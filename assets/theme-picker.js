@@ -229,7 +229,10 @@
       input.setAttribute('aria-expanded', 'true');
       input.focus();
     }
-    dialog.addEventListener('close', () => { input.setAttribute('aria-expanded', 'false'); syncOverlayState(); });
+    dialog.addEventListener('close', () => {
+      if (!dialog.open) input.setAttribute('aria-expanded', 'false');
+      syncOverlayState();
+    });
     input.addEventListener('input', () => { active = 0; renderCommands(); });
     results.addEventListener('pointermove', (event) => {
       const option = event.target.closest('[data-command-index]');
