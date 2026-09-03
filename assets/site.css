@@ -51,6 +51,21 @@ svg { display: block; max-width: 100%; }
 .command-empty { margin: 0; padding: 2.5rem 1rem; color: var(--muted); text-align: center; }
 .command-palette footer { display: flex; gap: 1rem; padding: .65rem 1rem; border-top: 1px solid var(--line); color: var(--muted); font: 700 .65rem/1.4 var(--mono); }
 .command-palette footer span { display: flex; align-items: center; gap: .3rem; }
+.shortcut-overlay { color-scheme:inherit; width:min(34rem,calc(100vw - 2rem)); max-height:calc(100dvh - 2rem); margin:clamp(1rem,12vh,7rem) auto auto; padding:0; overflow:auto; border:1px solid var(--line); border-radius:var(--surface-radius,5px); background:var(--snow); color:var(--ink); box-shadow:var(--surface-shadow,0 28px 90px color-mix(in srgb,var(--ink) 28%,transparent)); }
+.shortcut-overlay::backdrop { background:color-mix(in srgb,var(--ink) 42%,transparent); backdrop-filter:blur(7px); }
+.shortcut-overlay header { display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem 1.15rem; border-bottom:1px solid var(--line); }
+.shortcut-overlay header p { margin:0 0 .2rem; color:var(--copper); font:700 .64rem/1.3 var(--mono); letter-spacing:.09em; text-transform:uppercase; }
+.shortcut-overlay h2 { margin:0; font:400 clamp(1.45rem,4vw,2rem)/1.1 var(--serif); letter-spacing:-.025em; }
+.shortcut-overlay button { min-width:var(--control-height,2.75rem); min-height:var(--control-height,2.75rem); padding:.45rem .65rem; border:1px solid var(--line); border-radius:var(--control-radius,999px); background:var(--paper); color:var(--ink); font:700 .7rem/1.2 var(--mono); cursor:pointer; transition:translate var(--motion-medium) var(--ease-route),background var(--motion-fast),border-color var(--motion-fast),color var(--motion-fast); }
+.shortcut-overlay button:is(:hover,:focus-visible) { translate:0 -2px; border-color:var(--ink); background:var(--ink); color:var(--snow); }
+.shortcut-overlay button:active { translate:0; }
+.shortcut-overlay table { width:100%; border-collapse:collapse; }
+.shortcut-overlay th,.shortcut-overlay td { padding:.72rem 1.15rem; border-bottom:1px solid var(--line); text-align:left; }
+.shortcut-overlay thead th { color:var(--muted); font:700 .64rem/1.3 var(--mono); letter-spacing:.08em; text-transform:uppercase; }
+.shortcut-overlay tbody th { font:700 .86rem/1.35 var(--sans); }
+.shortcut-overlay td { text-align:right; }
+.shortcut-overlay kbd { display:inline-block; min-width:3.7rem; padding:.2rem .4rem; border:1px solid var(--line); border-bottom-width:2px; border-radius:3px; background:var(--paper); color:var(--muted); font:700 .68rem/1.2 var(--mono); text-align:center; white-space:nowrap; }
+.shortcut-overlay footer { padding:.65rem 1.15rem; color:var(--muted); font:700 .65rem/1.4 var(--mono); }
 .wrap { width: var(--wrap); margin-inline: auto; }
 .skip-link { position:fixed; z-index:20; top:8px; left:8px; padding:.7rem 1rem; border:1px solid var(--art-panel-line); border-radius:3px; background:var(--art-panel); color:var(--art-on-panel); box-shadow:0 8px 24px color-mix(in srgb,var(--ink) 18%,transparent); translate:0 -150%; }
 .skip-link:is(:focus,:focus-visible) { translate:0!important; }

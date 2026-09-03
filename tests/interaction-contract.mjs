@@ -34,6 +34,18 @@ try {
   if (!guarded.result.value) throw new Error('appearance shortcut opened while typing in a form control');
   await send('Runtime.evaluate', { expression: `document.querySelector('#shortcut-guard').remove()` });
 
+  await key(send, '/', 'Slash', 1);
+  const shortcutOverlay = await send('Runtime.evaluate', { expression: `(()=>{const shortcuts=document.querySelector('.shortcut-overlay');const commands=document.querySelector('.command-palette');return {open:shortcuts?.open,commandsOpen:commands.open,rows:shortcuts?.querySelectorAll('tbody tr').length,title:shortcuts?.querySelector('h2')?.textContent,overlay:portfolioOverlay.active}})()`, returnByValue: true });
+  if (!shortcutOverlay.result.value.open || shortcutOverlay.result.value.commandsOpen || shortcutOverlay.result.value.rows < 8 || shortcutOverlay.result.value.title !== 'Keyboard shortcuts' || !shortcutOverlay.result.value.overlay) throw new Error(`shortcut overlay failed: ${JSON.stringify(shortcutOverlay.result.value)}`);
+  await key(send, 'Escape', 'Escape');
+  await waitFor(send, `!document.querySelector('.shortcut-overlay').open&&!portfolioOverlay.active`, 'shortcut overlay close');
+
+  await key(send, 'k', 'KeyK', 1);
+  await send('Runtime.evaluate', { expression: `(()=>{const dialog=document.querySelector('.command-palette');const input=dialog.querySelector('input');input.value='keyboard shortcuts';input.dispatchEvent(new Event('input',{bubbles:true}));dialog.querySelector('[role="option"]').click()})()` });
+  const shortcutCommand = await send('Runtime.evaluate', { expression: `({shortcutsOpen:document.querySelector('.shortcut-overlay').open,commandsOpen:document.querySelector('.command-palette').open})`, returnByValue: true });
+  if (!shortcutCommand.result.value.shortcutsOpen || shortcutCommand.result.value.commandsOpen) throw new Error(`shortcut command failed: ${JSON.stringify(shortcutCommand.result.value)}`);
+  await key(send, 'Escape', 'Escape');
+
   await key(send, 'k', 'KeyK', 10);
   await send('Runtime.evaluate', { expression: `(()=>{const input=document.querySelector('.command-palette input');input.value='no trail matches this';input.dispatchEvent(new Event('input',{bubbles:true}))})()` });
   const empty = await send('Runtime.evaluate', { expression: `(()=>{const dialog=document.querySelector('.command-palette');const input=dialog.querySelector('input');return {open:dialog.open,empty:!dialog.querySelector('.command-empty').hidden,count:dialog.querySelectorAll('[role="option"]').length,active:input.hasAttribute('aria-activedescendant')}})()`, returnByValue: true });

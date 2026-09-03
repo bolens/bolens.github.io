@@ -49,7 +49,7 @@
       { label: 'Bottom of page', detail: 'Jump to the end of the page', group: 'On this page', keywords: 'scroll end footer', run: () => scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' }) },
       { label: 'Focus main content', detail: 'Move keyboard focus past navigation', group: 'Accessibility', keywords: 'skip content', shortcut: 'Alt M', ariaShortcut: 'Alt+M', run: () => document.querySelector('main')?.focus() },
       { label: 'Command palette', detail: 'Search pages and run site actions', group: 'Command', keywords: 'shortcut search commands', shortcut: 'Alt K', ariaShortcut: 'Alt+K', run: () => openCommands() },
-      { label: 'Keyboard shortcuts', detail: 'Show every available keyboard shortcut', group: 'Command', keywords: 'help hotkeys bindings', shortcut: 'Alt /', ariaShortcut: 'Alt+/', run: () => openCommands('shortcut') },
+      { label: 'Keyboard shortcuts', detail: 'Show every available keyboard shortcut', group: 'Command', keywords: 'help hotkeys bindings', shortcut: 'Alt /', ariaShortcut: 'Alt+/', run: () => openShortcuts() },
       { label: 'Choose palette', detail: 'Open color and appearance controls', group: 'Command', keywords: 'theme colors shortcut', shortcut: 'Alt P', ariaShortcut: 'Alt+P', run: pickerUi.open },
       { label: 'Cycle color palette', detail: 'Move to the next color scheme', group: 'Palette', keywords: 'next theme colors', run: runAppearance(appearance.cyclePalette) },
       ...Object.entries(palettes).map(([name, palette]) => ({ label: `Use ${palette.label} palette`, detail: 'Change the site color scheme', group: 'Palette', keywords: `${name} theme colors`, run: choosePalette(name) })),
@@ -67,6 +67,12 @@
     dialog.setAttribute('aria-label', 'Site search and commands');
     dialog.innerHTML = `<div class="command-search"><svg class="command-search-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-search"></use></svg><input type="search" role="combobox" autocomplete="off" spellcheck="false" aria-label="Search pages and commands" aria-autocomplete="list" aria-controls="command-results" aria-expanded="false" placeholder="Search pages and commands…"><kbd>Esc</kbd></div><div class="command-results" id="command-results" role="listbox" aria-label="Results"></div><p class="command-empty" role="status" hidden>No matching trail found.</p><footer><span><kbd>↑</kbd><kbd>↓</kbd> Move</span><span><kbd>↵</kbd> Open</span></footer>`;
     document.body.append(dialog);
+    const shortcutCommands = commands.filter((command) => command.ariaShortcut);
+    const shortcutDialog = document.createElement('dialog');
+    shortcutDialog.className = 'shortcut-overlay';
+    shortcutDialog.setAttribute('aria-labelledby', 'shortcut-overlay-title');
+    shortcutDialog.innerHTML = `<header><div><p>Quick reference</p><h2 id="shortcut-overlay-title">Keyboard shortcuts</h2></div><button type="button" aria-label="Close keyboard shortcuts">Close</button></header><table><thead><tr><th scope="col">Action</th><th scope="col">Shortcut</th></tr></thead><tbody>${shortcutCommands.map((command) => `<tr><th scope="row">${command.label}</th><td><kbd>${command.shortcut}</kbd></td></tr>`).join('')}</tbody></table><footer>Press <kbd>Esc</kbd> to close</footer>`;
+    document.body.append(shortcutDialog);
     const footer = document.querySelector('.site-footer');
     if (footer && !footer.querySelector('.shortcut-hint')) {
       const hint = document.createElement('span');
@@ -102,6 +108,7 @@
     };
     function openCommands(query = '') {
       pickerUi.close();
+      if (shortcutDialog.open) shortcutDialog.close();
       input.value = query;
       active = 0;
       renderCommands();
@@ -110,6 +117,12 @@
       input.setAttribute('aria-expanded', 'true');
       input.focus();
     }
+    function openShortcuts() {
+      pickerUi.close();
+      if (dialog.open) dialog.close();
+      if (!shortcutDialog.open) shortcutDialog.showModal();
+      overlay.set('shortcuts', true);
+    }
     dialog.addEventListener('close', () => {
       if (!dialog.open) {
         input.setAttribute('aria-expanded', 'false');
@@ -117,6 +130,9 @@
       }
       overlay.set('commands', dialog.open);
     });
+    shortcutDialog.querySelector('button').addEventListener('click', () => shortcutDialog.close());
+    shortcutDialog.addEventListener('click', (event) => { if (event.target === shortcutDialog) shortcutDialog.close(); });
+    shortcutDialog.addEventListener('close', () => overlay.set('shortcuts', false));
     input.addEventListener('input', () => { active = 0; renderCommands(); });
     results.addEventListener('pointermove', (event) => {
       const option = event.target.closest('[data-command-index]');
@@ -159,7 +175,8 @@
       }
       if (keyCode === 'Slash' && altShortcut) {
         event.preventDefault();
-        openCommands('shortcut');
+        if (shortcutDialog.open) shortcutDialog.close();
+        else openShortcuts();
         return;
       }
       if (!altShortcut) return;
