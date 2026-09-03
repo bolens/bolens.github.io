@@ -34,10 +34,10 @@
         <title id="camp-title">A cryptid campfire beneath the northern lights</title>
         <desc id="camp-desc">At night, Bigfoot, a gray alien, Mothman, and Dogman roast marshmallows around a fire whose smoke forms 404. In daylight, the cryptids explore the campsite while two campers and their small windhound enjoy the mountain woods.</desc>
         <defs>
-          <linearGradient id="night-sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#020914"/><stop offset=".28" stop-color="#071927"/><stop offset=".62" stop-color="#12313e"/><stop offset="1" stop-color="#28504b"/></linearGradient>
+          <linearGradient id="night-sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--scene-sky-top,#020914)"/><stop offset=".28" stop-color="var(--scene-sky-upper,#071927)"/><stop offset=".62" stop-color="var(--scene-sky-mid,#12313e)"/><stop offset="1" stop-color="var(--scene-sky-haze,#28504b)"/></linearGradient>
           <radialGradient id="sky-vignette" cx="52%" cy="26%" r="76%"><stop offset=".2" stop-color="#184050" stop-opacity=".2"/><stop offset=".7" stop-color="#061521" stop-opacity=".08"/><stop offset="1" stop-color="#01070e" stop-opacity=".62"/></radialGradient>
           <radialGradient id="horizon-airglow" cx="50%" cy="100%" r="72%"><stop stop-color="#6c9a91" stop-opacity=".22"/><stop offset=".48" stop-color="#315967" stop-opacity=".09"/><stop offset="1" stop-color="#0a1926" stop-opacity="0"/></radialGradient>
-          <linearGradient id="upper-sky-depth" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#162442" stop-opacity=".28"/><stop offset=".38" stop-color="#061326" stop-opacity="0"/><stop offset=".72" stop-color="#173b43" stop-opacity=".13"/><stop offset="1" stop-color="#020811" stop-opacity=".34"/></linearGradient>
+          <linearGradient id="upper-sky-depth" x1="0" y1="0" x2="1" y2="1"><stop stop-color="var(--scene-sky-depth,#162442)" stop-opacity="var(--scene-sky-depth-opacity,.28)"/><stop offset=".38" stop-color="#061326" stop-opacity="0"/><stop offset=".72" stop-color="var(--scene-sky-mid,#173b43)" stop-opacity=".13"/><stop offset="1" stop-color="var(--scene-sky-top,#020811)" stop-opacity=".34"/></linearGradient>
           <linearGradient id="aurora-ray" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dcfff0" stop-opacity=".04"/><stop offset=".32" stop-color="#8ef0c7" stop-opacity=".38"/><stop offset=".72" stop-color="#65c6c7" stop-opacity=".1"/><stop offset="1" stop-color="#4a8ca3" stop-opacity="0"/></linearGradient>
           <linearGradient id="aurora-green" x1="0" y1="0" x2="1" y2=".25"><stop stop-color="#46d8a1" stop-opacity=".25"/><stop offset=".28" stop-color="#8af1c6"/><stop offset=".58" stop-color="#58cfc1"/><stop offset=".82" stop-color="#779ddd"/><stop offset="1" stop-color="#62e0b2" stop-opacity=".28"/></linearGradient>
           <linearGradient id="aurora-blue" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#6ae1cc" stop-opacity=".12"/><stop offset=".36" stop-color="#83e4d6"/><stop offset=".7" stop-color="#7d9ee0"/><stop offset="1" stop-color="#65cdbf" stop-opacity=".2"/></linearGradient>
@@ -46,10 +46,10 @@
           <radialGradient id="moon-surface" cx="38%" cy="34%" r="72%"><stop stop-color="#fffbe1"/><stop offset=".58" stop-color="#eee6bd"/><stop offset=".84" stop-color="#d6cea8"/><stop offset="1" stop-color="#aeb2a0"/></radialGradient>
           <radialGradient id="fire-glow"><stop stop-color="#ffb348" stop-opacity=".44"/><stop offset="1" stop-color="#ff7b3d" stop-opacity="0"/></radialGradient>
           <linearGradient id="tent-cloth" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#cc5b3c"/><stop offset="1" stop-color="#7d3028"/></linearGradient>
-          <linearGradient id="pine-lit" x1="0" y1="0" x2="1" y2=".8"><stop stop-color="#315f4e"/><stop offset=".42" stop-color="#173d35"/><stop offset="1" stop-color="#071d1d"/></linearGradient>
-          <linearGradient id="forest-floor-depth" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#294b43"/><stop offset=".38" stop-color="#163630"/><stop offset="1" stop-color="#071b19"/></linearGradient>
-          <linearGradient id="mountain-far" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#274653"/><stop offset=".55" stop-color="#16323d"/><stop offset="1" stop-color="#0a222b"/></linearGradient>
-          <linearGradient id="mountain-near" x1=".2" y1="0" x2=".8" y2="1"><stop stop-color="#35545d"/><stop offset=".28" stop-color="#1d3d48"/><stop offset=".7" stop-color="#102c36"/><stop offset="1" stop-color="#071e28"/></linearGradient>
+          <linearGradient id="pine-lit" x1="0" y1="0" x2="1" y2=".8"><stop stop-color="var(--scene-pine-lit,#315f4e)"/><stop offset=".42" stop-color="var(--scene-pine-mid,#173d35)"/><stop offset="1" stop-color="var(--scene-pine-dark,#071d1d)"/></linearGradient>
+          <linearGradient id="forest-floor-depth" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--scene-ground-lit,#294b43)"/><stop offset=".38" stop-color="var(--scene-ground-mid,#163630)"/><stop offset="1" stop-color="var(--scene-ground-dark,#071b19)"/></linearGradient>
+          <linearGradient id="mountain-far" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--scene-mountain-far-lit,#274653)"/><stop offset=".55" stop-color="var(--scene-mountain-far-mid,#16323d)"/><stop offset="1" stop-color="var(--scene-mountain-far-dark,#0a222b)"/></linearGradient>
+          <linearGradient id="mountain-near" x1=".2" y1="0" x2=".8" y2="1"><stop stop-color="var(--scene-mountain-lit,#35545d)"/><stop offset=".28" stop-color="var(--scene-mountain-mid,#1d3d48)"/><stop offset=".7" stop-color="var(--scene-mountain-shadow,#102c36)"/><stop offset="1" stop-color="var(--scene-mountain-dark,#071e28)"/></linearGradient>
           <linearGradient id="bigfoot-fire" x1="0" y1="0" x2="1" y2=".55"><stop stop-color="#5a392b"/><stop offset=".7" stop-color="#76513a"/><stop offset="1" stop-color="#b87648"/></linearGradient>
           <linearGradient id="alien-fire" x1="0" y1=".2" x2="1" y2=".8"><stop stop-color="#718482"/><stop offset=".68" stop-color="#91a3a0"/><stop offset="1" stop-color="#d6a56e"/></linearGradient>
           <linearGradient id="moth-fire" x1="1" y1=".2" x2="0" y2=".8"><stop stop-color="#292330"/><stop offset=".72" stop-color="#403347"/><stop offset="1" stop-color="#9b5946"/></linearGradient>
@@ -195,10 +195,10 @@
           <use class="aurora-edge aurora-edge-two" href="#aurora-strand" x="-4" y="62" width="1208" height="180"/>
         </g>
         <rect width="1200" height="760" rx="8" fill="url(#sky-vignette)" pointer-events="none"/>
-        <use class="camp-moon sky-orb" href="#sky-orb" x="902" y="18" width="200" height="200" style="--orb-glow:url(#moon-glow);--orb-glow-opacity:.42;--orb-fill:url(#moon-surface);--orb-highlight-opacity:0;--orb-crater-opacity:.34"/>
+        <use class="scene-orb sky-orb" href="#sky-orb" x="902" y="18" width="200" height="200"/>
         <g class="weather-clouds" aria-hidden="true">
-          <use href="#cloud-bank" x="54" y="122" width="190" height="62" style="--cloud-fill:#9bb8bd;--cloud-edge:#6f9299;--cloud-shadow:#496d76"/>
-          <use href="#cloud-bank" x="795" y="184" width="235" height="76" style="--cloud-fill:#8baab1;--cloud-edge:#65858e;--cloud-shadow:#3c626c"/>
+          <use class="weather-cloud weather-cloud-left" href="#cloud-bank" x="54" y="122" width="190" height="62"/>
+          <use class="weather-cloud weather-cloud-right" href="#cloud-bank" x="795" y="184" width="235" height="76"/>
         </g>
         <use class="weather-rain" aria-hidden="true" href="#rain-field" width="1200" height="760"/>
 
@@ -649,6 +649,7 @@
         </g>
         <path class="smoke-thread" d="M612 555c-24-29 23-38-4-69s18-42 0-78" fill="none" stroke="#d4dedb" stroke-width="8" stroke-linecap="round" opacity=".58"/>
         <rect class="palette-wash" width="1200" height="760" pointer-events="none"/>
+        <rect class="theme-light-wash" width="1200" height="760" pointer-events="none"/>
 
         <g class="day-scene">
           <rect class="daylight-wash" width="1200" height="760" fill="url(#day-sky)"/>
