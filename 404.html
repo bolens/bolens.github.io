@@ -37,6 +37,8 @@
           <linearGradient id="night-sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#020914"/><stop offset=".28" stop-color="#071927"/><stop offset=".62" stop-color="#12313e"/><stop offset="1" stop-color="#28504b"/></linearGradient>
           <radialGradient id="sky-vignette" cx="52%" cy="26%" r="76%"><stop offset=".2" stop-color="#184050" stop-opacity=".2"/><stop offset=".7" stop-color="#061521" stop-opacity=".08"/><stop offset="1" stop-color="#01070e" stop-opacity=".62"/></radialGradient>
           <radialGradient id="horizon-airglow" cx="50%" cy="100%" r="72%"><stop stop-color="#6c9a91" stop-opacity=".22"/><stop offset=".48" stop-color="#315967" stop-opacity=".09"/><stop offset="1" stop-color="#0a1926" stop-opacity="0"/></radialGradient>
+          <linearGradient id="upper-sky-depth" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#162442" stop-opacity=".28"/><stop offset=".38" stop-color="#061326" stop-opacity="0"/><stop offset=".72" stop-color="#173b43" stop-opacity=".13"/><stop offset="1" stop-color="#020811" stop-opacity=".34"/></linearGradient>
+          <linearGradient id="aurora-ray" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#dcfff0" stop-opacity=".04"/><stop offset=".32" stop-color="#8ef0c7" stop-opacity=".38"/><stop offset=".72" stop-color="#65c6c7" stop-opacity=".1"/><stop offset="1" stop-color="#4a8ca3" stop-opacity="0"/></linearGradient>
           <linearGradient id="aurora-green" x1="0" y1="0" x2="1" y2=".25"><stop stop-color="#46d8a1" stop-opacity=".25"/><stop offset=".28" stop-color="#8af1c6"/><stop offset=".58" stop-color="#58cfc1"/><stop offset=".82" stop-color="#779ddd"/><stop offset="1" stop-color="#62e0b2" stop-opacity=".28"/></linearGradient>
           <linearGradient id="aurora-blue" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#6ae1cc" stop-opacity=".12"/><stop offset=".36" stop-color="#83e4d6"/><stop offset=".7" stop-color="#7d9ee0"/><stop offset="1" stop-color="#65cdbf" stop-opacity=".2"/></linearGradient>
           <linearGradient id="aurora-violet" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#8b73c7" stop-opacity=".18"/><stop offset=".44" stop-color="#b18de0"/><stop offset=".72" stop-color="#6eb7d4"/><stop offset="1" stop-color="#8d70c5" stop-opacity=".15"/></linearGradient>
@@ -88,7 +90,9 @@
         </defs>
 
         <rect width="1200" height="760" rx="8" fill="url(#night-sky)"/>
+        <rect width="1200" height="410" fill="url(#upper-sky-depth)"/>
         <ellipse cx="600" cy="352" rx="700" ry="270" fill="url(#horizon-airglow)"/>
+        <g class="sky-airglow" fill="none" stroke-linecap="round"><path d="M-80 312Q208 268 474 300T1280 284" stroke="#63a69d" stroke-width="38" opacity=".035"/><path d="M-70 337Q244 301 536 327t734-18" stroke="#a2c1b6" stroke-width="3" opacity=".12"/></g>
         <path class="milky-way" d="M-70 285C190 170 382 214 583 128S966 21 1270 92" fill="none" stroke="#b8d4d4" stroke-width="92" stroke-linecap="round" opacity=".035"/>
         <g class="camp-stars" fill="#d8eee5">
           <circle cx="66" cy="90" r="2"/><circle cx="140" cy="157" r="1.5"/><circle cx="216" cy="75" r="1.6"/><circle cx="335" cy="134" r="1.7"/><circle cx="433" cy="61" r="1.2"/><circle cx="522" cy="118" r="2"/><circle cx="682" cy="72" r="1.5"/><circle cx="760" cy="151" r="1.2"/><circle cx="906" cy="72" r="1.8"/><circle cx="1095" cy="151" r="1.5"/>
@@ -97,12 +101,14 @@
         </g>
         <g class="star-dust" fill="#afcbc9" opacity=".45"><circle cx="118" cy="127" r=".7"/><circle cx="155" cy="92" r=".6"/><circle cx="202" cy="142" r=".6"/><circle cx="238" cy="103" r=".5"/><circle cx="314" cy="154" r=".6"/><circle cx="351" cy="84" r=".5"/><circle cx="414" cy="126" r=".7"/><circle cx="486" cy="91" r=".5"/><circle cx="547" cy="151" r=".6"/><circle cx="604" cy="91" r=".5"/><circle cx="652" cy="129" r=".7"/><circle cx="731" cy="54" r=".6"/><circle cx="786" cy="119" r=".5"/><circle cx="932" cy="132" r=".6"/><circle cx="1073" cy="177" r=".6"/></g>
         <g class="deep-stars" fill="#dce9e4" opacity=".5"><circle cx="47" cy="146" r=".45"/><circle cx="87" cy="237" r=".55"/><circle cx="128" cy="67" r=".4"/><circle cx="198" cy="211" r=".5"/><circle cx="273" cy="122" r=".4"/><circle cx="325" cy="72" r=".55"/><circle cx="399" cy="174" r=".45"/><circle cx="447" cy="31" r=".5"/><circle cx="509" cy="205" r=".4"/><circle cx="583" cy="139" r=".55"/><circle cx="637" cy="35" r=".4"/><circle cx="694" cy="193" r=".5"/><circle cx="773" cy="83" r=".45"/><circle cx="839" cy="145" r=".55"/><circle cx="892" cy="37" r=".4"/><circle cx="947" cy="167" r=".5"/><circle cx="1062" cy="112" r=".45"/><circle cx="1126" cy="43" r=".55"/><circle cx="1171" cy="189" r=".4"/></g>
+        <g class="stellar-color" opacity=".72"><circle cx="116" cy="68" r="1.1" fill="#bfd9ff"/><circle cx="267" cy="96" r=".9" fill="#ffe5bb"/><circle cx="408" cy="42" r="1.2" fill="#d5e5ff"/><circle cx="575" cy="183" r=".8" fill="#ffd7ae"/><circle cx="704" cy="41" r="1" fill="#c7ddff"/><circle cx="878" cy="186" r=".85" fill="#ffe9c9"/><circle cx="1080" cy="64" r="1.15" fill="#c9dcff"/></g>
         <g class="high-clouds" fill="none" stroke="#b7cad0" stroke-linecap="round" filter="url(#sky-haze)" opacity=".055"><path d="M-45 236Q154 185 345 223T728 210" stroke-width="12"/><path d="M673 177q166-43 318-5t265-14" stroke-width="8"/><path d="M83 294q134-39 276-8" stroke-width="6"/></g>
         <g class="aurora-curtains" fill="none" stroke-linecap="round">
           <path d="M42 138v91M104 109v105M171 117v131M239 145v86M311 132v124M382 91v137M455 78v130M527 102v137M600 63v156M673 72v132M748 85v149M821 72v139M894 99v127M970 76v158M1047 91v124M1125 62v143" stroke="url(#aurora-green)" stroke-width="24" opacity=".12"/>
           <path d="M76 159v70M146 139v96M213 157v80M347 119v107M421 111v115M566 92v119M710 104v113M857 103v116M1007 108v113M1170 91v109" stroke="url(#aurora-blue)" stroke-width="10" opacity=".18"/>
           <path d="M19 177q8 34 1 69M58 143q12 46 2 96M128 124q-8 58 3 113M205 144q10 48-2 98M278 121q-9 67 2 124M359 101q13 61-3 126M486 89q-10 72 4 136M638 78q12 64-4 132M779 95q-9 66 3 128M927 107q11 57-3 115M1083 85q-8 71 3 132M1162 76q12 59-2 121" stroke="#b7f5d8" stroke-width="3" opacity=".17"/>
         </g>
+        <g class="aurora-ray-filaments" fill="none" stroke="url(#aurora-ray)" stroke-linecap="round"><path d="M92 104q-8 70 2 146M121 92q12 78-3 164M155 107q-5 53 4 124M331 91q10 71-4 147M371 73q-8 91 3 174M409 82q12 62-2 138M579 57q-9 103 4 190M617 49q13 86-2 166M655 61q-6 72 3 151M800 70q10 86-4 165M843 61q-8 77 3 162M1017 65q12 80-3 171M1062 54q-7 95 3 180M1101 63q10 64-2 143" stroke-width="7" opacity=".15"/><path d="M72 126v91M187 113v126M298 122v104M456 85v142M519 75v157M714 65v161M754 84v143M906 82v137M958 69v163M1140 71v141" stroke-width="2" opacity=".3"/></g>
         <g class="camp-aurora" fill="none" stroke-linecap="round">
           <path class="aurora-ribbon aurora-ribbon-one" d="M-70 170C125 45 260 225 444 108S773 37 942 121s256 6 344-68"/>
           <path class="aurora-ribbon aurora-ribbon-two" d="M-50 225C129 108 284 264 473 153S783 91 954 167s235 11 305-51"/>
@@ -111,7 +117,8 @@
           <path class="aurora-edge aurora-edge-two" d="M-42 215C132 101 286 250 476 143S787 82 958 158s229 8 300-50"/>
         </g>
         <rect width="1200" height="760" rx="8" fill="url(#sky-vignette)" pointer-events="none"/>
-        <circle cx="1002" cy="118" r="84" fill="url(#moon-glow)"/>
+        <circle cx="1002" cy="118" r="132" fill="url(#moon-glow)" opacity=".42"/>
+        <circle cx="1002" cy="118" r="82" fill="none" stroke="#e9f2dc" stroke-width="2" opacity=".08"/>
         <g class="camp-moon">
           <circle cx="1002" cy="118" r="48" fill="url(#moon-surface)"/>
           <g fill="#b9b699" opacity=".34"><ellipse cx="982" cy="98" rx="10" ry="7" transform="rotate(-18 982 98)"/><ellipse cx="1022" cy="137" rx="12" ry="8" transform="rotate(13 1022 137)"/><ellipse cx="1011" cy="91" rx="6" ry="5"/><ellipse cx="979" cy="127" rx="7" ry="11" transform="rotate(24 979 127)"/><ellipse cx="1030" cy="108" rx="5" ry="7"/></g>
