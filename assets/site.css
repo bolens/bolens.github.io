@@ -455,10 +455,20 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
 :root[data-theme="day"] .day-scene,:root[data-theme="day"] .caption-day { display:inline; }
 :root[data-theme="day"] .caption-night { display:none; }
 :root[data-theme="day"] .camp-atmosphere { display:none; }
+:root[data-theme="day"] :is(.camp-stars,.star-dust,.deep-stars,.stellar-color,.milky-way,.sky-airglow,.aurora-curtains,.aurora-ray-filaments,.camp-aurora,.camp-moon,.night-moon-aura,.background-ufo,.tent-peekers,.camper,.roasting-arm,.seat-shadows,.campfire-glow,.fire-rim-light,.smores-kit,.campfire,.smoke-404,.smoke-thread) { display:none; }
 :root[data-theme="day"] .lost-page { --lost-sky:var(--paper);--lost-panel:color-mix(in srgb,var(--snow) 88%,transparent);--lost-copy:var(--ink);--lost-muted:var(--muted);--lost-accent:var(--copper);--lost-line:color-mix(in srgb,var(--line) 72%,transparent); }
 :root[data-theme="day"] .lost-button { border-color:var(--ink);background:var(--ink);color:var(--paper); }
 :root[data-theme="day"] .lost-button:hover { border-color:var(--copper);background:var(--copper);color:var(--paper); }
 .day-palette-wash { fill:var(--lost-night-tint);opacity:.06;mix-blend-mode:soft-light; }
+.daylight-wash { opacity:.44;mix-blend-mode:screen; }
+.day-scenery-duplicate,.day-added-tree,.day-tent-duplicate,.day-added-bush,.day-foreground { display:none; }
+.day-bigfoot-tree > .day-added-tree { display:inline;filter:drop-shadow(8px 12px 9px rgba(19,34,29,.2)); }
+.day-bigfoot,.day-mothman,.day-dogman,.day-campers { filter:drop-shadow(5px 9px 6px rgba(15,31,27,.3)); }
+.day-ufo { filter:drop-shadow(7px 12px 9px rgba(20,45,49,.28)); }
+.depth-far,.depth-mid,.depth-near { transform-box:view-box;transform-origin:center bottom;transition:translate .8s cubic-bezier(.2,.7,.2,1); }
+.depth-far { translate:var(--parallax-far-x,0) var(--parallax-far-y,0); }
+.depth-mid { translate:var(--parallax-mid-x,0) var(--parallax-mid-y,0); }
+.depth-near { translate:var(--parallax-near-x,0) var(--parallax-near-y,0); }
 .day-cloud-404 text { fill:#fff;stroke:color-mix(in srgb,var(--lost-day-sky-top) 38%,#fff);stroke-width:6;paint-order:stroke fill;font:700 112px/1 var(--serif);letter-spacing:7px;opacity:.82; }
 .day-sunbeams { transform-box:view-box;transform-origin:982px 112px;animation:day-ray-breathe 14s ease-in-out infinite alternate; }
 .day-sun { transform-box:fill-box;transform-origin:center;animation:day-sun-breathe 9s ease-in-out infinite alternate; }
@@ -565,6 +575,7 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
   :root:not([data-theme]) .day-scene,:root:not([data-theme]) .caption-day { display:inline; }
   :root:not([data-theme]) .caption-night { display:none; }
   :root:not([data-theme]) .camp-atmosphere { display:none; }
+  :root:not([data-theme]) :is(.camp-stars,.star-dust,.deep-stars,.stellar-color,.milky-way,.sky-airglow,.aurora-curtains,.aurora-ray-filaments,.camp-aurora,.camp-moon,.night-moon-aura,.background-ufo,.tent-peekers,.camper,.roasting-arm,.seat-shadows,.campfire-glow,.fire-rim-light,.smores-kit,.campfire,.smoke-404,.smoke-thread) { display:none; }
   :root:not([data-theme]) .lost-page { --lost-sky:var(--paper);--lost-panel:color-mix(in srgb,var(--snow) 88%,transparent);--lost-copy:var(--ink);--lost-muted:var(--muted);--lost-accent:var(--copper);--lost-line:color-mix(in srgb,var(--line) 72%,transparent); }
   :root:not([data-theme]) .lost-button { border-color:var(--ink);background:var(--ink);color:var(--paper); }
   :root:not([data-theme]) .lost-button:hover { border-color:var(--copper);background:var(--copper);color:var(--paper); }
@@ -600,6 +611,7 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lost-page *, .lost-page *::before, .lost-page *::after { animation:none !important; transition:none !important; }
+  .depth-far,.depth-mid,.depth-near { translate:0 0!important; }
   .smoke-number-main { opacity:.76; translate:0; scale:1; }
   .smoke-number-haze { opacity:.16; }
   .tent-peekers { translate:0; }
