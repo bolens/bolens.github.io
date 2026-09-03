@@ -29,8 +29,20 @@ try {
     if (result.result.value.loading) throw new Error(`${route} retained its loading state after resources completed`);
     const unstable = Object.entries(result.result.value.dimensions).filter(([, delta]) => delta.widthDelta > .5 || delta.heightDelta > .5);
     if (unstable.length) throw new Error(`${route} glyph initialization shifted layout: ${JSON.stringify(Object.fromEntries(unstable))}`);
+
+    if (route === '/') {
+      const skeleton = await send('Runtime.evaluate', { expression: `(()=>{const root=document.documentElement;const target=document.querySelector('.signal-map');const read=()=>{const style=getComputedStyle(target,'::after');return {content:style.content,animation:style.animationName,pointerEvents:style.pointerEvents}};const settled=read();root.classList.add('is-loading');const loading=read();root.dataset.motion='reduced';const reduced=read();root.classList.remove('is-loading');root.removeAttribute('data-motion');return {settled,loading,reduced}})()`, returnByValue: true });
+      const { settled, loading, reduced } = skeleton.result.value;
+      if (settled.content !== 'none' || loading.content === 'none' || loading.animation !== 'skeleton-trace' || loading.pointerEvents !== 'none' || reduced.animation !== 'none') throw new Error(`visual skeleton states failed: ${JSON.stringify(skeleton.result.value)}`);
+    }
+
+    if (route === '/work/') {
+      const textSkeleton = await send('Runtime.evaluate', { expression: `(()=>{const time=document.querySelector('.project-updated');time.className='project-updated';const read=()=>{const style=getComputedStyle(time);return {width:style.width,color:style.color,background:style.backgroundImage,animation:style.animationName,visibility:style.visibility}};const pending=read();time.classList.add('is-resolved');const resolved=read();time.className='project-updated is-unavailable';const unavailable=read();return {pending,resolved,unavailable}})()`, returnByValue: true });
+      const { pending, resolved, unavailable } = textSkeleton.result.value;
+      if (pending.width === 'auto' || pending.color !== 'rgba(0, 0, 0, 0)' || pending.background === 'none' || pending.animation !== 'skeleton-text' || resolved.background !== 'none' || resolved.animation !== 'none' || resolved.color === 'rgba(0, 0, 0, 0)' || unavailable.visibility !== 'hidden') throw new Error(`text skeleton states failed: ${JSON.stringify(textSkeleton.result.value)}`);
+    }
   }
-  console.log('Glyph layout stability passed buttons, links, headings, principles, work rows, and case-study navigation.');
+  console.log('Layout stability passed glyph geometry plus visual and text skeleton state transitions.');
 } finally {
   await browser.close();
   await server.close();

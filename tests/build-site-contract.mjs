@@ -44,11 +44,21 @@ try {
   const previousInode = statSync(generatedThemePath).ino;
   const generated = run();
   if (generated.status !== 0 || !readFileSync(generatedThemePath, 'utf8').includes('Alpine Test')) throw new Error(`theme regeneration failed: ${generated.stderr}`);
+  const generatedPages = ['404.html', 'index.html', 'about/index.html', 'work/index.html', ...projects.filter(({ slug }) => slug).map(({ slug }) => `case-studies/${slug}/index.html`)];
+  for (const relativePath of generatedPages) {
+    const html = readFileSync(join(fixture, relativePath), 'utf8');
+    const bootstrap = 'document.documentElement.classList.add("is-loading")';
+    if (html.split(bootstrap).length !== 2 || html.split('/assets/loading-state.js').length !== 2) throw new Error(`${relativePath} must contain one loading bootstrap and one loading controller`);
+    if (!(html.indexOf(bootstrap) < html.indexOf('/assets/theme-data.js') && html.indexOf('/assets/command-palette.js') < html.indexOf('/assets/loading-state.js'))) throw new Error(`${relativePath} has an unsafe loading-script order`);
+  }
+  const generatedWork = readFileSync(join(fixture, 'work/index.html'), 'utf8');
+  if ((generatedWork.match(/class="project-updated" aria-hidden="true"/g) ?? []).length !== projects.length) throw new Error('work index must reserve one inaccessible update-date skeleton per project');
+  if (!generatedWork.includes('.work-tools,.project-updated{display:none!important}')) throw new Error('work index must hide enhanced controls and skeletons without JavaScript');
   if (statSync(generatedThemePath).ino === previousInode) throw new Error('generated output was rewritten in place instead of replaced atomically');
   const temporaryOutputs = readdirSync(join(fixture, 'assets')).filter((name) => name.endsWith('.tmp'));
   if (temporaryOutputs.length) throw new Error(`temporary generated outputs remained: ${temporaryOutputs.join(', ')}`);
   if (run('--check').status !== 0) throw new Error('generated fixture remained stale after regeneration');
-  console.log('Build contract passed validation, stale detection, atomic replacement, cleanup, and deterministic regeneration.');
+  console.log('Build contract passed validation, loading wiring, stale detection, atomic replacement, cleanup, and deterministic regeneration.');
 } finally {
   rmSync(fixture, { recursive: true, force: true });
 }
