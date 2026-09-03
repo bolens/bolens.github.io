@@ -21,6 +21,8 @@ const glyphs = {
   shield: null, terminal: null, network: null, wrench: null,
   cloud: null, database: null, lock: null, refresh: null, package: null, bug: null, monitor: null, code: null,
   mug: null, river: null, flag: null, 'first-aid': null,
+  journal: null, beacon: null, 'trail-camera': null, carabiner: null,
+  headlamp: null, cabin: null, 'trail-blaze': null, radio: null,
 };
 const internalMotions = {
   trailhead: ['--glyph-trailhead-motion', 'glyph-trailhead-sign-flip'],
@@ -61,6 +63,14 @@ const internalMotions = {
   river: ['--glyph-river-motion', 'glyph-river-current-flow'],
   flag: ['--glyph-flag-motion', 'glyph-flag-wave'],
   'first-aid': ['--glyph-first-aid-motion', 'glyph-first-aid-pulse'],
+  journal: ['--glyph-journal-motion', 'glyph-journal-check-draw'],
+  beacon: ['--glyph-beacon-motion', 'glyph-beacon-ring-a-pulse'],
+  'trail-camera': ['--glyph-trail-camera-motion', 'glyph-trail-camera-shutter'],
+  carabiner: ['--glyph-carabiner-motion', 'glyph-carabiner-gate-open'],
+  headlamp: ['--glyph-headlamp-motion', 'glyph-headlamp-beam-shine'],
+  cabin: ['--glyph-cabin-motion', 'glyph-cabin-smoke-a-rise'],
+  'trail-blaze': ['--glyph-trail-blaze-motion', 'glyph-trail-blaze-paint'],
+  radio: ['--glyph-radio-motion', 'glyph-radio-signal-a-pulse'],
 };
 const secondaryMotions = {
   cairn: [['--glyph-cairn-middle-motion', 'glyph-cairn-middle-stack'], ['--glyph-cairn-upper-motion', 'glyph-cairn-upper-stack']],
@@ -74,6 +84,9 @@ const secondaryMotions = {
   command: [['--glyph-command-cursor-motion', 'glyph-command-cursor-blink']],
   keyboard: [['--glyph-keyboard-key-b-motion', 'glyph-keyboard-key-b-tap'], ['--glyph-keyboard-space-motion', 'glyph-keyboard-space-tap']],
   palette: [['--glyph-palette-dot-b-motion', 'glyph-palette-dot-b-mix'], ['--glyph-palette-dot-c-motion', 'glyph-palette-dot-c-mix'], ['--glyph-palette-dot-d-motion', 'glyph-palette-dot-d-mix']],
+  beacon: [['--glyph-beacon-ring-b-motion', 'glyph-beacon-ring-b-pulse']],
+  cabin: [['--glyph-cabin-smoke-b-motion', 'glyph-cabin-smoke-b-rise']],
+  radio: [['--glyph-radio-signal-b-motion', 'glyph-radio-signal-b-pulse']],
 };
 const allInternalMotions = Object.values(internalMotions).map(([property, name, duration = 680]) => [property, name, duration])
   .concat(Object.values(secondaryMotions).flat().map(([property, name]) => [property, name, 680]));
@@ -114,6 +127,14 @@ if (!/glyph-mug-body[\s\S]*glyph-mug-steam/.test(sprite)) throw new Error('mug s
 if (!/glyph-river-banks[\s\S]*glyph-river-current" pathLength="1"/.test(sprite)) throw new Error('river current must flow between fixed banks');
 if (!/glyph-flag-pole[\s\S]*glyph-flag-cloth/.test(sprite)) throw new Error('flag cloth must wave independently from its pole');
 if (!/glyph-first-aid-kit[\s\S]*glyph-first-aid-cross/.test(sprite)) throw new Error('first-aid cross must pulse independently from its kit');
+if (!/glyph-journal-cover[\s\S]*glyph-journal-check" pathLength="1"/.test(sprite)) throw new Error('journal check must draw independently on its fixed cover');
+if (!/glyph-beacon-base[\s\S]*glyph-beacon-ring-a[\s\S]*glyph-beacon-ring-b/.test(sprite)) throw new Error('beacon signal rings must pulse independently from its base');
+if (!/glyph-trail-camera-body[\s\S]*glyph-trail-camera-shutter/.test(sprite)) throw new Error('trail camera shutter must animate independently from its housing');
+if (!/glyph-carabiner-body[\s\S]*glyph-carabiner-gate/.test(sprite)) throw new Error('carabiner gate must open independently from its body');
+if (!/glyph-headlamp-housing[\s\S]*glyph-headlamp-beam/.test(sprite)) throw new Error('headlamp beam must animate independently from its housing');
+if (!/glyph-cabin-body[\s\S]*glyph-cabin-smoke-a[\s\S]*glyph-cabin-smoke-b/.test(sprite)) throw new Error('cabin smoke curls must rise independently from the cabin');
+if (!/glyph-trail-blaze-tree[\s\S]*glyph-trail-blaze-paint" pathLength="1"/.test(sprite)) throw new Error('trail blaze paint must draw onto a fixed tree');
+if (!/glyph-radio-body[\s\S]*glyph-radio-signal-a[\s\S]*glyph-radio-signal-b/.test(sprite)) throw new Error('radio signal marks must pulse independently from its body');
 for (const glyph of ['shield', 'terminal', 'network', 'wrench']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const glyph of ['cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const [, motion] of allInternalMotions) if (!sprite.includes(`@keyframes ${motion}`)) throw new Error(`${motion} must be defined inside the external sprite`);
@@ -273,7 +294,7 @@ try {
 
     for (const [width, height, viewport] of [[1440, 1000, 'desktop'], [390, 844, 'mobile']]) {
       await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
-      await send('Runtime.evaluate', { expression: `document.querySelector('#glyph-phase-gallery').style.gridTemplateColumns='repeat(${width < 600 ? 3 : 7},1fr)';document.querySelector('#glyph-phase-gallery').getAnimations({subtree:true}).forEach((animation)=>{animation.pause();animation.currentTime=220})` });
+      await send('Runtime.evaluate', { expression: `(()=>{const gallery=document.querySelector('#glyph-phase-gallery');gallery.style.gridTemplateColumns='repeat(${width < 600 ? 3 : 7},1fr)';gallery.scrollTop=${width < 600 ? 'gallery.scrollHeight' : '0'};gallery.getAnimations({subtree:true}).forEach((animation)=>{animation.pause();animation.currentTime=220})})()` });
       const capture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
       writeFileSync(`${evidenceDir}/${viewport}-phase-early.png`, Buffer.from(capture.data, 'base64'));
       await send('Runtime.evaluate', { expression: `document.querySelector('#glyph-phase-gallery').getAnimations({subtree:true}).forEach((animation)=>animation.currentTime=470)` });
