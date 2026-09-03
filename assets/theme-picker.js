@@ -110,6 +110,8 @@
       { label: 'Home', detail: 'Portfolio overview', group: 'Go to', href: '/', shortcut: 'Alt H', ariaShortcut: 'Alt+H' },
       { label: 'Selected work', detail: 'Featured projects', group: 'Go to', href: '/#selected-work' },
       { label: 'Toolbox', detail: 'Languages, systems, and interfaces', group: 'Go to', href: '/#toolbox' },
+      { label: 'Currently', detail: 'What Michael is working on now', group: 'Go to', href: '/#currently' },
+      { label: 'Contact', detail: 'Connect with Michael on GitHub', group: 'Go to', href: '/#contact' },
       { label: 'Off the clock', detail: 'Interests beyond the terminal', group: 'Go to', href: '/#off-the-clock' },
       { label: 'All work', detail: 'Project index', group: 'Go to', href: '/work/', shortcut: 'Alt W', ariaShortcut: 'Alt+W' },
       { label: 'About Michael', detail: 'Approach, principles, and interests', group: 'Go to', href: '/about/', shortcut: 'Alt A', ariaShortcut: 'Alt+A' },
@@ -117,6 +119,8 @@
       { label: 'uDDNS case study', detail: 'Dynamic DNS across multiple providers', group: 'Case study', href: '/case-studies/uddns/' },
       { label: 'AUR Response Toolkit', detail: 'Evidence-backed incident response', group: 'Case study', href: '/case-studies/aur-response-toolkit/' },
       { label: 'Privacy Devices', detail: 'Local-first privacy controls', group: 'Case study', href: '/case-studies/privacy-devices/' },
+      { label: 'Launch Layer', detail: 'Layered Steam launch orchestration', group: 'Case study', href: '/case-studies/launch-layer/' },
+      { label: 'Millennium Helpers', detail: 'Cross-platform Steam tooling', group: 'Case study', href: '/case-studies/millennium-helpers/' },
       { label: 'GitHub profile', detail: 'All repositories', group: 'Open', href: 'https://github.com/bolens' },
       { label: 'uDDNS project site', detail: 'Documentation and installation', group: 'Open', href: 'https://bolens.github.io/uddns/' },
       { label: 'uDDNS repository', detail: 'Source on GitHub', group: 'Open', href: 'https://github.com/bolens/uddns' },
@@ -124,6 +128,9 @@
       { label: 'AUR Response Toolkit repository', detail: 'Source on GitHub', group: 'Open', href: 'https://github.com/bolens/aur-response-toolkit' },
       { label: 'Privacy Devices project site', detail: 'Documentation and installation', group: 'Open', href: 'https://bolens.github.io/omarchy-privacy-devices/' },
       { label: 'Privacy Devices repository', detail: 'Source on GitHub', group: 'Open', href: 'https://github.com/bolens/omarchy-privacy-devices' },
+      { label: 'Launch Layer repository', detail: 'Source on GitHub', group: 'Open', href: 'https://github.com/bolens/launch-layer' },
+      { label: 'Millennium Helpers project site', detail: 'Documentation and installation', group: 'Open', href: 'https://bolens.github.io/millennium-helpers/' },
+      { label: 'Millennium Helpers repository', detail: 'Source on GitHub', group: 'Open', href: 'https://github.com/bolens/millennium-helpers' },
       { label: 'Back', detail: 'Return to the previous page', group: 'Browser', keywords: 'history previous', run: () => history.back() },
       { label: 'Forward', detail: 'Move to the next page in history', group: 'Browser', keywords: 'history next', run: () => history.forward() },
       { label: 'Reload page', detail: 'Refresh the current page', group: 'Browser', keywords: 'refresh', run: () => location.reload() },
@@ -151,6 +158,13 @@
     dialog.setAttribute('aria-label', 'Site search and commands');
     dialog.innerHTML = `<div class="command-search"><span aria-hidden="true">⌕</span><input type="search" role="combobox" autocomplete="off" spellcheck="false" aria-label="Search pages and commands" aria-autocomplete="list" aria-controls="command-results" aria-expanded="false" placeholder="Search pages and commands…"><kbd>Esc</kbd></div><div class="command-results" id="command-results" role="listbox" aria-label="Results"></div><p class="command-empty" role="status" hidden>No matching trail found.</p><footer><span><kbd>↑</kbd><kbd>↓</kbd> Move</span><span><kbd>↵</kbd> Open</span></footer>`;
     document.body.append(dialog);
+    const footer = document.querySelector('.site-footer');
+    if (footer && !footer.querySelector('.shortcut-hint')) {
+      const hint = document.createElement('span');
+      hint.className = 'shortcut-hint';
+      hint.innerHTML = 'Press <kbd>Alt</kbd> + <kbd>/</kbd> for shortcuts';
+      footer.children[0]?.after(hint);
+    }
     const input = dialog.querySelector('input');
     const results = dialog.querySelector('.command-results');
     const empty = dialog.querySelector('.command-empty');
