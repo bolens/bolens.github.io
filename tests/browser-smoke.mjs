@@ -191,6 +191,11 @@ try {
     const [day,night] = matrixValue.states.filter((state) => state.palette === palette);
     if (!day || !night || day.paper === night.paper || day.accent === night.accent || day.hot === night.hot || day.panel === night.panel || day.card === night.card || day.server === night.server || day.ufo === night.ufo || day.commandBackground === night.commandBackground || day.commandColor === night.commandColor || day.commandScheme !== 'light' || night.commandScheme !== 'dark') throw new Error(`theme SVG matrix failed for ${palette}: ${JSON.stringify({ day,night })}`);
   }
+  const swatchPreviews = await send('Runtime.evaluate', { expression: `(()=>{const read=()=>[...document.querySelectorAll('[data-palette-option]')].map((option)=>({name:option.dataset.paletteOption,colors:[...option.querySelectorAll('.palette-swatches i')].map((swatch)=>getComputedStyle(swatch).backgroundColor)}));document.querySelector('.theme-options input[value="day"]').click();const day=read();document.querySelector('.theme-options input[value="night"]').click();const night=read();return {day,night}})()`, returnByValue: true });
+  for (const day of swatchPreviews.result.value.day) {
+    const night = swatchPreviews.result.value.night.find((preview) => preview.name === day.name);
+    if (day.colors.length !== 5 || new Set(day.colors).size !== 5 || !night || new Set(night.colors).size !== 5 || day.colors.join() === night.colors.join()) throw new Error(`palette preview failed for ${day.name}: ${JSON.stringify({ day,night })}`);
+  }
   if (matrixValue.overlap !== 0 || matrixValue.panelRight > matrixValue.viewport) throw new Error(`palette layout failed: ${JSON.stringify(matrixValue)}`);
   if (captureEvidence) {
     for (const time of [1200,4320,7440,21600]) await capturePhase(1440, 'theme-night', '#off-the-clock', time);
