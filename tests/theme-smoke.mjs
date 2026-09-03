@@ -8,6 +8,14 @@ const { origin } = server;
 let browser;
 
 const pause = (duration = 100) => new Promise((done) => setTimeout(done, duration));
+const waitFor = async (send, expression) => {
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const ready = await send('Runtime.evaluate', { expression, returnByValue: true });
+    if (ready.result.value) return;
+    await pause(50);
+  }
+  throw new Error(`page did not become ready: ${expression}`);
+};
 
 try {
   browser = await startBrowser(() => {});
@@ -19,12 +27,12 @@ try {
   await pause();
   await send('Runtime.evaluate', { expression: `localStorage.setItem('portfolio-palette','glacier')` });
   await send('Page.navigate', { url: `${origin}/?palette=alpine` });
-  await pause();
+  await waitFor(send, `!!window.portfolioAppearancePicker`);
 
   const preview = await send('Runtime.evaluate', {
     expression: `(()=>{
       let changes=0;
-      addEventListener('portfolio-appearance-change',()=>changes++);
+      portfolioAppearance.subscribe(()=>changes++);
       dispatchEvent(new StorageEvent('storage',{key:'portfolio-palette',newValue:'coast'}));
       dispatchEvent(new StorageEvent('storage',{key:'portfolio-theme',newValue:'night'}));
       return {
@@ -45,25 +53,25 @@ try {
 
   await send('Runtime.evaluate', { expression: `localStorage.removeItem('portfolio-theme')` });
   await send('Page.navigate', { url: `${origin}/missing-theme-check` });
-  await pause();
+  await waitFor(send, `!!window.portfolioAppearancePicker`);
   const autoLight = await send('Runtime.evaluate', {
-    expression: `({theme:portfolioAppearance.theme,resolved:portfolioAppearance.resolvedTheme,color:document.querySelector('meta[name="theme-color"]:not([media])')?.content})`,
+    expression: `({theme:portfolioAppearance.theme,resolved:portfolioAppearance.resolvedTheme,colors:[...document.querySelectorAll('meta[name="theme-color"]')].map((meta)=>meta.content)})`,
     returnByValue: true,
   });
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'dark' }] });
   await pause(50);
   const autoDark = await send('Runtime.evaluate', {
-    expression: `({theme:portfolioAppearance.theme,resolved:portfolioAppearance.resolvedTheme,color:document.querySelector('meta[name="theme-color"]:not([media])')?.content})`,
+    expression: `({theme:portfolioAppearance.theme,resolved:portfolioAppearance.resolvedTheme,colors:[...document.querySelectorAll('meta[name="theme-color"]')].map((meta)=>meta.content)})`,
     returnByValue: true,
   });
   const light = autoLight.result.value;
   const dark = autoDark.result.value;
-  if (light.theme !== 'auto' || light.resolved !== 'day' || light.color !== '#eaf1f4' || dark.resolved !== 'night' || dark.color !== '#10232f') {
+  if (light.theme !== 'auto' || light.resolved !== 'day' || light.colors.join('|') !== '#eaf1f4|#10232f' || dark.resolved !== 'night' || dark.colors.join('|') !== '#eaf1f4|#10232f') {
     throw new Error(`automatic theme resolution failed: ${JSON.stringify({ light, dark })}`);
   }
 
   await send('Page.navigate', { url: `${origin}/` });
-  await pause();
+  await waitFor(send, `!!window.portfolioAppearancePicker`);
   const cleared = await send('Runtime.evaluate', {
     expression: `(()=>{dispatchEvent(new StorageEvent('storage',{key:'portfolio-palette',newValue:null}));dispatchEvent(new StorageEvent('storage',{key:'portfolio-theme',newValue:null}));return {palette:portfolioAppearance.palette,theme:portfolioAppearance.theme,checked:document.querySelector('input[name="portfolio-palette"]:checked')?.value}})()`,
     returnByValue: true,
@@ -72,7 +80,93 @@ try {
     throw new Error(`cleared preference synchronization failed: ${JSON.stringify(cleared.result.value)}`);
   }
 
-  console.log('Theme smoke passed URL previews, cross-tab synchronization, cleared preferences, and automatic system color changes.');
+  await send('Emulation.setEmulatedMedia', { features: [
+    { name: 'prefers-color-scheme', value: 'light' },
+    { name: 'prefers-contrast', value: 'more' },
+  ] });
+  await send('Runtime.evaluate', { expression: `portfolioAppearance.setPalette('desert');portfolioAppearance.setTheme('day')` });
+  const contrastLight = await send('Runtime.evaluate', {
+    expression: `(()=>{const style=getComputedStyle(document.documentElement);return {muted:style.getPropertyValue('--muted').trim(),line:style.getPropertyValue('--line').trim()}})()`,
+    returnByValue: true,
+  });
+  await send('Emulation.setEmulatedMedia', { features: [
+    { name: 'prefers-color-scheme', value: 'dark' },
+    { name: 'prefers-contrast', value: 'more' },
+  ] });
+  await send('Runtime.evaluate', { expression: `portfolioAppearance.setTheme('night')` });
+  const contrastDark = await send('Runtime.evaluate', {
+    expression: `(()=>{const style=getComputedStyle(document.documentElement);return {muted:style.getPropertyValue('--muted').trim(),line:style.getPropertyValue('--line').trim()}})()`,
+    returnByValue: true,
+  });
+  if (contrastLight.result.value.muted !== '#2e4442' || contrastLight.result.value.line !== '#718784' || contrastDark.result.value.muted !== '#d4dedb' || contrastDark.result.value.line !== '#78908c') {
+    throw new Error(`increased contrast tokens failed: ${JSON.stringify({ light: contrastLight.result.value, dark: contrastDark.result.value })}`);
+  }
+
+  await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'light' }] });
+  await send('Runtime.evaluate', { expression: `localStorage.setItem('portfolio-palette','toString');localStorage.setItem('portfolio-theme','sepia')` });
+  await send('Page.navigate', { url: `${origin}/?palette=__proto__` });
+  await waitFor(send, `!!window.portfolioAppearancePicker`);
+  const invalid = await send('Runtime.evaluate', {
+    expression: `({palette:portfolioAppearance.palette,theme:portfolioAppearance.theme,rootPalette:document.documentElement.dataset.palette,rootTheme:document.documentElement.dataset.theme||'auto'})`,
+    returnByValue: true,
+  });
+  if (invalid.result.value.palette !== 'glacier' || invalid.result.value.theme !== 'auto' || invalid.result.value.rootPalette !== 'glacier' || invalid.result.value.rootTheme !== 'auto') {
+    throw new Error(`invalid preference fallback failed: ${JSON.stringify(invalid.result.value)}`);
+  }
+
+  const explicitColors = await send('Runtime.evaluate', {
+    expression: `(()=>{const read=()=>[...document.querySelectorAll('meta[name="theme-color"]')].map((meta)=>meta.content);portfolioAppearance.setPalette('coast');portfolioAppearance.setTheme('day');const day=read();portfolioAppearance.setTheme('night');return {day,night:read()}})()`,
+    returnByValue: true,
+  });
+  if (explicitColors.result.value.day.some((color) => color !== '#e8f0ef') || explicitColors.result.value.night.some((color) => color !== '#102326')) {
+    throw new Error(`explicit theme-color synchronization failed: ${JSON.stringify(explicitColors.result.value)}`);
+  }
+
+  const automaticPalettes = [];
+  for (const palette of ['alpine', 'desert', 'glacier', 'signal', 'forest', 'coast', 'meadow', 'volcanic']) {
+    await send('Runtime.evaluate', { expression: `portfolioAppearance.setPalette('${palette}');portfolioAppearance.setTheme('auto')` });
+    await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'light' }] });
+    const day = await send('Runtime.evaluate', { expression: `getComputedStyle(document.documentElement).getPropertyValue('--paper').trim()`, returnByValue: true });
+    await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'dark' }] });
+    const night = await send('Runtime.evaluate', { expression: `getComputedStyle(document.documentElement).getPropertyValue('--paper').trim()`, returnByValue: true });
+    automaticPalettes.push({ palette, day: day.result.value, night: night.result.value });
+  }
+  if (automaticPalettes.some(({ day, night }) => !day || !night || day === night)) {
+    throw new Error(`automatic palette matrix failed: ${JSON.stringify(automaticPalettes)}`);
+  }
+
+  const overlayComposition = await send('Runtime.evaluate', {
+    expression: `(()=>{const changes=[];const record=(event)=>changes.push(event.detail.active);addEventListener('ui-overlay-change',record);portfolioOverlay.set('commands',true);portfolioOverlay.set('appearance',true);portfolioOverlay.set('commands',false);const shared=document.documentElement.classList.contains('ui-overlay-open');portfolioOverlay.set('appearance',false);removeEventListener('ui-overlay-change',record);return {shared,closed:!document.documentElement.classList.contains('ui-overlay-open'),changes}})()`,
+    returnByValue: true,
+  });
+  const overlayValue = overlayComposition.result.value;
+  if (!overlayValue.shared || !overlayValue.closed || overlayValue.changes.join('|') !== 'true|false') {
+    throw new Error(`overlay composition failed: ${JSON.stringify(overlayValue)}`);
+  }
+
+  const atomicReset = await send('Runtime.evaluate', {
+    expression: `(()=>{portfolioAppearance.setPalette('desert');portfolioAppearance.setTheme('night');const states=[];const unsubscribe=portfolioAppearance.subscribe((state)=>states.push(state));portfolioAppearance.reset();unsubscribe();portfolioAppearance.setTheme('day');return {states,savedPalette:localStorage.getItem('portfolio-palette'),savedTheme:localStorage.getItem('portfolio-theme')}})()`,
+    returnByValue: true,
+  });
+  const resetValue = atomicReset.result.value;
+  if (resetValue.states.length !== 1 || resetValue.states[0].palette !== 'glacier' || resetValue.states[0].theme !== 'auto' || resetValue.savedPalette !== 'glacier' || resetValue.savedTheme !== 'day') {
+    throw new Error(`atomic appearance reset failed: ${JSON.stringify(resetValue)}`);
+  }
+
+  await send('Emulation.setScriptExecutionDisabled', { value: true });
+  await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'dark' }] });
+  await send('Page.navigate', { url: `${origin}/?palette=alpine` });
+  await pause();
+  const noScript = await send('Runtime.evaluate', {
+    expression: `(()=>{const style=getComputedStyle(document.documentElement);return {palette:document.documentElement.dataset.palette||'',theme:document.documentElement.dataset.theme||'',paper:style.getPropertyValue('--paper').trim(),accent:style.getPropertyValue('--copper').trim(),picker:!!document.querySelector('.palette-picker')}})()`,
+    returnByValue: true,
+  });
+  await send('Emulation.setScriptExecutionDisabled', { value: false });
+  if (noScript.result.value.palette || noScript.result.value.theme || noScript.result.value.paper !== '#10232f' || noScript.result.value.accent !== '#70bce2' || noScript.result.value.picker) {
+    throw new Error(`no-JavaScript fallback failed: ${JSON.stringify(noScript.result.value)}`);
+  }
+
+  console.log('Theme smoke passed preference fallbacks, metadata, atomic state transitions, synchronization, automatic palettes, overlay composition, increased contrast, and no-JavaScript defaults.');
 } finally {
   browser?.close();
   server.close();

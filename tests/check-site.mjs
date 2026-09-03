@@ -31,6 +31,16 @@ for (const file of htmlFiles) {
   if (count(/<h1\b/g) !== 1) fail(file, 'must contain exactly one h1');
   if (!/<title>[^<]+<\/title>/.test(html)) fail(file, 'missing non-empty title');
   if (!/<meta name="viewport"/.test(html)) fail(file, 'missing viewport metadata');
+  if (count(/<meta name="theme-color"/g) !== 2) fail(file, 'must contain light and dark theme-color metadata');
+  if (count(/assets\/theme-tokens\.css/g) !== 1) fail(file, 'must load generated theme tokens exactly once');
+  const themeDataIndex = html.indexOf('/assets/theme-data.js');
+  const appearanceControllerIndex = html.indexOf('/assets/appearance-controller.js');
+  const overlayIndex = html.indexOf('/assets/ui-overlay.js');
+  const appearancePickerIndex = html.indexOf('/assets/appearance-picker.js');
+  const commandPaletteIndex = html.indexOf('/assets/command-palette.js');
+  if (!(themeDataIndex >= 0 && themeDataIndex < appearanceControllerIndex && appearanceControllerIndex < overlayIndex && overlayIndex < appearancePickerIndex && appearancePickerIndex < commandPaletteIndex)) {
+    fail(file, 'appearance scripts must load in data, controller, overlay, picker, command order');
+  }
 
   const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
   for (const match of html.matchAll(/\bhref="#([^"]+)"/g)) {
