@@ -30,6 +30,14 @@ try {
     const unstable = Object.entries(result.result.value.dimensions).filter(([, delta]) => delta.widthDelta > .5 || delta.heightDelta > .5);
     if (unstable.length) throw new Error(`${route} glyph initialization shifted layout: ${JSON.stringify(Object.fromEntries(unstable))}`);
 
+    const alignment = await send('Runtime.evaluate', { expression: `(()=>{
+      const selectors=['.hero-actions .button .trail-arrow','.text-link .trail-arrow','.project-link h3 .trail-arrow','.eyebrow .trail-glyph','.principles li .principle-glyph','.case-facts a .trail-arrow','.case-next a .trail-arrow','.site-footer a .trail-arrow'];
+      const textRect=(container,glyph)=>{const walker=document.createTreeWalker(container,NodeFilter.SHOW_TEXT);let node;let candidate=null;while(node=walker.nextNode()){if(glyph.contains(node)||!node.textContent.trim())continue;candidate=node}if(!candidate)return null;const end=candidate.textContent.trimEnd().length;const range=document.createRange();range.setStart(candidate,Math.max(0,end-1));range.setEnd(candidate,end);return range.getBoundingClientRect()};
+      return Object.fromEntries(selectors.flatMap((selector)=>{const glyph=document.querySelector(selector);if(!glyph)return [];const container=glyph.parentElement;const text=textRect(container,glyph);if(!text)return [];const box=glyph.getBoundingClientRect();const reference=container.closest('.case-next')?container.getBoundingClientRect():text;return [[selector,Math.abs((box.top+box.height/2)-(reference.top+reference.height/2))]]}));
+    })()`, returnByValue: true });
+    const misaligned = Object.entries(alignment.result.value).filter(([, centerDelta]) => centerDelta > 2.5);
+    if (misaligned.length) throw new Error(`${route} glyph centers missed adjacent text: ${JSON.stringify(Object.fromEntries(misaligned))}`);
+
     if (route === '/') {
       const skeleton = await send('Runtime.evaluate', { expression: `(()=>{const root=document.documentElement;const target=document.querySelector('.signal-map');const read=()=>{const style=getComputedStyle(target,'::after');return {content:style.content,animation:style.animationName,pointerEvents:style.pointerEvents}};const settled=read();root.classList.add('is-loading');const loading=read();root.dataset.motion='reduced';const reduced=read();root.classList.remove('is-loading');root.removeAttribute('data-motion');return {settled,loading,reduced}})()`, returnByValue: true });
       const { settled, loading, reduced } = skeleton.result.value;
@@ -42,7 +50,7 @@ try {
       if (pending.width === 'auto' || pending.color !== 'rgba(0, 0, 0, 0)' || pending.background === 'none' || pending.animation !== 'skeleton-text' || resolved.background !== 'none' || resolved.animation !== 'none' || resolved.color === 'rgba(0, 0, 0, 0)' || unavailable.visibility !== 'hidden') throw new Error(`text skeleton states failed: ${JSON.stringify(textSkeleton.result.value)}`);
     }
   }
-  console.log('Layout stability passed glyph geometry plus visual and text skeleton state transitions.');
+  console.log('Layout stability passed reserved sizing, optical glyph centering, and skeleton state transitions.');
 } finally {
   await browser.close();
   await server.close();
