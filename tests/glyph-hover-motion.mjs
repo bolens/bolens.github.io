@@ -25,6 +25,8 @@ const glyphs = {
   headlamp: null, cabin: null, 'trail-blaze': null, radio: null,
   filter: null, sort: null, clock: null, globe: null,
   microphone: null, key: null, bell: null, 'hard-drive': null,
+  owl: null, trout: null, canoe: null, mushroom: null,
+  marshmallow: null, 'paw-print': null, pinecone: null, snowshoe: null,
 };
 const internalMotions = {
   trailhead: ['--glyph-trailhead-motion', 'glyph-trailhead-sign-flip'],
@@ -81,6 +83,14 @@ const internalMotions = {
   key: ['--glyph-key-motion', 'glyph-key-pin-set'],
   bell: ['--glyph-bell-motion', 'glyph-bell-clapper-swing'],
   'hard-drive': ['--glyph-hard-drive-motion', 'glyph-hard-drive-arm-seek'],
+  owl: ['--glyph-owl-motion', 'glyph-owl-eye-a-blink'],
+  trout: ['--glyph-trout-motion', 'glyph-trout-tail-flick'],
+  canoe: ['--glyph-canoe-motion', 'glyph-canoe-paddle-dip'],
+  mushroom: ['--glyph-mushroom-motion', 'glyph-mushroom-spore-a-float'],
+  marshmallow: ['--glyph-marshmallow-motion', 'glyph-marshmallow-toast-draw'],
+  'paw-print': ['--glyph-paw-print-motion', 'glyph-paw-pad-land'],
+  pinecone: ['--glyph-pinecone-motion', 'glyph-pinecone-scale-a-open'],
+  snowshoe: ['--glyph-snowshoe-motion', 'glyph-snowshoe-binding-tighten'],
 };
 const secondaryMotions = {
   cairn: [['--glyph-cairn-middle-motion', 'glyph-cairn-middle-stack'], ['--glyph-cairn-upper-motion', 'glyph-cairn-upper-stack']],
@@ -104,6 +114,15 @@ const secondaryMotions = {
   clock: [['--glyph-clock-hour-motion', 'glyph-clock-hour-nudge']],
   microphone: [['--glyph-microphone-level-b-motion', 'glyph-microphone-level-b-rise'], ['--glyph-microphone-level-c-motion', 'glyph-microphone-level-c-rise']],
   'hard-drive': [['--glyph-hard-drive-light-motion', 'glyph-hard-drive-light-blink']],
+  key: [['--glyph-key-spark-motion', 'glyph-key-spark-pop']],
+  bell: [['--glyph-bell-sound-a-motion', 'glyph-bell-sound-a-ring'], ['--glyph-bell-sound-b-motion', 'glyph-bell-sound-b-ring']],
+  owl: [['--glyph-owl-eye-b-motion', 'glyph-owl-eye-b-blink']],
+  trout: [['--glyph-trout-bubble-motion', 'glyph-trout-bubble-rise']],
+  canoe: [['--glyph-canoe-ripple-motion', 'glyph-canoe-ripple-spread']],
+  mushroom: [['--glyph-mushroom-spore-b-motion', 'glyph-mushroom-spore-b-float']],
+  marshmallow: [['--glyph-marshmallow-spark-motion', 'glyph-marshmallow-spark-pop']],
+  'paw-print': [['--glyph-paw-toe-a-motion', 'glyph-paw-toe-a-land'], ['--glyph-paw-toe-b-motion', 'glyph-paw-toe-b-land'], ['--glyph-paw-toe-c-motion', 'glyph-paw-toe-c-land'], ['--glyph-paw-toe-d-motion', 'glyph-paw-toe-d-land']],
+  pinecone: [['--glyph-pinecone-scale-b-motion', 'glyph-pinecone-scale-b-open'], ['--glyph-pinecone-scale-c-motion', 'glyph-pinecone-scale-c-open']],
 };
 const allInternalMotions = Object.values(internalMotions).map(([property, name, duration = 680]) => [property, name, duration])
   .concat(Object.values(secondaryMotions).flat().map(([property, name]) => [property, name, 680]));
@@ -160,6 +179,19 @@ if (!/glyph-microphone-body[\s\S]*glyph-microphone-level-a[\s\S]*glyph-microphon
 if (!/glyph-key-body[\s\S]*glyph-key-pin/.test(sprite)) throw new Error('key pin must set independently from its body');
 if (!/glyph-bell-body[\s\S]*glyph-bell-clapper/.test(sprite)) throw new Error('bell clapper must swing independently inside its body');
 if (!/glyph-hard-drive-body[\s\S]*glyph-hard-drive-arm[\s\S]*glyph-hard-drive-light/.test(sprite)) throw new Error('hard-drive arm and light must animate independently from its housing');
+if (!/glyph-river-banks" d="M10 3[^"]*M14 3[^"]*8 18"/.test(sprite)) throw new Error('river banks must form a winding channel that widens toward the foreground');
+if (!/glyph-carabiner-body" d="M16 4C10 1 5 5 5 11v3[^"]*"[\s\S]*glyph-carabiner-spine[\s\S]*glyph-carabiner-gate[\s\S]*glyph-carabiner-hinge/.test(sprite)) throw new Error('carabiner must use an asymmetric D-profile, fixed load-bearing spine, hinged gate, and exact closure');
+if (!/glyph-trail-camera-flash" d="M19 1v4m-2-2h4m-3\.5-1\.5 3 3m0-3-3 3"/.test(sprite)) throw new Error('trail-camera flash must use four radial rays');
+if (!/glyph-key-pin[\s\S]*glyph-key-spark/.test(sprite)) throw new Error('key unlock glint must animate independently from its body');
+if (!/glyph-bell-clapper[\s\S]*glyph-bell-sound-a[\s\S]*glyph-bell-sound-b/.test(sprite)) throw new Error('bell sound ticks must follow its swinging clapper');
+if (!/glyph-owl-body[\s\S]*glyph-owl-eye-a[\s\S]*glyph-owl-eye-b/.test(sprite)) throw new Error('owl eyes must blink independently from its body');
+if (!/glyph-trout-body[\s\S]*glyph-trout-tail[\s\S]*glyph-trout-bubble/.test(sprite)) throw new Error('trout tail and bubble must animate independently from its body');
+if (!/glyph-canoe-hull[\s\S]*glyph-canoe-paddle[\s\S]*glyph-canoe-ripple/.test(sprite)) throw new Error('canoe paddle and ripple must animate independently from its hull');
+if (!/glyph-mushroom-body[\s\S]*glyph-mushroom-spore-a[\s\S]*glyph-mushroom-spore-b/.test(sprite)) throw new Error('mushroom spores must float independently from its body');
+if (!/glyph-marshmallow-stick[\s\S]*glyph-marshmallow-toast" pathLength="1"[\s\S]*glyph-marshmallow-spark/.test(sprite)) throw new Error('marshmallow toast and spark must animate independently from its stick');
+if (!/glyph-paw-pad[\s\S]*glyph-paw-toe-a[\s\S]*glyph-paw-toe-d/.test(sprite)) throw new Error('paw pad and toes must land independently');
+if (!/glyph-pinecone-body[\s\S]*glyph-pinecone-scale-a[\s\S]*glyph-pinecone-scale-c/.test(sprite)) throw new Error('pinecone scales must open independently from its body');
+if (!/glyph-snowshoe-frame[\s\S]*glyph-snowshoe-binding/.test(sprite)) throw new Error('snowshoe binding must tighten independently from its frame');
 for (const glyph of ['shield', 'terminal', 'network', 'wrench']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const glyph of ['cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const [, motion] of allInternalMotions) if (!sprite.includes(`@keyframes ${motion}`)) throw new Error(`${motion} must be defined inside the external sprite`);
