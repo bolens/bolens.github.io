@@ -128,6 +128,20 @@
             <g fill="var(--log-end,#70452d)" stroke="var(--log-outline,#281a16)" stroke-width="4"><ellipse cx="18" cy="22" rx="15" ry="18"/><ellipse cx="302" cy="22" rx="15" ry="18"/></g>
             <g fill="none" stroke="var(--log-ring,#a86940)" stroke-width="2.5"><ellipse cx="18" cy="22" rx="8" ry="11"/><ellipse cx="302" cy="22" rx="8" ry="11"/><path d="m13 16 11 13m-12 0 12-14m273 1 11 13m-12 0 12-14"/></g>
           </symbol>
+          <symbol id="camp-bench" viewBox="0 0 340 64" data-regions="ground-shadow,seat-log,support-legs">
+            <ellipse cx="170" cy="47" rx="168" ry="15" fill="var(--bench-shadow,#071716)" opacity="var(--bench-shadow-opacity,.6)"/>
+            <use href="#camp-log" x="5" width="330" height="46"/>
+            <path d="m59 42-15 18m249-16 16 17" fill="none" stroke="var(--bench-support,#3a241b)" stroke-width="13" stroke-linecap="round"/>
+          </symbol>
+          <symbol id="ground-shadow" viewBox="0 0 110 22" data-regions="shadow-core,shadow-feather">
+            <ellipse cx="55" cy="11" rx="53" ry="10" fill="var(--ground-shadow-fill,#071514)" opacity="var(--ground-shadow-opacity,.58)"/>
+            <ellipse cx="55" cy="11" rx="42" ry="6" fill="var(--ground-shadow-core,#020b0b)" opacity="var(--ground-shadow-core-opacity,.22)"/>
+          </symbol>
+          <symbol id="solar-ray-fan" viewBox="0 0 1200 760" data-regions="broad-ray,focused-ray,horizon-ray">
+            <path d="M962 116 690 530h165l135-403Z"/>
+            <path d="M1000 126 866 546h116l45-414Z" opacity=".68"/>
+            <path d="M936 103 540 454h143l281-333Z" opacity=".52"/>
+          </symbol>
           <symbol id="alpine-peak" viewBox="0 0 240 220" data-regions="mountain-face,mountain-shadow,snow-cap,ridge-lines,rock-glints">
             <path d="M0 220 120 10l120 210Z" fill="var(--peak-fill,url(#mountain-near))"/>
             <path d="m120 10 120 210-82-78-38 45-22-54-42 49Z" fill="var(--peak-shadow,#173744)" opacity="var(--peak-shadow-opacity,.82)"/>
@@ -444,7 +458,7 @@
           <use class="aurora-edge aurora-edge-two" href="#aurora-strand" x="-4" y="62" width="1208" height="180"/>
         </g>
         <rect width="1200" height="760" rx="8" fill="url(#sky-vignette)" pointer-events="none"/>
-        <g class="solar-ray-field" fill="url(#day-sunbeam)" aria-hidden="true" data-region="position-reactive-sunbeams"><path d="M962 116 690 530h165l135-403Z"/><path d="M1000 126 866 546h116l45-414Z" opacity=".68"/><path d="M936 103 540 454h143l281-333Z" opacity=".52"/></g>
+        <g class="solar-ray-field" fill="url(#day-sunbeam)" aria-hidden="true" data-region="position-reactive-sunbeams"><use href="#solar-ray-fan" width="1200" height="760"/></g>
         <use class="scene-orb sky-orb" href="#sky-orb" x="902" y="18" width="200" height="200"/>
         <g class="weather-clouds weather-clouds-back" aria-hidden="true">
           <use class="weather-cloud weather-cloud-left" href="#cloud-bank" x="54" y="122" width="190" height="62"/>
@@ -772,17 +786,14 @@
           <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fire-ring-stone" x="624" y="694" width="55" height="38" transform="rotate(5 652 713)" style="--ring-stone-fill:#3f4a47;--ring-stone-crack-opacity:.65"/>
           <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="665" y="680" width="53" height="36" transform="rotate(9 692 698)" style="--ring-stone-fill:#58605a"/>
         </g>
-        <g class="bench bench-left scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" stroke-linecap="round" stroke-linejoin="round">
-          <ellipse cx="387" cy="653" rx="170" ry="16" fill="#071716" opacity=".6"/>
-          <use href="#camp-log" x="216" y="606" width="330" height="46"/>
-          <path d="m270 648-15 17m249-14 16 17" stroke="#3a241b" stroke-width="13"/>
+        <use class="bench bench-left scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" href="#camp-bench" x="212" y="606" width="340" height="64"/>
+        <use class="bench bench-right scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" href="#camp-bench" x="692" y="610" width="260" height="49" style="--log-end:#684029;--log-ring:#a2643d"/>
+        <g class="seat-shadows" aria-hidden="true" data-region="camper-ground-shadows">
+          <use href="#ground-shadow" x="295" y="611" width="110" height="22"/>
+          <use href="#ground-shadow" x="456" y="612" width="86" height="20"/>
+          <use href="#ground-shadow" x="712" y="612" width="86" height="20"/>
+          <use href="#ground-shadow" x="819" y="611" width="102" height="22"/>
         </g>
-        <g class="bench bench-right scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" stroke-linecap="round" stroke-linejoin="round">
-          <ellipse cx="822" cy="653" rx="130" ry="16" fill="#071716" opacity=".6"/>
-          <use href="#camp-log" x="699" y="610" width="246" height="35" style="--log-end:#684029;--log-ring:#a2643d"/>
-          <path d="m743 648-15 17m187-15 15 17" stroke="#3a241b" stroke-width="13"/>
-        </g>
-        <g class="seat-shadows" fill="#071514" opacity=".58"><ellipse cx="350" cy="622" rx="55" ry="11"/><ellipse cx="499" cy="622" rx="43" ry="10"/><ellipse cx="755" cy="622" rx="43" ry="10"/><ellipse cx="870" cy="622" rx="51" ry="11"/></g>
 
         <g class="camper bigfoot scene-layer" data-scene-layer="campsite-subjects" data-scale-band="subject" stroke="#3d261c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
           <path d="M302 521q-7-62 47-66 57 3 48 67l-15 91h-68Z" fill="url(#bigfoot-fire)"/>
@@ -970,7 +981,7 @@
 
         <g class="day-scene">
           <rect class="daylight-wash" width="1200" height="760" fill="url(#day-sky)"/>
-          <g class="day-sunbeams" fill="url(#day-sunbeam)"><path d="M962 116 690 530h165l135-403Z"/><path d="M1000 126 866 546h116l45-414Z" opacity=".68"/><path d="M936 103 540 454h143l281-333Z" opacity=".52"/></g>
+          <g class="day-sunbeams" fill="url(#day-sunbeam)"><use href="#solar-ray-fan" width="1200" height="760"/></g>
           <use class="day-sun sky-orb" href="#sky-orb" x="882" y="12" width="200" height="200" style="--orb-fill:var(--lost-day-sun);--orb-glow:var(--lost-day-sun);--orb-glow-opacity:.13;--orb-rays-opacity:1;--orb-crater-opacity:0"/>
           <g class="day-clouds" opacity=".68"><use href="#cloud-bank" x="17" y="143" width="142" height="52" style="--cloud-edge:#d5e3e3"/><use href="#cloud-bank" x="1006" y="211" width="127" height="46" style="--cloud-edge:#d5e3e3"/></g>
           <g class="day-cloud-404" text-anchor="middle"><text x="730" y="145">404</text><path d="M616 158q113 18 228-2" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".22"/></g>

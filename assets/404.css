@@ -93,6 +93,13 @@
 :root[data-scene-cycle="dynamic"] .ufo-lights { filter:brightness(calc(.65 + var(--scene-ufo-glint-opacity))); }
 .solar-ray-field { display:none;translate:var(--scene-orb-x,0) var(--scene-orb-y,0);transform-box:view-box;transform-origin:var(--scene-orb-center-x,1002px) var(--scene-orb-center-y,118px);opacity:var(--scene-ray-opacity,.5);animation:day-ray-breathe 14s ease-in-out infinite alternate;transition:translate 1.2s ease; }
 :root:is([data-scene-time="morning"],[data-scene-time="day"],[data-scene-time="evening"]) .solar-ray-field { display:inline; }
+.bench,.seat-shadows { transition:filter .8s ease,opacity .8s ease; }
+.seat-shadows { opacity:var(--scene-ground-shadow-opacity,.58);filter:blur(var(--scene-ground-shadow-blur,0)); }
+:root[data-scene-time="morning"] .seat-shadows { --scene-ground-shadow-opacity:.38;--scene-ground-shadow-blur:1px; }
+:root[data-scene-time="day"] .seat-shadows { --scene-ground-shadow-opacity:.52; }
+:root[data-scene-time="evening"] .seat-shadows { --scene-ground-shadow-opacity:.4;--scene-ground-shadow-blur:.8px; }
+:root:is([data-scene-time="twilight"],[data-scene-time="night"]) .seat-shadows { --scene-ground-shadow-opacity:.27;--scene-ground-shadow-blur:1.4px; }
+:root:is([data-weather="cloudy"],[data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .seat-shadows { opacity:calc(var(--scene-ground-shadow-opacity,.58) * .58);filter:blur(1.6px); }
 .depth-back,.depth-far,.depth-mid,.depth-near { transform-box:view-box;transform-origin:center bottom;transition:translate .8s cubic-bezier(.2,.7,.2,1); }
 .depth-back { translate:var(--parallax-back-x,0) var(--parallax-back-y,0); }
 .depth-far { translate:var(--parallax-far-x,0) var(--parallax-far-y,0); }

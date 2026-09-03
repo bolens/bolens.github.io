@@ -8,8 +8,17 @@ const html = readFileSync(resolve(root, '404.html'), 'utf8');
 
 test('seating and firewood share one scalable detailed log', () => {
   assert.match(html, /<symbol id="camp-log" viewBox="0 0 320 44"[^>]*>/);
-  assert.equal([...html.matchAll(/href="#camp-log"/g)].length, 8);
+  assert.match(html, /<symbol id="camp-bench" viewBox="0 0 340 64"[^>]*data-regions="ground-shadow,seat-log,support-legs"/);
+  assert.equal([...html.matchAll(/href="#camp-log"/g)].length, 7);
+  assert.equal([...html.matchAll(/href="#camp-bench"/g)].length, 2);
+  assert.equal([...html.matchAll(/href="#ground-shadow"/g)].length, 4);
   assert.doesNotMatch(html, /charred-log-detail/);
+});
+
+test('solar rays share one position-reactive fan glyph', () => {
+  assert.match(html, /<symbol id="solar-ray-fan" viewBox="0 0 1200 760"[^>]*data-regions="broad-ray,focused-ray,horizon-ray"/);
+  assert.equal([...html.matchAll(/href="#solar-ray-fan"/g)].length, 2);
+  assert.doesNotMatch(html, /<g class="(?:solar-ray-field|day-sunbeams)"[^>]*>\s*<path/);
 });
 
 test('all mountain ranges reuse one scalable detailed peak', () => {
