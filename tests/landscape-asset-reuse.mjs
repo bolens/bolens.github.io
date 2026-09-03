@@ -15,8 +15,8 @@ test('seating and firewood share one scalable detailed log', () => {
 test('both mountain ranges reuse one scalable detailed peak', () => {
   assert.match(html, /<symbol id="alpine-peak" viewBox="0 0 240 220"[^>]*>/);
   assert.equal([...html.matchAll(/href="#alpine-peak"/g)].length, 13);
-  assert.match(html, /class="mountain-range mountain-range-far depth-far"/);
-  assert.match(html, /class="mountain-range mountain-range-near depth-far"/);
+  assert.match(html, /class="mountain-range mountain-range-far depth-far scene-layer"/);
+  assert.match(html, /class="mountain-range mountain-range-near depth-far scene-layer"/);
   assert.doesNotMatch(html, /class="mountain-faces/);
 });
 
@@ -35,8 +35,8 @@ test('landscape brush is layered from horizon to clearing edge', () => {
     assert.notEqual(position, -1, `${regions[index]} region is required`);
   });
   assert.deepEqual(positions, [...positions].sort((a, b) => a - b));
-  assert.equal([...html.matchAll(/class="midstory-brush depth-mid"/g)].length, 1);
-  assert.equal([...html.matchAll(/class="understory-shrubs depth-near"/g)].length, 1);
+  assert.equal([...html.matchAll(/class="midstory-brush depth-mid scene-layer"/g)].length, 1);
+  assert.equal([...html.matchAll(/class="understory-shrubs depth-near scene-layer"/g)].length, 1);
 });
 
 test('fire ring and forest floor use configurable asset families', () => {
@@ -44,12 +44,12 @@ test('fire ring and forest floor use configurable asset families', () => {
   assert.equal([...html.matchAll(/href="#fire-bed"/g)].length, 1);
   assert.equal([...html.matchAll(/href="#woodland-debris"/g)].length, 11);
   assert.equal([...html.matchAll(/href="#ground-sprig"/g)].length, 5);
-  assert.equal([...html.matchAll(/href="#moss-clump"/g)].length, 6);
+  assert.equal([...html.matchAll(/href="#moss-clump"/g)].length, 7);
   assert.equal([...html.matchAll(/href="#fungi-cluster"/g)].length, 4);
   assert.equal([...html.matchAll(/href="#shelf-fungi"/g)].length, 2);
   assert.equal([...html.matchAll(/href="#pinecone-sprig"/g)].length, 5);
   assert.equal([...html.matchAll(/href="#wildflower-clump"/g)].length, 3);
-  assert.equal([...html.matchAll(/href="#fallen-branch"/g)].length, 5);
+  assert.equal([...html.matchAll(/href="#fallen-branch"/g)].length, 6);
   assert.doesNotMatch(html, /class="forest-litter"|class="forest-duff"|class="forest-floor-texture"/);
   assert.doesNotMatch(html, /class="mushroom-detail"|class="shelf-fungi"/);
 });
