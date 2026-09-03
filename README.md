@@ -23,6 +23,7 @@ node tests/browser-isolation.mjs
 node tests/theme-smoke.mjs
 node tests/interaction-contract.mjs
 node tests/browser-smoke.mjs
+node tests/glyph-site-placement.mjs
 ```
 
 Enable the tracked pre-commit hook once per clone:

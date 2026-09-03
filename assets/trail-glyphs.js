@@ -20,15 +20,24 @@
     if (section === 'confirm' || text === 'confirm') return 'summit';
     if (text.includes('selected work') || text.includes('project index')) return 'trailhead';
     if (text.includes('working set') || text === 'approach') return 'compass';
-    if (text.includes('currently') || text.includes('field notes')) return 'map';
-    if (text.includes('get in touch') || text.includes('follow the work')) return 'lantern';
-    if (text.includes('off the clock')) return 'fire';
+    if (text.includes('currently')) return 'clock';
+    if (text.includes('field notes')) return 'journal';
+    if (text.includes('get in touch')) return 'radio';
+    if (text.includes('follow the work')) return 'repository';
+    if (text.includes('off the clock')) return 'owl';
     if (text === 'observe') return 'binoculars';
     if (text === 'restrain') return 'cairn';
     if (text === 'recover') return 'shelter';
     if (text.includes('about')) return 'backpack';
     if (text.includes('linux systems builder')) return 'pine';
-    if (eyebrow.closest('.case-intro')) return 'trailhead';
+    if (eyebrow.closest('.case-intro')) {
+      if (text.includes('infrastructure')) return 'globe';
+      if (text.includes('security')) return 'shield';
+      if (text.includes('desktop')) return 'microphone';
+      if (text.includes('gaming')) return 'command';
+      if (text.includes('steam')) return 'wrench';
+      return 'trailhead';
+    }
     if (eyebrow.closest('.lost-copy')) return 'stars';
     return null;
   };
@@ -40,9 +49,10 @@
     eyebrow.prepend(makeGlyph(name));
   });
 
-  document.querySelectorAll('.case-facts dt').forEach((term, index) => {
-    const name = index === 0 ? 'role' : index === 1 ? 'layers' : 'repository';
-    term.prepend(makeGlyph(name, 'fact-glyph'));
+  const factGlyphs = { role: 'role', interfaces: 'network', modes: 'sort', coverage: 'layers', pipeline: 'layers', project: 'repository' };
+  document.querySelectorAll('.case-facts dt').forEach((term) => {
+    const name = factGlyphs[term.textContent.trim().toLowerCase()];
+    if (name) term.prepend(makeGlyph(name, 'fact-glyph'));
   });
 
   const fieldGlyphs = ['pine', 'compass', 'fire'];
