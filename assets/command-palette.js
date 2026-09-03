@@ -87,11 +87,11 @@
       { label: 'Cycle color palette', detail: 'Move to the next color scheme', group: 'Palette', keywords: 'next theme colors', run: runAppearance(appearance.cyclePalette) },
       ...Object.entries(palettes).map(([name, palette]) => ({ label: `Use ${palette.label} palette`, detail: 'Change the site color scheme', group: 'Palette', keywords: `${name} theme colors`, run: choosePalette(name) })),
       { label: 'Toggle day or night', detail: 'Switch between light and dark scenes', group: 'Theme', keywords: 'appearance mode', run: runAppearance(appearance.toggleTheme) },
-      { label: 'Toggle reduced motion', detail: 'Switch between reduced and system motion', group: 'Accessibility', keywords: 'animation movement preference', run: runAppearance(() => appearance.toggleMotion?.()) },
+      { label: 'Toggle reduced motion', detail: 'Switch between reduced and system motion', group: 'Accessibility', keywords: 'animation movement preference', run: () => { const state = appearance.toggleMotion(); announce(state.motion === 'reduced' ? 'Reduced motion enabled.' : 'Using the system motion preference.'); } },
       { label: 'Use system appearance', detail: 'Follow the device setting', group: 'Theme', keywords: 'auto light dark', run: chooseTheme('auto') },
       { label: 'Use day appearance', detail: 'Switch to the light scene', group: 'Theme', keywords: 'light', run: chooseTheme('day') },
       { label: 'Use night appearance', detail: 'Switch to the dark scene', group: 'Theme', keywords: 'dark', run: chooseTheme('night') },
-      { label: 'Reset all site preferences', detail: `Restore ${palettes[appearance.defaultPalette].label}, system appearance, and system motion`, group: 'Theme', keywords: 'default clear settings preferences', run: runAppearance(appearance.reset) },
+      { label: 'Reset all site preferences', detail: `Restore ${palettes[appearance.defaultPalette].label}, system appearance, and system motion`, group: 'Theme', keywords: 'default clear settings preferences', run: () => { appearance.reset(); recentLabels = []; try { localStorage.removeItem('portfolio-recent-commands'); } catch {} pickerUi.announce(); } },
     ];
     for (const command of commands) {
       command.searchText = `${command.label} ${command.detail} ${command.group} ${command.keywords ?? ''} ${command.shortcut ? `keyboard shortcut hotkey ${command.shortcut}` : ''}`.toLowerCase();
@@ -127,6 +127,16 @@
     let active = 0;
     let commandReturnFocus = null;
     let shortcutReturnFocus = null;
+    let recentLabels = [];
+    try {
+      const saved = JSON.parse(localStorage.getItem('portfolio-recent-commands') ?? '[]');
+      if (Array.isArray(saved)) recentLabels = saved.filter((label) => typeof label === 'string').slice(0, 5);
+    } catch {}
+    const canRestoreFocus = (element) => element instanceof HTMLElement && element !== document.body && element !== document.documentElement && element.isConnected;
+    const recordRecent = (command) => {
+      recentLabels = [command.label, ...recentLabels.filter((label) => label !== command.label)].slice(0, 5);
+      try { localStorage.setItem('portfolio-recent-commands', JSON.stringify(recentLabels)); } catch {}
+    };
 
     const escapeHtml = (value) => value.replace(/[&<>"']/g, (character) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
     const fuzzyPositions = (text, query) => {
@@ -169,11 +179,16 @@
         if (scope === 'projects' && !projectGroups.has(command.group) && !/project|repository/i.test(command.label)) return false;
         return Number.isFinite(matchScore(command, terms));
       }).sort((left, right) => terms.length ? matchScore(left, terms) - matchScore(right, terms) : (left.priority ?? 0) - (right.priority ?? 0));
+      if (!terms.length && scope === 'all' && recentLabels.length) {
+        const recent = recentLabels.map((label) => visible.find((command) => command.label === label)).filter((command) => command && (command.priority ?? 0) >= 0);
+        visible = [...visible.filter((command) => (command.priority ?? 0) < 0), ...recent.map((command) => ({ ...command, renderGroup: 'Recent' })), ...visible.filter((command) => (command.priority ?? 0) >= 0 && !recent.includes(command))];
+      }
       active = Math.min(active, Math.max(visible.length - 1, 0));
       let group = '';
       results.innerHTML = visible.map((command, index) => {
-        const heading = command.group === group ? '' : `<p class="command-group" role="presentation">${escapeHtml(command.group)}</p>`;
-        group = command.group;
+        const displayGroup = command.renderGroup ?? command.group;
+        const heading = displayGroup === group ? '' : `<p class="command-group" role="presentation">${escapeHtml(displayGroup)}</p>`;
+        group = displayGroup;
         const external = /^https?:/.test(command.href ?? '');
         return `${heading}<button type="button" id="command-option-${index}" role="option" aria-selected="${index === active}"${command.ariaShortcut ? ` aria-keyshortcuts="${command.ariaShortcut}"` : ''} data-command-index="${index}"><span><b>${highlight(command.label, query)}</b><small>${escapeHtml(command.detail)}${external ? ' <span aria-hidden="true">↗</span><span class="visually-hidden"> (opens an external site)</span>' : ''}</small></span><span class="command-meta"><i>${escapeHtml(command.group)}</i>${command.shortcut ? `<kbd>${escapeHtml(command.shortcut)}</kbd>` : ''}</span></button>`;
       }).join('');
@@ -184,12 +199,14 @@
     };
     const runCommand = (command) => {
       if (!command) return;
+      recordRecent(command);
       if (dialog.contains(document.activeElement)) document.activeElement.blur();
       dialog.close();
       if (command.run) command.run();
       else location.href = command.href;
     };
     function openCommands(query = '') {
+      const scrollPosition = scrollY;
       pickerUi.close();
       if (shortcutDialog.open) shortcutDialog.close();
       if (!dialog.open) commandReturnFocus = document.activeElement;
@@ -199,13 +216,17 @@
       dialog.showModal();
       overlay.set('commands', true);
       input.setAttribute('aria-expanded', 'true');
-      input.focus();
+      input.focus({ preventScroll: true });
+      scrollTo({ top: scrollPosition });
     }
     function openShortcuts(returnTarget = document.activeElement) {
+      const scrollPosition = scrollY;
       pickerUi.close();
       if (dialog.open) dialog.close();
       shortcutReturnFocus = returnTarget;
       if (!shortcutDialog.open) shortcutDialog.showModal();
+      shortcutDialog.querySelector('button').focus({ preventScroll: true });
+      scrollTo({ top: scrollPosition });
       overlay.set('shortcuts', true);
     }
     dialog.addEventListener('close', () => {
@@ -214,14 +235,14 @@
         if (dialog.contains(document.activeElement)) document.activeElement.blur();
       }
       overlay.set('commands', dialog.open);
-      if (!dialog.open && commandReturnFocus instanceof HTMLElement && !shortcutDialog.open) commandReturnFocus.focus();
+      if (!dialog.open && canRestoreFocus(commandReturnFocus) && !shortcutDialog.open) commandReturnFocus.focus();
       if (!dialog.open && !shortcutDialog.open) commandReturnFocus = null;
     });
     shortcutDialog.querySelector('button').addEventListener('click', () => shortcutDialog.close());
     shortcutDialog.addEventListener('click', (event) => { if (event.target === shortcutDialog) shortcutDialog.close(); });
     shortcutDialog.addEventListener('close', () => {
       overlay.set('shortcuts', false);
-      if (shortcutReturnFocus instanceof HTMLElement) shortcutReturnFocus.focus();
+      if (canRestoreFocus(shortcutReturnFocus)) shortcutReturnFocus.focus();
       shortcutReturnFocus = null;
     });
     input.addEventListener('input', () => { active = 0; renderCommands(); });
