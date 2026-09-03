@@ -54,6 +54,12 @@ try {
     if (html.split(bootstrap).length !== 2 || html.split('/assets/loading-state.js').length !== 2) throw new Error(`${relativePath} must contain one loading bootstrap and one loading controller`);
     if (!(html.indexOf(bootstrap) < html.indexOf('/assets/theme-data.js') && html.indexOf('/assets/command-palette.js') < html.indexOf('/assets/loading-state.js'))) throw new Error(`${relativePath} has an unsafe loading-script order`);
   }
+  const generated404 = readFileSync(join(fixture, '404.html'), 'utf8');
+  if (!(generated404.indexOf('/assets/appearance-controller.js') < generated404.indexOf('/assets/404-weather.js')
+    && generated404.indexOf('/assets/404-weather.js') < generated404.indexOf('/assets/404-time.js')
+    && generated404.indexOf('/assets/404-time.js') < generated404.indexOf('<link rel="stylesheet"'))) {
+    throw new Error('404 scene state must resolve before stylesheet paint');
+  }
   const generatedWork = readFileSync(join(fixture, 'work/index.html'), 'utf8');
   if ((generatedWork.match(/class="project-updated" aria-hidden="true"/g) ?? []).length !== projects.length) throw new Error('work index must reserve one inaccessible update-date skeleton per project');
   if (!generatedWork.includes('.work-tools,.project-updated{display:none!important}')) throw new Error('work index must hide enhanced controls and skeletons without JavaScript');

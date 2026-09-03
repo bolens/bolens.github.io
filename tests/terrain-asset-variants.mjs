@@ -99,7 +99,7 @@ test('scene conditions swap secondary details without moving the campsite', () =
   };
   for (const [condition, region] of Object.entries(conditionRegions)) {
     assert.match(html, new RegExp(`class="condition-detail condition-${condition}[^>]+data-region="${region}"`));
-    assert.match(css, new RegExp(`condition-${condition} \\{ display:inline; \\}`));
+    assert.match(css, new RegExp(`condition-${condition}[^}]+opacity:1;visibility:visible`));
   }
   for (const mode of weatherModes) {
     assert.match(css, new RegExp(`data-weather="${mode}"\\] \\.terrain-asset`), `${mode} must override reusable assets scene-wide`);
