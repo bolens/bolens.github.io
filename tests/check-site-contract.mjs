@@ -27,7 +27,8 @@ try {
 
   writeFileSync(stylesheet, original);
   const page = join(fixture, 'about/index.html');
-  writeFileSync(page, readFileSync(page, 'utf8').replace('</body>', `<!-- <img src="/assets/documentation-example.png"> --></body>`));
+  const originalPage = readFileSync(page, 'utf8');
+  writeFileSync(page, originalPage.replace('</body>', `<!-- <img src="/assets/documentation-example.png"> --></body>`));
   const regenerated = spawnSync(process.execPath, ['scripts/build-site.mjs'], { cwd: fixture, encoding: 'utf8' });
   if (regenerated.status !== 0) throw new Error(`HTML comment fixture could not be generated: ${regenerated.stderr}`);
   const htmlCommentResult = run();
@@ -41,7 +42,16 @@ try {
     throw new Error(`commented metadata satisfied a live requirement: ${commentedMetadata.stderr}`);
   }
 
-  console.log('Site checker contract passed stylesheet and HTML reference filtering.');
+  const duplicateId = originalPage.match(/\bid="([^"]+)"/)?.[1];
+  writeFileSync(page, originalPage.replace('</body>', `<span id="${duplicateId}"></span></body>`));
+  const regeneratedDuplicateId = spawnSync(process.execPath, ['scripts/build-site.mjs'], { cwd: fixture, encoding: 'utf8' });
+  if (regeneratedDuplicateId.status !== 0) throw new Error(`duplicate ID fixture could not be generated: ${regeneratedDuplicateId.stderr}`);
+  const duplicateIdResult = run();
+  if (duplicateIdResult.status === 0 || !new RegExp(`about/index\\.html: duplicate id ${duplicateId}`).test(duplicateIdResult.stderr)) {
+    throw new Error(`duplicate HTML ID was not rejected: ${duplicateIdResult.stderr}`);
+  }
+
+  console.log('Site checker contract passed stylesheet filtering and HTML structure validation.');
 } finally {
   rmSync(fixture, { recursive: true, force: true });
 }

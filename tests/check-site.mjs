@@ -44,7 +44,11 @@ for (const file of htmlFiles) {
     fail(file, 'appearance scripts must load in data, controller, overlay, picker, command order');
   }
 
-  const ids = new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((match) => match[1]));
+  const ids = new Set();
+  for (const match of html.matchAll(/\bid="([^"]+)"/g)) {
+    if (ids.has(match[1])) fail(file, `duplicate id ${match[1]}`);
+    ids.add(match[1]);
+  }
   for (const match of html.matchAll(/\bhref="#([^"]+)"/g)) {
     if (!ids.has(match[1])) fail(file, `fragment link #${match[1]} has no matching id`);
   }
