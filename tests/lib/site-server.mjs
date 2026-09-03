@@ -6,7 +6,15 @@ const mime = { '.css': 'text/css', '.html': 'text/html', '.js': 'text/javascript
 
 export async function startSiteServer(root) {
   const server = createServer((request, response) => {
-    const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
+    let pathname;
+    try {
+      pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
+      if (pathname.includes('\0')) throw new URIError('NUL byte in request path');
+    } catch {
+      response.writeHead(400, { 'content-type': 'text/plain; charset=utf-8' });
+      response.end('Bad Request');
+      return;
+    }
     let file = join(root, normalize(pathname).replace(/^\/+/, ''));
     if (pathname.endsWith('/')) file = join(file, 'index.html');
     if (!existsSync(file) || statSync(file).isDirectory()) {
