@@ -4,7 +4,7 @@
 .project-featured { grid-column: 1 / -1; }
 .project-link { position:relative; height:100%; display:grid; grid-template-rows:auto 1fr; overflow:clip; border:1px solid var(--line); border-radius:3px; background:var(--snow); text-decoration:none; transition:translate var(--motion-medium) var(--ease-route),box-shadow var(--motion-medium) var(--ease-route),border-color var(--motion-fast); }
 .project-link::before { content:'TRACE / 0' counter(project); position:absolute; z-index:2; top:1rem; left:1rem; padding:.32rem .5rem; border:1px solid color-mix(in srgb,var(--art-on-panel) 35%,transparent); border-radius:2px; background:color-mix(in srgb,var(--art-panel) 84%,transparent); color:var(--art-on-panel); font:700 .58rem/1.2 var(--mono); letter-spacing:.1em; backdrop-filter:blur(6px); }
-.project-link:is(:hover,:focus-visible) { translate:0 -5px; box-shadow: 0 20px 45px rgba(20,44,43,.11); }
+.project-link:is(:hover,:focus-visible) { translate:0 var(--motion-hover-lift); box-shadow: 0 18px 38px color-mix(in srgb,var(--ink) 11%,transparent); }
 .project-link:is(:hover,:focus-visible) { border-color:color-mix(in srgb,var(--copper) 65%,var(--line)); }
 .project-visual { background: color-mix(in srgb,var(--paper) 78%,var(--lichen)); overflow: hidden; transition:filter var(--motion-medium) var(--ease-route); }
 .project-featured .project-visual { aspect-ratio: 2.45 / 1; }
@@ -39,7 +39,7 @@
 .project-evidence dd { margin:.22rem 0 0; font:700 .78rem/1.45 var(--sans); }
 .all-work { margin: 2.2rem 0 0; text-align: center; }.button-secondary { background: transparent; color: var(--ink); }.button-secondary:is(:hover,:focus-visible) { color: var(--snow); }
 .toolbox { display: grid; grid-template-columns: 1fr 1.25fr; gap: clamp(3rem, 8vw, 8rem); padding-block: clamp(5rem, 10vw, 9rem); border-top: 1px solid var(--line); }
-.toolbox dl { margin: 0; }.toolbox dl div { padding: 1.45rem 0; border-bottom: 1px solid var(--line); }.toolbox dt { margin-bottom: .55rem; font: 700 .75rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .11em; }.toolbox dd { max-width: 58ch; margin: 0; color: var(--muted); font-size: 1.08rem; line-height: 1.62; }
+.toolbox dl { margin: 0; }.toolbox dl div { padding: 1.45rem 0; border-bottom: 1px solid var(--line); transition:padding var(--motion-medium) var(--ease-route),background var(--motion-fast),box-shadow var(--motion-fast); }.toolbox dl div:hover { padding-inline:.8rem; background:var(--snow); box-shadow:inset 3px 0 var(--copper); }.toolbox dt { margin-bottom: .55rem; font: 700 .75rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .11em; }.toolbox dd { max-width: 58ch; margin: 0; color: var(--muted); font-size: 1.08rem; line-height: 1.62; }
 .current { display:grid; grid-template-columns:.7fr 2.3fr; gap:clamp(2rem,7vw,7rem); padding-block:clamp(4rem,8vw,7rem); border-top:1px solid var(--line); }
 .current h2,.contact h2 { max-width:16ch; margin:0; font:400 clamp(2.2rem,4.4vw,4.2rem)/1.03 var(--serif); letter-spacing:-.04em; }
 .current h2 + p,.contact div > p { max-width:62ch; margin:1.4rem 0 0; color:var(--muted); font-size:1.06rem; line-height:1.68; }
