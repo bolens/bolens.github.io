@@ -233,6 +233,8 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
   .hero-copy,.signal-map,.hero::after { animation:none!important; }
   html { scroll-behavior:auto; scroll-snap-type:none!important; }.case-story section { scroll-snap-align:none; }.project-visual,.project-copy,.principles li,.toolbox dl div,.about-principles article,.about-field-notes dl div,.index-list a,.case-story>section>.eyebrow,.case-story>section>h2,.case-story>section>.prose { animation:none!important; opacity:1!important; translate:none!important; scale:1!important; }.hobby-traveler,.route-bigfoot,.route-bike,.ddns-packets { display: none; }.visual-shield .check { stroke-dashoffset: 0; }.hobby-landed-disc { display: block; }.hobby-route li,.hobby-route li > svg,.hobby-thrower,.throwing-arm { animation: none; } *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*) { animation-duration: .01ms !important; animation-delay: 0s !important; }
 }
+:root[data-motion="reduced"] { scroll-behavior:auto; }
+:root[data-motion="reduced"] *,:root[data-motion="reduced"] *::before,:root[data-motion="reduced"] *::after { animation:none!important; transition:none!important; }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) { color-scheme:dark; }
   .map-node circle:first-child { filter: none; }

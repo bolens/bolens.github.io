@@ -145,12 +145,21 @@ try {
     throw new Error(`overlay composition failed: ${JSON.stringify(overlayValue)}`);
   }
 
+  const motionPreference = await send('Runtime.evaluate', {
+    expression: `(()=>{portfolioAppearance.setMotion('reduced');const reduced={motion:portfolioAppearance.motion,root:document.documentElement.dataset.motion,saved:localStorage.getItem('portfolio-motion')};portfolioAppearance.toggleMotion();const automatic={motion:portfolioAppearance.motion,root:document.documentElement.dataset.motion||'auto',saved:localStorage.getItem('portfolio-motion')};portfolioAppearance.setMotion('reduced');return {reduced,automatic}})()`,
+    returnByValue: true,
+  });
+  const motionValue = motionPreference.result.value;
+  if (motionValue.reduced.motion !== 'reduced' || motionValue.reduced.root !== 'reduced' || motionValue.reduced.saved !== 'reduced' || motionValue.automatic.motion !== 'auto' || motionValue.automatic.root !== 'auto' || motionValue.automatic.saved !== 'auto') {
+    throw new Error(`motion preference failed: ${JSON.stringify(motionValue)}`);
+  }
+
   const atomicReset = await send('Runtime.evaluate', {
-    expression: `(()=>{portfolioAppearance.setPalette('desert');portfolioAppearance.setTheme('night');const states=[];const unsubscribe=portfolioAppearance.subscribe((state)=>states.push(state));portfolioAppearance.reset();unsubscribe();portfolioAppearance.setTheme('day');return {states,savedPalette:localStorage.getItem('portfolio-palette'),savedTheme:localStorage.getItem('portfolio-theme')}})()`,
+    expression: `(()=>{portfolioAppearance.setPalette('desert');portfolioAppearance.setTheme('night');portfolioAppearance.setMotion('reduced');const states=[];const unsubscribe=portfolioAppearance.subscribe((state)=>states.push(state));portfolioAppearance.reset();unsubscribe();portfolioAppearance.setTheme('day');return {states,savedPalette:localStorage.getItem('portfolio-palette'),savedTheme:localStorage.getItem('portfolio-theme'),savedMotion:localStorage.getItem('portfolio-motion'),rootMotion:document.documentElement.dataset.motion||'auto'}})()`,
     returnByValue: true,
   });
   const resetValue = atomicReset.result.value;
-  if (resetValue.states.length !== 1 || resetValue.states[0].palette !== 'glacier' || resetValue.states[0].theme !== 'auto' || resetValue.savedPalette !== 'glacier' || resetValue.savedTheme !== 'day') {
+  if (resetValue.states.length !== 1 || resetValue.states[0].palette !== 'glacier' || resetValue.states[0].theme !== 'auto' || resetValue.states[0].motion !== 'auto' || resetValue.savedPalette !== 'glacier' || resetValue.savedTheme !== 'day' || resetValue.savedMotion !== 'auto' || resetValue.rootMotion !== 'auto') {
     throw new Error(`atomic appearance reset failed: ${JSON.stringify(resetValue)}`);
   }
 

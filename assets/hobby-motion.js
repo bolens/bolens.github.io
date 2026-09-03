@@ -8,7 +8,7 @@
   let overlayOpen = document.documentElement.classList.contains('ui-overlay-open');
 
   const sync = () => {
-    const running = intersecting && !reducedMotion.matches && !document.hidden && !overlayOpen;
+    const running = intersecting && !reducedMotion.matches && document.documentElement.dataset.motion !== 'reduced' && !document.hidden && !overlayOpen;
     section.dataset.motion = running ? 'running' : 'paused';
     svgTimelines.forEach((svg) => running ? svg.unpauseAnimations?.() : svg.pauseAnimations?.());
   };
@@ -19,6 +19,7 @@
   }, { threshold: .01 });
 
   reducedMotion.addEventListener('change', sync);
+  window.portfolioAppearance?.subscribe(sync);
   document.addEventListener('visibilitychange', sync);
   addEventListener('ui-overlay-change', ({ detail }) => {
     overlayOpen = detail.active;

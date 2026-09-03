@@ -8,6 +8,7 @@
   if (!context) return;
 
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
+  const motionReduced = () => reducedMotion.matches || document.documentElement.dataset.motion === 'reduced';
   const restrained = navigator.connection?.saveData || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
   const targetInterval = 1000 / (restrained ? 20 : 30);
   const random = (() => {
@@ -68,7 +69,7 @@
   };
 
   figure.addEventListener('pointermove', (event) => {
-    if (reducedMotion.matches || overlayActive || event.pointerType === 'touch') return;
+    if (motionReduced() || overlayActive || event.pointerType === 'touch') return;
     const bounds = figure.getBoundingClientRect();
     const x = (event.clientX - bounds.left) / bounds.width - .5;
     const y = (event.clientY - bounds.top) / bounds.height - .5;
@@ -101,7 +102,7 @@
       grainContext.fillRect(speck.x * width, speck.y * height, speck.radius, speck.radius);
     });
     grainContext.globalAlpha = 1;
-    draw(reducedMotion.matches ? 7.25 : performance.now() / 1000);
+    draw(motionReduced() ? 7.25 : performance.now() / 1000);
   };
 
   const sceneTransform = () => {
@@ -140,7 +141,7 @@
       context.fill();
     });
 
-    const fogTime = reducedMotion.matches ? 0 : time * .018;
+    const fogTime = motionReduced() ? 0 : time * .018;
     [[330, 492, 245, 25, .038], [865, 515, 295, 32, .045], [620, 575, 215, 22, .032]].forEach(([x, y, rx, ry, alpha], index) => {
       const [cx, cy] = point(x + Math.sin(fogTime + index * 1.8) * 13, y);
       const gradient = context.createRadialGradient(cx, cy, 0, cx, cy, rx * view.scale);
@@ -158,7 +159,7 @@
     });
 
     const [fireX, fireY] = point(610, 656);
-    const firePulse = reducedMotion.matches ? 1 : .975 + .025 * Math.sin(time * 2.4) + .012 * Math.sin(time * 4.1 + 1.2);
+    const firePulse = motionReduced() ? 1 : .975 + .025 * Math.sin(time * 2.4) + .012 * Math.sin(time * 4.1 + 1.2);
     paintGlow(fireX, fireY, 176 * view.scale * firePulse, [[0, 'rgba(255,170,70,.105)'], [.38, 'rgba(242,103,48,.052)'], [1, 'rgba(242,90,40,0)']]);
 
     fireflies.forEach((fly) => {
@@ -192,7 +193,7 @@
   };
 
   const animate = (timestamp) => {
-    if (!visible || reducedMotion.matches || overlayActive) return;
+    if (!visible || motionReduced() || overlayActive) return;
     frameId = requestAnimationFrame(animate);
     if (timestamp - previousTime < targetInterval) return;
     previousTime = timestamp;
@@ -201,7 +202,7 @@
 
   const updateMotion = () => {
     cancelAnimationFrame(frameId);
-    if (reducedMotion.matches) {
+    if (motionReduced()) {
       draw(7.25);
     } else if (visible && !overlayActive) {
       previousTime = 0;
@@ -219,6 +220,7 @@
     updateMotion();
   });
   reducedMotion.addEventListener?.('change', () => { resetParallax(); updateMotion(); });
+  window.portfolioAppearance?.subscribe(() => { resetParallax(); updateMotion(); });
   new ResizeObserver(resize).observe(figure);
   resize();
   figure.classList.add('hybrid-effects-ready');
