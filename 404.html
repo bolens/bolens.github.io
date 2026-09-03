@@ -18,6 +18,7 @@
     @media (prefers-reduced-motion:reduce) { .camp-atmosphere { opacity:.72; } }
   </style>
   <script src="/assets/404-weather.js" defer></script>
+  <script src="/assets/404-time.js" defer></script>
   <script src="/assets/404-scene.js" defer></script>
 </head>
 <body class="lost-page">
@@ -134,8 +135,19 @@
             <path d="m120 10-22 123m22-58 38 67m-60-9-42 49m102-40 33 31" fill="none" stroke="var(--peak-ridge,#31515a)" stroke-width="4" stroke-linecap="round" opacity="var(--peak-ridge-opacity,.6)"/>
             <path d="m81 118 18-15 13 4m42 18 15-9 15 6" fill="none" stroke="var(--peak-glint,#6f898b)" stroke-width="2.5" stroke-linecap="round" opacity=".42"/>
           </symbol>
-          <symbol id="terrain-condition-marks" viewBox="0 0 100 100" overflow="visible" data-regions="cloud-cover,rain-streaks,wet-sheen,dry-cracks,snow-cap,drought-stress">
+          <symbol id="forest-trail" viewBox="0 0 500 320" data-regions="trail-bed,trail-edge,trail-wear,embedded-stones,root-crossings,conditions">
+            <path d="M62 14q69 19 105 54 31 31-9 64-34 28 34 63 55 28 88 61 29 29 85 38 60 9 126 45l-51 21q-54-25-112-26-68-2-108-39-32-30-79-51-71-32-45-79 16-28 43-45 21-14-6-35-32-24-84-34Z" fill="var(--trail-bed,#66543a)" stroke="var(--trail-edge,#27352e)" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M69 25q60 19 94 51 27 26-9 56-37 31 31 69 50 28 81 59 34 34 94 44 51 8 103 35" fill="none" stroke="var(--trail-wear,#ad8a5a)" stroke-width="9" stroke-linecap="round" opacity="var(--trail-wear-opacity,.4)"/>
+            <path d="M88 38q28 12 47 27m12 82q-17 16 18 35m45 27q21 13 36 27m43 39q23 13 49 17m48 10q28 7 51 19" fill="none" stroke="var(--trail-rut,#3c382b)" stroke-width="5" stroke-linecap="round" opacity=".5"/>
+            <g fill="var(--trail-stone,#8b7656)" stroke="var(--trail-stone-edge,#384039)" stroke-width="2" opacity=".78"><path d="m129 91 8-5 10 3 1 7-9 4-9-3Z"/><path d="m126 157 7-4 10 3 1 7-9 4-8-3Z"/><path d="m226 229 9-5 11 4-1 8-10 3-9-4Z"/><path d="m326 282 9-4 11 5-2 7-10 2-8-4Z"/><path d="m415 303 8-4 10 4-1 7-10 2-7-4Z"/></g>
+            <g fill="none" stroke="var(--trail-root,#58432f)" stroke-width="4" stroke-linecap="round" opacity=".72"><path d="m100 117 57 13m-16-7 11-12m-3 15 15 12M248 250l57 15m-17-10 13-11m-6 15 17 12"/></g>
+            <use href="#terrain-condition-marks" x="54" y="7" width="100" height="100"/>
+            <use href="#terrain-condition-marks" x="155" y="118" width="100" height="100"/>
+            <use href="#terrain-condition-marks" x="328" y="212" width="100" height="100"/>
+          </symbol>
+          <symbol id="terrain-condition-marks" viewBox="0 0 100 100" overflow="visible" data-regions="cloud-cover,overcast-diffusion,rain-streaks,wet-sheen,dry-cracks,snow-cap,drought-stress">
             <g class="asset-cloud-mark" data-region="cloud-cover" fill="none" stroke="var(--asset-cloud-color,#c1d0ce)" stroke-linecap="round" opacity="var(--asset-cloud-opacity,0)"><path d="M6 20q19-9 38-1t39-1" stroke-width="8"/><path d="M17 29q15-6 29 0t28-1" stroke-width="3"/></g>
+            <g class="asset-overcast-mark" data-region="overcast-diffusion" fill="none" stroke="var(--asset-overcast-color,#aebfbd)" stroke-linecap="round" opacity="var(--asset-overcast-opacity,0)"><path d="M5 13q18-7 35-1t36-1 20 1M8 31q17-6 33 0t34-1 17 0" stroke-width="5"/><path d="M18 44q15-4 29 0t29-1" stroke-width="2.5"/></g>
             <g class="asset-rain-mark" data-region="rain-streaks" fill="none" stroke="var(--asset-rain-color,#b9e0e4)" stroke-width="3" stroke-linecap="round" opacity="var(--asset-rain-opacity,0)"><path d="m18 14-8 19m31-24-9 22m34-16-9 23m31-17-8 20"/><path d="m27 47-7 17m31-20-8 20m31-13-7 17" stroke-width="2"/></g>
             <g class="asset-wet-mark" data-region="wet-sheen" fill="none" stroke="var(--asset-wet-color,#d8f4ee)" stroke-linecap="round" opacity="var(--asset-wet-opacity,0)"><path d="M17 72q14-12 29-4m8 11q12-9 25-3" stroke-width="4"/><path d="M25 82q9 4 18 0m27 5q7 3 14-1" stroke-width="2"/></g>
             <g class="asset-dry-mark" data-region="dry-cracks" fill="none" stroke="var(--asset-dry-color,#c4a36d)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="var(--asset-dry-opacity,0)"><path d="m26 52 9 8-6 9 10 8m26-34-8 10 8 8-7 12"/><path d="m13 88 17-3m41 4 16-5" stroke-width="3"/></g>
@@ -322,8 +334,8 @@
             <path d="M7 1v12M1 7h12" fill="none" stroke="var(--glint-fill,#f2fbf3)" stroke-width="var(--glint-width,1.4)" stroke-linecap="round"/>
           </symbol>
           <symbol id="scout-ufo" viewBox="0 0 168 84" data-regions="ground-shadow,landing-gear,saucer-hull,glass-dome,hull-rim,signal-lights,conditions">
-            <ellipse cx="84" cy="68" rx="79" ry="10" fill="var(--ufo-shadow,#071b1c)" opacity=".72"/>
-            <path d="m39 55-12 19m102-19 12 19M23 74h17m88 0h17" fill="none" stroke="var(--ufo-gear,#526a69)" stroke-width="5" stroke-linecap="round"/>
+            <ellipse cx="84" cy="68" rx="79" ry="10" fill="var(--ufo-shadow,#071b1c)" opacity="var(--ufo-ground-shadow-opacity,.72)"/>
+            <path d="m39 55-12 19m102-19 12 19M23 74h17m88 0h17" fill="none" stroke="var(--ufo-gear,#526a69)" stroke-width="5" stroke-linecap="round" opacity="var(--ufo-landing-gear-opacity,1)"/>
             <path d="M16 42Q84 13 152 42 133 67 84 68 35 67 16 42Z" fill="var(--ufo-hull,#506969)" stroke="var(--ufo-edge,#789491)" stroke-width="3"/>
             <path d="M57 40Q84 3 111 40Z" fill="var(--ufo-dome,#54898d)" stroke="var(--ufo-dome-edge,#8bb4ae)" stroke-width="3" opacity=".72"/>
             <path d="M14 44q70 15 140 0" fill="none" stroke="var(--ufo-rim,#20393b)" stroke-width="6"/>
@@ -421,9 +433,21 @@
         </g>
         <rect width="1200" height="760" rx="8" fill="url(#sky-vignette)" pointer-events="none"/>
         <use class="scene-orb sky-orb" href="#sky-orb" x="902" y="18" width="200" height="200"/>
-        <g class="weather-clouds" aria-hidden="true">
+        <g class="weather-clouds weather-clouds-back" aria-hidden="true">
           <use class="weather-cloud weather-cloud-left" href="#cloud-bank" x="54" y="122" width="190" height="62"/>
-          <use class="weather-cloud weather-cloud-right" href="#cloud-bank" x="795" y="184" width="235" height="76"/>
+        </g>
+        <g class="weather-overcast scene-layer" data-scene-layer="weather-overcast" data-region="overcast-cloud-deck" aria-hidden="true">
+          <rect width="1200" height="430" fill="#687d84" opacity=".2"/>
+          <use class="weather-cloud overcast-cloud" href="#cloud-bank" x="-40" y="80" width="330" height="108"/>
+          <use class="weather-cloud overcast-cloud" href="#cloud-bank" x="230" y="48" width="370" height="120"/>
+          <use class="weather-cloud overcast-cloud" href="#cloud-bank" x="550" y="72" width="350" height="114"/>
+        </g>
+        <use class="terrain-asset day-flight-ufo depth-back scene-layer" data-light="sun" data-weather="clear" data-ufo-state="flying" data-scene-layer="sky-subject" data-scale-band="distant" data-region="daytime-flying-ufo" href="#scout-ufo" x="660" y="100" width="210" height="105" style="--ufo-ground-shadow-opacity:0;--ufo-landing-gear-opacity:0;--ufo-hull:#59777b;--ufo-edge:#a6c5c3;--ufo-dome:#78bbc2;--ufo-dome-edge:#d2eeea;--ufo-rim:#36585c;--ufo-light:#d9903d;--asset-cloud-opacity:0;--asset-rain-opacity:0;--asset-wet-opacity:0;--asset-dry-opacity:0;--asset-snow-opacity:0;--asset-drought-opacity:0"/>
+        <g class="weather-clouds weather-clouds-front" aria-hidden="true">
+          <use class="weather-cloud weather-cloud-right" href="#cloud-bank" x="760" y="150" width="235" height="76"/>
+        </g>
+        <g class="weather-overcast weather-overcast-front" aria-hidden="true">
+          <use class="weather-cloud overcast-cloud" href="#cloud-bank" x="850" y="42" width="400" height="130"/>
         </g>
         <use class="weather-rain" aria-hidden="true" href="#rain-field" width="1200" height="760"/>
         <use class="weather-snow" aria-hidden="true" href="#snow-field" width="1200" height="760"/>
@@ -438,7 +462,16 @@
           <use href="#alpine-peak" x="878" y="221" width="233" height="214" style="--peak-snow-opacity:.26"/>
           <use href="#alpine-peak" x="1060" y="294" width="153" height="141" style="--peak-shadow-opacity:.68"/>
         </g>
-        <g class="mountain-range mountain-range-near depth-far scene-layer" data-scene-layer="terrain-far" data-scale-band="far" data-region="near-mountain-ridge" style="--peak-fill:url(#mountain-near);--peak-shadow:#173744;--peak-snow:#d4e0dc;--peak-snow-opacity:.48;--peak-ridge:#31515a">
+        <g class="mountain-range mountain-range-middle depth-far scene-layer" data-scene-layer="terrain-middle" data-scale-band="far-middle" data-region="middle-mountain-ridge" opacity=".86" style="--peak-fill:#31505a;--peak-shadow:#112f3a;--peak-snow:#b2c5c0;--peak-snow-opacity:.37;--peak-ridge:#3b5d64">
+          <use href="#alpine-peak" x="-30" y="300" width="170" height="156" style="--peak-shadow-opacity:.72;--peak-snow-opacity:.28"/>
+          <use href="#alpine-peak" x="115" y="232" width="235" height="215" style="--peak-shadow-opacity:.78"/>
+          <use href="#alpine-peak" x="330" y="276" width="190" height="174" style="--peak-snow-opacity:.3"/>
+          <use href="#alpine-peak" x="490" y="214" width="250" height="229" style="--peak-shadow-opacity:.8;--peak-snow-opacity:.42"/>
+          <use href="#alpine-peak" x="720" y="265" width="205" height="188" style="--peak-snow-opacity:.31"/>
+          <use href="#alpine-peak" x="900" y="225" width="245" height="225" style="--peak-shadow-opacity:.79;--peak-snow-opacity:.4"/>
+          <use href="#alpine-peak" x="1090" y="300" width="150" height="138" style="--peak-shadow-opacity:.7;--peak-snow-opacity:.27"/>
+        </g>
+        <g class="mountain-range mountain-range-near depth-far scene-layer" data-scene-layer="terrain-near" data-scale-band="far-near" data-region="near-mountain-ridge" style="--peak-fill:url(#mountain-near);--peak-shadow:#173744;--peak-snow:#d4e0dc;--peak-snow-opacity:.48;--peak-ridge:#31515a">
           <use href="#alpine-peak" x="22" y="276" width="190" height="174" style="--peak-shadow:#173542;--peak-snow-opacity:.34"/>
           <use href="#alpine-peak" x="181" y="187" width="287" height="263" style="--peak-shadow-opacity:.86;--peak-snow-opacity:.52"/>
           <use href="#alpine-peak" x="446" y="260" width="207" height="190" style="--peak-shadow:#0c2631;--peak-snow-opacity:.3"/>
@@ -463,6 +496,14 @@
           <use class="terrain-asset" data-light="shadow" data-weather="dry" href="#berry-shrub" x="716" y="418" width="76" height="53" style="--shrub-fill:#294b3d"/>
           <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#evergreen-shrub" x="932" y="424" width="66" height="43" style="--shrub-fill:#24483b;--shrub-highlight:#55715c"/>
           <use class="terrain-asset" data-light="shadow" data-weather="cloudy" href="#berry-shrub" x="1131" y="414" width="73" height="51" style="--shrub-fill:#203f36"/>
+        </g>
+        <g class="forest-transition depth-far scene-layer" data-scene-layer="forest-far" data-scale-band="transition" data-region="transition-tree-line" fill="#1b403d" stroke="#48675e" stroke-width="2.2" stroke-linejoin="round" opacity=".72">
+          <use href="#distant-pine" x="-15" y="310" width="82" height="176"/><use href="#distant-pine" x="63" y="326" width="76" height="163"/>
+          <use href="#distant-pine" x="267" y="297" width="89" height="191"/><use href="#distant-pine" x="350" y="320" width="78" height="167"/>
+          <use href="#distant-pine" x="421" y="292" width="92" height="197"/><use href="#distant-pine" x="505" y="316" width="79" height="169"/>
+          <use href="#distant-pine" x="590" y="301" width="86" height="184"/><use href="#distant-pine" x="673" y="322" width="77" height="165"/>
+          <use href="#distant-pine" x="865" y="298" width="89" height="191"/><use href="#distant-pine" x="1023" y="317" width="80" height="171"/>
+          <use href="#distant-pine" x="1092" y="294" width="91" height="195"/>
         </g>
         <g class="ground-tones scene-layer" data-scene-layer="ground-base" data-region="ground-color-fields" opacity=".52">
           <path d="M106 490q122-42 238 2t216 12q-66 44-176 42t-278-56Z" fill="#315044" opacity=".35"/>
@@ -560,7 +601,7 @@
             <g class="bank-pebble-patches"><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-pebble-cluster" x="28" y="664" width="68" height="22"/><use class="terrain-asset" data-light="moon" data-weather="rainy" href="#river-pebble-cluster" x="137" y="596" width="88" height="28" style="--bank-pebble:#586d66"/><use class="terrain-asset" data-light="shadow" data-weather="dry" href="#river-pebble-cluster" x="269" y="492" width="91" height="29" style="--bank-pebble:#667168"/></g>
           </g>
         </g>
-        <use class="terrain-asset background-ufo" data-light="moon" data-weather="clear" href="#scout-ufo" x="821" y="365" width="168" height="84" opacity=".48" style="--asset-cloud-opacity:0;--asset-rain-opacity:0;--asset-wet-opacity:0;--asset-dry-opacity:0;--asset-snow-opacity:0;--asset-drought-opacity:0"/>
+        <use class="terrain-asset background-trail depth-mid scene-layer" data-light="moon" data-weather="dry" data-scene-layer="forest-path" data-scale-band="mid-to-near" data-region="winding-forest-trail" href="#forest-trail" x="510" y="401" width="500" height="320" style="--trail-bed:#5f513a;--trail-edge:#20352e;--trail-wear:#aa895a;--trail-root:#59432f"/>
         <g class="deep-forest depth-mid scene-layer" data-scene-layer="forest-mid" data-scale-band="mid" data-region="midground-tree-line">
           <use href="#distant-pine" x="235" y="343" width="56" height="120"/><use href="#distant-pine" x="282" y="323" width="70" height="150"/>
           <use href="#distant-pine" x="344" y="355" width="52" height="112"/><use href="#distant-pine" x="400" y="302" width="76" height="164"/>
@@ -583,6 +624,7 @@
             <g fill="#52745a" stroke="#29483b" stroke-width="1"><ellipse cx="113" cy="552" rx="13" ry="5" transform="rotate(38 113 552)"/><ellipse cx="146" cy="533" rx="14" ry="5" transform="rotate(-55 146 533)"/><ellipse cx="174" cy="524" rx="13" ry="5" transform="rotate(-35 174 524)"/><ellipse cx="68" cy="589" rx="12" ry="5" transform="rotate(35 68 589)"/><ellipse cx="96" cy="568" rx="13" ry="5" transform="rotate(-55 96 568)"/><ellipse cx="116" cy="566" rx="12" ry="5" transform="rotate(-35 116 566)"/></g>
           </g>
         </g>
+        <use class="terrain-asset background-ufo night-docked-ufo depth-mid scene-layer" data-light="moon" data-weather="clear" data-ufo-state="docked" data-scene-layer="forest-secret" data-scale-band="mid" data-region="nighttime-docked-ufo" href="#scout-ufo" x="855" y="360" width="220" height="110" opacity=".88" style="--ufo-shadow:#071b1c;--ufo-gear:#73908a;--ufo-hull:#587476;--ufo-edge:#91b2ae;--ufo-dome:#5b999d;--ufo-dome-edge:#a9d1ca;--ufo-light:#ffd15c"/>
         <g class="camp-pines depth-mid scene-layer" data-scene-layer="forest-frame" data-scale-band="near" data-region="camp-tree-frame" fill="url(#pine-lit)" stroke="#335e51" stroke-width="3" stroke-linejoin="round">
           <use href="#distant-pine" x="32" y="210" width="148" height="317"/>
           <use href="#distant-pine" x="146" y="294" width="110" height="235"/>
@@ -612,12 +654,6 @@
           <use class="terrain-asset" data-light="ambient" data-weather="clear" href="#alpine-boulder" x="58" y="499" width="136" height="87"/>
           <use class="terrain-asset" data-light="ambient" data-weather="cloudy" href="#alpine-boulder" x="960" y="537" width="158" height="101" style="--boulder-facet:#3a504e"/>
           <use class="terrain-asset" data-light="ambient" data-weather="dry" href="#river-stone" x="310" y="697" width="106" height="48" style="--stone-fill:#4b5148"/>
-        </g>
-        <g class="background-trail" data-region="campsite-trail" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M616 450q73 17 116 48 31 23 58 52 30 31 95 51 48 15 91 45l-42 23q-37-28-87-44-73-22-108-58-28-30-57-48-37-24-93-35Z" fill="#66543a" opacity=".52"/>
-          <path d="M616 456q70 17 110 47 34 25 60 54 29 32 91 51 48 15 78 37" fill="none" stroke="#aa895a" stroke-width="7" opacity=".4"/>
-          <path d="M638 466q21 4 40 13m24 14q17 9 30 21m39 35q11 15 28 26m32 20q18 9 37 14m29 13q20 8 38 21" fill="none" stroke="#3c382b" stroke-width="5" opacity=".48"/>
-          <g fill="#8b7656" stroke="#384039" stroke-width="2" opacity=".75"><path d="m743 465 8-5 10 3 1 7-9 4-9-3Z"/><path d="m790 512 7-4 9 3 1 6-8 4-8-3Z"/><path d="m846 542 9-4 10 4-1 7-10 3-8-4Z"/><path d="m909 568 8-4 11 5-2 7-10 2-7-4Z"/></g>
         </g>
         <g class="forest-floor depth-near scene-layer" data-scene-layer="clearing-ground" data-scale-band="near" data-region="clearing-understory" stroke-linecap="round" stroke-linejoin="round">
           <g class="evergreen-understory" data-region="evergreen-understory">
@@ -916,6 +952,7 @@
           <use class="terrain-asset" data-light="shadow" data-weather="cloudy" href="#berry-shrub" x="1082" y="680" width="164" height="115" style="--shrub-fill:#18392f"/>
         </g>
         <rect class="palette-wash" width="1200" height="760" pointer-events="none"/>
+        <rect class="scene-time-wash" width="1200" height="760" pointer-events="none"/>
         <rect class="theme-light-wash" width="1200" height="760" pointer-events="none"/>
 
         <g class="day-scene">
@@ -932,7 +969,6 @@
           <g class="day-moth-tree" stroke-linecap="round" stroke-linejoin="round"><g class="day-added-tree"><path d="M811 648q13-189 3-415" fill="none" stroke="#3b291d" stroke-width="41"/><path d="M811 648q12-190 3-415" fill="none" stroke="var(--lost-day-bark)" stroke-width="31"/><path d="M814 274q-52-45-98-53m100 7q43-55 91-72m-92 185q-49-33-89-31m90-18q43-40 85-45" fill="none" stroke="var(--lost-day-bark)" stroke-width="13"/><g fill="var(--lost-day-pine)" stroke="var(--lost-day-pine-dark)" stroke-width="3"><path d="M669 232q49-73 97-27 32-75 82-28 48-67 93-5 29 57-31 87-58 28-105 0-54 27-99 0-43 3-37-27Z"/><path d="M690 326q42-60 84-20 31-61 75-21 44-50 79 2 25 47-27 69-49 22-92 0-47 23-84-2-41 2-35-28Z"/></g></g>
             <g class="day-mothman" transform="translate(0 90)"><path d="M776 190q36-50 72 0l-9 65h-55Z" fill="#33283a"/><path d="M782 205q-45-39-74-13 24 16 56 42Zm61 0q43-39 73-13-25 16-57 42Z" fill="#473650"/><ellipse cx="798" cy="201" rx="7" ry="5" fill="#cf3735"/><ellipse cx="826" cy="201" rx="7" ry="5" fill="#cf3735"/><path d="M793 224q19 14 39 0m-47 34 27-17 27 17" fill="none" stroke="#86658c" stroke-width="4"/><path d="M785 259q28 18 56 0" fill="none" stroke="#221a27" stroke-width="9"/></g>
           </g>
-          <g class="day-ufo" transform="translate(680 235)"><ellipse cx="0" cy="34" rx="91" ry="23" fill="#526b70" stroke="#29444a" stroke-width="4"/><path d="M-55 15Q0-48 55 15Z" fill="#91d2dc" stroke="#426c73" stroke-width="4" opacity=".9"/><g class="day-alien"><ellipse cx="0" cy="-2" rx="22" ry="27" fill="#aabbb6"/><ellipse cx="-8" cy="-4" rx="6" ry="11" fill="#111b1e" transform="rotate(-16 -8 -4)"/><ellipse cx="9" cy="-4" rx="6" ry="11" fill="#111b1e" transform="rotate(16 9 -4)"/><path d="M-4 12q5 3 9 0" fill="none" stroke="#526663" stroke-width="2"/></g><path d="M-88 31q88 34 176 0" fill="none" stroke="#adc3bf" stroke-width="5"/><g fill="var(--lost-accent)"><circle cx="-55" cy="43" r="4"/><circle cx="-20" cy="49" r="4"/><circle cx="20" cy="49" r="4"/><circle cx="55" cy="43" r="4"/></g></g>
           <g class="day-camp" stroke-linecap="round" stroke-linejoin="round">
             <g class="day-tent-duplicate"><path d="M861 655 934 530l99 125Z" fill="var(--lost-day-tent)" stroke="var(--lost-day-tent-edge)" stroke-width="4"/><path d="M934 530 988 654h-107Z" fill="#344f4d" opacity=".76"/><path d="m934 530 54 124m-54-124-53 124" fill="none" stroke="#f5d4b5" stroke-width="3"/></g>
             <g class="day-campers"><g transform="translate(850 525)"><circle cx="0" cy="0" r="18" fill="#e5b18a"/><path d="M-17-3q1-24 18-24 18 1 18 25L9-16q-13 8-26 13Z" fill="#b96743"/><path d="M-15 2h12m6 0h12M-3 2h6" fill="none" stroke="#202628" stroke-width="3"/><path d="M-3 13q5 3 10 0m-9 4q5 7 10 0" fill="none" stroke="#724737" stroke-width="2"/><path d="M-17 21q18-11 36 0l8 77h-55Z" fill="#547b72"/><path d="M-14 97-25 132m41-35 21 35M-17 34l-28 34m62-34 27 26" fill="none" stroke="#425e58" stroke-width="12"/></g><g transform="translate(926 527)"><circle cx="0" cy="0" r="18" fill="#d9a27f"/><path d="M-19 2q-1-28 19-29 22 2 20 31L10-15q-17 8-29 17Z" fill="#49302c"/><path d="M-9 3h2m14 0h2M-7 13q7 4 14 0" fill="none" stroke="#51362f" stroke-width="2.5"/><path d="M-18 22q18-11 36 0l9 76h-54Z" fill="#b45f4a"/><path d="M-14 97-24 132m39-35 20 35M-17 35l-26 31m60-31 25 25" fill="none" stroke="#8e493d" stroke-width="12"/><path d="M40 57q18-13 30 2" fill="none" stroke="#d9a27f" stroke-width="8"/></g>
@@ -945,7 +981,7 @@
           <rect class="day-palette-wash" width="1200" height="760" pointer-events="none"/>
         </g>
       </svg>
-      <figcaption><span class="caption-night">Somewhere off the marked trail · after dark</span><span class="caption-day">Somewhere off the marked trail · broad daylight</span></figcaption>
+      <figcaption><span class="caption-night">Somewhere off the marked trail · after dark</span><span class="caption-day">Somewhere off the marked trail · broad daylight</span><span class="caption-time caption-morning">Somewhere off the marked trail · first light</span><span class="caption-time caption-evening">Somewhere off the marked trail · golden hour</span><span class="caption-time caption-twilight">Somewhere off the marked trail · blue hour</span></figcaption>
     </figure>
   </main>
 </body>

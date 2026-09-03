@@ -24,8 +24,10 @@ const colorPattern = /^#[0-9a-f]{6}$/i;
 const paletteEntries = Object.entries(themes.palettes);
 if (!themes.palettes[themes.defaultPalette]) throw new Error('data/themes.json: defaultPalette must name a palette');
 if (JSON.stringify(themes.modes) !== JSON.stringify(['auto', 'day', 'night'])) throw new Error('data/themes.json: modes must be auto, day, and night');
-const weatherModes = ['clear', 'cloudy', 'rainy', 'wet', 'dry', 'snowy', 'drought'];
+const weatherModes = ['clear', 'cloudy', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought'];
 if (JSON.stringify(themes.weatherModes) !== JSON.stringify(weatherModes)) throw new Error(`data/themes.json: weatherModes must be ${weatherModes.join(', ')}`);
+const timeModes = ['day', 'night', 'morning', 'evening', 'twilight'];
+if (JSON.stringify(themes.timeModes) !== JSON.stringify(timeModes)) throw new Error(`data/themes.json: timeModes must be ${timeModes.join(', ')}`);
 const requiredTokens = Object.keys(themes.palettes[themes.defaultPalette].day);
 for (const [name, palette] of paletteEntries) {
   if (!/^[a-z][a-z0-9-]*$/.test(name)) throw new Error(`data/themes.json: invalid palette ID ${name}`);
@@ -64,7 +66,7 @@ const themeCss = [
   '',
 ].join('\n');
 outputs.set('assets/theme-tokens.css', themeCss);
-outputs.set('assets/theme-data.js', `window.portfolioThemeData=${JSON.stringify({ defaultPalette: themes.defaultPalette, modes: themes.modes, weatherModes: themes.weatherModes, palettes: Object.fromEntries(paletteEntries.map(([name, palette]) => [name, { label: palette.label, light: palette.day.paper, dark: palette.night.paper, weather: palette.weather }])) })};\n`);
+outputs.set('assets/theme-data.js', `window.portfolioThemeData=${JSON.stringify({ defaultPalette: themes.defaultPalette, modes: themes.modes, weatherModes: themes.weatherModes, timeModes: themes.timeModes, palettes: Object.fromEntries(paletteEntries.map(([name, palette]) => [name, { label: palette.label, light: palette.day.paper, dark: palette.night.paper, weather: palette.weather }])) })};\n`);
 const themeMeta = `<meta name="theme-color" content="${defaultTheme.day.paper}" media="(prefers-color-scheme: light)"><meta name="theme-color" content="${defaultTheme.night.paper}" media="(prefers-color-scheme: dark)">`;
 const syncThemeMeta = (source) => source.replace(/<meta name="theme-color"[^>]*>(?:\s*<meta name="theme-color"[^>]*>)?/, themeMeta);
 const loadingBootstrap = '<script>document.documentElement.classList.add("is-loading")</script>';

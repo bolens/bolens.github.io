@@ -14,6 +14,7 @@
   const atmosphereProfiles = Object.freeze({
     clear: Object.freeze({ stars: 1, fog: 1, fireflies: 1, embers: 1 }),
     cloudy: Object.freeze({ stars: .25, fog: 1.25, fireflies: .7, embers: .9 }),
+    overcast: Object.freeze({ stars: .1, fog: 1.45, fireflies: .35, embers: .72 }),
     rainy: Object.freeze({ stars: .08, fog: 1.4, fireflies: .25, embers: .18 }),
     wet: Object.freeze({ stars: .7, fog: 1.2, fireflies: .8, embers: .85 }),
     dry: Object.freeze({ stars: .9, fog: .45, fireflies: 1.1, embers: 1 }),
@@ -69,6 +70,19 @@
   let overlayActive = document.documentElement.classList.contains('ui-overlay-open');
   let parallaxFrame = 0;
   let atmosphere = profileFor(window.portfolioWeather?.condition);
+  const timeProfiles = Object.freeze({
+    day: Object.freeze({ stars: 0, fireflies: .08, embers: .78 }),
+    night: Object.freeze({ stars: 1, fireflies: 1, embers: 1 }),
+    morning: Object.freeze({ stars: .08, fireflies: .18, embers: .82 }),
+    evening: Object.freeze({ stars: .18, fireflies: .65, embers: 1 }),
+    twilight: Object.freeze({ stars: .58, fireflies: .88, embers: 1 }),
+  });
+  const profileForTime = (state = {}) => {
+    if (state.cycle !== 'dynamic') return timeProfiles[state.time] || timeProfiles.night;
+    const darkness = Math.min(1, Math.max(0, state.darkness ?? 1));
+    return { stars: darkness, fireflies: .08 + darkness * .92, embers: .78 + darkness * .22 };
+  };
+  let timeProfile = profileForTime(window.portfolioSceneTime?.state);
 
   const setParallax = (x = 0, y = 0) => {
     figure.style.setProperty('--parallax-back-x', `${(-x * .7).toFixed(2)}px`);
@@ -147,7 +161,7 @@
 
     stars.forEach((star) => {
       const [x, y] = point(star.x, star.y);
-      const luminance = star.alpha * atmosphere.stars * (.72 + .28 * Math.sin(time * star.speed + star.phase));
+      const luminance = star.alpha * atmosphere.stars * timeProfile.stars * (.72 + .28 * Math.sin(time * star.speed + star.phase));
       context.fillStyle = `rgba(218,236,232,${luminance})`;
       context.beginPath();
       context.arc(x, y, Math.max(.45, star.radius * view.scale), 0, Math.PI * 2);
@@ -177,7 +191,7 @@
 
     fireflies.forEach((fly) => {
       const wave = .5 + .5 * Math.sin(time * fly.speed + fly.phase);
-      const alpha = (.045 + .3 * wave * wave) * atmosphere.fireflies;
+      const alpha = (.045 + .3 * wave * wave) * atmosphere.fireflies * timeProfile.fireflies;
       const [x, y] = point(fly.x + Math.sin(time * .13 + fly.phase) * fly.drift, fly.y + Math.cos(time * .1 + fly.phase) * 2.5);
       const glowSize = 16 * view.scale;
       context.globalAlpha = alpha;
@@ -191,7 +205,7 @@
 
     embers.forEach((ember) => {
       const progress = (time * .1 + ember.phase) % 1;
-      const alpha = Math.sin(progress * Math.PI) * .36 * atmosphere.embers;
+      const alpha = Math.sin(progress * Math.PI) * .36 * atmosphere.embers * timeProfile.embers;
       const x = fireX + (ember.x + ember.sway * progress + Math.sin(time * .7 + ember.phase * 9) * 1.5) * view.scale;
       const y = fireY - (8 + ember.lift * progress) * view.scale;
       context.fillStyle = `rgba(255,196,91,${alpha})`;
@@ -239,7 +253,15 @@
     figure.dataset.atmosphereCondition = condition;
     draw(motionReduced() ? 7.25 : performance.now() / 1000);
   });
+  window.portfolioSceneTime?.subscribe((state) => {
+    timeProfile = profileForTime(state);
+    figure.dataset.atmosphereTime = state.time;
+    figure.dataset.atmosphereCycle = state.cycle;
+    draw(motionReduced() ? 7.25 : performance.now() / 1000);
+  });
   figure.dataset.atmosphereCondition = window.portfolioWeather?.condition || 'clear';
+  figure.dataset.atmosphereTime = window.portfolioSceneTime?.time || 'night';
+  figure.dataset.atmosphereCycle = window.portfolioSceneTime?.cycle || 'fixed';
   new ResizeObserver(resize).observe(figure);
   resize();
   figure.classList.add('hybrid-effects-ready');

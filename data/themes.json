@@ -8,11 +8,19 @@
   "weatherModes": [
     "clear",
     "cloudy",
+    "overcast",
     "rainy",
     "wet",
     "dry",
     "snowy",
     "drought"
+  ],
+  "timeModes": [
+    "day",
+    "night",
+    "morning",
+    "evening",
+    "twilight"
   ],
   "palettes": {
     "alpine": {
@@ -326,7 +334,7 @@
     },
     "meadow": {
       "label": "Wildflower",
-      "weather": "cloudy",
+      "weather": "overcast",
       "day": {
         "paper": "#f1efe4",
         "snow": "#fcfbf5",
