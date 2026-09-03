@@ -394,7 +394,7 @@
           <clipPath id="tent-door"><path d="M933 521 1007 647H861Z"/></clipPath>
         </defs>
 
-        <g class="sky-field depth-back">
+        <g class="sky-field depth-back scene-layer" data-scene-layer="sky-base">
           <rect width="1200" height="760" rx="8" fill="url(#night-sky)"/>
           <rect width="1200" height="410" fill="url(#upper-sky-depth)"/>
         </g>
@@ -412,7 +412,7 @@
 
 
 
-        <g class="camp-aurora depth-back">
+        <g class="camp-aurora depth-back scene-layer" data-scene-layer="sky-light">
           <use class="aurora-ribbon aurora-ribbon-one" href="#aurora-strand" x="0" y="22" width="1200" height="180"/>
           <use class="aurora-ribbon aurora-ribbon-two" href="#aurora-strand" x="-8" y="72" width="1216" height="180"/>
           <use class="aurora-ribbon aurora-ribbon-three" href="#aurora-strand" x="18" y="120" width="1180" height="176"/>
@@ -429,7 +429,7 @@
         <use class="weather-snow" aria-hidden="true" href="#snow-field" width="1200" height="760"/>
         <use class="weather-drought" aria-hidden="true" href="#drought-field" width="1200" height="760"/>
 
-        <g class="mountain-range mountain-range-far depth-far" data-region="far-mountain-ridge" opacity=".78" style="--peak-fill:url(#mountain-far);--peak-shadow:#102b35;--peak-snow:#91aaa9;--peak-snow-opacity:.3;--peak-ridge:#31515a">
+        <g class="mountain-range mountain-range-far depth-far scene-layer" data-scene-layer="terrain-far" data-scale-band="far" data-region="far-mountain-ridge" opacity=".78" style="--peak-fill:url(#mountain-far);--peak-shadow:#102b35;--peak-snow:#91aaa9;--peak-snow-opacity:.3;--peak-ridge:#31515a">
           <use href="#alpine-peak" x="25" y="335" width="118" height="108" style="--peak-shadow-opacity:.66"/>
           <use href="#alpine-peak" x="136" y="258" width="193" height="177" style="--peak-snow-opacity:.24"/>
           <use href="#alpine-peak" x="261" y="167" width="292" height="268" style="--peak-shadow-opacity:.72"/>
@@ -438,7 +438,7 @@
           <use href="#alpine-peak" x="878" y="221" width="233" height="214" style="--peak-snow-opacity:.26"/>
           <use href="#alpine-peak" x="1060" y="294" width="153" height="141" style="--peak-shadow-opacity:.68"/>
         </g>
-        <g class="mountain-range mountain-range-near depth-far" data-region="near-mountain-ridge" style="--peak-fill:url(#mountain-near);--peak-shadow:#173744;--peak-snow:#d4e0dc;--peak-snow-opacity:.48;--peak-ridge:#31515a">
+        <g class="mountain-range mountain-range-near depth-far scene-layer" data-scene-layer="terrain-far" data-scale-band="far" data-region="near-mountain-ridge" style="--peak-fill:url(#mountain-near);--peak-shadow:#173744;--peak-snow:#d4e0dc;--peak-snow-opacity:.48;--peak-ridge:#31515a">
           <use href="#alpine-peak" x="22" y="276" width="190" height="174" style="--peak-shadow:#173542;--peak-snow-opacity:.34"/>
           <use href="#alpine-peak" x="181" y="187" width="287" height="263" style="--peak-shadow-opacity:.86;--peak-snow-opacity:.52"/>
           <use href="#alpine-peak" x="446" y="260" width="207" height="190" style="--peak-shadow:#0c2631;--peak-snow-opacity:.3"/>
@@ -448,7 +448,7 @@
         </g>
         <path d="M0 435q105-62 207-21 98 39 191-13 106-60 212 3 90 54 189 4 117-58 201 8 86 67 200 8v103H0Z" fill="#163a3c" opacity=".78"/>
         <path d="M0 446c169-55 331-34 486-2 206 43 386-27 714-14v330H0Z" fill="url(#forest-floor-depth)"/>
-        <g class="horizon-forest depth-back" data-region="horizon-tree-line" fill="#17353a" stroke="#416067" stroke-width="2" stroke-linejoin="round">
+        <g class="horizon-forest depth-back scene-layer" data-scene-layer="forest-back" data-scale-band="distant" data-region="horizon-tree-line" fill="#17353a" stroke="#416067" stroke-width="2" stroke-linejoin="round">
           <use href="#distant-pine" x="-18" y="335" width="65" height="139"/><use href="#distant-pine" x="44" y="354" width="53" height="114"/>
           <use href="#distant-pine" x="96" y="321" width="71" height="152"/><use href="#distant-pine" x="162" y="350" width="55" height="118"/>
           <use href="#distant-pine" x="211" y="330" width="65" height="139"/><use href="#distant-pine" x="757" y="338" width="61" height="131"/>
@@ -464,7 +464,7 @@
           <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#evergreen-shrub" x="932" y="424" width="66" height="43" style="--shrub-fill:#24483b;--shrub-highlight:#55715c"/>
           <use class="terrain-asset" data-light="shadow" data-weather="cloudy" href="#berry-shrub" x="1131" y="414" width="73" height="51" style="--shrub-fill:#203f36"/>
         </g>
-        <g class="ground-tones" data-region="ground-color-fields" opacity=".52">
+        <g class="ground-tones scene-layer" data-scene-layer="ground-base" data-region="ground-color-fields" opacity=".52">
           <path d="M106 490q122-42 238 2t216 12q-66 44-176 42t-278-56Z" fill="#315044" opacity=".35"/>
           <path d="M535 546q104-35 209 2t217 11q-76 52-192 39t-234-52Z" fill="#0a2522" opacity=".72"/>
           <path d="M430 650q159-59 337-14t300 4q-121 74-310 66t-327-56Z" fill="#091a18" opacity=".68"/>
@@ -477,7 +477,7 @@
           <path d="M42 626q67-24 128-15m803 9q84-26 167-11M270 719q113-24 213-7m324 5q79-22 151-8" stroke="#091e1b" stroke-width="11" opacity=".55"/>
           <g stroke="#6b5b3b" stroke-width="2" opacity=".38"><path d="m183 546 31-8m-12 17 38-6m78 14 29-7m-18 19 44-7m516-18 32-8m-11 19 39-8m72 20 34-9m-17 22 42-9"/></g>
         </g>
-        <g class="forest-floor-scatter depth-near" data-region="forest-floor-scatter">
+        <g class="forest-floor-scatter depth-near scene-layer" data-scene-layer="ground-detail" data-scale-band="near" data-region="forest-floor-scatter">
           <use class="terrain-asset floor-debris" data-light="shadow" data-weather="wet" href="#woodland-debris" x="70" y="505" width="88" height="48"/>
           <use class="terrain-asset floor-debris" data-light="moon" data-weather="clear" href="#woodland-debris" x="172" y="540" width="74" height="40" transform="rotate(-8 209 560)" style="--debris-leaf:#574831"/>
           <use class="terrain-asset floor-debris" data-light="ambient" data-weather="dry" href="#woodland-debris" x="276" y="500" width="83" height="45" transform="rotate(7 318 523)"/>
@@ -502,7 +502,7 @@
           <path d="M20 746q91-22 178-9m82-5q92-18 176-2m342 5q91-20 179-4m70 5q67-14 131-2" fill="none" stroke="#172823" stroke-width="3" opacity=".6"/>
         </g>
 
-        <g class="river depth-mid">
+        <g class="river depth-mid scene-layer" data-scene-layer="water-mid">
           <g class="condition-detail condition-drought drought-riverbed" data-region="exposed-riverbed">
             <path d="M0 654q80-20 150-65 72-46 144-57 73-11 119-48" fill="none" stroke="#776343" stroke-width="46" stroke-linecap="round" opacity=".82"/>
             <path d="M3 650q77-18 148-62 70-43 143-55 72-11 116-46" fill="none" stroke="#aa895b" stroke-width="5" stroke-linecap="round" opacity=".55"/>
@@ -561,7 +561,7 @@
           </g>
         </g>
         <use class="terrain-asset background-ufo" data-light="moon" data-weather="clear" href="#scout-ufo" x="821" y="365" width="168" height="84" opacity=".48" style="--asset-cloud-opacity:0;--asset-rain-opacity:0;--asset-wet-opacity:0;--asset-dry-opacity:0;--asset-snow-opacity:0;--asset-drought-opacity:0"/>
-        <g class="deep-forest depth-mid" data-region="midground-tree-line">
+        <g class="deep-forest depth-mid scene-layer" data-scene-layer="forest-mid" data-scale-band="mid" data-region="midground-tree-line">
           <use href="#distant-pine" x="235" y="343" width="56" height="120"/><use href="#distant-pine" x="282" y="323" width="70" height="150"/>
           <use href="#distant-pine" x="344" y="355" width="52" height="112"/><use href="#distant-pine" x="400" y="302" width="76" height="164"/>
           <use href="#distant-pine" x="470" y="342" width="58" height="124"/><use href="#distant-pine" x="535" y="315" width="69" height="149"/>
@@ -583,14 +583,14 @@
             <g fill="#52745a" stroke="#29483b" stroke-width="1"><ellipse cx="113" cy="552" rx="13" ry="5" transform="rotate(38 113 552)"/><ellipse cx="146" cy="533" rx="14" ry="5" transform="rotate(-55 146 533)"/><ellipse cx="174" cy="524" rx="13" ry="5" transform="rotate(-35 174 524)"/><ellipse cx="68" cy="589" rx="12" ry="5" transform="rotate(35 68 589)"/><ellipse cx="96" cy="568" rx="13" ry="5" transform="rotate(-55 96 568)"/><ellipse cx="116" cy="566" rx="12" ry="5" transform="rotate(-35 116 566)"/></g>
           </g>
         </g>
-        <g class="camp-pines depth-mid" data-region="camp-tree-frame" fill="url(#pine-lit)" stroke="#335e51" stroke-width="3" stroke-linejoin="round">
+        <g class="camp-pines depth-mid scene-layer" data-scene-layer="forest-frame" data-scale-band="near" data-region="camp-tree-frame" fill="url(#pine-lit)" stroke="#335e51" stroke-width="3" stroke-linejoin="round">
           <use href="#distant-pine" x="32" y="210" width="148" height="317"/>
           <use href="#distant-pine" x="146" y="294" width="110" height="235"/>
           <use href="#distant-pine" x="1017" y="252" width="123" height="264"/>
           <use href="#distant-pine" x="1115" y="319" width="93" height="200"/>
           <use href="#distant-pine" x="773" y="335" width="84" height="181"/>
         </g>
-        <g class="midstory-brush depth-mid" data-region="midstory-brush">
+        <g class="midstory-brush depth-mid scene-layer" data-scene-layer="forest-mid" data-scale-band="mid" data-region="midstory-brush">
           <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#evergreen-shrub" x="264" y="471" width="92" height="60" style="--shrub-fill:#214638;--shrub-highlight:#587761"/>
           <use class="terrain-asset" data-light="shadow" data-weather="cloudy" href="#berry-shrub" x="358" y="474" width="104" height="73" style="--shrub-fill:#254839"/>
           <use class="terrain-asset" data-light="shadow" data-weather="dry" href="#evergreen-shrub" x="744" y="481" width="78" height="51" style="--shrub-fill:#284838;--shrub-highlight:#6e7854"/>
@@ -608,7 +608,7 @@
           <g class="firefly-phase-three"><use class="terrain-asset" data-light="moon" data-weather="clear" href="#firefly-pair" x="269" y="479" width="186" height="58" style="--firefly-size-a:2;--firefly-size-b:1.7"/><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#firefly-pair" x="618" y="458" width="199" height="94" style="--firefly-size-a:2.1;--firefly-size-b:1.5"/><use class="terrain-asset" data-light="shadow" data-weather="cloudy" href="#firefly-pair" x="970" y="472" width="182" height="95" style="--firefly-size-a:1.6;--firefly-size-b:2.2;--firefly-halo-opacity:.18"/></g>
         </g>
 
-        <g class="camp-boulders depth-near" data-region="clearing-boulders">
+        <g class="camp-boulders depth-near scene-layer" data-scene-layer="clearing-back" data-scale-band="near" data-region="clearing-boulders">
           <use class="terrain-asset" data-light="ambient" data-weather="clear" href="#alpine-boulder" x="58" y="499" width="136" height="87"/>
           <use class="terrain-asset" data-light="ambient" data-weather="cloudy" href="#alpine-boulder" x="960" y="537" width="158" height="101" style="--boulder-facet:#3a504e"/>
           <use class="terrain-asset" data-light="ambient" data-weather="dry" href="#river-stone" x="310" y="697" width="106" height="48" style="--stone-fill:#4b5148"/>
@@ -619,7 +619,7 @@
           <path d="M638 466q21 4 40 13m24 14q17 9 30 21m39 35q11 15 28 26m32 20q18 9 37 14m29 13q20 8 38 21" fill="none" stroke="#3c382b" stroke-width="5" opacity=".48"/>
           <g fill="#8b7656" stroke="#384039" stroke-width="2" opacity=".75"><path d="m743 465 8-5 10 3 1 7-9 4-9-3Z"/><path d="m790 512 7-4 9 3 1 6-8 4-8-3Z"/><path d="m846 542 9-4 10 4-1 7-10 3-8-4Z"/><path d="m909 568 8-4 11 5-2 7-10 2-7-4Z"/></g>
         </g>
-        <g class="forest-floor depth-near" data-region="clearing-understory" stroke-linecap="round" stroke-linejoin="round">
+        <g class="forest-floor depth-near scene-layer" data-scene-layer="clearing-ground" data-scale-band="near" data-region="clearing-understory" stroke-linecap="round" stroke-linejoin="round">
           <g class="evergreen-understory" data-region="evergreen-understory">
             <use class="terrain-asset" data-light="moon" data-weather="wet" href="#evergreen-shrub" x="61" y="581" width="91" height="59" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
             <use class="terrain-asset" data-light="shadow" data-weather="clear" href="#evergreen-shrub" x="174" y="542" width="112" height="73" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
@@ -662,7 +662,7 @@
           <use class="terrain-asset" data-light="shadow" data-weather="drought" href="#pinecone-sprig" x="1032" y="701" width="72" height="48" style="--cone-needle:#776343;--cone-fill:#755038"/>
           <use class="terrain-asset" data-light="shadow" data-weather="drought" href="#woodland-debris" x="1092" y="684" width="94" height="51" style="--debris-leaf:#67513a;--debris-dry:#b18754"/>
         </g>
-        <g class="understory-shrubs depth-near" data-region="foreground-brush">
+        <g class="understory-shrubs depth-near scene-layer" data-scene-layer="clearing-edge" data-scale-band="near" data-region="foreground-brush">
           <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#berry-shrub" x="8" y="565" width="155" height="108"/>
           <use class="terrain-asset" data-light="ambient" data-weather="clear" href="#berry-shrub" x="258" y="557" width="132" height="112"/>
           <use class="terrain-asset" data-light="fire" data-weather="dry" href="#evergreen-shrub" x="366" y="620" width="88" height="57" style="--shrub-fill:#31503c;--shrub-highlight:#947047"/>
@@ -670,7 +670,7 @@
           <use class="terrain-asset" data-light="ambient" data-weather="dry" href="#berry-shrub" x="1014" y="582" width="170" height="119"/>
         </g>
 
-        <g class="camp-tent" transform="translate(55)">
+        <g class="camp-tent scene-layer" data-scene-layer="campsite-back" data-scale-band="subject" transform="translate(55)">
           <use class="terrain-asset" data-light="ambient" data-weather="clear" href="#camp-tent-shell" x="831" y="481" width="242" height="169"/>
           <g clip-path="url(#tent-door)" class="tent-peekers">
             <path d="M864 506 934 485l69 157H864Z" fill="#173235"/>
@@ -710,7 +710,7 @@
         </g>
 
         <ellipse class="campfire-glow" cx="610" cy="641" rx="198" ry="105" fill="url(#fire-glow)" filter="url(#camp-soft)"/>
-        <g class="fire-ring-stones depth-near">
+        <g class="fire-ring-stones depth-near scene-layer" data-scene-layer="campsite-ground" data-scale-band="subject">
           <use class="terrain-asset fire-bed" data-light="fire" data-weather="dry" href="#fire-bed" x="522" y="651" width="180" height="65"/>
           <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="505" y="644" width="52" height="35" transform="rotate(8 531 662)" style="--ring-stone-fill:#515b55;--ring-stone-crack-opacity:.7"/>
           <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="546" y="633" width="53" height="36" transform="rotate(-5 573 651)" style="--ring-stone-fill:#626b62;--ring-stone-face-opacity:.52"/>
@@ -723,19 +723,19 @@
           <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fire-ring-stone" x="624" y="694" width="55" height="38" transform="rotate(5 652 713)" style="--ring-stone-fill:#3f4a47;--ring-stone-crack-opacity:.65"/>
           <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="665" y="680" width="53" height="36" transform="rotate(9 692 698)" style="--ring-stone-fill:#58605a"/>
         </g>
-        <g class="bench bench-left" stroke-linecap="round" stroke-linejoin="round">
+        <g class="bench bench-left scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" stroke-linecap="round" stroke-linejoin="round">
           <ellipse cx="387" cy="653" rx="170" ry="16" fill="#071716" opacity=".6"/>
           <use href="#camp-log" x="216" y="606" width="330" height="46"/>
           <path d="m270 648-15 17m249-14 16 17" stroke="#3a241b" stroke-width="13"/>
         </g>
-        <g class="bench bench-right" stroke-linecap="round" stroke-linejoin="round">
+        <g class="bench bench-right scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" stroke-linecap="round" stroke-linejoin="round">
           <ellipse cx="822" cy="653" rx="130" ry="16" fill="#071716" opacity=".6"/>
           <use href="#camp-log" x="699" y="610" width="246" height="35" style="--log-end:#684029;--log-ring:#a2643d"/>
           <path d="m743 648-15 17m187-15 15 17" stroke="#3a241b" stroke-width="13"/>
         </g>
         <g class="seat-shadows" fill="#071514" opacity=".58"><ellipse cx="350" cy="622" rx="55" ry="11"/><ellipse cx="499" cy="622" rx="43" ry="10"/><ellipse cx="755" cy="622" rx="43" ry="10"/><ellipse cx="870" cy="622" rx="51" ry="11"/></g>
 
-        <g class="camper bigfoot" stroke="#3d261c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <g class="camper bigfoot scene-layer" data-scene-layer="campsite-subjects" data-scale-band="subject" stroke="#3d261c" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
           <path d="M302 521q-7-62 47-66 57 3 48 67l-15 91h-68Z" fill="url(#bigfoot-fire)"/>
           <path d="M313 478q3-39 22-51 15-12 30 0 20 14 24 52l-13 32h-51Z" fill="#6b4733"/>
           <path d="M318 467q8-28 31-35 24 8 35 36l-8 13q-28-13-55 0Z" fill="#41281f"/>
@@ -773,7 +773,7 @@
           <g class="bigfoot-feet" fill="#765039" stroke="#3d261c" stroke-width="1.8"><path d="M299 665q10-8 21-3l14 8q6 4 4 10l-3 6h-39q-5-8 3-21Z"/><path d="M377 665q11-8 22-2l13 8q6 4 3 10l-4 6h-38q-5-10 4-22Z"/><g fill="#84583d"><ellipse cx="337" cy="676" rx="5" ry="4"/><ellipse cx="334" cy="682" rx="4.5" ry="3.5"/><ellipse cx="328" cy="684" rx="4" ry="3"/><ellipse cx="321" cy="685" rx="3.6" ry="2.8"/><ellipse cx="314" cy="685" rx="3.2" ry="2.5"/><ellipse cx="414" cy="677" rx="5" ry="4"/><ellipse cx="411" cy="683" rx="4.5" ry="3.5"/><ellipse cx="405" cy="685" rx="4" ry="3"/><ellipse cx="398" cy="686" rx="3.6" ry="2.8"/><ellipse cx="391" cy="686" rx="3.2" ry="2.5"/></g><path d="M302 676q12-6 30 1m47 0q13-7 30 1" fill="none" stroke="#b47a51" stroke-width="2"/></g>
         </g>
 
-        <g class="camper alien" stroke="#314344" stroke-width="1.5" stroke-linejoin="round">
+        <g class="camper alien scene-layer" data-scene-layer="campsite-subjects" data-scale-band="subject" stroke="#314344" stroke-width="1.5" stroke-linejoin="round">
           <path d="M467 615q-4-67 9-98 8-18 22-18 15 0 23 18 13 32 8 98Z" fill="url(#alien-fire)"/>
           <path d="M447 466q1-49 51-58 51 8 52 58-5 29-19 43-13 14-33 15-20-1-34-15-13-14-17-43Z" fill="url(#alien-head)"/>
           <path d="M458 449q40-31 80 0M454 482q9 31 44 42 35-10 45-42" fill="none" stroke="#d5ded9" stroke-width="3" opacity=".5"/>
@@ -801,7 +801,7 @@
 
         <g class="roasting-arm arm-bigfoot"><path d="M393 519q18 4 28 20l21 21 31 13-5 16-37-13-27-23-18-12Z" fill="#754b34" stroke="#3d261c" stroke-width="1.7" stroke-linejoin="round"/><path d="M461 574 605 529" fill="none" stroke="#72543d" stroke-width="5"/><path d="M461 572 605 527" fill="none" stroke="#d2b98c" stroke-width="2"/><path d="m527 552 7-6m22-2 5 3" fill="none" stroke="#4c3528" stroke-width="2"/><path d="M461 568q9-3 17 3l5 7-4 10-9 3-11-6Z" fill="#93603f" stroke="#3d261c" stroke-width="1.7"/><path d="m468 573 4 6q2 4-1 8m5-11 2 5q1 4-2 7m-11-12-2 7" fill="none" stroke="#3d261c" stroke-width="2" stroke-linecap="round"/><use class="terrain-asset roasting-marshmallow" data-light="fire" data-weather="dry" href="#toasted-marshmallow" x="594" y="518" width="22" height="19"/></g>
 
-        <g class="camper mothman" stroke="#291d2a" stroke-width="1.6" stroke-linejoin="round">
+        <g class="camper mothman scene-layer" data-scene-layer="campsite-subjects" data-scale-band="subject" stroke="#291d2a" stroke-width="1.6" stroke-linejoin="round">
           <path d="M720 616q-10-78 34-130 43 48 32 130Z" fill="url(#moth-fire)"/>
           <path class="moth-wing wing-left" d="M750 520q-47-77-91-72 9 30 32 58-25-7-39 7 35 20 70 72Z" fill="#252631"/>
           <path class="moth-wing wing-right" d="M760 520q48-79 92-72-9 31-32 59 25-8 40 7-36 20-71 72Z" fill="#252631"/>
@@ -829,7 +829,7 @@
           <g class="roasting-arm arm-moth"><path d="m733 520-13 3-20 24-37 20 7 16 41-20 27-25Z" fill="#443848"/><path d="M671 570 621 535" fill="none" stroke="#72543d" stroke-width="4.5"/><path d="M671 568 621 533" fill="none" stroke="#d2b98c" stroke-width="1.8"/><path d="m646 552-4-7m-12-3-6 1" fill="none" stroke="#4c3528" stroke-width="2"/><path d="m662 567 13-4 9 6-3 12-14 4Z" fill="#57455b"/><path d="M666 569q8-1 12 4m-8 0q5 2 5 8m0-9q6 3 5 9" fill="none" stroke="#291d2a" stroke-width="2"/><path d="M664 576q7 4 15 1" fill="none" stroke="#9a789e" stroke-width="1.5" opacity=".55"/><use class="terrain-asset roasting-marshmallow" data-light="fire" data-weather="clear" href="#toasted-marshmallow" x="613" y="528" width="18" height="15"/></g>
         </g>
 
-        <g class="camper dogman" stroke="#30231e" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+        <g class="camper dogman scene-layer" data-scene-layer="campsite-subjects" data-scale-band="subject" stroke="#30231e" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
           <path d="M824 614q-12-66 10-112 10-22 34-30 33 7 47 34 19 43 8 108Z" fill="url(#dogman-fire)"/>
           <path d="m840 456 8-38 21 25 23-26 6 42q-3 35-29 47-28-12-29-50Z" fill="url(#dogman-head)"/>
           <path d="m848 420 9 30-15 7m49-38-9 31 16 8" fill="#342925"/>
@@ -864,7 +864,7 @@
 
         <rect class="scene-grain" width="1200" height="760" fill="#8fa39c" filter="url(#scene-grain)" opacity=".055" style="mix-blend-mode:soft-light" pointer-events="none"/>
 
-        <g class="campfire" transform="translate(134 143) scale(.78)">
+        <g class="campfire scene-layer" data-scene-layer="campsite-effects" data-scale-band="subject" transform="translate(134 143) scale(.78)">
           <g class="coal-bed"><use class="terrain-asset" data-light="fire" data-weather="dry" href="#coal-piece" x="537" y="658" width="44" height="24" transform="rotate(-7 559 670)"/><use class="terrain-asset" data-light="fire" data-weather="clear" href="#coal-piece" x="563" y="667" width="44" height="24" transform="rotate(5 585 679)" style="--coal-fill:#472725;--coal-glow-opacity:.28"/><use class="terrain-asset" data-light="fire" data-weather="dry" href="#coal-piece" x="592" y="667" width="46" height="25" transform="rotate(-4 615 680)" style="--coal-fill:#92392a;--coal-glow:#ff8a43"/><use class="terrain-asset" data-light="shadow" data-weather="wet" href="#coal-piece" x="622" y="657" width="44" height="24" transform="rotate(8 644 669)" style="--coal-fill:#512624;--coal-glow-opacity:.22"/></g>
           <g class="fire-logs" stroke-linecap="round">
             <use href="#camp-log" x="522" y="642" width="142" height="20" style="--log-bark:#6d3927;--log-outline:#3a211b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
@@ -888,7 +888,7 @@
           <use class="terrain-asset" data-light="fire" data-weather="drought" href="#camp-stove" x="535" y="610" width="150" height="92" style="--asset-dry-opacity:0;--asset-drought-opacity:0"/>
         </g>
 
-        <g class="smoke-404" mask="url(#smoke-cutout)" filter="url(#smoke-texture)">
+        <g class="smoke-404 scene-layer" data-scene-layer="air-front" mask="url(#smoke-cutout)" filter="url(#smoke-texture)">
           <g class="smoke-character smoke-character-left">
             <path class="forming-tendril" pathLength="1" d="M644 414c-30-19-58-7-54-37 4-27 44-22 36-51-6-24-31-25-17-60"/>
             <text class="smoke-number smoke-number-haze" x="575" y="400">4</text>
@@ -909,6 +909,12 @@
           <g class="smoke-puffs"><use href="#smoke-puff" x="591" y="265" width="24" height="24"/><use href="#smoke-puff" x="665" y="319" width="20" height="20" style="--smoke-puff-size:6"/><use href="#smoke-puff" x="747" y="256" width="22" height="22" style="--smoke-puff-size:6.5"/><use href="#smoke-puff" x="832" y="293" width="20" height="20" style="--smoke-puff-size:6"/><use href="#smoke-puff" x="881" y="340" width="24" height="24"/></g>
         </g>
         <path class="smoke-thread" d="M612 555c-24-29 23-38-4-69s18-42 0-78" fill="none" stroke="#d4dedb" stroke-width="8" stroke-linecap="round" opacity=".58"/>
+        <g class="foreground-occlusion depth-near scene-layer" data-scene-layer="foreground-edge" data-scale-band="foreground" data-region="foreground-occlusion">
+          <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#evergreen-shrub" x="-36" y="690" width="144" height="94" style="--shrub-fill:#102f29;--shrub-highlight:#4e6d55"/>
+          <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#moss-clump" x="48" y="731" width="126" height="44" style="--moss-fill:#294e3c;--moss-highlight:#66805d"/>
+          <use class="terrain-asset" data-light="shadow" data-weather="dry" href="#fallen-branch" x="949" y="725" width="142" height="53" transform="rotate(-4 1020 752)" style="--branch-fill:#422f23"/>
+          <use class="terrain-asset" data-light="shadow" data-weather="cloudy" href="#berry-shrub" x="1082" y="680" width="164" height="115" style="--shrub-fill:#18392f"/>
+        </g>
         <rect class="palette-wash" width="1200" height="760" pointer-events="none"/>
         <rect class="theme-light-wash" width="1200" height="760" pointer-events="none"/>
 
