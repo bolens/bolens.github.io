@@ -16,7 +16,7 @@ const glyphs = {
   fire: null, pine: null, summit: null, boot: 'glyph-boot-step', stars: null,
   'arrow-east': 'glyph-arrow-glide', 'arrow-north-east': 'glyph-arrow-glide', 'arrow-north': 'glyph-arrow-glide', 'arrow-north-west': 'glyph-arrow-glide',
   'arrow-west': 'glyph-arrow-glide', 'arrow-south-west': 'glyph-arrow-glide', 'arrow-south': 'glyph-arrow-glide', 'arrow-south-east': 'glyph-arrow-glide',
-  waypoint: 'glyph-waypoint-hop', search: null, close: 'glyph-close-snap', command: null,
+  waypoint: null, search: null, close: null, command: null,
   keyboard: null, palette: null, role: null, layers: null, repository: null, backpack: null,
   shield: null, terminal: null, network: null, wrench: null,
   cloud: null, database: null, lock: null, refresh: null, package: null, bug: null, monitor: null, code: null,
@@ -33,6 +33,8 @@ const internalMotions = {
   map: ['--glyph-map-left-motion', 'glyph-map-left-unfold'],
   pine: ['--glyph-pine-motion', 'glyph-pine-canopy-sway'],
   search: ['--glyph-search-motion', 'glyph-search-scan-sweep'],
+  waypoint: ['--glyph-waypoint-motion', 'glyph-waypoint-center-pulse'],
+  close: ['--glyph-close-motion', 'glyph-close-center-snap'],
   stars: ['--glyph-stars-motion', 'glyph-star-a-twinkle'],
   command: ['--glyph-command-motion', 'glyph-command-chevron-type'],
   keyboard: ['--glyph-keyboard-motion', 'glyph-keyboard-key-a-tap'],
@@ -55,6 +57,22 @@ const internalMotions = {
   monitor: ['--glyph-monitor-motion', 'glyph-monitor-cursor-blink'],
   code: ['--glyph-code-motion', 'glyph-code-slash-compile'],
 };
+const secondaryMotions = {
+  cairn: [['--glyph-cairn-middle-motion', 'glyph-cairn-middle-stack'], ['--glyph-cairn-upper-motion', 'glyph-cairn-upper-stack']],
+  map: [['--glyph-map-right-motion', 'glyph-map-right-unfold'], ['--glyph-map-route-motion', 'glyph-map-route-reveal']],
+  layers: [['--glyph-layers-middle-motion', 'glyph-layers-middle-settle'], ['--glyph-layers-bottom-motion', 'glyph-layers-bottom-settle']],
+  network: [['--glyph-network-link-b-motion', 'glyph-network-link-b-draw'], ['--glyph-network-link-c-motion', 'glyph-network-link-c-draw'], ['--glyph-network-node-a-motion', 'glyph-network-node-ping-a'], ['--glyph-network-node-b-motion', 'glyph-network-node-ping-b'], ['--glyph-network-node-c-motion', 'glyph-network-node-ping-c']],
+  cloud: [['--glyph-cloud-drop-b-motion', 'glyph-cloud-drop-b-fall'], ['--glyph-cloud-drop-c-motion', 'glyph-cloud-drop-c-fall']],
+  database: [['--glyph-database-row-b-motion', 'glyph-database-row-b-read']],
+  code: [['--glyph-code-left-motion', 'glyph-code-left-compile'], ['--glyph-code-right-motion', 'glyph-code-right-compile']],
+  stars: [['--glyph-stars-b-motion', 'glyph-star-b-twinkle'], ['--glyph-stars-c-motion', 'glyph-star-c-twinkle'], ['--glyph-stars-d-motion', 'glyph-star-d-twinkle'], ['--glyph-stars-e-motion', 'glyph-star-e-twinkle']],
+  command: [['--glyph-command-cursor-motion', 'glyph-command-cursor-blink']],
+  keyboard: [['--glyph-keyboard-key-b-motion', 'glyph-keyboard-key-b-tap'], ['--glyph-keyboard-space-motion', 'glyph-keyboard-space-tap']],
+  palette: [['--glyph-palette-dot-b-motion', 'glyph-palette-dot-b-mix'], ['--glyph-palette-dot-c-motion', 'glyph-palette-dot-c-mix'], ['--glyph-palette-dot-d-motion', 'glyph-palette-dot-d-mix']],
+};
+const allInternalMotions = Object.values(internalMotions).map(([property, name, duration = 680]) => [property, name, duration])
+  .concat(Object.values(secondaryMotions).flat().map(([property, name]) => [property, name, 680]));
+const motionDeclarations = allInternalMotions.map(([property, name, duration]) => `${property}:${name} ${duration}ms linear`).join(';');
 const arrowVectors = {
   'arrow-east': [1, 0], 'arrow-north-east': [1, -1], 'arrow-north': [0, -1], 'arrow-north-west': [-1, -1],
   'arrow-west': [-1, 0], 'arrow-south-west': [-1, 1], 'arrow-south': [0, 1], 'arrow-south-east': [1, 1],
@@ -72,7 +90,9 @@ if (!/glyph-map-left[\s\S]*glyph-map-center[\s\S]*glyph-map-right[\s\S]*glyph-ma
 if (!/glyph-role-head[\s\S]*glyph-role-shoulders/.test(sprite) || !/glyph-layers-bottom[\s\S]*glyph-layers-middle[\s\S]*glyph-layers-top/.test(sprite) || !/glyph-repository-cover[\s\S]*glyph-repository-lines" pathLength="1"/.test(sprite)) throw new Error('field markers must animate internal geometry while their frames remain fixed');
 if (!/glyph-backpack-body[\s\S]*glyph-backpack-flap/.test(sprite)) throw new Error('backpack body and flap must have independent geometry');
 if (!/glyph-lantern-housing[\s\S]*glyph-lantern-flame[\s\S]*glyph-lantern-rays/.test(sprite)) throw new Error('lantern housing, flame, and rays must have independent geometry');
-if (!/glyph-star-a[\s\S]*glyph-star-b[\s\S]*glyph-star-c/.test(sprite)) throw new Error('stars must twinkle independently while the constellation stays fixed');
+if (!/glyph-star-a[\s\S]*glyph-star-b[\s\S]*glyph-star-c[\s\S]*glyph-star-d[\s\S]*glyph-star-e/.test(sprite)) throw new Error('every star must twinkle independently while the constellation stays fixed');
+if (!/glyph-waypoint-frame[\s\S]*glyph-waypoint-center/.test(sprite)) throw new Error('waypoint center must animate independently from its frame');
+if (!/glyph-close-corners[\s\S]*glyph-close-center/.test(sprite)) throw new Error('close center must animate independently from its corner marks');
 if (!/glyph-command-frame[\s\S]*glyph-command-chevron[\s\S]*glyph-command-cursor/.test(sprite)) throw new Error('command prompt details must animate independently from its frame');
 if (!/glyph-keyboard-frame[\s\S]*glyph-keyboard-key-a[\s\S]*glyph-keyboard-key-b[\s\S]*glyph-keyboard-space/.test(sprite)) throw new Error('keyboard keys must animate independently from its frame');
 if (!/glyph-palette-body[\s\S]*glyph-palette-dot-a[\s\S]*glyph-palette-dot-d/.test(sprite)) throw new Error('palette colors must animate independently from its body');
@@ -86,7 +106,10 @@ if (!/glyph-database-shell[\s\S]*glyph-database-row-a" pathLength="1"[\s\S]*glyp
 if (!/glyph-boot-body" d="[^"]*V12H7V3\.5Z/.test(sprite) || !/glyph-boot-laces[\s\S]*glyph-boot-tread/.test(sprite)) throw new Error('boot must have a closed rear contour with independent laces and tread');
 for (const glyph of ['shield', 'terminal', 'network', 'wrench']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const glyph of ['cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
-for (const motion of ['glyph-trailhead-sign-flip', 'glyph-compass-spin', 'glyph-fire-flicker', 'glyph-binoculars-zoom', 'glyph-summit-snow', 'glyph-switchback-trace', 'glyph-cairn-top-stack', 'glyph-shelter-pitch', 'glyph-map-left-unfold', 'glyph-role-nod', 'glyph-layers-top-settle', 'glyph-layers-middle-settle', 'glyph-layers-bottom-settle', 'glyph-repository-write', 'glyph-backpack-pack', 'glyph-lantern-glow', 'glyph-shield-check-draw', 'glyph-terminal-cursor-run', 'glyph-network-link-a-draw', 'glyph-network-link-b-draw', 'glyph-network-link-c-draw', 'glyph-network-node-ping-a', 'glyph-wrench-tighten', 'glyph-cloud-drop-a-fall', 'glyph-cloud-drop-b-fall', 'glyph-cloud-drop-c-fall', 'glyph-database-row-a-read', 'glyph-database-row-b-read', 'glyph-lock-release', 'glyph-refresh-cycle', 'glyph-package-fold-close', 'glyph-bug-inspect', 'glyph-monitor-cursor-blink', 'glyph-code-left-compile', 'glyph-code-right-compile', 'glyph-code-slash-compile', 'glyph-star-a-twinkle', 'glyph-star-b-twinkle', 'glyph-star-c-twinkle', 'glyph-command-chevron-type', 'glyph-command-cursor-blink', 'glyph-keyboard-key-a-tap', 'glyph-keyboard-key-b-tap', 'glyph-keyboard-space-tap', 'glyph-palette-dot-a-mix', 'glyph-palette-dot-d-mix', 'glyph-pine-canopy-sway', 'glyph-search-scan-sweep']) if (!sprite.includes(`@keyframes ${motion}`)) throw new Error(`${motion} must be defined inside the external sprite`);
+for (const [, motion] of allInternalMotions) if (!sprite.includes(`@keyframes ${motion}`)) throw new Error(`${motion} must be defined inside the external sprite`);
+const keyframeNames = [...sprite.matchAll(/@keyframes\s+([\w-]+)/g)].map((match) => match[1]);
+const duplicateKeyframes = keyframeNames.filter((name, index) => keyframeNames.indexOf(name) !== index);
+if (duplicateKeyframes.length) throw new Error(`sprite keyframes must be unique: ${[...new Set(duplicateKeyframes)].join(', ')}`);
 
 const hover = async (selector) => {
   const point = await send('Runtime.evaluate', { expression: `(()=>{const element=document.querySelector(${JSON.stringify(selector)});element.scrollIntoView({block:'center',behavior:'instant'});const box=element.getBoundingClientRect();return {x:box.left+box.width/2,y:box.top+box.height/2}})()`, returnByValue: true });
@@ -102,15 +125,16 @@ try {
 
   const realContexts = [
     ['.hero-actions .button', '.hero-actions .button use', 'glyph-arrow-glide'],
-    ['.principles li', '.principles li use', 'glyph-waypoint-hop'],
+    ['.principles li', '.principles li use', null, '--glyph-waypoint-motion', 'glyph-waypoint-center-pulse'],
     ['.section-heading .eyebrow', '.section-heading .eyebrow use', null],
   ];
-  for (const [trigger, target, expected] of realContexts) {
+  for (const [trigger, target, expected, internalProperty, internalName] of realContexts) {
     await hover(trigger);
     const animation = await send('Runtime.evaluate', { expression: `document.querySelector(${JSON.stringify(target)}).getAnimations()[0]?.animationName`, returnByValue: true });
     if (expected === null) {
-      const signMotion = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector(${JSON.stringify(target)})).getPropertyValue('--glyph-trailhead-motion').trim()`, returnByValue: true });
-      if ((animation.result.value && animation.result.value !== 'none') || !signMotion.result.value.startsWith('glyph-trailhead-sign-flip 680ms')) throw new Error(`${trigger} did not isolate the signboard motion`);
+      const internal = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector(${JSON.stringify(target)})).getPropertyValue(${JSON.stringify(internalProperty || '--glyph-trailhead-motion')}).trim()`, returnByValue: true });
+      const expectedInternal = internalName || 'glyph-trailhead-sign-flip';
+      if ((animation.result.value && animation.result.value !== 'none') || !internal.result.value.startsWith(`${expectedInternal} 680ms`)) throw new Error(`${trigger} did not isolate ${expectedInternal}`);
     } else if (animation.result.value !== expected) throw new Error(`${trigger} did not trigger ${expected}`);
     await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 0, y: 0 });
   }
@@ -126,7 +150,7 @@ try {
   for (const [trigger, target, expected, internalProperty, internalName] of [
     ['.command-palette .overlay-heading', '.command-palette .overlay-heading-glyph use', null, '--glyph-command-motion', 'glyph-command-chevron-type'],
     ['.command-search', '.command-search-glyph use', null, '--glyph-search-motion', 'glyph-search-scan-sweep'],
-    ['.command-palette .overlay-close', '.command-palette .overlay-close use', 'glyph-close-snap'],
+    ['.command-palette .overlay-close', '.command-palette .overlay-close use', null, '--glyph-close-motion', 'glyph-close-center-snap'],
   ]) {
     await hover(trigger);
     const animation = await send('Runtime.evaluate', { expression: `document.querySelector(${JSON.stringify(target)}).getAnimations()[0]?.animationName`, returnByValue: true });
@@ -159,11 +183,6 @@ try {
   const idle = await send('Runtime.evaluate', { expression: `document.querySelectorAll('#glyph-motion-gallery use').length===${Object.keys(glyphs).length}&&[...document.querySelectorAll('#glyph-motion-gallery use')].every((use)=>use.getAnimations().length===0&&getComputedStyle(use).transform==='none')`, returnByValue: true });
   if (!idle.result.value) throw new Error('glyphs must remain static before hover');
 
-  await hover('[data-glyph="waypoint"]');
-  const waypointVisibility = await send('Runtime.evaluate', { expression: `(()=>{const svg=document.querySelector('[data-glyph="waypoint"] svg');const use=svg.querySelector('use');const animation=use.getAnimations()[0];animation.pause();animation.currentTime=258;const svgRect=svg.getBoundingClientRect();const glyphRect=use.getBoundingClientRect();return {overflow:getComputedStyle(svg).overflow,glyphClearsTop:glyphRect.top<svgRect.top}})()`, returnByValue: true });
-  if (waypointVisibility.result.value.overflow !== 'visible' || !waypointVisibility.result.value.glyphClearsTop) throw new Error(`waypoint hop is clipped: ${JSON.stringify(waypointVisibility.result.value)}`);
-  await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 0, y: 0 });
-
   for (const [name, expectedAnimation] of Object.entries(glyphs)) {
     const selector = `[data-glyph="${name}"]`;
     await hover(selector);
@@ -174,6 +193,10 @@ try {
       const [property, expectedInternalMotion, expectedDuration = 680] = internalMotions[name];
       const internalMotion = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector(${JSON.stringify(`${selector} use`)})).getPropertyValue(${JSON.stringify(property)}).trim()`, returnByValue: true });
       if (!internalMotion.result.value.startsWith(`${expectedInternalMotion} ${expectedDuration}ms`)) throw new Error(`${name} did not trigger ${expectedInternalMotion} at ${expectedDuration}ms`);
+      for (const [secondaryProperty, secondaryMotion] of secondaryMotions[name] ?? []) {
+        const secondary = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector(${JSON.stringify(`${selector} use`)})).getPropertyValue(${JSON.stringify(secondaryProperty)}).trim()`, returnByValue: true });
+        if (!secondary.result.value.startsWith(`${secondaryMotion} 680ms`)) throw new Error(`${name} did not trigger secondary motion ${secondaryMotion}`);
+      }
     } else if (value.missing || value.name !== expectedAnimation || value.duration !== 680 || value.first === 'none' || value.first === value.second) throw new Error(`${name} hover motion failed: ${JSON.stringify(value)}`);
     await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 0, y: 0 });
   }
@@ -199,18 +222,51 @@ try {
     const evidenceDir = '/tmp/bolens-glyph-motion';
     mkdirSync(evidenceDir, { recursive: true });
     await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
-    await send('Runtime.evaluate', { expression: `(()=>{const style=document.createElement('style');style.textContent='#glyph-motion-gallery use{--glyph-compass-motion:glyph-compass-spin 680ms var(--ease-pop);--glyph-fire-motion:glyph-fire-flicker 680ms var(--ease-pop);--glyph-binocular-motion:glyph-binoculars-zoom 680ms var(--ease-pop);--glyph-summit-motion:glyph-summit-snow 680ms var(--ease-route);--glyph-switchback-motion:glyph-switchback-trace 960ms var(--ease-route);--glyph-cairn-middle-motion:glyph-cairn-middle-stack 680ms var(--ease-route);--glyph-cairn-upper-motion:glyph-cairn-upper-stack 680ms var(--ease-route);--glyph-cairn-top-motion:glyph-cairn-top-stack 680ms var(--ease-route);--glyph-shelter-motion:glyph-shelter-pitch 680ms var(--ease-pop);--glyph-map-left-motion:glyph-map-left-unfold 680ms var(--ease-pop);--glyph-map-right-motion:glyph-map-right-unfold 680ms var(--ease-pop);--glyph-map-route-motion:glyph-map-route-reveal 680ms var(--ease-route);--glyph-role-motion:glyph-role-nod 680ms var(--ease-pop);--glyph-layers-motion:glyph-layers-settle 680ms var(--ease-pop);--glyph-repository-motion:glyph-repository-write 680ms var(--ease-route);--glyph-backpack-motion:glyph-backpack-pack 680ms var(--ease-pop);--glyph-lantern-motion:glyph-lantern-glow 680ms var(--ease-pop);--glyph-shield-motion:glyph-shield-check-draw 680ms var(--ease-route);--glyph-terminal-motion:glyph-terminal-cursor-run 680ms var(--ease-route);--glyph-network-motion:glyph-network-connect 680ms var(--ease-route);--glyph-wrench-motion:glyph-wrench-tighten 680ms var(--ease-pop);animation:var(--glyph-motion) 680ms var(--ease-pop)}';document.head.append(style)})()` });
-    await send('Runtime.evaluate', { expression: `(()=>{const style=document.createElement('style');style.textContent='#glyph-motion-gallery use{--glyph-cloud-motion:glyph-cloud-rain 680ms var(--ease-route);--glyph-database-motion:glyph-database-read 680ms var(--ease-route);--glyph-lock-motion:glyph-lock-release 680ms var(--ease-pop);--glyph-refresh-motion:glyph-refresh-cycle 680ms var(--ease-pop);--glyph-package-motion:glyph-package-open 680ms var(--ease-pop);--glyph-bug-motion:glyph-bug-inspect 680ms var(--ease-pop);--glyph-monitor-motion:glyph-monitor-type 680ms var(--ease-route);--glyph-code-motion:glyph-code-compile 680ms var(--ease-route)}';document.head.append(style)})()` });
-    await send('Runtime.evaluate', { expression: `(()=>{const style=document.createElement('style');style.textContent='#glyph-motion-gallery use{--glyph-stars-motion:glyph-star-a-twinkle 680ms var(--ease-pop);--glyph-stars-b-motion:glyph-star-b-twinkle 680ms var(--ease-pop);--glyph-stars-c-motion:glyph-star-c-twinkle 680ms var(--ease-pop);--glyph-command-motion:glyph-command-chevron-type 680ms var(--ease-route);--glyph-command-cursor-motion:glyph-command-cursor-blink 680ms steps(1,end);--glyph-keyboard-motion:glyph-keyboard-key-a-tap 680ms var(--ease-pop);--glyph-keyboard-key-b-motion:glyph-keyboard-key-b-tap 680ms var(--ease-pop);--glyph-keyboard-space-motion:glyph-keyboard-space-tap 680ms var(--ease-pop);--glyph-palette-motion:glyph-palette-dot-a-mix 680ms var(--ease-pop);--glyph-palette-dot-b-motion:glyph-palette-dot-b-mix 680ms var(--ease-pop);--glyph-palette-dot-c-motion:glyph-palette-dot-c-mix 680ms var(--ease-pop);--glyph-palette-dot-d-motion:glyph-palette-dot-d-mix 680ms var(--ease-pop);--glyph-layers-motion:glyph-layers-top-settle 680ms var(--ease-route);--glyph-layers-middle-motion:glyph-layers-middle-settle 680ms var(--ease-route);--glyph-layers-bottom-motion:glyph-layers-bottom-settle 680ms var(--ease-route);--glyph-network-motion:glyph-network-link-a-draw 680ms var(--ease-route);--glyph-network-link-b-motion:glyph-network-link-b-draw 680ms var(--ease-route);--glyph-network-link-c-motion:glyph-network-link-c-draw 680ms var(--ease-route);--glyph-network-node-a-motion:glyph-network-node-ping-a 680ms var(--ease-pop);--glyph-network-node-b-motion:glyph-network-node-ping-b 680ms var(--ease-pop);--glyph-network-node-c-motion:glyph-network-node-ping-c 680ms var(--ease-pop);--glyph-cloud-motion:glyph-cloud-drop-a-fall 680ms var(--ease-route);--glyph-cloud-drop-b-motion:glyph-cloud-drop-b-fall 680ms var(--ease-route);--glyph-cloud-drop-c-motion:glyph-cloud-drop-c-fall 680ms var(--ease-route);--glyph-package-motion:glyph-package-fold-close 680ms var(--ease-pop);--glyph-monitor-motion:glyph-monitor-cursor-blink 680ms steps(1,end);--glyph-code-left-motion:glyph-code-left-compile 680ms var(--ease-route);--glyph-code-right-motion:glyph-code-right-compile 680ms var(--ease-route);--glyph-code-motion:glyph-code-slash-compile 680ms var(--ease-route)}';document.head.append(style)})()` });
-    await send('Runtime.evaluate', { expression: `(()=>{const style=document.createElement('style');style.textContent='#glyph-motion-gallery use{--glyph-pine-motion:glyph-pine-canopy-sway 680ms var(--ease-pop);--glyph-search-motion:glyph-search-scan-sweep 680ms var(--ease-route);--glyph-database-motion:glyph-database-row-a-read 680ms var(--ease-route);--glyph-database-row-b-motion:glyph-database-row-b-read 680ms var(--ease-route)}';document.head.append(style)})()` });
-    await send('Runtime.evaluate', { expression: `(()=>{const style=document.createElement('style');style.textContent='#glyph-motion-gallery use{--glyph-trailhead-motion:glyph-trailhead-sign-flip 680ms var(--ease-pop)}';document.head.append(style)})()` });
+    await send('Runtime.evaluate', { expression: `(()=>{
+      const parsed=new DOMParser().parseFromString(${JSON.stringify(sprite)},'image/svg+xml');
+      const style=document.createElement('style');
+      style.textContent=[...parsed.querySelectorAll('style')].map((node)=>node.textContent).join('\\n');
+      document.head.append(style);
+      const gallery=document.createElement('section');
+      gallery.id='glyph-phase-gallery';
+      gallery.setAttribute('aria-label','Deterministic glyph animation phases');
+      gallery.style.cssText='position:fixed;z-index:101;inset:1rem;display:grid;grid-template-columns:repeat(7,1fr);gap:.65rem;padding:1rem;overflow:auto;background:var(--paper)';
+      for(const name of ${JSON.stringify(Object.keys(internalMotions))}){
+        const symbol=parsed.querySelector('#glyph-'+name);
+        const card=document.createElement('article');
+        card.style.cssText='min-height:5.4rem;display:grid;place-items:center;gap:.25rem';
+        const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+        svg.setAttribute('viewBox',symbol.getAttribute('viewBox')||'0 0 24 24');
+        svg.setAttribute('aria-hidden','true');
+        svg.setAttribute('style','width:2rem;height:2rem;${motionDeclarations}');
+        svg.innerHTML=symbol.innerHTML;
+        const label=document.createElement('small');
+        label.textContent=name;
+        label.style.cssText='font:600 10px var(--mono)';
+        card.append(svg,label);
+        gallery.append(card);
+      }
+      document.querySelector('#glyph-motion-gallery').remove();
+      document.body.append(gallery);
+    })()` });
+    const phaseAudit = await send('Runtime.evaluate', { expression: `(()=>{
+      const gallery=document.querySelector('#glyph-phase-gallery');
+      const animations=gallery.getAnimations({subtree:true});
+      const names=new Set(animations.map((animation)=>animation.animationName));
+      const missing=${JSON.stringify(allInternalMotions.map(([, name]) => name))}.filter((name)=>!names.has(name));
+      const fixed=['glyph-waypoint-frame','glyph-close-corners','glyph-compass-frame','glyph-fire-logs','glyph-pine-trunk'];
+      const movingFixed=fixed.filter((className)=>gallery.querySelector('.'+className)?.getAnimations().length);
+      animations.forEach((animation)=>{animation.pause();animation.currentTime=220});
+      return {count:animations.length,missing,movingFixed};
+    })()`, returnByValue: true });
+    if (phaseAudit.result.value.missing.length || phaseAudit.result.value.movingFixed.length) throw new Error(`deterministic phase fixture failed: ${JSON.stringify(phaseAudit.result.value)}`);
+
     for (const [width, height, viewport] of [[1440, 1000, 'desktop'], [390, 844, 'mobile']]) {
       await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
-      await send('Runtime.evaluate', { expression: `document.querySelector('#glyph-motion-gallery').style.gridTemplateColumns='repeat(${width < 600 ? 3 : 7},1fr)'` });
-      await send('Runtime.evaluate', { expression: `[...document.querySelectorAll('#glyph-motion-gallery use')].forEach((use)=>{const animation=use.getAnimations()[0];if(animation){animation.pause();animation.currentTime=340}})` });
+      await send('Runtime.evaluate', { expression: `document.querySelector('#glyph-phase-gallery').style.gridTemplateColumns='repeat(${width < 600 ? 3 : 7},1fr)';document.querySelector('#glyph-phase-gallery').getAnimations({subtree:true}).forEach((animation)=>{animation.pause();animation.currentTime=220})` });
       const capture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
-      writeFileSync(`${evidenceDir}/${viewport}-phase-mid.png`, Buffer.from(capture.data, 'base64'));
-      await send('Runtime.evaluate', { expression: `[...document.querySelectorAll('#glyph-motion-gallery use')].forEach((use)=>{const animation=use.getAnimations()[0];if(animation)animation.currentTime=560})` });
+      writeFileSync(`${evidenceDir}/${viewport}-phase-early.png`, Buffer.from(capture.data, 'base64'));
+      await send('Runtime.evaluate', { expression: `document.querySelector('#glyph-phase-gallery').getAnimations({subtree:true}).forEach((animation)=>animation.currentTime=470)` });
       const lateCapture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
       writeFileSync(`${evidenceDir}/${viewport}-phase-late.png`, Buffer.from(lateCapture.data, 'base64'));
     }
