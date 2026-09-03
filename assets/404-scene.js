@@ -11,6 +11,16 @@
   const motionReduced = () => reducedMotion.matches || document.documentElement.dataset.motion === 'reduced';
   const restrained = navigator.connection?.saveData || (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4);
   const targetInterval = 1000 / (restrained ? 20 : 30);
+  const atmosphereProfiles = Object.freeze({
+    clear: Object.freeze({ stars: 1, fog: 1, fireflies: 1, embers: 1 }),
+    cloudy: Object.freeze({ stars: .25, fog: 1.25, fireflies: .7, embers: .9 }),
+    rainy: Object.freeze({ stars: .08, fog: 1.4, fireflies: .25, embers: .18 }),
+    wet: Object.freeze({ stars: .7, fog: 1.2, fireflies: .8, embers: .85 }),
+    dry: Object.freeze({ stars: .9, fog: .45, fireflies: 1.1, embers: 1 }),
+    snowy: Object.freeze({ stars: .35, fog: 1.55, fireflies: .18, embers: .25 }),
+    drought: Object.freeze({ stars: .7, fog: .08, fireflies: .55, embers: 0 }),
+  });
+  const profileFor = (condition) => atmosphereProfiles[condition] || atmosphereProfiles.clear;
   const random = (() => {
     let state = 0x404cafe;
     return () => {
@@ -29,8 +39,8 @@
   const fireflies = Array.from({ length: restrained ? 12 : 20 }, () => ({
     x: range(45, 1155), y: range(470, 625), radius: range(1.1, 2.1), phase: range(0, Math.PI * 2), speed: range(.22, .42), drift: range(2, 7)
   })).filter(({ x }) => Math.abs(x - 610) > 100);
-  const embers = Array.from({ length: restrained ? 7 : 12 }, () => ({
-    x: range(-24, 24), lift: range(22, 78), sway: range(-12, 12), radius: range(.8, 1.8), phase: range(0, 1)
+  const embers = Array.from({ length: restrained ? 4 : 7 }, () => ({
+    x: range(-15, 15), lift: range(14, 38), sway: range(-5, 5), radius: range(.55, 1.15), phase: range(0, 1)
   }));
   const grain = Array.from({ length: restrained ? 80 : 150 }, () => ({
     x: random(), y: random(), radius: range(.25, .75), alpha: range(.012, .038)
@@ -58,6 +68,7 @@
   let visible = !document.hidden;
   let overlayActive = document.documentElement.classList.contains('ui-overlay-open');
   let parallaxFrame = 0;
+  let atmosphere = profileFor(window.portfolioWeather?.condition);
 
   const setParallax = (x = 0, y = 0) => {
     figure.style.setProperty('--parallax-back-x', `${(-x * .7).toFixed(2)}px`);
@@ -136,7 +147,7 @@
 
     stars.forEach((star) => {
       const [x, y] = point(star.x, star.y);
-      const luminance = star.alpha * (.72 + .28 * Math.sin(time * star.speed + star.phase));
+      const luminance = star.alpha * atmosphere.stars * (.72 + .28 * Math.sin(time * star.speed + star.phase));
       context.fillStyle = `rgba(218,236,232,${luminance})`;
       context.beginPath();
       context.arc(x, y, Math.max(.45, star.radius * view.scale), 0, Math.PI * 2);
@@ -147,8 +158,8 @@
     [[330, 492, 245, 25, .038], [865, 515, 295, 32, .045], [620, 575, 215, 22, .032]].forEach(([x, y, rx, ry, alpha], index) => {
       const [cx, cy] = point(x + Math.sin(fogTime + index * 1.8) * 13, y);
       const gradient = context.createRadialGradient(cx, cy, 0, cx, cy, rx * view.scale);
-      gradient.addColorStop(0, `rgba(184,207,199,${alpha})`);
-      gradient.addColorStop(.62, `rgba(128,166,157,${alpha * .55})`);
+      gradient.addColorStop(0, `rgba(184,207,199,${alpha * atmosphere.fog})`);
+      gradient.addColorStop(.62, `rgba(128,166,157,${alpha * atmosphere.fog * .55})`);
       gradient.addColorStop(1, 'rgba(100,140,134,0)');
       context.save();
       context.translate(cx, cy);
@@ -166,7 +177,7 @@
 
     fireflies.forEach((fly) => {
       const wave = .5 + .5 * Math.sin(time * fly.speed + fly.phase);
-      const alpha = .045 + .3 * wave * wave;
+      const alpha = (.045 + .3 * wave * wave) * atmosphere.fireflies;
       const [x, y] = point(fly.x + Math.sin(time * .13 + fly.phase) * fly.drift, fly.y + Math.cos(time * .1 + fly.phase) * 2.5);
       const glowSize = 16 * view.scale;
       context.globalAlpha = alpha;
@@ -179,10 +190,10 @@
     });
 
     embers.forEach((ember) => {
-      const progress = (time * .15 + ember.phase) % 1;
-      const alpha = Math.sin(progress * Math.PI) * .48;
-      const x = fireX + (ember.x + ember.sway * progress + Math.sin(time + ember.phase * 9) * 3) * view.scale;
-      const y = fireY - (12 + ember.lift * progress) * view.scale;
+      const progress = (time * .1 + ember.phase) % 1;
+      const alpha = Math.sin(progress * Math.PI) * .36 * atmosphere.embers;
+      const x = fireX + (ember.x + ember.sway * progress + Math.sin(time * .7 + ember.phase * 9) * 1.5) * view.scale;
+      const y = fireY - (8 + ember.lift * progress) * view.scale;
       context.fillStyle = `rgba(255,196,91,${alpha})`;
       context.beginPath();
       context.arc(x, y, Math.max(.6, ember.radius * view.scale * (1 - progress * .45)), 0, Math.PI * 2);
@@ -223,6 +234,12 @@
   });
   reducedMotion.addEventListener?.('change', () => { resetParallax(); updateMotion(); });
   window.portfolioAppearance?.subscribe(() => { resetParallax(); updateMotion(); });
+  window.portfolioWeather?.subscribe(({ condition }) => {
+    atmosphere = profileFor(condition);
+    figure.dataset.atmosphereCondition = condition;
+    draw(motionReduced() ? 7.25 : performance.now() / 1000);
+  });
+  figure.dataset.atmosphereCondition = window.portfolioWeather?.condition || 'clear';
   new ResizeObserver(resize).observe(figure);
   resize();
   figure.classList.add('hybrid-effects-ready');
