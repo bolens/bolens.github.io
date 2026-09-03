@@ -101,6 +101,9 @@ try {
   if (!pickerMotion.result.value.overlay || !pickerMotion.result.value.open || pickerMotion.result.value.motion !== 'paused') throw new Error(`404 color overlay motion failed: ${JSON.stringify(pickerMotion.result.value)}`);
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+  const parallaxReset = await send('Runtime.evaluate', { expression: `new Promise((resolve)=>{const figure=document.querySelector('.cryptid-camp');const box=figure.getBoundingClientRect();figure.dispatchEvent(new PointerEvent('pointermove',{clientX:box.right-1,clientY:box.bottom-1,pointerType:'mouse'}));dispatchEvent(new CustomEvent('ui-overlay-change',{detail:{active:true}}));requestAnimationFrame(()=>{const style=getComputedStyle(figure);resolve([style.getPropertyValue('--parallax-far-x'),style.getPropertyValue('--parallax-far-y'),style.getPropertyValue('--parallax-mid-x'),style.getPropertyValue('--parallax-mid-y'),style.getPropertyValue('--parallax-near-x'),style.getPropertyValue('--parallax-near-y')].map((value)=>Number.parseFloat(value)))})})`, awaitPromise: true, returnByValue: true });
+  await send('Runtime.evaluate', { expression: `dispatchEvent(new CustomEvent('ui-overlay-change',{detail:{active:false}}))` });
+  if (parallaxReset.result.value.some((offset) => offset !== 0)) throw new Error(`404 queued parallax reset failed: ${JSON.stringify(parallaxReset.result.value)}`);
 
   for (const width of [390, 1440]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: width === 390 ? 844 : 1000, deviceScaleFactor: 1, mobile: width === 390 });

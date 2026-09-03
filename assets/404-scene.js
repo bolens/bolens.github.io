@@ -75,7 +75,12 @@
     cancelAnimationFrame(parallaxFrame);
     parallaxFrame = requestAnimationFrame(() => setParallax(x, y));
   }, { passive: true });
-  figure.addEventListener('pointerleave', () => setParallax());
+  const resetParallax = () => {
+    cancelAnimationFrame(parallaxFrame);
+    parallaxFrame = 0;
+    setParallax();
+  };
+  figure.addEventListener('pointerleave', resetParallax);
 
   const resize = () => {
     const bounds = figure.getBoundingClientRect();
@@ -210,10 +215,10 @@
   });
   window.addEventListener('ui-overlay-change', (event) => {
     overlayActive = Boolean(event.detail?.active);
-    if (overlayActive) setParallax();
+    if (overlayActive) resetParallax();
     updateMotion();
   });
-  reducedMotion.addEventListener?.('change', () => { setParallax(); updateMotion(); });
+  reducedMotion.addEventListener?.('change', () => { resetParallax(); updateMotion(); });
   new ResizeObserver(resize).observe(figure);
   resize();
   figure.classList.add('hybrid-effects-ready');
