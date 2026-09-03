@@ -1,4 +1,16 @@
 (() => {
+  const makeGlyph = (name, className = 'trail-glyph') => {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.classList.add(className);
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttribute('href', `/assets/trail-glyphs.svg#glyph-${name}`);
+    svg.append(use);
+    return svg;
+  };
+
   const glyphFor = (label, eyebrow) => {
     const section = eyebrow.closest('section, header')?.id || '';
     const text = label.toLowerCase();
@@ -14,7 +26,7 @@
     if (text === 'observe') return 'binoculars';
     if (text === 'restrain') return 'cairn';
     if (text === 'recover') return 'shelter';
-    if (text.includes('about')) return 'boot';
+    if (text.includes('about')) return 'backpack';
     if (text.includes('linux systems builder')) return 'pine';
     if (eyebrow.closest('.case-intro')) return 'trailhead';
     if (eyebrow.closest('.lost-copy')) return 'stars';
@@ -25,15 +37,17 @@
     if (eyebrow.querySelector('.trail-glyph') || eyebrow.querySelector('.status-dot')) return;
     const name = glyphFor(eyebrow.textContent.trim(), eyebrow);
     if (!name) return;
-    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.classList.add('trail-glyph');
-    svg.setAttribute('viewBox', '0 0 24 24');
-    svg.setAttribute('aria-hidden', 'true');
-    svg.setAttribute('focusable', 'false');
-    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
-    use.setAttribute('href', `/assets/trail-glyphs.svg#glyph-${name}`);
-    svg.append(use);
-    eyebrow.prepend(svg);
+    eyebrow.prepend(makeGlyph(name));
+  });
+
+  document.querySelectorAll('.case-facts dt').forEach((term, index) => {
+    const name = index === 0 ? 'role' : index === 1 ? 'layers' : 'repository';
+    term.prepend(makeGlyph(name, 'fact-glyph'));
+  });
+
+  const fieldGlyphs = ['pine', 'compass', 'fire'];
+  document.querySelectorAll('.about-field-notes dt').forEach((term, index) => {
+    if (fieldGlyphs[index]) term.prepend(makeGlyph(fieldGlyphs[index], 'field-note-glyph'));
   });
 
   const arrows = { '→': 'east', '↗': 'north-east', '↑': 'north', '↖': 'north-west', '←': 'west', '↙': 'south-west', '↓': 'south', '↘': 'south-east' };
