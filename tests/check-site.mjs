@@ -66,7 +66,7 @@ for (const file of htmlFiles) {
 
   for (const match of html.matchAll(/\b(?:href|src)="([^"]+)"/g)) {
     const reference = match[1];
-    if (/^(?:https?:|mailto:|#)/.test(reference)) continue;
+    if (/^(?:https?:|mailto:|#)/i.test(reference)) continue;
     const clean = reference.split(/[?#]/, 1)[0];
     const target = clean.startsWith('/') ? join(root, clean) : resolve(dirname(file), clean);
     const expected = clean.endsWith('/') ? join(target, 'index.html') : target;
@@ -79,14 +79,14 @@ for (const file of htmlFiles) {
 }
 
 for (const file of cssFiles) {
-  const css = readFileSync(file, 'utf8');
+  const css = readFileSync(file, 'utf8').replace(/\/\*[\s\S]*?\*\//g, '');
   const references = [
     ...[...css.matchAll(/url\(\s*(['"]?)([^'"\)]+)\1\s*\)/g)].map((match) => match[2]),
     ...[...css.matchAll(/@import\s+(['"])([^'"]+)\1/g)].map((match) => match[2]),
   ];
   for (const value of references) {
     const reference = value.trim();
-    if (/^(?:#|data:|https?:)/.test(reference)) continue;
+    if (/^(?:#|data:|https?:)/i.test(reference)) continue;
     const clean = reference.split(/[?#]/, 1)[0];
     const target = clean.startsWith('/') ? join(root, clean) : resolve(dirname(file), clean);
     if (!existsSync(target)) fail(file, `broken stylesheet reference ${reference}`);
