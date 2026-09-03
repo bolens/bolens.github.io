@@ -54,6 +54,7 @@
   let frameId = 0;
   let previousTime = 0;
   let visible = !document.hidden;
+  let overlayActive = document.documentElement.classList.contains('ui-overlay-open');
 
   const resize = () => {
     const bounds = figure.getBoundingClientRect();
@@ -165,7 +166,7 @@
   };
 
   const animate = (timestamp) => {
-    if (!visible || reducedMotion.matches) return;
+    if (!visible || reducedMotion.matches || overlayActive) return;
     frameId = requestAnimationFrame(animate);
     if (timestamp - previousTime < targetInterval) return;
     previousTime = timestamp;
@@ -176,7 +177,7 @@
     cancelAnimationFrame(frameId);
     if (reducedMotion.matches) {
       draw(7.25);
-    } else if (visible) {
+    } else if (visible && !overlayActive) {
       previousTime = 0;
       frameId = requestAnimationFrame(animate);
     }
@@ -184,6 +185,10 @@
 
   document.addEventListener('visibilitychange', () => {
     visible = !document.hidden;
+    updateMotion();
+  });
+  window.addEventListener('ui-overlay-change', (event) => {
+    overlayActive = Boolean(event.detail?.active);
     updateMotion();
   });
   reducedMotion.addEventListener?.('change', updateMotion);
