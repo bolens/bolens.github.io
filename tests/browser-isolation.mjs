@@ -27,18 +27,14 @@ try {
   if (recovered.result.value !== 42) throw new Error('browser did not recover after a command timeout');
   const nativeFetch = globalThis.fetch;
   let targetAttempts = 0;
-  try {
-    globalThis.fetch = (input, options) => {
-      if (String(input).includes('/json/new?about:blank') && targetAttempts++ === 0) return Promise.reject(new Error('simulated debugger target race'));
-      return nativeFetch(input, options);
-    };
-    const retriedBrowser = await startBrowser(() => {});
-    browsers.push(retriedBrowser);
-    const retried = await retriedBrowser.send('Runtime.evaluate', { expression: '21*2', returnByValue: true });
-    if (targetAttempts < 2 || retried.result.value !== 42) throw new Error(`browser target startup did not recover after a transient endpoint failure (${targetAttempts} attempts)`);
-  } finally {
-    globalThis.fetch = nativeFetch;
-  }
+  const retryFetch = (input, options) => {
+    if (String(input).includes('/json/new?about:blank') && targetAttempts++ === 0) return Promise.reject(new Error('simulated debugger target race'));
+    return nativeFetch(input, options);
+  };
+  const retriedBrowser = await startBrowser(undefined, { fetch: retryFetch });
+  browsers.push(retriedBrowser);
+  const retried = await retriedBrowser.send('Runtime.evaluate', { expression: '21*2', returnByValue: true });
+  if (targetAttempts < 2 || retried.result.value !== 42) throw new Error(`browser target startup did not recover after a transient endpoint failure (${targetAttempts} attempts)`);
   const pending = browsers[0].send('Runtime.evaluate', {
     expression: 'new Promise(()=>{})',
     awaitPromise: true,

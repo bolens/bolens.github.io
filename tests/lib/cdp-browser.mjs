@@ -1,7 +1,7 @@
 import { existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 
-export async function startBrowser(onEvent) {
+export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = globalThis.fetch } = {}) {
   const executable = ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium'].find(existsSync);
   if (!executable) throw new Error('Chrome or Chromium is required for the browser smoke test');
   const profile = mkdtempSync('/tmp/bolens-site-smoke-');
@@ -73,7 +73,7 @@ export async function startBrowser(onEvent) {
     while (!target && Date.now() < deadline) {
       if (process.exitCode !== null) throw new Error(`browser exited before debugger target creation with ${executable} (code ${process.exitCode}): ${log.slice(-1200)}`);
       try {
-        const response = await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: 'PUT' });
+        const response = await fetchImpl(`http://127.0.0.1:${port}/json/new?about:blank`, { method: 'PUT' });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         target = await response.json();
       } catch (error) {
