@@ -12,49 +12,61 @@
   const paletteKey = 'portfolio-palette';
   const themeKey = 'portfolio-theme';
   const themes = ['auto', 'day', 'night'];
+  const systemDark = matchMedia('(prefers-color-scheme: dark)');
   let palette = 'glacier';
   let theme = 'auto';
 
   const requested = new URLSearchParams(location.search).get('palette');
+  const hasPalettePreview = requested in palettes;
   try {
     const saved = localStorage.getItem(paletteKey);
-    if (requested in palettes) palette = requested;
+    if (hasPalettePreview) palette = requested;
     else if (saved in palettes) palette = saved;
     const savedTheme = localStorage.getItem(themeKey);
     if (themes.includes(savedTheme)) theme = savedTheme;
   } catch {
-    if (requested in palettes) palette = requested;
+    if (hasPalettePreview) palette = requested;
   }
 
+  const resolvedTheme = () => theme === 'auto' ? (systemDark.matches ? 'night' : 'day') : theme;
   const syncThemeColors = () => {
     const colors = palettes[palette];
     document.querySelector('meta[name="theme-color"][media*="light"]')?.setAttribute('content', theme === 'night' ? colors.dark : colors.light);
     document.querySelector('meta[name="theme-color"][media*="dark"]')?.setAttribute('content', theme === 'day' ? colors.light : colors.dark);
-    document.querySelector('meta[name="theme-color"]:not([media])')?.setAttribute('content', theme === 'day' ? colors.light : colors.dark);
+    document.querySelector('meta[name="theme-color"]:not([media])')?.setAttribute('content', resolvedTheme() === 'night' ? colors.dark : colors.light);
   };
-  const applyPalette = (name, persist = true) => {
+  const notify = () => dispatchEvent(new CustomEvent('portfolio-appearance-change', { detail: { palette, theme, resolvedTheme: resolvedTheme() } }));
+  const applyPalette = (name, persist = true, announce = true) => {
     palette = name in palettes ? name : 'glacier';
     document.documentElement.dataset.palette = palette;
     syncThemeColors();
     if (persist) try { localStorage.setItem(paletteKey, palette); } catch {}
+    if (announce) notify();
     return palette;
   };
-  const applyTheme = (name, persist = true) => {
+  const applyTheme = (name, persist = true, announce = true) => {
     theme = themes.includes(name) ? name : 'auto';
     if (theme === 'auto') delete document.documentElement.dataset.theme;
     else document.documentElement.dataset.theme = theme;
     syncThemeColors();
     if (persist) try { localStorage.setItem(themeKey, theme); } catch {}
+    if (announce) notify();
     return theme;
   };
 
-  applyPalette(palette, false);
-  applyTheme(theme, false);
+  applyPalette(palette, false, false);
+  applyTheme(theme, false, false);
+  systemDark.addEventListener?.('change', () => { if (theme === 'auto') { syncThemeColors(); notify(); } });
+  addEventListener('storage', (event) => {
+    if (event.key === paletteKey && !hasPalettePreview) applyPalette(event.newValue in palettes ? event.newValue : 'glacier', false);
+    if (event.key === themeKey) applyTheme(themes.includes(event.newValue) ? event.newValue : 'auto', false);
+  });
   window.portfolioAppearance = {
     palettes,
     applyPalette,
     applyTheme,
     get palette() { return palette; },
     get theme() { return theme; },
+    get resolvedTheme() { return resolvedTheme(); },
   };
 })();

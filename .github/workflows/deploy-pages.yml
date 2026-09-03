@@ -28,8 +28,8 @@ jobs:
           package-manager-cache: false
       - name: Validate site
         run: node scripts/build-site.mjs --check && node tests/check-site.mjs
-      - name: Run browser smoke test
-        run: node tests/browser-smoke.mjs
+      - name: Run browser smoke tests
+        run: node tests/theme-smoke.mjs && node tests/browser-smoke.mjs
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v4
         with:

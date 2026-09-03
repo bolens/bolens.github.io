@@ -15,6 +15,7 @@ Then open <http://localhost:4173>.
 ```sh
 node scripts/build-site.mjs --check
 node tests/check-site.mjs
+node tests/theme-smoke.mjs
 node tests/browser-smoke.mjs
 ```
 

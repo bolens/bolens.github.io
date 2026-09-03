@@ -43,6 +43,15 @@
       if (announce) status.textContent = `${palettes[selected].label} palette, ${appearance} appearance.`;
     };
     syncPickerName();
+    addEventListener('portfolio-appearance-change', (event) => {
+      selected = event.detail.palette;
+      selectedTheme = event.detail.theme;
+      const paletteControl = picker.querySelector(`input[name="portfolio-palette"][value="${selected}"]`);
+      const themeControl = picker.querySelector(`input[name="portfolio-theme"][value="${selectedTheme}"]`);
+      if (paletteControl) paletteControl.checked = true;
+      if (themeControl) themeControl.checked = true;
+      syncPickerName();
+    });
 
     picker.addEventListener('change', (event) => {
       if (!(event.target instanceof HTMLInputElement)) return;
