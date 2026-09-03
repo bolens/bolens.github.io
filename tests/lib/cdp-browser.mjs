@@ -68,7 +68,20 @@ export async function startBrowser(onEvent) {
       await new Promise((done) => setTimeout(done, 50));
     }
     if (!port) throw new Error(`browser debugger did not start within 45s with ${executable}: ${log.slice(-1200)}`);
-    const target = await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: 'PUT' }).then((result) => result.json());
+    let target;
+    let targetError;
+    while (!target && Date.now() < deadline) {
+      if (process.exitCode !== null) throw new Error(`browser exited before debugger target creation with ${executable} (code ${process.exitCode}): ${log.slice(-1200)}`);
+      try {
+        const response = await fetch(`http://127.0.0.1:${port}/json/new?about:blank`, { method: 'PUT' });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        target = await response.json();
+      } catch (error) {
+        targetError = error;
+        await new Promise((done) => setTimeout(done, 50));
+      }
+    }
+    if (!target?.webSocketDebuggerUrl) throw new Error(`browser debugger target was not ready within 45s with ${executable}: ${targetError?.message ?? 'missing target URL'}; ${log.slice(-1200)}`);
     socket = new WebSocket(target.webSocketDebuggerUrl);
     await new Promise((resolve, reject) => { socket.onopen = resolve; socket.onerror = reject; });
     let id = 0;
