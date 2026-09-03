@@ -60,6 +60,8 @@
   let parallaxFrame = 0;
 
   const setParallax = (x = 0, y = 0) => {
+    figure.style.setProperty('--parallax-back-x', `${(-x * .7).toFixed(2)}px`);
+    figure.style.setProperty('--parallax-back-y', `${(-y * .3).toFixed(2)}px`);
     figure.style.setProperty('--parallax-far-x', `${(-x * 1.5).toFixed(2)}px`);
     figure.style.setProperty('--parallax-far-y', `${(-y * .7).toFixed(2)}px`);
     figure.style.setProperty('--parallax-mid-x', `${(x * 2.6).toFixed(2)}px`);

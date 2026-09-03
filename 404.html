@@ -89,6 +89,29 @@
             <path d="M0 19v90M-8 35Q0 29 9 35M-17 53Q0 43 17 52M-23 74Q0 60 23 72M-26 94Q0 78 26 91" fill="none"/>
             <path d="m-9 36-10 1m27-2 11 2m-35 17-10 3m42-4 10 3m-49 19-9 5m55-7 9 5m-57 17-8 5m58-7 9 5" fill="none" stroke-width="1.4"/>
           </symbol>
+          <symbol id="evergreen-shrub" viewBox="0 0 120 78">
+            <g fill="none" stroke="var(--shrub-stem,#294737)" stroke-width="4" stroke-linecap="round"><path d="M12 74Q34 39 58 12m-21 60Q54 39 76 25m-8 48q16-25 39-37"/><path d="m29 53-15-8m27-8-12-11m39 22-15-9m35 10 15-10" stroke-width="2.5"/></g>
+            <g fill="var(--shrub-fill,#315c45)" stroke="var(--shrub-outline,#17382e)" stroke-width="2" stroke-linejoin="round"><path d="m7 55 20-24 17 25-11-3 13 17H5l14-16Z"/><path d="m32 43 26-36 24 38-13-5 16 30H27l18-27Z"/><path d="m66 54 20-31 27 35-13-4 15 17H61l16-18Z"/></g>
+            <path d="M18 61q21 7 40 0t43 1" fill="none" stroke="var(--shrub-highlight,#78916a)" stroke-width="2.5" stroke-linecap="round" opacity=".65"/>
+            <use href="#terrain-condition-marks" width="120" height="78"/>
+          </symbol>
+          <symbol id="cloud-bank" viewBox="0 0 160 52">
+            <path d="M4 49q10-27 35-20Q51 4 76 21q24-28 47 5 27-7 34 23Z" fill="var(--cloud-fill,#fff)" stroke="var(--cloud-edge,#c7d7d6)" stroke-width="3" stroke-linejoin="round"/>
+            <path d="M24 42q29-8 52 1t57-3" fill="none" stroke="var(--cloud-shadow,#a9c3c5)" stroke-width="4" stroke-linecap="round" opacity="var(--cloud-shadow-opacity,.3)"/>
+          </symbol>
+          <symbol id="sky-orb" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="92" fill="var(--orb-glow,#fffbdc)" opacity="var(--orb-glow-opacity,.13)"/>
+            <g class="orb-rays" fill="none" stroke="var(--orb-fill,#ffe08a)" stroke-width="6" stroke-linecap="round" opacity="var(--orb-rays-opacity,0)"><path d="M100 31V9m0 182v-22m69-69h22M9 100h22m118-49 16-16M35 165l16-16m98 16 16 16M35 35l16 16"/></g>
+            <circle cx="100" cy="100" r="48" fill="var(--orb-fill,url(#moon-surface))"/>
+            <circle cx="87" cy="86" r="8" fill="var(--orb-highlight,#fff7c9)" opacity="var(--orb-highlight-opacity,.34)"/>
+            <g class="orb-craters" fill="var(--orb-crater,#b9b699)" opacity="var(--orb-crater-opacity,.34)"><ellipse cx="80" cy="80" rx="10" ry="7" transform="rotate(-18 80 80)"/><ellipse cx="120" cy="119" rx="12" ry="8" transform="rotate(13 120 119)"/><ellipse cx="109" cy="73" rx="6" ry="5"/><ellipse cx="77" cy="109" rx="7" ry="11" transform="rotate(24 77 109)"/><ellipse cx="128" cy="90" rx="5" ry="7"/></g>
+          </symbol>
+          <symbol id="aurora-strand" viewBox="0 0 1200 180">
+            <path d="M-35 130C145 12 282 175 458 74S770 22 930 91s225 8 307-54" fill="none" stroke="var(--aurora-color,url(#aurora-green))" stroke-width="var(--aurora-width,30)" stroke-linecap="round" opacity="var(--aurora-opacity,.3)"/>
+          </symbol>
+          <symbol id="rain-field" viewBox="0 0 1200 760">
+            <g fill="none" stroke="var(--rain-color,#b9e0e4)" stroke-width="3" stroke-linecap="round" opacity="var(--rain-opacity,.48)"><path d="m58 72-15 35m90-11-18 42m116-74-16 39m98 22-18 43m122-91-15 37m105 7-19 45m123-83-17 42m112-35-19 44m129-73-17 41m106-10-16 39m126-78-18 43"/><path d="m89 238-18 42m121-64-15 36m111 9-19 44m126-72-17 41m103-19-16 38m123-55-18 43m110-9-15 36m118-74-19 45m116-37-17 40M42 430l-17 40m124-67-19 45m115-18-16 39m132-72-18 43m112-15-16 38m126-62-19 44m116-23-17 41m128-75-18 43m113-8-16 38m120-69-19 45"/></g>
+          </symbol>
           <symbol id="camp-log" viewBox="0 0 320 44">
             <rect x="17" y="4" width="286" height="36" rx="18" fill="var(--log-bark,url(#bark-grain))" stroke="var(--log-outline,#281a16)" stroke-width="5"/>
             <path d="M38 13q52 8 104 0t103 1q25 4 47-2M55 30q35-7 69 0m49-1q31-8 62 0" fill="none" stroke="var(--log-highlight,#c17849)" stroke-width="3" stroke-linecap="round" opacity=".72"/>
@@ -146,8 +169,10 @@
           <clipPath id="tent-door"><path d="M933 521 1007 647H861Z"/></clipPath>
         </defs>
 
-        <rect width="1200" height="760" rx="8" fill="url(#night-sky)"/>
-        <rect width="1200" height="410" fill="url(#upper-sky-depth)"/>
+        <g class="sky-field depth-back">
+          <rect width="1200" height="760" rx="8" fill="url(#night-sky)"/>
+          <rect width="1200" height="410" fill="url(#upper-sky-depth)"/>
+        </g>
         <ellipse cx="600" cy="352" rx="700" ry="270" fill="url(#horizon-airglow)"/>
         <g class="sky-airglow" fill="none" stroke-linecap="round"><path d="M-80 312Q208 268 474 300T1280 284" stroke="#63a69d" stroke-width="38" opacity=".035"/><path d="M-70 337Q244 301 536 327t734-18" stroke="#a2c1b6" stroke-width="3" opacity=".12"/></g>
         <path class="milky-way" d="M-70 285C190 170 382 214 583 128S966 21 1270 92" fill="none" stroke="#b8d4d4" stroke-width="92" stroke-linecap="round" opacity=".035"/>
@@ -162,22 +187,20 @@
 
 
 
-        <g class="camp-aurora" fill="none" stroke-linecap="round">
-          <path class="aurora-ribbon aurora-ribbon-one" d="M-70 170C125 45 260 225 444 108S773 37 942 121s256 6 344-68"/>
-          <path class="aurora-ribbon aurora-ribbon-two" d="M-50 225C129 108 284 264 473 153S783 91 954 167s235 11 305-51"/>
-          <path class="aurora-ribbon aurora-ribbon-three" d="M16 271C166 178 316 286 490 205s306-49 452 4 203 21 276-21"/>
-          <path class="aurora-edge aurora-edge-one" d="M-65 155C125 39 266 210 447 98S774 29 947 111s249 4 335-65"/>
-          <path class="aurora-edge aurora-edge-two" d="M-42 215C132 101 286 250 476 143S787 82 958 158s229 8 300-50"/>
+        <g class="camp-aurora depth-back">
+          <use class="aurora-ribbon aurora-ribbon-one" href="#aurora-strand" x="0" y="22" width="1200" height="180"/>
+          <use class="aurora-ribbon aurora-ribbon-two" href="#aurora-strand" x="-8" y="72" width="1216" height="180"/>
+          <use class="aurora-ribbon aurora-ribbon-three" href="#aurora-strand" x="18" y="120" width="1180" height="176"/>
+          <use class="aurora-edge aurora-edge-one" href="#aurora-strand" x="0" y="12" width="1200" height="180"/>
+          <use class="aurora-edge aurora-edge-two" href="#aurora-strand" x="-4" y="62" width="1208" height="180"/>
         </g>
         <rect width="1200" height="760" rx="8" fill="url(#sky-vignette)" pointer-events="none"/>
-        <circle class="night-moon-aura" cx="1002" cy="118" r="132" fill="url(#moon-glow)" opacity=".42"/>
-        <circle class="night-moon-aura" cx="1002" cy="118" r="82" fill="none" stroke="#e9f2dc" stroke-width="2" opacity=".08"/>
-        <g class="camp-moon">
-          <circle cx="1002" cy="118" r="48" fill="url(#moon-surface)"/>
-          <g fill="#b9b699" opacity=".34"><ellipse cx="982" cy="98" rx="10" ry="7" transform="rotate(-18 982 98)"/><ellipse cx="1022" cy="137" rx="12" ry="8" transform="rotate(13 1022 137)"/><ellipse cx="1011" cy="91" rx="6" ry="5"/><ellipse cx="979" cy="127" rx="7" ry="11" transform="rotate(24 979 127)"/><ellipse cx="1030" cy="108" rx="5" ry="7"/></g>
-          <g fill="none" stroke="#f8f2ce" stroke-width="2" opacity=".42"><ellipse cx="982" cy="98" rx="10" ry="7" transform="rotate(-18 982 98)"/><ellipse cx="1022" cy="137" rx="12" ry="8" transform="rotate(13 1022 137)"/><path d="M973 116q11-8 22-3m12 14q9-6 18-2"/></g>
-          <path d="M1033 81a48 48 0 0 1 4 70c8-22 8-48-4-70Z" fill="#6e7f7c" opacity=".18"/>
+        <use class="camp-moon sky-orb" href="#sky-orb" x="902" y="18" width="200" height="200" style="--orb-glow:url(#moon-glow);--orb-glow-opacity:.42;--orb-fill:url(#moon-surface);--orb-highlight-opacity:0;--orb-crater-opacity:.34"/>
+        <g class="weather-clouds" aria-hidden="true">
+          <use href="#cloud-bank" x="54" y="122" width="190" height="62" style="--cloud-fill:#9bb8bd;--cloud-edge:#6f9299;--cloud-shadow:#496d76"/>
+          <use href="#cloud-bank" x="795" y="184" width="235" height="76" style="--cloud-fill:#8baab1;--cloud-edge:#65858e;--cloud-shadow:#3c626c"/>
         </g>
+        <use class="weather-rain" aria-hidden="true" href="#rain-field" width="1200" height="760"/>
 
         <g class="mountain-range mountain-range-far depth-far" opacity=".78" style="--peak-fill:url(#mountain-far);--peak-shadow:#102b35;--peak-snow:#91aaa9;--peak-snow-opacity:.3;--peak-ridge:#31515a">
           <use href="#alpine-peak" x="25" y="335" width="118" height="108" style="--peak-shadow-opacity:.66"/>
@@ -198,6 +221,15 @@
         </g>
         <path d="M0 435q105-62 207-21 98 39 191-13 106-60 212 3 90 54 189 4 117-58 201 8 86 67 200 8v103H0Z" fill="#163a3c" opacity=".78"/>
         <path d="M0 446c169-55 331-34 486-2 206 43 386-27 714-14v330H0Z" fill="url(#forest-floor-depth)"/>
+        <g class="horizon-forest depth-back" fill="#17353a" stroke="#416067" stroke-width="2" stroke-linejoin="round">
+          <use href="#distant-pine" x="-18" y="335" width="65" height="139"/><use href="#distant-pine" x="44" y="354" width="53" height="114"/>
+          <use href="#distant-pine" x="96" y="321" width="71" height="152"/><use href="#distant-pine" x="162" y="350" width="55" height="118"/>
+          <use href="#distant-pine" x="211" y="330" width="65" height="139"/><use href="#distant-pine" x="757" y="338" width="61" height="131"/>
+          <use href="#distant-pine" x="809" y="310" width="74" height="159"/><use href="#distant-pine" x="875" y="347" width="55" height="118"/>
+          <use href="#distant-pine" x="925" y="324" width="68" height="146"/><use href="#distant-pine" x="984" y="350" width="54" height="116"/>
+          <use href="#distant-pine" x="1030" y="316" width="72" height="154"/><use href="#distant-pine" x="1091" y="344" width="58" height="124"/>
+          <use href="#distant-pine" x="1138" y="326" width="67" height="144"/>
+        </g>
         <g class="ground-tones" opacity=".52">
           <path d="M106 490q122-42 238 2t216 12q-66 44-176 42t-278-56Z" fill="#315044" opacity=".35"/>
           <path d="M535 546q104-35 209 2t217 11q-76 52-192 39t-234-52Z" fill="#0a2522" opacity=".72"/>
@@ -335,8 +367,14 @@
           <g fill="#8b7656" stroke="#384039" stroke-width="2" opacity=".75"><path d="m743 465 8-5 10 3 1 7-9 4-9-3Z"/><path d="m790 512 7-4 9 3 1 6-8 4-8-3Z"/><path d="m846 542 9-4 10 4-1 7-10 3-8-4Z"/><path d="m909 568 8-4 11 5-2 7-10 2-7-4Z"/></g>
         </g>
         <g class="forest-floor depth-near" stroke-linecap="round" stroke-linejoin="round">
-          <g fill="#173b33" stroke="#315c4c" stroke-width="2"><path d="M190 610q12-41 24 0 12-53 26 0 11-35 22 0Z"/><path d="M987 660q10-42 23 0 12-54 25 0 12-37 23 0Z"/><path d="M75 646q11-31 22 0 10-42 22 0 9-28 19 0Z"/><path d="M1070 687q12-35 23 0 12-47 24 0 11-31 21 0Z"/></g>
-          <g fill="none" stroke="#547a5b" stroke-width="3"><path d="m208 617-13-28m19 25 2-36m9 37 14-32m-135 68-9-25m16 23 3-31m904 49-10-31m18 28 4-38m13 38 17-30m56 59-9-27m16 24 4-33"/></g>
+          <g class="evergreen-understory">
+            <use class="terrain-asset" data-light="moon" data-weather="wet" href="#evergreen-shrub" x="61" y="581" width="91" height="59" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
+            <use class="terrain-asset" data-light="shadow" data-weather="clear" href="#evergreen-shrub" x="174" y="542" width="112" height="73" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
+            <use class="terrain-asset" data-light="fire" data-weather="dry" href="#evergreen-shrub" x="436" y="626" width="86" height="56" style="--shrub-fill:#294a39;--shrub-highlight:#9a744d"/>
+            <use class="terrain-asset" data-light="fire" data-weather="clear" href="#evergreen-shrub" x="689" y="622" width="92" height="60" style="--shrub-fill:#294a39;--shrub-highlight:#9a744d"/>
+            <use class="terrain-asset" data-light="moon" data-weather="cloudy" href="#evergreen-shrub" x="969" y="600" width="105" height="68" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
+            <use class="terrain-asset" data-light="shadow" data-weather="dry" href="#evergreen-shrub" x="1054" y="627" width="101" height="66" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
+          </g>
           <g fill="#43524a" stroke="#1b2d2b" stroke-width="3"><path d="m224 690 16-13 22 2 10 15-17 12-23-3Z"/><path d="m1080 704 17-13 24 3 8 15-18 10-22-3Z"/><path d="m931 690 12-10 18 2 7 12-14 9-17-3Z"/></g>
           <path d="M148 708q47-31 94-4m716 16q54-35 102-7" fill="none" stroke="#4a3021" stroke-width="9"/>
           <path d="m164 703 12-13m18 5 9-16m786 28 14-15m20 8 10-16" fill="none" stroke="#6f4930" stroke-width="4"/>
@@ -615,9 +653,8 @@
         <g class="day-scene">
           <rect class="daylight-wash" width="1200" height="760" fill="url(#day-sky)"/>
           <g class="day-sunbeams" fill="url(#day-sunbeam)"><path d="M962 116 690 530h165l135-403Z"/><path d="M1000 126 866 546h116l45-414Z" opacity=".68"/><path d="M936 103 540 454h143l281-333Z" opacity=".52"/></g>
-          <circle cx="982" cy="112" r="92" fill="var(--lost-day-sun)" opacity=".13"/>
-          <g class="day-sun"><circle cx="982" cy="112" r="48" fill="var(--lost-day-sun)"/><circle cx="969" cy="98" r="8" fill="#fff7c9" opacity=".34"/><path d="M982 43v-22m0 182v-22m69-69h22m-182 0h22m118-49 16-16M917 177l16-16m98 16 16 16M917 47l16 16" stroke="var(--lost-day-sun)" stroke-width="6" stroke-linecap="round"/></g>
-          <g class="day-clouds" fill="#fff" opacity=".68"><path d="M20 182q20-31 48-10 19-31 48-5 31-7 39 25H17Z"/><path d="M1010 244q18-27 43-9 17-27 42-4 27-6 35 22h-123Z"/></g>
+          <use class="day-sun sky-orb" href="#sky-orb" x="882" y="12" width="200" height="200" style="--orb-fill:var(--lost-day-sun);--orb-glow:var(--lost-day-sun);--orb-glow-opacity:.13;--orb-rays-opacity:1;--orb-crater-opacity:0"/>
+          <g class="day-clouds" opacity=".68"><use href="#cloud-bank" x="17" y="143" width="142" height="52" style="--cloud-edge:#d5e3e3"/><use href="#cloud-bank" x="1006" y="211" width="127" height="46" style="--cloud-edge:#d5e3e3"/></g>
           <g class="day-cloud-404" text-anchor="middle"><text x="730" y="145">404</text><path d="M616 158q113 18 228-2" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".22"/></g>
           <g class="day-scenery-duplicate"><path d="M0 436 108 316l87 65 119-171 137 158 116-112 108 121 131-187 146 168 98-96 150 169v107H0Z" fill="url(#day-mountain)"/><g fill="var(--lost-day-snow)" opacity=".82"><path d="m108 316 29 21 15-12 43 56-87-65Zm206-106 38 44 25-18 74 132-137-158Zm253 46 34 38 22-16 52 99-108-121Zm239-66 45 52 30-20 71 136-146-168Zm244 72 37 42 24-17 89 144-150-169Z"/></g><path d="M0 428q137-55 271-4 122 47 246 4 128-44 257 5 137 51 426-7v334H0Z" fill="url(#day-ground)"/><path d="M0 652q126-32 228-107 91-67 193-95" fill="none" stroke="var(--lost-day-river)" stroke-width="62" stroke-linecap="round"/><path d="M0 642q119-28 218-100 91-66 196-99" fill="none" stroke="#d7f2ec" stroke-width="5" opacity=".58" stroke-linecap="round"/><g class="day-distant-forest" fill="var(--lost-day-pine)"><use href="#distant-pine" x="28" y="330" width="74" height="160"/><use href="#distant-pine" x="104" y="354" width="62" height="134"/><use href="#distant-pine" x="177" y="316" width="82" height="176"/><use href="#distant-pine" x="302" y="339" width="70" height="151"/><use href="#distant-pine" x="510" y="320" width="79" height="170"/><use href="#distant-pine" x="590" y="351" width="62" height="134"/><use href="#distant-pine" x="684" y="315" width="82" height="177"/><use href="#distant-pine" x="1017" y="324" width="78" height="168"/><use href="#distant-pine" x="1100" y="348" width="65" height="140"/></g></g>
           <g class="day-bigfoot-tree" stroke-linecap="round" stroke-linejoin="round">
