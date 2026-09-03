@@ -23,4 +23,4 @@
 .availability { margin-top: 5rem; padding: clamp(2rem, 6vw, 5rem); background: var(--ink); color: var(--snow); }
 .availability h2 { max-width: 800px; }
 .availability .button { margin-top: 2.5rem; border-color: var(--snow); background: var(--snow); color: var(--ink); }
-.availability .button:hover { color: var(--snow); background: var(--copper); border-color: var(--copper); }
+.availability .button:is(:hover,:focus-visible) { color: var(--snow); background: var(--copper); border-color: var(--copper); }

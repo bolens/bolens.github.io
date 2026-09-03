@@ -37,7 +37,7 @@
 .project-evidence div { min-width:0; padding:.85rem .75rem 0 0; background:var(--snow); }
 .project-evidence dt { color:var(--muted); font:700 .64rem/1.4 var(--mono); letter-spacing:.1em; text-transform:uppercase; }
 .project-evidence dd { margin:.22rem 0 0; font:700 .78rem/1.45 var(--sans); }
-.all-work { margin: 2.2rem 0 0; text-align: center; }.button-secondary { background: transparent; color: var(--ink); }.button-secondary:hover { color: var(--snow); }
+.all-work { margin: 2.2rem 0 0; text-align: center; }.button-secondary { background: transparent; color: var(--ink); }.button-secondary:is(:hover,:focus-visible) { color: var(--snow); }
 .toolbox { display: grid; grid-template-columns: 1fr 1.25fr; gap: clamp(3rem, 8vw, 8rem); padding-block: clamp(5rem, 10vw, 9rem); border-top: 1px solid var(--line); }
 .toolbox dl { margin: 0; }.toolbox dl div { padding: 1.45rem 0; border-bottom: 1px solid var(--line); }.toolbox dt { margin-bottom: .55rem; font: 700 .75rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .11em; }.toolbox dd { max-width: 58ch; margin: 0; color: var(--muted); font-size: 1.08rem; line-height: 1.62; }
 .current { display:grid; grid-template-columns:.7fr 2.3fr; gap:clamp(2rem,7vw,7rem); padding-block:clamp(4rem,8vw,7rem); border-top:1px solid var(--line); }
@@ -47,7 +47,7 @@
 .contact { display:grid; grid-template-columns:1.35fr 1fr; gap:clamp(2rem,7vw,7rem); align-items:end; margin-top:clamp(3rem,7vw,6rem); padding:clamp(3rem,6vw,5.5rem); background:var(--ink); color:var(--paper); }
 .contact .eyebrow,.contact div > p { color:color-mix(in srgb,var(--paper) 72%,transparent); }
 .contact .button { margin-top:1.6rem; border-color:var(--paper); background:var(--paper); color:var(--ink); }
-.contact .button:hover { border-color:var(--copper); background:var(--copper); color:var(--paper); }
+.contact .button:is(:hover,:focus-visible) { border-color:var(--copper); background:var(--copper); color:var(--paper); }
 .hobbies { display:grid; grid-template-columns:minmax(13rem,.8fr) 2fr; align-items:center; gap:clamp(2rem,6vw,6rem); padding-block:clamp(4rem,8vw,7rem); border-top:1px solid var(--line); }
 .hobbies-heading h2 { max-width: 22rem; margin: 0; font: 400 clamp(1.7rem,2.8vw,2.65rem)/1.03 var(--serif); letter-spacing: -.04em; }
 .hobby-route { position: relative; min-width: 0; isolation: isolate; }

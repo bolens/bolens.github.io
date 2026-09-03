@@ -1,12 +1,12 @@
 .lost-page { --lost-sky:var(--art-panel);--lost-panel:color-mix(in srgb,var(--art-panel) 84%,transparent);--lost-copy:var(--art-on-panel);--lost-muted:color-mix(in srgb,var(--art-on-panel) 72%,var(--art-panel-line));--lost-accent:var(--copper);--lost-line:color-mix(in srgb,var(--art-panel-line) 42%,transparent);--lost-night-tint:var(--art-cool);--lost-day-sky-top:#78b9d8;--lost-day-sky-mid:#b9dbe2;--lost-day-haze:#e8e2c5;--lost-day-sun:#ffe08a;--lost-day-mountain-lit:#769198;--lost-day-mountain-shadow:#45656a;--lost-day-snow:#edf1df;--lost-day-ground-lit:#557b54;--lost-day-ground-shadow:#213f32;--lost-day-river:#438a93;--lost-day-pine:#315f43;--lost-day-pine-dark:#173b30;--lost-day-bark:#65503a;--lost-day-shrub:#426b45;--lost-day-fern:#6f9259;--lost-day-tent:var(--art-hot);--lost-day-tent-edge:var(--art-warm);--smoke-font:var(--serif);--smoke-weight:700;--smoke-size:148px;--smoke-tracking:-3px;min-height:100svh;color:var(--lost-copy);background:var(--lost-sky); }
 .lost-main { position: relative; min-height: 100svh; overflow: hidden; background: var(--lost-sky); isolation: isolate; }
-.lost-copy { position: absolute; z-index: 3; top: clamp(1.5rem,5vw,4.5rem); left: max(1.25rem,calc((100vw - 1180px)/2)); width: min(35rem,calc(100vw - 2.5rem)); padding: clamp(1rem,2.2vw,1.7rem); border: 1px solid var(--lost-line); border-radius: 3px; background: var(--lost-panel); box-shadow: 0 24px 70px rgba(0,0,0,.24); backdrop-filter: blur(8px); }
+.lost-copy { position: absolute; z-index: 3; top: clamp(1.5rem,5vw,4.5rem); left: max(1.25rem,calc((100vw - 1180px)/2)); width: min(35rem,calc(100vw - 2.5rem)); padding: clamp(1rem,2.2vw,1.7rem); border: 1px solid var(--lost-line); border-radius:var(--surface-radius); background: var(--lost-panel); box-shadow:var(--surface-shadow); backdrop-filter: blur(8px); }
 .lost-copy .eyebrow { margin-bottom: .8rem; color: var(--lost-muted); letter-spacing: .15em; }
 .lost-copy h1 { max-width: 11ch; font-size: clamp(3rem,6.2vw,6.5rem); line-height: .94; letter-spacing: -.045em; text-shadow: 0 3px 18px rgba(0,0,0,.25); }
 .lost-copy h1 em { color: var(--lost-accent); }
 .lost-lede { max-width: 29rem; margin: 1.1rem 0 1.4rem; color: var(--lost-muted); font-size: clamp(1rem,1vw + .72rem,1.14rem); line-height: 1.62; letter-spacing: .004em; }
 .lost-button { border-color: var(--lost-copy); background: var(--lost-copy); color: var(--lost-sky); }
-.lost-button:hover { border-color: var(--lost-accent); background: var(--lost-accent); color: var(--lost-sky); }
+.lost-button:is(:hover,:focus-visible) { border-color: var(--lost-accent); background: var(--lost-accent); color: var(--lost-sky); }
 .cryptid-camp { position: absolute; inset: 0; margin: 0; display: grid; align-items: end; }
 .cryptid-camp svg { width: 100%; height: 100%; min-height: 620px; object-fit: cover; object-position: center bottom; }
 .cryptid-camp figcaption { position: absolute; right: clamp(1rem,3vw,2.5rem); bottom: 1rem; color: color-mix(in srgb,var(--lost-copy) 70%,transparent); font: 700 .67rem/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
@@ -18,7 +18,7 @@
 :root[data-theme="day"] :is(.camp-stars,.star-dust,.deep-stars,.stellar-color,.milky-way,.sky-airglow,.aurora-curtains,.aurora-ray-filaments,.camp-aurora,.camp-moon,.night-moon-aura,.background-ufo,.tent-peekers,.camper,.roasting-arm,.seat-shadows,.campfire-glow,.fire-rim-light,.smores-kit,.campfire,.smoke-404,.smoke-thread) { display:none; }
 :root[data-theme="day"] .lost-page { --lost-sky:var(--paper);--lost-panel:color-mix(in srgb,var(--snow) 88%,transparent);--lost-copy:var(--ink);--lost-muted:var(--muted);--lost-accent:var(--copper);--lost-line:color-mix(in srgb,var(--line) 72%,transparent); }
 :root[data-theme="day"] .lost-button { border-color:var(--ink);background:var(--ink);color:var(--paper); }
-:root[data-theme="day"] .lost-button:hover { border-color:var(--copper);background:var(--copper);color:var(--paper); }
+:root[data-theme="day"] .lost-button:is(:hover,:focus-visible) { border-color:var(--copper);background:var(--copper);color:var(--paper); }
 .day-palette-wash { fill:var(--lost-night-tint);opacity:.06;mix-blend-mode:soft-light; }
 .daylight-wash { opacity:.44;mix-blend-mode:screen; }
 .day-scenery-duplicate,.day-added-tree,.day-tent-duplicate,.day-added-bush,.day-foreground { display:none; }
@@ -138,7 +138,7 @@
   :root:not([data-theme]) :is(.camp-stars,.star-dust,.deep-stars,.stellar-color,.milky-way,.sky-airglow,.aurora-curtains,.aurora-ray-filaments,.camp-aurora,.camp-moon,.night-moon-aura,.background-ufo,.tent-peekers,.camper,.roasting-arm,.seat-shadows,.campfire-glow,.fire-rim-light,.smores-kit,.campfire,.smoke-404,.smoke-thread) { display:none; }
   :root:not([data-theme]) .lost-page { --lost-sky:var(--paper);--lost-panel:color-mix(in srgb,var(--snow) 88%,transparent);--lost-copy:var(--ink);--lost-muted:var(--muted);--lost-accent:var(--copper);--lost-line:color-mix(in srgb,var(--line) 72%,transparent); }
   :root:not([data-theme]) .lost-button { border-color:var(--ink);background:var(--ink);color:var(--paper); }
-  :root:not([data-theme]) .lost-button:hover { border-color:var(--copper);background:var(--copper);color:var(--paper); }
+  :root:not([data-theme]) .lost-button:is(:hover,:focus-visible) { border-color:var(--copper);background:var(--copper);color:var(--paper); }
 }
 @media (max-width: 760px) {
   .lost-copy { top:1rem; left:1rem; width:calc(100vw - 2rem); margin:0; padding:1rem; }
