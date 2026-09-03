@@ -1,4 +1,4 @@
-import { cpSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
@@ -40,10 +40,15 @@ try {
   changedThemes.palettes.alpine.label = 'Alpine Test';
   writeJson(themePath, changedThemes);
   if (run('--check').status === 0) throw new Error('stale generated theme artifacts were not detected');
+  const generatedThemePath = join(fixture, 'assets/theme-data.js');
+  const previousInode = statSync(generatedThemePath).ino;
   const generated = run();
-  if (generated.status !== 0 || !readFileSync(join(fixture, 'assets/theme-data.js'), 'utf8').includes('Alpine Test')) throw new Error(`theme regeneration failed: ${generated.stderr}`);
+  if (generated.status !== 0 || !readFileSync(generatedThemePath, 'utf8').includes('Alpine Test')) throw new Error(`theme regeneration failed: ${generated.stderr}`);
+  if (statSync(generatedThemePath).ino === previousInode) throw new Error('generated output was rewritten in place instead of replaced atomically');
+  const temporaryOutputs = readdirSync(join(fixture, 'assets')).filter((name) => name.endsWith('.tmp'));
+  if (temporaryOutputs.length) throw new Error(`temporary generated outputs remained: ${temporaryOutputs.join(', ')}`);
   if (run('--check').status !== 0) throw new Error('generated fixture remained stale after regeneration');
-  console.log('Build contract passed project/theme validation, stale detection, and deterministic regeneration.');
+  console.log('Build contract passed validation, stale detection, atomic replacement, cleanup, and deterministic regeneration.');
 } finally {
   rmSync(fixture, { recursive: true, force: true });
 }

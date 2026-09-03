@@ -1,4 +1,4 @@
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
@@ -124,6 +124,17 @@ for (const [relativePath, prefix, current, workHref, aboutHref, footerHref, foot
     .replace(/<footer class="site-footer wrap">[\s\S]*?<\/footer>/, footer));
 }
 
+let writeSequence = 0;
+const writeAtomically = (path, content) => {
+  const temporary = `${path}.${process.pid}.${++writeSequence}.tmp`;
+  try {
+    writeFileSync(temporary, content);
+    renameSync(temporary, path);
+  } finally {
+    rmSync(temporary, { force: true });
+  }
+};
+
 let stale = false;
 for (const [relativePath, content] of outputs) {
   const path = resolve(root, relativePath);
@@ -132,7 +143,7 @@ for (const [relativePath, content] of outputs) {
     console.error(`${relativePath} is stale; run node scripts/build-site.mjs`);
     stale = true;
   } else {
-    writeFileSync(path, content);
+    writeAtomically(path, content);
     console.log(`Generated ${relativePath}`);
   }
 }
