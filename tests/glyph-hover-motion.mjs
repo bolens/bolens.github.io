@@ -112,6 +112,7 @@ const secondaryMotions = {
   filter: [['--glyph-filter-particle-b-motion', 'glyph-filter-particle-b-drop']],
   sort: [['--glyph-sort-bar-b-motion', 'glyph-sort-bar-b-settle'], ['--glyph-sort-bar-c-motion', 'glyph-sort-bar-c-settle']],
   clock: [['--glyph-clock-hour-motion', 'glyph-clock-hour-nudge']],
+  globe: [['--glyph-globe-traveler-motion', 'glyph-globe-traveler-travel'], ['--glyph-globe-destination-motion', 'glyph-globe-destination-arrive']],
   microphone: [['--glyph-microphone-level-b-motion', 'glyph-microphone-level-b-rise'], ['--glyph-microphone-level-c-motion', 'glyph-microphone-level-c-rise']],
   'hard-drive': [['--glyph-hard-drive-light-motion', 'glyph-hard-drive-light-blink']],
   key: [['--glyph-key-spark-motion', 'glyph-key-spark-pop']],
@@ -174,7 +175,7 @@ if (!/glyph-radio-body[\s\S]*glyph-radio-note-a[\s\S]*glyph-radio-note-b/.test(s
 if (!/glyph-filter-frame[\s\S]*glyph-filter-particle-a[\s\S]*glyph-filter-particle-b/.test(sprite)) throw new Error('filter particles must pass through a fixed funnel');
 if (!/glyph-sort-frame[\s\S]*glyph-sort-bar-a[\s\S]*glyph-sort-bar-c/.test(sprite)) throw new Error('sort bars must settle independently inside a fixed frame');
 if (!/glyph-clock-face[\s\S]*glyph-clock-hour[\s\S]*glyph-clock-minute/.test(sprite)) throw new Error('clock hands must move independently from its face');
-if (!/glyph-globe-frame[\s\S]*glyph-globe-route" pathLength="1"/.test(sprite)) throw new Error('globe route must trace independently across its frame');
+if (!/glyph-globe-frame[\s\S]*glyph-globe-route" pathLength="1"[\s\S]*glyph-globe-traveler[\s\S]*glyph-globe-destination/.test(sprite)) throw new Error('globe route, traveler, and destination must animate independently inside its fixed frame');
 if (!/glyph-microphone-body[\s\S]*glyph-microphone-level-a[\s\S]*glyph-microphone-level-c/.test(sprite)) throw new Error('microphone levels must animate independently from its body');
 if (!/glyph-key-body[\s\S]*glyph-key-pin/.test(sprite)) throw new Error('key pin must set independently from its body');
 if (!/glyph-bell-body[\s\S]*glyph-bell-clapper/.test(sprite)) throw new Error('bell clapper must swing independently inside its body');
