@@ -23,6 +23,11 @@ const assets = [
   'pinecone-sprig',
   'wildflower-clump',
   'fallen-branch',
+  'reed-clump',
+  'trail-boots',
+  'camp-storage',
+  'river-ripple',
+  'water-foam',
 ];
 const lightModes = ['ambient', 'sun', 'moon', 'fire', 'shadow'];
 const weatherModes = ['clear', 'cloudy', 'rainy', 'wet', 'dry'];
@@ -38,12 +43,12 @@ test('every reusable terrain symbol exposes shared condition marks', () => {
 test('lighting and weather modes form an orthogonal variant matrix', () => {
   for (const mode of lightModes) assert.match(css, new RegExp(`data-light="${mode}"`), `missing ${mode} light mode`);
   for (const mode of weatherModes) assert.match(css, new RegExp(`data-weather="${mode}"`), `missing ${mode} weather mode`);
-  assert.equal(lightModes.length * weatherModes.length * assets.length, 400);
+  assert.equal(lightModes.length * weatherModes.length * assets.length, 525);
 });
 
 test('every terrain placement opts into valid light and weather modes', () => {
   const placements = [...html.matchAll(/<use class="terrain-asset"[^>]+href="#([^"]+)"[^>]*>/g)].map((match) => match[0]);
-  assert.equal(placements.length, 58);
+  assert.equal(placements.length, 72);
   for (const placement of placements) {
     const asset = placement.match(/href="#([^"]+)"/)?.[1];
     const light = placement.match(/data-light="([^"]+)"/)?.[1];

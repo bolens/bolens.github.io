@@ -34,3 +34,18 @@ test('fire ring and forest floor use configurable asset families', () => {
   assert.doesNotMatch(html, /class="forest-litter"|class="forest-duff"|class="forest-floor-texture"/);
   assert.doesNotMatch(html, /class="mushroom-detail"|class="shelf-fungi"/);
 });
+
+test('riverbank and tent details reuse condition-aware assets', () => {
+  assert.equal([...html.matchAll(/href="#reed-clump"/g)].length, 3);
+  assert.equal([...html.matchAll(/href="#trail-boots"/g)].length, 2);
+  assert.equal([...html.matchAll(/href="#camp-storage"/g)].length, 2);
+  assert.doesNotMatch(html, /<g class="bank-reeds"[^>]+fill=/);
+  assert.doesNotMatch(html, /<g class="tent-storage"[^>]+stroke-linejoin=/);
+});
+
+test('river surface details reuse condition-aware assets', () => {
+  assert.equal([...html.matchAll(/href="#river-ripple"/g)].length, 4);
+  assert.equal([...html.matchAll(/href="#water-foam"/g)].length, 3);
+  assert.doesNotMatch(html, /<g class="river-ripples"[^>]+stroke=/);
+  assert.doesNotMatch(html, /<g class="water-foam"/);
+});
