@@ -65,6 +65,14 @@ test('automatic appearance follows local clock while explicit appearance stays f
   assert.ok(morning.darkness < twilight.darkness && twilight.darkness < night.darkness);
   assert.equal(document.documentElement.dataset.sceneCycle, 'dynamic');
   assert.equal(properties.get('--scene-orb-x'), `${night.x.toFixed(2)}px`);
+  assert.equal(properties.get('--scene-orb-center-x'), `${(1002 + night.x).toFixed(2)}px`);
+  const nightShadow = properties.get('--scene-cast-shadow');
+  portfolioSceneTime.refresh(new Date(2026, 8, 3, 6, 0));
+  const morningShadow = properties.get('--scene-cast-shadow');
+  portfolioSceneTime.refresh(new Date(2026, 8, 3, 18, 30));
+  const eveningShadow = properties.get('--scene-cast-shadow');
+  assert.notEqual(morningShadow, eveningShadow);
+  assert.notEqual(eveningShadow, nightShadow);
   setAppearance('night');
   const fixedNight = portfolioSceneTime.refresh(new Date(2026, 8, 3, 12, 0));
   assert.equal(fixedNight.time, 'night');
@@ -92,4 +100,8 @@ test('morning evening and twilight restyle every shared scene system', () => {
   assert.match(css, /data-scene-cycle="dynamic"\][^\n]+\.weather-cloud/);
   assert.match(css, /data-scene-cycle="dynamic"\][^\n]+\.ufo-lights/);
   assert.match(css, /translate:var\(--scene-orb-x,0\) var\(--scene-orb-y,0\)/);
+  assert.match(css, /--asset-time-shadow:var\(--scene-cast-shadow/);
+  assert.match(timeSource, /--scene-cast-shadow/);
+  assert.match(html, /class="solar-ray-field"[^>]+data-region="position-reactive-sunbeams"/);
+  assert.match(css, /\.solar-ray-field \{[^}]+translate:var\(--scene-orb-x,0\) var\(--scene-orb-y,0\)[^}]+transform-origin:var\(--scene-orb-center-x,1002px\) var\(--scene-orb-center-y,118px\)/);
 });
