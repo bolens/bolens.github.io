@@ -13,6 +13,7 @@ Then open <http://localhost:4173>.
 ## Verify
 
 ```sh
+node scripts/lint.mjs
 node scripts/build-site.mjs --check
 node tests/build-site-contract.mjs
 node tests/check-site.mjs
@@ -23,6 +24,16 @@ node tests/theme-smoke.mjs
 node tests/interaction-contract.mjs
 node tests/browser-smoke.mjs
 ```
+
+Enable the tracked pre-commit hook once per clone:
+
+```sh
+git config core.hooksPath .githooks
+```
+
+The hook runs `node scripts/lint.mjs`, which checks JavaScript syntax, parses JSON,
+verifies generated files, and validates the site contract. CI runs the same command
+for pull requests and pushes to `main`.
 
 Project listings, command-palette entries, shared page chrome, `sitemap.xml`, and `llms.txt` are generated from `data/projects.json` and `scripts/build-site.mjs`. Palette tokens, picker previews, browser theme colors, and 404 scene accents are generated from `data/themes.json`. Run `node scripts/build-site.mjs` after changing either data source or shared navigation.
 
