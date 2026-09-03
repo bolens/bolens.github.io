@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { waitFor } from './lib/browser-test.mjs';
+import { hoverElement, waitFor } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -202,11 +202,7 @@ const intentionalRefinements = new Set(['glyph-shelter-pitch', 'glyph-wrench-tig
 const duplicateKeyframes = keyframeNames.filter((name, index) => keyframeNames.indexOf(name) !== index && !intentionalRefinements.has(name));
 if (duplicateKeyframes.length) throw new Error(`sprite keyframes must be unique: ${[...new Set(duplicateKeyframes)].join(', ')}`);
 
-const hover = async (selector) => {
-  const point = await send('Runtime.evaluate', { expression: `(()=>{const element=document.querySelector(${JSON.stringify(selector)});element.scrollIntoView({block:'center',behavior:'instant'});const box=element.getBoundingClientRect();return {x:box.left+box.width/2,y:box.top+box.height/2}})()`, returnByValue: true });
-  await send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point.result.value });
-  await waitFor(send, `document.querySelector(${JSON.stringify(selector)}).matches(':hover')`, `${selector} hover state`);
-};
+const hover = (selector) => hoverElement(send, selector);
 
 try {
   await Promise.all(['Page.enable', 'Runtime.enable'].map((method) => send(method)));
