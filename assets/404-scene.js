@@ -4,7 +4,7 @@
   const svg = figure?.querySelector('svg');
   if (!canvas || !figure || !svg) return;
 
-  const context = canvas.getContext('2d', { alpha: true, desynchronized: true });
+  const context = canvas.getContext('2d', { alpha: true });
   if (!context) return;
 
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
