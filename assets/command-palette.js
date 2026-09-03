@@ -4,6 +4,7 @@
   const overlay = window.portfolioOverlay;
   if (!appearance || !pickerUi || !overlay) return;
   const { palettes } = appearance;
+  const glyphNames = ['trailhead', 'compass', 'map', 'cairn', 'switchback', 'shelter', 'lantern', 'binoculars', 'fire', 'pine', 'summit', 'boot', 'stars', 'arrow-east', 'arrow-north-east', 'arrow-north', 'arrow-north-west', 'arrow-west', 'arrow-south-west', 'arrow-south', 'arrow-south-east', 'waypoint', 'search', 'close', 'command', 'keyboard', 'palette', 'role', 'layers', 'repository', 'backpack', 'shield', 'terminal', 'network', 'wrench', 'cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code'];
 
   const mountCommands = () => {
     let announce = () => {};
@@ -86,6 +87,7 @@
       { label: 'Focus main content', detail: 'Move keyboard focus past navigation', group: 'Accessibility', keywords: 'skip content', shortcut: 'Alt M', ariaShortcut: 'Alt+M', run: () => document.querySelector('main')?.focus() },
       { label: 'Command palette', detail: 'Search pages and run site actions', group: 'Command', keywords: 'shortcut search commands', shortcut: 'Alt K', ariaShortcut: 'Alt+K', run: () => openCommands() },
       { label: 'Keyboard shortcuts', detail: 'Show every available keyboard shortcut', group: 'Command', keywords: 'help hotkeys bindings', shortcut: 'Alt /', ariaShortcut: 'Alt+/', run: ({ returnFocus }) => openShortcuts(returnFocus) },
+      { label: 'Glyph explorer', detail: 'Preview the portfolio icon suite', group: 'Command', keywords: 'icons symbols gallery', shortcut: 'Alt G', ariaShortcut: 'Alt+G', run: ({ returnFocus }) => openGlyphExplorer(returnFocus) },
       { label: 'Choose palette', detail: 'Open color and appearance controls', group: 'Command', keywords: 'theme colors shortcut', shortcut: 'Alt P', ariaShortcut: 'Alt+P', run: pickerUi.open },
       { label: 'Cycle color palette', detail: 'Move to the next color scheme', group: 'Palette', keywords: 'next theme colors', run: runAppearance(appearance.cyclePalette) },
       ...Object.entries(palettes).map(([name, palette]) => ({ label: `Use ${palette.label} palette`, detail: 'Change the site color scheme', group: 'Palette', keywords: `${name} theme colors`, run: choosePalette(name) })),
@@ -116,6 +118,12 @@
     shortcutDialog.setAttribute('aria-labelledby', 'shortcut-overlay-title');
     shortcutDialog.innerHTML = `<header class="overlay-header"><div class="overlay-heading"><svg class="overlay-heading-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-keyboard"></use></svg><div><p>Quick reference</p><h2 id="shortcut-overlay-title">Keyboard shortcuts</h2></div></div><button class="overlay-close" type="button" aria-label="Close keyboard shortcuts" data-tooltip="Close keyboard shortcuts"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-close"></use></svg></button></header><table><thead><tr><th scope="col">Action</th><th scope="col">Shortcut</th></tr></thead><tbody>${shortcutCommands.map((command) => `<tr><th scope="row">${command.label}</th><td><kbd>${command.shortcut}</kbd></td></tr>`).join('')}</tbody></table><footer>Press <kbd>Esc</kbd> to close</footer>`;
     document.body.append(shortcutDialog);
+    const glyphDialog = document.createElement('dialog');
+    glyphDialog.className = 'glyph-explorer';
+    glyphDialog.setAttribute('aria-labelledby', 'glyph-explorer-title');
+    glyphDialog.setAttribute('aria-describedby', 'glyph-explorer-help');
+    glyphDialog.innerHTML = `<header class="overlay-header"><div class="overlay-heading"><svg class="overlay-heading-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-stars"></use></svg><div><p>Trail marks</p><h2 id="glyph-explorer-title">Glyph explorer</h2></div></div><button class="overlay-close" type="button" aria-label="Close glyph explorer" data-tooltip="Close glyph explorer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-close"></use></svg></button></header><p class="glyph-explorer-help" id="glyph-explorer-help">Hover or focus a glyph to preview its motion.</p><div class="glyph-explorer-grid">${glyphNames.map((name) => `<button class="glyph-explorer-item" type="button" aria-label="Preview ${name.replaceAll('-', ' ')} glyph"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-${name}"></use></svg><span>${name.replaceAll('-', ' ')}</span></button>`).join('')}</div><footer>Press <kbd>Esc</kbd> to close</footer>`;
+    document.body.append(glyphDialog);
     const footer = document.querySelector('.site-footer');
     if (footer && !footer.querySelector('.shortcut-hint')) {
       const hint = document.createElement('span');
@@ -130,6 +138,7 @@
     let active = 0;
     let commandReturnFocus = null;
     let shortcutReturnFocus = null;
+    let glyphReturnFocus = null;
     let recentLabels = [];
     dialog.querySelector('.overlay-close').addEventListener('click', () => dialog.close());
     try {
@@ -214,6 +223,7 @@
       const scrollPosition = scrollY;
       pickerUi.close();
       if (shortcutDialog.open) shortcutDialog.close();
+      if (glyphDialog.open) glyphDialog.close();
       if (!dialog.open) commandReturnFocus = document.activeElement;
       input.value = query;
       active = 0;
@@ -228,11 +238,23 @@
       const scrollPosition = scrollY;
       pickerUi.close();
       if (dialog.open) dialog.close();
+      if (glyphDialog.open) glyphDialog.close();
       shortcutReturnFocus = returnTarget;
       if (!shortcutDialog.open) shortcutDialog.showModal();
       shortcutDialog.querySelector('button').focus({ preventScroll: true });
       scrollTo({ top: scrollPosition });
       overlay.set('shortcuts', true);
+    }
+    function openGlyphExplorer(returnTarget = document.activeElement) {
+      const scrollPosition = scrollY;
+      pickerUi.close();
+      if (dialog.open) dialog.close();
+      if (shortcutDialog.open) shortcutDialog.close();
+      glyphReturnFocus = returnTarget;
+      if (!glyphDialog.open) glyphDialog.showModal();
+      glyphDialog.querySelector('.overlay-close').focus({ preventScroll: true });
+      scrollTo({ top: scrollPosition });
+      overlay.set('glyphs', true);
     }
     dialog.addEventListener('close', () => {
       if (!dialog.open) {
@@ -240,8 +262,8 @@
         if (dialog.contains(document.activeElement)) document.activeElement.blur();
       }
       overlay.set('commands', dialog.open);
-      if (!dialog.open && canRestoreFocus(commandReturnFocus) && !shortcutDialog.open) commandReturnFocus.focus();
-      if (!dialog.open && !shortcutDialog.open) commandReturnFocus = null;
+      if (!dialog.open && canRestoreFocus(commandReturnFocus) && !shortcutDialog.open && !glyphDialog.open) commandReturnFocus.focus();
+      if (!dialog.open && !shortcutDialog.open && !glyphDialog.open) commandReturnFocus = null;
     });
     shortcutDialog.querySelector('.overlay-close').addEventListener('click', () => shortcutDialog.close());
     shortcutDialog.addEventListener('click', (event) => { if (event.target === shortcutDialog) shortcutDialog.close(); });
@@ -249,6 +271,13 @@
       overlay.set('shortcuts', false);
       if (canRestoreFocus(shortcutReturnFocus)) shortcutReturnFocus.focus();
       shortcutReturnFocus = null;
+    });
+    glyphDialog.querySelector('.overlay-close').addEventListener('click', () => glyphDialog.close());
+    glyphDialog.addEventListener('click', (event) => { if (event.target === glyphDialog) glyphDialog.close(); });
+    glyphDialog.addEventListener('close', () => {
+      overlay.set('glyphs', false);
+      if (canRestoreFocus(glyphReturnFocus)) glyphReturnFocus.focus();
+      glyphReturnFocus = null;
     });
     input.addEventListener('input', () => { active = 0; renderCommands(); });
     results.addEventListener('pointermove', (event) => {
@@ -300,6 +329,12 @@
         event.preventDefault();
         if (shortcutDialog.open) shortcutDialog.close();
         else openShortcuts();
+        return;
+      }
+      if (keyCode === 'KeyG' && altShortcut) {
+        event.preventDefault();
+        if (glyphDialog.open) glyphDialog.close();
+        else openGlyphExplorer();
         return;
       }
       if (!altShortcut) return;

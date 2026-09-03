@@ -42,8 +42,19 @@ try {
   await key(send, 'Escape', 'Escape');
   await waitFor(send, `!document.querySelector('.shortcut-overlay').open&&!portfolioOverlay.active`, 'shortcut overlay close');
 
-  const overlayChrome = await send('Runtime.evaluate', { expression: `(()=>{const dialogs=[...document.querySelectorAll('.command-palette,.shortcut-overlay')];const iconButtons=[...document.querySelectorAll('.overlay-close')];const palette=document.querySelector('.palette-picker');return {dialogs:dialogs.length,headers:dialogs.filter((dialog)=>dialog.querySelector(':scope>.overlay-header')).length,headingGlyphs:dialogs.filter((dialog)=>dialog.querySelector('.overlay-heading-glyph[aria-hidden="true"]')).length,iconButtons:iconButtons.length,named:iconButtons.every((button)=>button.getAttribute('aria-label')&&button.dataset.tooltip===button.getAttribute('aria-label')),decorative:iconButtons.every((button)=>button.querySelector('svg[aria-hidden="true"][focusable="false"]')),paletteHeader:!!palette.querySelector('.palette-panel-heading .overlay-heading-glyph[aria-hidden="true"]'),paletteClose:!!palette.querySelector('.overlay-close[aria-label="Close color and appearance controls"]')}})()`, returnByValue: true });
-  if (JSON.stringify(overlayChrome.result.value) !== JSON.stringify({ dialogs: 2, headers: 2, headingGlyphs: 2, iconButtons: 3, named: true, decorative: true, paletteHeader: true, paletteClose: true })) throw new Error(`overlay chrome semantics failed: ${JSON.stringify(overlayChrome.result.value)}`);
+  await send('Runtime.evaluate', { expression: `(()=>{const button=document.createElement('button');button.id='glyph-return';document.body.append(button);button.focus()})()` });
+  await key(send, 'g', 'KeyG', 1);
+  const glyphExplorer = await send('Runtime.evaluate', { expression: `(()=>{const dialog=document.querySelector('.glyph-explorer');const items=[...dialog.querySelectorAll('.glyph-explorer-item')];return {open:dialog.open,title:dialog.querySelector('h2')?.textContent,description:dialog.getAttribute('aria-describedby'),items:items.length,uniqueNames:new Set(items.map((item)=>item.getAttribute('aria-label'))).size,decorative:items.every((item)=>item.querySelector('svg[aria-hidden="true"][focusable="false"]')),named:items.every((item)=>item.getAttribute('aria-label')?.startsWith('Preview ')),overlay:portfolioOverlay.active,focused:document.activeElement===dialog.querySelector('.overlay-close'),overflow:document.documentElement.scrollWidth-innerWidth}})()`, returnByValue: true });
+  const { overflow: glyphOverflow, ...glyphSemantics } = glyphExplorer.result.value;
+  if (JSON.stringify(glyphSemantics) !== JSON.stringify({ open:true, title:'Glyph explorer', description:'glyph-explorer-help', items:43, uniqueNames:43, decorative:true, named:true, overlay:true, focused:true }) || glyphOverflow > 0) throw new Error(`glyph explorer semantics failed: ${JSON.stringify(glyphExplorer.result.value)}`);
+  await send('Runtime.evaluate', { expression: `document.querySelector('.glyph-explorer-item[aria-label="Preview arrow east glyph"]').focus()` });
+  const glyphPreview = await send('Runtime.evaluate', { expression: `document.querySelector('.glyph-explorer-item[aria-label="Preview arrow east glyph"] use').getAnimations()[0]?.animationName`, returnByValue: true });
+  if (glyphPreview.result.value !== 'glyph-arrow-glide') throw new Error(`glyph explorer keyboard preview failed: ${glyphPreview.result.value}`);
+  await key(send, 'Escape', 'Escape');
+  await waitFor(send, `!document.querySelector('.glyph-explorer').open&&!portfolioOverlay.active&&document.activeElement?.id==='glyph-return'`, 'glyph explorer close and focus return');
+
+  const overlayChrome = await send('Runtime.evaluate', { expression: `(()=>{const dialogs=[...document.querySelectorAll('.command-palette,.shortcut-overlay,.glyph-explorer')];const iconButtons=[...document.querySelectorAll('.overlay-close')];const palette=document.querySelector('.palette-picker');return {dialogs:dialogs.length,headers:dialogs.filter((dialog)=>dialog.querySelector(':scope>.overlay-header')).length,headingGlyphs:dialogs.filter((dialog)=>dialog.querySelector('.overlay-heading-glyph[aria-hidden="true"]')).length,iconButtons:iconButtons.length,named:iconButtons.every((button)=>button.getAttribute('aria-label')&&button.dataset.tooltip===button.getAttribute('aria-label')),decorative:iconButtons.every((button)=>button.querySelector('svg[aria-hidden="true"][focusable="false"]')),paletteHeader:!!palette.querySelector('.palette-panel-heading .overlay-heading-glyph[aria-hidden="true"]'),paletteClose:!!palette.querySelector('.overlay-close[aria-label="Close color and appearance controls"]')}})()`, returnByValue: true });
+  if (JSON.stringify(overlayChrome.result.value) !== JSON.stringify({ dialogs: 3, headers: 3, headingGlyphs: 3, iconButtons: 4, named: true, decorative: true, paletteHeader: true, paletteClose: true })) throw new Error(`overlay chrome semantics failed: ${JSON.stringify(overlayChrome.result.value)}`);
   await send('Runtime.evaluate', { expression: `(()=>{const shortcuts=document.querySelector('.shortcut-overlay');shortcuts.showModal();shortcuts.querySelector('.overlay-close').focus()})()` });
   await pause(250);
   const tooltipState = await send('Runtime.evaluate', { expression: `(()=>{const close=document.querySelector('.shortcut-overlay .overlay-close');const tooltip=getComputedStyle(close,'::after');const state={opacity:tooltip.opacity,content:tooltip.content,focused:document.activeElement===close};close.closest('dialog').close();return state})()`, returnByValue: true });
@@ -121,6 +132,11 @@ try {
       const appearanceCapture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
       writeFileSync(`/tmp/bolens-overlay-appearance-${name}.png`, Buffer.from(appearanceCapture.data, 'base64'));
       await send('Runtime.evaluate', { expression: `portfolioAppearancePicker.close()` });
+      await key(send, 'g', 'KeyG', 1);
+      await send('Runtime.evaluate', { expression: `document.querySelector('.glyph-explorer-item').focus()` });
+      const glyphCapture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+      writeFileSync(`/tmp/bolens-glyph-explorer-${name}.png`, Buffer.from(glyphCapture.data, 'base64'));
+      await key(send, 'Escape', 'Escape');
     }
     await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
   }
