@@ -9,6 +9,16 @@ const server = await startSiteServer(root);
 const { origin } = server;
 const errors = [];
 let browser;
+const pause = (duration = 50) => new Promise((done) => setTimeout(done, duration));
+const waitFor = async (send, expression, description, timeout = 10_000) => {
+  const deadline = Date.now() + timeout;
+  while (Date.now() < deadline) {
+    const result = await send('Runtime.evaluate', { expression, returnByValue: true });
+    if (result.result.value) return result.result.value;
+    await pause();
+  }
+  throw new Error(`timed out waiting for ${description}`);
+};
 try {
   browser = await startBrowser((message) => {
     if (message.method === 'Runtime.exceptionThrown') errors.push(message.params.exceptionDetails.exception?.description ?? message.params.exceptionDetails.text);
@@ -22,7 +32,7 @@ try {
   const { send } = browser;
   const capturePhase = async (width, name, selector, time, path = '/') => {
     await send('Page.navigate', { url: `${origin}${path}` });
-    await new Promise((done) => setTimeout(done, 200));
+    await waitFor(send, `document.readyState==='complete'&&!!document.querySelector(${JSON.stringify(selector)})`, `${name} capture target`);
     await send('Runtime.evaluate', { expression: `
       document.documentElement.style.scrollBehavior='auto';
       const target=document.querySelector(${JSON.stringify(selector)});
@@ -41,7 +51,7 @@ try {
   };
   const captureSequence = async (width, name, selector, times) => {
     await send('Page.navigate', { url: `${origin}/` });
-    await new Promise((done) => setTimeout(done, 200));
+    await waitFor(send, `document.readyState==='complete'&&!!document.querySelector(${JSON.stringify(selector)})`, `${name} sequence target`);
     await send('Runtime.evaluate', { expression: `
       document.documentElement.style.scrollBehavior='auto';
       const target=document.querySelector(${JSON.stringify(selector)});
@@ -79,11 +89,7 @@ try {
   if (missing.status !== 404 || !(await missing.text()).includes('This signal')) throw new Error('custom 404 response failed');
 
   await send('Page.navigate', { url: `${origin}/missing-route` });
-  for (let attempt = 0; attempt < 40; attempt++) {
-    const ready = await send('Runtime.evaluate', { expression: `location.pathname==='/missing-route'&&document.readyState==='complete'&&!!document.querySelector('.command-palette')`, returnByValue: true });
-    if (ready.result.value) break;
-    await new Promise((done) => setTimeout(done, 50));
-  }
+  await waitFor(send, `location.pathname==='/missing-route'&&document.readyState==='complete'&&!!document.querySelector('.command-palette')`, 'custom 404 scripts');
   const hybridHandoff = await send('Runtime.evaluate', { expression: 'window.__hybridReadyState', returnByValue: true });
   if (!hybridHandoff.result.value?.painted || hybridHandoff.result.value.desynchronized) throw new Error(`404 hybrid canvas is not presentation-safe: ${JSON.stringify(hybridHandoff.result.value)}`);
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'k', code: 'KeyK', windowsVirtualKeyCode: 75, modifiers: 1 });
@@ -92,7 +98,7 @@ try {
   if (!commandMotion.result.value.overlay || !commandMotion.result.value.open || commandMotion.result.value.motion !== 'paused') throw new Error(`404 command overlay motion failed: ${JSON.stringify(commandMotion.result.value)}`);
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
-  await new Promise((done) => setTimeout(done, 50));
+  await waitFor(send, `!document.querySelector('.command-palette').open&&!document.documentElement.classList.contains('ui-overlay-open')`, '404 command overlay close');
   const resumedMotion = await send('Runtime.evaluate', { expression: `(()=>({overlay:document.documentElement.classList.contains('ui-overlay-open'),motion:getComputedStyle(document.querySelector('.camp-stars circle')).animationPlayState}))()`, returnByValue: true });
   if (resumedMotion.result.value.overlay || resumedMotion.result.value.motion !== 'running') throw new Error(`404 overlay motion resume failed: ${JSON.stringify(resumedMotion.result.value)}`);
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'p', code: 'KeyP', windowsVirtualKeyCode: 80, modifiers: 1 });
@@ -109,11 +115,7 @@ try {
     await send('Emulation.setDeviceMetricsOverride', { width, height: width === 390 ? 844 : 1000, deviceScaleFactor: 1, mobile: width === 390 });
     for (const route of ['/', '/work/', '/about/', '/case-studies/uddns/', '/case-studies/aur-response-toolkit/', '/case-studies/privacy-devices/', '/case-studies/launch-layer/', '/case-studies/millennium-helpers/']) {
       await send('Page.navigate', { url: `${origin}${route}` });
-      for (let attempt = 0; attempt < 40; attempt++) {
-        const state = await send('Runtime.evaluate', { expression: 'document.readyState', returnByValue: true });
-        if (state.result.value === 'complete') break;
-        await new Promise((done) => setTimeout(done, 50));
-      }
+      await waitFor(send, `location.pathname===${JSON.stringify(route)}&&document.readyState==='complete'&&!!document.querySelector('main')`, `${route} responsive render`);
       const check = await send('Runtime.evaluate', { expression: `({h1:document.querySelectorAll('h1').length,main:!!document.querySelector('main'),overflow:document.documentElement.scrollWidth>innerWidth,title:document.title,shortcutHint:document.querySelector('.shortcut-hint')?.textContent.trim()})`, returnByValue: true });
       const value = check.result.value;
       if (value.h1 !== 1 || !value.main || value.overflow || !value.title || value.shortcutHint !== 'Press Alt + / for shortcuts') throw new Error(`${width}px ${route}: ${JSON.stringify(value)}`);
@@ -131,17 +133,13 @@ try {
   }
 
   await send('Page.navigate', { url: `${origin}/case-studies/uddns/` });
-  await new Promise((done) => setTimeout(done, 200));
+  await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.case-story > section h2')`, 'case-study scroll treatment');
   const chapterScroll = await send('Runtime.evaluate', { expression: `(()=>{const section=document.querySelector('.case-story > section');const heading=section.querySelector('h2');return {snapType:getComputedStyle(document.documentElement).scrollSnapType,snapAlign:getComputedStyle(section).scrollSnapAlign,timelineSupported:CSS.supports('animation-timeline: view()'),headingTimeline:getComputedStyle(heading).animationTimeline}})()`, returnByValue: true });
   const chapterScrollValue = chapterScroll.result.value;
   if (!chapterScrollValue.snapType.includes('y') || chapterScrollValue.snapAlign !== 'start' || (chapterScrollValue.timelineSupported && chapterScrollValue.headingTimeline === 'auto')) throw new Error(`case chapter scroll treatment failed: ${JSON.stringify(chapterScrollValue)}`);
 
   await send('Page.navigate', { url: `${origin}/` });
-  for (let attempt = 0; attempt < 40; attempt++) {
-    const ready = await send('Runtime.evaluate', { expression: `location.pathname==='/'&&document.readyState==='complete'&&!!document.querySelector('.command-palette')`, returnByValue: true });
-    if (ready.result.value) break;
-    await new Promise((done) => setTimeout(done, 50));
-  }
+  await waitFor(send, `location.pathname==='/'&&document.readyState==='complete'&&!!document.querySelector('.command-palette')`, 'home scripts');
   const scrollMotion = await send('Runtime.evaluate', { expression: `(()=>{const supported=CSS.supports('animation-timeline: view()');const visual=getComputedStyle(document.querySelector('.project-visual'));const copy=getComputedStyle(document.querySelector('.project-copy'));const detail=getComputedStyle(document.querySelector('.toolbox dl div'));return {supported,visualTimeline:visual.animationTimeline,copyTimeline:copy.animationTimeline,detailTimeline:detail.animationTimeline,visualRange:visual.animationRange}})()`, returnByValue: true });
   const scrollMotionValue = scrollMotion.result.value;
   if (scrollMotionValue.supported && [scrollMotionValue.visualTimeline,scrollMotionValue.copyTimeline,scrollMotionValue.detailTimeline].some((timeline)=>timeline === 'auto')) throw new Error(`homepage scroll motion failed: ${JSON.stringify(scrollMotionValue)}`);
@@ -175,14 +173,14 @@ try {
   const paletteValue = paletteSelection.result.value;
   if (paletteValue.count !== 8 || paletteValue.selected !== 'glacier' || !['#28769c','#70bce2'].includes(paletteValue.accent) || !paletteValue.summary.startsWith('Glacier ·') || !paletteValue.status.startsWith('Glacier palette,')) throw new Error(`palette selection failed: ${JSON.stringify(paletteValue)}`);
   await send('Page.navigate', { url: `${origin}/about/` });
-  await new Promise((done) => setTimeout(done, 200));
+  await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.availability')`, 'about appearance controls');
   const persistedPalette = await send('Runtime.evaluate', { expression: `({selected:document.documentElement.dataset.palette,checked:document.querySelector('.palette-picker input:checked')?.value})`, returnByValue: true });
   if (persistedPalette.result.value.selected !== 'glacier' || persistedPalette.result.value.checked !== 'glacier') throw new Error(`palette persistence failed: ${JSON.stringify(persistedPalette.result.value)}`);
   const aboutNightPanel = await send('Runtime.evaluate', { expression: `(()=>{document.querySelector('.theme-options input[value="night"]').click();const panel=document.querySelector('.availability');const button=panel.querySelector('.button');return {page:getComputedStyle(document.body).backgroundColor,panel:getComputedStyle(panel).backgroundColor,panelText:getComputedStyle(panel).color,button:getComputedStyle(button).backgroundColor,buttonText:getComputedStyle(button).color}})()`, returnByValue: true });
   const aboutPanelValue = aboutNightPanel.result.value;
   if (aboutPanelValue.panel === 'rgb(255, 255, 255)' || aboutPanelValue.panel === aboutPanelValue.panelText || aboutPanelValue.button === aboutPanelValue.buttonText || aboutPanelValue.panel === aboutPanelValue.page) throw new Error(`about night panel failed: ${JSON.stringify(aboutPanelValue)}`);
   await send('Page.navigate', { url: `${origin}/` });
-  await new Promise((done) => setTimeout(done, 200));
+  await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.hike-stars')`, 'home scene themes');
   const sceneThemes = await send('Runtime.evaluate', { expression: `(()=>{const themeInput=(value)=>document.querySelector('.theme-options input[value="'+value+'"]');const inspect=()=>({theme:document.documentElement.dataset.theme||'auto',night:getComputedStyle(document.querySelector('.hike-stars')).visibility,day:getComputedStyle(document.querySelector('.hike-day-sun')).visibility,sky:getComputedStyle(document.documentElement).getPropertyValue('--scene-sky').trim()});const day=themeInput('day');day.checked=true;day.dispatchEvent(new Event('change',{bubbles:true}));const dayState=inspect();const night=themeInput('night');night.checked=true;night.dispatchEvent(new Event('change',{bubbles:true}));const nightState=inspect();return {count:document.querySelectorAll('.theme-options input').length,dayState,nightState}})()`, returnByValue: true });
   const sceneThemeValue = sceneThemes.result.value;
   if (sceneThemeValue.count !== 3 || sceneThemeValue.dayState.theme !== 'day' || sceneThemeValue.dayState.night !== 'hidden' || sceneThemeValue.dayState.day !== 'visible' || sceneThemeValue.nightState.theme !== 'night' || sceneThemeValue.nightState.night !== 'visible' || sceneThemeValue.nightState.day !== 'hidden' || sceneThemeValue.dayState.sky === sceneThemeValue.nightState.sky) throw new Error(`scene theme switching failed: ${JSON.stringify(sceneThemeValue)}`);
@@ -202,13 +200,7 @@ try {
   }
   if (matrixValue.overlap !== 0 || matrixValue.panelRight > matrixValue.viewport) throw new Error(`palette layout failed: ${JSON.stringify(matrixValue)}`);
   await send('Page.navigate', { url: `${origin}/` });
-  let homeReady = false;
-  for (let attempt = 0; attempt < 100; attempt++) {
-    const ready = await send('Runtime.evaluate', { expression: `document.readyState==='complete'&&!!document.querySelector('.skip-link')`, returnByValue: true });
-    if (ready.result.value) { homeReady = true; break; }
-    await new Promise((done) => setTimeout(done, 50));
-  }
-  if (!homeReady) throw new Error('home page did not become ready for skip-link check');
+  await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.skip-link')`, 'home skip link');
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
   const skipLink = await send('Runtime.evaluate', { expression: `(()=>{const link=document.querySelector('.skip-link');const style=getComputedStyle(link);const box=link.getBoundingClientRect();return {focused:document.activeElement===link,matchesFocus:link.matches(':focus-visible'),transform:style.transform,background:style.backgroundColor,color:style.color,border:style.borderColor,outline:style.outlineStyle,outlineWidth:style.outlineWidth,width:box.width,height:box.height,top:box.top}})()`, returnByValue: true });
@@ -222,7 +214,7 @@ try {
   await send('Runtime.evaluate', { expression: `localStorage.removeItem('portfolio-palette');localStorage.removeItem('portfolio-theme');document.documentElement.dataset.palette='alpine';delete document.documentElement.dataset.theme` });
 
   await send('Page.navigate', { url: `${origin}/` });
-  await new Promise((done) => setTimeout(done, 200));
+  await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.visual-ddns svg')&&!!document.querySelector('.hobby-flight-layer')`, 'SVG motion fixtures');
   const motion = await send('Runtime.evaluate', { expression: `(()=>{
     const ddns=document.querySelector('.visual-ddns svg');
     const packet=document.querySelector('.ddns-packets circle');
@@ -283,7 +275,7 @@ try {
 
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'dark' }, { name: 'prefers-reduced-motion', value: 'reduce' }] });
   await send('Page.navigate', { url: `${origin}/` });
-  await new Promise((done) => setTimeout(done, 150));
+  await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.ddns-packets')`, 'reduced-motion fixtures');
   const preferences = await send('Runtime.evaluate', { expression: `({dark:matchMedia('(prefers-color-scheme: dark)').matches,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches,ddns:getComputedStyle(document.querySelector('.ddns-packets')).display,flight:getComputedStyle(document.querySelector('.hobby-traveler')).display,landed:getComputedStyle(document.querySelector('.hobby-landed-disc')).display,scrollAnimations:[...document.querySelectorAll('.project-visual,.project-copy,.principles li,.toolbox dl div')].map((item)=>getComputedStyle(item).animationName)})`, returnByValue: true });
   if (!preferences.result.value.dark || !preferences.result.value.reduced || preferences.result.value.ddns !== 'none' || preferences.result.value.flight !== 'none' || preferences.result.value.landed === 'none' || preferences.result.value.scrollAnimations.some((name)=>name !== 'none')) throw new Error(`preference emulation failed: ${JSON.stringify(preferences.result.value)}`);
   if (captureEvidence) {
@@ -303,5 +295,6 @@ try {
   if (errors.length) throw new Error(`browser errors: ${errors.join('; ')}`);
   console.log('Browser smoke passed 16 responsive route renders, custom 404, dark mode, reduced motion, print, and forced colors with no page, console, or network errors.');
 } finally {
-  browser?.close(); server.close();
+  browser?.close();
+  await server.close();
 }

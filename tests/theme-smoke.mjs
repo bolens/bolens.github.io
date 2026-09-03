@@ -154,6 +154,21 @@ try {
     throw new Error(`atomic appearance reset failed: ${JSON.stringify(resetValue)}`);
   }
 
+  const blockedStorageScript = await send('Page.addScriptToEvaluateOnNewDocument', { source: `
+    Storage.prototype.getItem=()=>{throw new DOMException('blocked','SecurityError')};
+    Storage.prototype.setItem=()=>{throw new DOMException('blocked','SecurityError')};
+  ` });
+  await send('Page.navigate', { url: `${origin}/` });
+  await waitFor(send, `!!window.portfolioAppearancePicker`, 'blocked-storage appearance startup');
+  const blockedStorage = await send('Runtime.evaluate', {
+    expression: `(()=>{portfolioAppearance.setPalette('coast');portfolioAppearance.setTheme('night');return {palette:portfolioAppearance.palette,theme:portfolioAppearance.theme,rootPalette:document.documentElement.dataset.palette,rootTheme:document.documentElement.dataset.theme}})()`,
+    returnByValue: true,
+  });
+  await send('Page.removeScriptToEvaluateOnNewDocument', { identifier: blockedStorageScript.identifier });
+  if (blockedStorage.result.value.palette !== 'coast' || blockedStorage.result.value.theme !== 'night' || blockedStorage.result.value.rootPalette !== 'coast' || blockedStorage.result.value.rootTheme !== 'night') {
+    throw new Error(`blocked storage fallback failed: ${JSON.stringify(blockedStorage.result.value)}`);
+  }
+
   await send('Emulation.setScriptExecutionDisabled', { value: true });
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'dark' }] });
   await send('Page.navigate', { url: `${origin}/?palette=alpine` });
@@ -167,8 +182,8 @@ try {
     throw new Error(`no-JavaScript fallback failed: ${JSON.stringify(noScript.result.value)}`);
   }
 
-  console.log('Theme smoke passed preference fallbacks, metadata, atomic state transitions, synchronization, automatic palettes, overlay composition, increased contrast, and no-JavaScript defaults.');
+  console.log('Theme smoke passed preference and storage fallbacks, metadata, atomic state transitions, synchronization, automatic palettes, overlay composition, increased contrast, and no-JavaScript defaults.');
 } finally {
   browser?.close();
-  server.close();
+  await server.close();
 }
