@@ -97,7 +97,11 @@ nav a:not(.nav-cta):hover, nav a[aria-current="page"] { background-size: 100% 2p
 a:hover .trail-arrow { translate:.18em 0; }
 a:hover .trail-arrow:has(use[href$="arrow-north-east"]) { translate:.12em -.12em; }
 a:hover .trail-arrow:has(use[href$="arrow-north"]) { translate:0 -.16em; }
+a:hover .trail-arrow:has(use[href$="arrow-north-west"]) { translate:-.12em -.12em; }
+a:hover .trail-arrow:has(use[href$="arrow-west"]) { translate:-.18em 0; }
+a:hover .trail-arrow:has(use[href$="arrow-south-west"]) { translate:-.12em .12em; }
 a:hover .trail-arrow:has(use[href$="arrow-south"]) { translate:0 .16em; }
+a:hover .trail-arrow:has(use[href$="arrow-south-east"]) { translate:.12em .12em; }
 .status-dot { display: inline-block; width: .56rem; aspect-ratio: 1; margin-right: .5rem; border-radius: 50%; background: var(--copper); box-shadow: 0 0 0 4px color-mix(in srgb, var(--copper) 18%, transparent); }
 h1,h2,h3 { text-wrap: balance; }
 p,dd,small { text-wrap: pretty; }

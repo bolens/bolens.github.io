@@ -36,7 +36,7 @@
     eyebrow.prepend(svg);
   });
 
-  const arrows = { '→': 'east', '↗': 'north-east', '↑': 'north', '↓': 'south' };
+  const arrows = { '→': 'east', '↗': 'north-east', '↑': 'north', '↖': 'north-west', '←': 'west', '↙': 'south-west', '↓': 'south', '↘': 'south-east' };
   document.querySelectorAll('span[aria-hidden="true"], strong[aria-hidden="true"]').forEach((marker) => {
     const direction = arrows[marker.textContent.trim()];
     if (!direction) return;
