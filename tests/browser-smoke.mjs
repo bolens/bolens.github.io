@@ -106,6 +106,28 @@ try {
   const missing = await fetch(`${origin}/missing-route`);
   if (missing.status !== 404 || !(await missing.text()).includes('This signal')) throw new Error('custom 404 response failed');
 
+  await send('Page.navigate', { url: `${origin}/missing-route` });
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const ready = await send('Runtime.evaluate', { expression: `location.pathname==='/missing-route'&&document.readyState==='complete'&&!!document.querySelector('.command-palette')`, returnByValue: true });
+    if (ready.result.value) break;
+    await new Promise((done) => setTimeout(done, 50));
+  }
+  await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'k', code: 'KeyK', windowsVirtualKeyCode: 75, modifiers: 1 });
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'k', code: 'KeyK', windowsVirtualKeyCode: 75, modifiers: 1 });
+  const commandMotion = await send('Runtime.evaluate', { expression: `(()=>({overlay:document.documentElement.classList.contains('ui-overlay-open'),open:document.querySelector('.command-palette').open,motion:getComputedStyle(document.querySelector('.camp-stars circle')).animationPlayState}))()`, returnByValue: true });
+  if (!commandMotion.result.value.overlay || !commandMotion.result.value.open || commandMotion.result.value.motion !== 'paused') throw new Error(`404 command overlay motion failed: ${JSON.stringify(commandMotion.result.value)}`);
+  await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+  await new Promise((done) => setTimeout(done, 50));
+  const resumedMotion = await send('Runtime.evaluate', { expression: `(()=>({overlay:document.documentElement.classList.contains('ui-overlay-open'),motion:getComputedStyle(document.querySelector('.camp-stars circle')).animationPlayState}))()`, returnByValue: true });
+  if (resumedMotion.result.value.overlay || resumedMotion.result.value.motion !== 'running') throw new Error(`404 overlay motion resume failed: ${JSON.stringify(resumedMotion.result.value)}`);
+  await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'p', code: 'KeyP', windowsVirtualKeyCode: 80, modifiers: 1 });
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'p', code: 'KeyP', windowsVirtualKeyCode: 80, modifiers: 1 });
+  const pickerMotion = await send('Runtime.evaluate', { expression: `(()=>({overlay:document.documentElement.classList.contains('ui-overlay-open'),open:document.querySelector('.palette-picker').open,motion:getComputedStyle(document.querySelector('.camp-stars circle')).animationPlayState}))()`, returnByValue: true });
+  if (!pickerMotion.result.value.overlay || !pickerMotion.result.value.open || pickerMotion.result.value.motion !== 'paused') throw new Error(`404 color overlay motion failed: ${JSON.stringify(pickerMotion.result.value)}`);
+  await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
+
   for (const width of [390, 1440]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: width === 390 ? 844 : 1000, deviceScaleFactor: 1, mobile: width === 390 });
     for (const route of ['/', '/work/', '/about/', '/case-studies/uddns/', '/case-studies/aur-response-toolkit/', '/case-studies/privacy-devices/', '/case-studies/launch-layer/', '/case-studies/millennium-helpers/']) {
@@ -138,13 +160,17 @@ try {
   if (!chapterScrollValue.snapType.includes('y') || chapterScrollValue.snapAlign !== 'start' || (chapterScrollValue.timelineSupported && chapterScrollValue.headingTimeline === 'auto')) throw new Error(`case chapter scroll treatment failed: ${JSON.stringify(chapterScrollValue)}`);
 
   await send('Page.navigate', { url: `${origin}/` });
-  await new Promise((done) => setTimeout(done, 200));
+  for (let attempt = 0; attempt < 40; attempt++) {
+    const ready = await send('Runtime.evaluate', { expression: `location.pathname==='/'&&document.readyState==='complete'&&!!document.querySelector('.command-palette')`, returnByValue: true });
+    if (ready.result.value) break;
+    await new Promise((done) => setTimeout(done, 50));
+  }
   const scrollMotion = await send('Runtime.evaluate', { expression: `(()=>{const supported=CSS.supports('animation-timeline: view()');const visual=getComputedStyle(document.querySelector('.project-visual'));const copy=getComputedStyle(document.querySelector('.project-copy'));const detail=getComputedStyle(document.querySelector('.toolbox dl div'));return {supported,visualTimeline:visual.animationTimeline,copyTimeline:copy.animationTimeline,detailTimeline:detail.animationTimeline,visualRange:visual.animationRange}})()`, returnByValue: true });
   const scrollMotionValue = scrollMotion.result.value;
   if (scrollMotionValue.supported && [scrollMotionValue.visualTimeline,scrollMotionValue.copyTimeline,scrollMotionValue.detailTimeline].some((timeline)=>timeline === 'auto')) throw new Error(`homepage scroll motion failed: ${JSON.stringify(scrollMotionValue)}`);
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'p', code: 'KeyP', windowsVirtualKeyCode: 80, modifiers: 1 });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'p', code: 'KeyP', windowsVirtualKeyCode: 80, modifiers: 1 });
-  const pickerOpened = await send('Runtime.evaluate', { expression: `(()=>{const picker=document.querySelector('.palette-picker');return !picker.hidden&&picker.open})()`, returnByValue: true });
+  const pickerOpened = await send('Runtime.evaluate', { expression: `(()=>{const picker=document.querySelector('.palette-picker');const summary=picker.querySelector('summary');const fieldsets=[...picker.querySelectorAll('fieldset')];return {open:!picker.hidden&&picker.open,focused:document.activeElement===summary,shortcut:summary.getAttribute('aria-keyshortcuts'),name:summary.getAttribute('aria-label'),groups:fieldsets.length,legends:fieldsets.map((group)=>group.querySelector('legend')?.textContent),described:fieldsets.every((group)=>group.getAttribute('aria-describedby')&&document.getElementById(group.getAttribute('aria-describedby'))),radios:picker.querySelectorAll('input[type="radio"]').length,checked:picker.querySelectorAll('input[type="radio"]:checked').length,decorative:picker.querySelectorAll('.palette-swatches[aria-hidden="true"]').length,live:document.querySelector('.palette-status')?.getAttribute('aria-live')}})()`, returnByValue: true });
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
   const pickerClosed = await send('Runtime.evaluate', { expression: `(()=>{const picker=document.querySelector('.palette-picker');return picker.hidden&&!picker.open})()`, returnByValue: true });
@@ -152,7 +178,8 @@ try {
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'k', code: 'KeyK', windowsVirtualKeyCode: 75, modifiers: 1 });
   const commandPalette = await send('Runtime.evaluate', { expression: `(()=>{const picker=document.querySelector('.palette-picker');const dialog=document.querySelector('.command-palette');const input=dialog.querySelector('input');input.value='privacy';input.dispatchEvent(new Event('input',{bubbles:true}));const selected=dialog.querySelector('[aria-selected="true"]');const state={open:dialog.open,focused:document.activeElement===input,results:dialog.querySelectorAll('[role="option"]').length,selected:selected?.querySelector('b')?.textContent,pickerHidden:picker.hidden};dialog.close();return state})()`, returnByValue: true });
   const commandValue = commandPalette.result.value;
-  if (!commandValue.open || !commandValue.focused || commandValue.results < 1 || commandValue.selected !== 'Privacy Devices' || !commandValue.pickerHidden || !pickerOpened.result.value || !pickerClosed.result.value) throw new Error(`command palette failed: ${JSON.stringify({ ...commandValue,pickerOpened:pickerOpened.result.value,pickerClosed:pickerClosed.result.value })}`);
+  const pickerValue = pickerOpened.result.value;
+  if (!commandValue.open || !commandValue.focused || commandValue.results < 1 || commandValue.selected !== 'Privacy Devices' || !commandValue.pickerHidden || !pickerValue.open || !pickerValue.focused || pickerValue.shortcut !== 'Alt+P' || !pickerValue.name.includes('Glacier') || pickerValue.groups !== 2 || pickerValue.legends.join('|') !== 'Choose a color palette|Choose an appearance' || !pickerValue.described || pickerValue.radios !== 11 || pickerValue.checked !== 2 || pickerValue.decorative !== 8 || pickerValue.live !== 'polite' || !pickerClosed.result.value) throw new Error(`command palette failed: ${JSON.stringify({ ...commandValue,pickerOpened:pickerValue,pickerClosed:pickerClosed.result.value })}`);
   const commonCommands = await send('Runtime.evaluate', { expression: `(()=>{const dialog=document.querySelector('.command-palette');const input=dialog.querySelector('input');input.value='';input.dispatchEvent(new Event('input',{bubbles:true}));return [...dialog.querySelectorAll('[role="option"] b')].map((item)=>item.textContent)})()`, returnByValue: true });
   const commandLabels = commonCommands.result.value;
   for (const label of ['Toolbox','Copy page link','Share page','Print page','View page source','Focus main content','Toggle day or night','Use Glacier palette']) if (!commandLabels.includes(label)) throw new Error(`missing common command: ${label}`);
@@ -167,9 +194,9 @@ try {
   if (!shortcutHelpValue.open || shortcutHelpValue.query !== 'shortcut' || shortcutHelpValue.expanded !== 'true' || !shortcutHelpValue.active || shortcutHelpValue.shortcuts < 8) throw new Error(`shortcut help failed: ${JSON.stringify(shortcutHelpValue)}`);
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Escape', code: 'Escape', windowsVirtualKeyCode: 27 });
-  const paletteSelection = await send('Runtime.evaluate', { expression: `(()=>{const inputs=[...document.querySelectorAll('.palette-picker input[name="portfolio-palette"]')];const glacier=inputs.find((input)=>input.value==='glacier');glacier.checked=true;glacier.dispatchEvent(new Event('change',{bubbles:true}));const style=getComputedStyle(document.documentElement);return {count:inputs.length,selected:document.documentElement.dataset.palette,accent:style.getPropertyValue('--copper').trim()}})()`, returnByValue: true });
+  const paletteSelection = await send('Runtime.evaluate', { expression: `(()=>{const inputs=[...document.querySelectorAll('.palette-picker input[name="portfolio-palette"]')];const glacier=inputs.find((input)=>input.value==='glacier');glacier.checked=true;glacier.dispatchEvent(new Event('change',{bubbles:true}));const style=getComputedStyle(document.documentElement);return {count:inputs.length,selected:document.documentElement.dataset.palette,accent:style.getPropertyValue('--copper').trim(),summary:document.querySelector('.palette-name').textContent,status:document.querySelector('.palette-status').textContent}})()`, returnByValue: true });
   const paletteValue = paletteSelection.result.value;
-  if (paletteValue.count !== 8 || paletteValue.selected !== 'glacier' || !['#28769c','#70bce2'].includes(paletteValue.accent)) throw new Error(`palette selection failed: ${JSON.stringify(paletteValue)}`);
+  if (paletteValue.count !== 8 || paletteValue.selected !== 'glacier' || !['#28769c','#70bce2'].includes(paletteValue.accent) || !paletteValue.summary.startsWith('Glacier ·') || !paletteValue.status.startsWith('Glacier palette,')) throw new Error(`palette selection failed: ${JSON.stringify(paletteValue)}`);
   await send('Page.navigate', { url: `${origin}/about/` });
   await new Promise((done) => setTimeout(done, 200));
   const persistedPalette = await send('Runtime.evaluate', { expression: `({selected:document.documentElement.dataset.palette,checked:document.querySelector('.palette-picker input:checked')?.value})`, returnByValue: true });
@@ -197,6 +224,13 @@ try {
     if (day.colors.length !== 5 || new Set(day.colors).size !== 5 || !night || new Set(night.colors).size !== 5 || day.colors.join() === night.colors.join()) throw new Error(`palette preview failed for ${day.name}: ${JSON.stringify({ day,night })}`);
   }
   if (matrixValue.overlap !== 0 || matrixValue.panelRight > matrixValue.viewport) throw new Error(`palette layout failed: ${JSON.stringify(matrixValue)}`);
+  await send('Page.navigate', { url: `${origin}/` });
+  await new Promise((done) => setTimeout(done, 200));
+  await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
+  await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
+  const skipLink = await send('Runtime.evaluate', { expression: `(()=>{const link=document.querySelector('.skip-link');const style=getComputedStyle(link);const box=link.getBoundingClientRect();return {focused:document.activeElement===link,matchesFocus:link.matches(':focus-visible'),transform:style.transform,background:style.backgroundColor,color:style.color,border:style.borderColor,outline:style.outlineStyle,outlineWidth:style.outlineWidth,width:box.width,height:box.height,top:box.top}})()`, returnByValue: true });
+  const skipValue = skipLink.result.value;
+  if (!skipValue.focused || !skipValue.matchesFocus || skipValue.transform !== 'none' || skipValue.background === skipValue.color || skipValue.border === skipValue.background || skipValue.outline === 'none' || Number.parseFloat(skipValue.outlineWidth) < 3 || skipValue.width < 24 || skipValue.height < 24 || skipValue.top < 0) throw new Error(`skip link focus failed: ${JSON.stringify(skipValue)}`);
   if (captureEvidence) {
     for (const time of [1200,4320,7440,21600]) await capturePhase(1440, 'theme-night', '#off-the-clock', time);
     await send('Runtime.evaluate', { expression: `document.querySelector('.theme-options input[value="day"]').click()` });
