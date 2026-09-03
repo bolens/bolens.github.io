@@ -18,6 +18,16 @@ const pages = [
     ['.about-field-notes header .eyebrow', 'journal', '--glyph-journal-motion', 'glyph-journal-check-draw'],
     ['.availability .eyebrow', 'repository', '--glyph-repository-motion', 'glyph-repository-write'],
   ]],
+  ['/work/', [
+    ['[data-project-name="uddns"]', 'cloud', '--glyph-cloud-motion', 'glyph-cloud-drop-a-fall'],
+    ['[data-project-name="aur response toolkit"]', 'shield', '--glyph-shield-motion', 'glyph-shield-check-draw'],
+    ['[data-project-name="launch layer"]', 'terminal', '--glyph-terminal-motion', 'glyph-terminal-cursor-run'],
+    ['[data-project-name="millennium helpers"]', 'wrench', '--glyph-wrench-motion', 'glyph-wrench-tighten'],
+    ['[data-project-name="privacy devices"]', 'lock', '--glyph-lock-motion', 'glyph-lock-release'],
+    ['[data-project-name="p2p services"]', 'network', '--glyph-network-motion', 'glyph-network-link-a-draw'],
+    ['[data-project-name="app drawer"]', 'package', '--glyph-package-motion', 'glyph-package-fold-close'],
+    ['[data-project-name="multi-monitor workspaces"]', 'monitor', '--glyph-monitor-motion', 'glyph-monitor-cursor-blink'],
+  ]],
   ['/case-studies/uddns/', [
     ['.case-intro>.eyebrow', 'globe', '--glyph-globe-motion', 'glyph-globe-route-draw'],
     ['.case-facts div:nth-child(2) dt', 'network', '--glyph-network-motion', 'glyph-network-link-a-draw'],
@@ -59,7 +69,7 @@ try {
 
     for (const [selector, glyph, property, motion] of placements) {
       const idle = await send('Runtime.evaluate', {
-        expression: `(()=>{const target=document.querySelector(${JSON.stringify(selector)});const icons=target?.querySelectorAll(':scope>svg');const svg=icons?.[0];const use=svg?.querySelector('use');return {count:icons?.length??0,href:use?.getAttribute('href'),hidden:svg?.getAttribute('aria-hidden'),focusable:svg?.getAttribute('focusable'),outer:use?.getAnimations()[0]?.animationName??'none',motion:getComputedStyle(use).getPropertyValue(${JSON.stringify(property)}).trim()}})()`,
+        expression: `(()=>{const target=document.querySelector(${JSON.stringify(selector)});const icons=target?.querySelectorAll(':scope>svg');const svg=icons?.[0];const use=svg?.querySelector('use');return {count:icons?.length??0,href:use?.getAttribute('href'),hidden:svg?.getAttribute('aria-hidden'),focusable:svg?.getAttribute('focusable'),outer:use?.getAnimations()[0]?.animationName??'none',motion:use?getComputedStyle(use).getPropertyValue(${JSON.stringify(property)}).trim():''}})()`,
         returnByValue: true,
       });
       const expectedHref = `/assets/trail-glyphs.svg#glyph-${glyph}`;
@@ -77,6 +87,33 @@ try {
       }
       await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 0, y: 0 });
     }
+
+    if (path === '/work/') {
+      const arrows = await send('Runtime.evaluate', {
+        expression: `(()=>[...document.querySelectorAll('.index-list>a')].map((row)=>({href:row.href,glyph:row.querySelector('.trail-arrow use')?.getAttribute('href')})))()`,
+        returnByValue: true,
+      });
+      if (arrows.result.value.length !== 8 || arrows.result.value.some(({ glyph }) => glyph !== '/assets/trail-glyphs.svg#glyph-arrow-east')) {
+        throw new Error(`work rows must use one consistent forward arrow: ${JSON.stringify(arrows.result.value)}`);
+      }
+      for (const [selector, , property, motion] of placements) {
+        const focused = await send('Runtime.evaluate', {
+          expression: `(()=>{const row=document.querySelector(${JSON.stringify(selector)});row.focus();const use=row.querySelector(':scope>.project-glyph use');return {focused:document.activeElement===row,motion:getComputedStyle(use).getPropertyValue(${JSON.stringify(property)}).trim()}})()`,
+          returnByValue: true,
+        });
+        if (!focused.result.value.focused || !focused.result.value.motion.startsWith(`${motion} 680ms`)) {
+          throw new Error(`${selector} keyboard motion failed: ${JSON.stringify(focused.result.value)}`);
+        }
+      }
+      await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
+      const mobile = await send('Runtime.evaluate', {
+        expression: `new Promise((resolve)=>requestAnimationFrame(()=>requestAnimationFrame(()=>{const row=document.querySelector('.index-list>a');const icon=row.querySelector(':scope>.project-glyph').getBoundingClientRect();const copy=row.querySelector(':scope>span').getBoundingClientRect();const arrow=row.querySelector(':scope>.trail-arrow').getBoundingClientRect();resolve({overflow:document.documentElement.scrollWidth-innerWidth,order:icon.right<copy.left&&copy.right<arrow.left})})))`,
+        awaitPromise: true,
+        returnByValue: true,
+      });
+      if (mobile.result.value.overflow > 0 || !mobile.result.value.order) throw new Error(`work row mobile layout failed: ${JSON.stringify(mobile.result.value)}`);
+      await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
+    }
   }
 
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
@@ -91,7 +128,7 @@ try {
     throw new Error(`contextual glyph reduced motion failed: ${JSON.stringify(reduced.result.value)}`);
   }
 
-  console.log(`Glyph site placement passed ${pages.reduce((count, [, placements]) => count + placements.length, 0)} semantic placements with idle, hover, and reduced-motion checks.`);
+  console.log(`Glyph site placement passed ${pages.reduce((count, [, placements]) => count + placements.length, 0)} semantic placements with idle, hover, keyboard, mobile-layout, and reduced-motion checks.`);
 } finally {
   await browser.close();
   await server.close();

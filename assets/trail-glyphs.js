@@ -60,9 +60,24 @@
     if (fieldGlyphs[index]) term.prepend(makeGlyph(fieldGlyphs[index], 'field-note-glyph'));
   });
 
+  const projectGlyphs = {
+    uddns: 'cloud',
+    'aur response toolkit': 'shield',
+    'launch layer': 'terminal',
+    'millennium helpers': 'wrench',
+    'privacy devices': 'lock',
+    'p2p services': 'network',
+    'app drawer': 'package',
+    'multi-monitor workspaces': 'monitor',
+  };
+  document.querySelectorAll('.index-list>a[data-project-name]').forEach((project) => {
+    const name = projectGlyphs[project.dataset.projectName];
+    if (name) project.prepend(makeGlyph(name, 'project-glyph'));
+  });
+
   const arrows = { '→': 'east', '↗': 'north-east', '↑': 'north', '↖': 'north-west', '←': 'west', '↙': 'south-west', '↓': 'south', '↘': 'south-east' };
   document.querySelectorAll('span[aria-hidden="true"], strong[aria-hidden="true"]').forEach((marker) => {
-    const direction = arrows[marker.textContent.trim()];
+    const direction = marker.closest('.index-list') ? 'east' : arrows[marker.textContent.trim()];
     if (!direction) return;
     marker.textContent = '';
     marker.classList.add('trail-arrow');
