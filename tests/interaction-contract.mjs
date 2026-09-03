@@ -45,12 +45,29 @@ try {
   const commandAction = await send('Runtime.evaluate', { expression: `({theme:portfolioAppearance.theme,dialog:document.querySelector('.command-palette').open,overlay:portfolioOverlay.active,status:document.querySelector('.palette-status').textContent})`, returnByValue: true });
   if (commandAction.result.value.theme !== 'day' || commandAction.result.value.dialog || commandAction.result.value.overlay || !commandAction.result.value.status.includes('Day')) throw new Error(`command execution failed: ${JSON.stringify(commandAction.result.value)}`);
 
+  await send('Runtime.evaluate', { expression: `(()=>{window.__shared=[];window.__copied=[];Object.defineProperty(navigator,'clipboard',{configurable:true,value:{writeText:(value)=>{__copied.push(value);return Promise.resolve()}}});Object.defineProperty(navigator,'share',{configurable:true,value:(value)=>{__shared.push(value);return Promise.resolve()}})})()` });
+  await key(send, 'k', 'KeyK', 1);
+  await send('Runtime.evaluate', { expression: `(()=>{const input=document.querySelector('.command-palette input');input.value='copy page title';input.dispatchEvent(new Event('input',{bubbles:true}));document.querySelector('.command-palette [role="option"]').click()})()` });
+  await key(send, 'k', 'KeyK', 1);
+  await send('Runtime.evaluate', { expression: `(()=>{const dialog=document.querySelector('.command-palette');const input=dialog.querySelector('input');input.value='share page';input.dispatchEvent(new Event('input',{bubbles:true}));[...dialog.querySelectorAll('[role="option"]')].find((option)=>option.querySelector('b').textContent==='Share page').click()})()` });
+  await key(send, 'k', 'KeyK', 1);
+  await send('Runtime.evaluate', { expression: `(()=>{Object.defineProperty(navigator,'share',{configurable:true,value:undefined});const dialog=document.querySelector('.command-palette');const input=dialog.querySelector('input');input.value='share page';input.dispatchEvent(new Event('input',{bubbles:true}));[...dialog.querySelectorAll('[role="option"]')].find((option)=>option.querySelector('b').textContent==='Share page').click()})()` });
+  const pageActions = await send('Runtime.evaluate', { expression: `({copied:__copied,shared:__shared,title:document.title,url:location.href})`, returnByValue: true });
+  const pageActionValue = pageActions.result.value;
+  if (pageActionValue.copied.join('|') !== `${pageActionValue.title}|${pageActionValue.url}` || pageActionValue.shared.length !== 1 || pageActionValue.shared[0].title !== pageActionValue.title || pageActionValue.shared[0].url !== pageActionValue.url) throw new Error(`page command actions failed: ${JSON.stringify(pageActionValue)}`);
+
   await key(send, 'k', 'KeyK', 1);
   await key(send, 'ArrowUp', 'ArrowUp');
   const wrappedLast = await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette [aria-selected="true"] b').textContent`, returnByValue: true });
   await key(send, 'ArrowDown', 'ArrowDown');
   const wrappedFirst = await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette [aria-selected="true"] b').textContent`, returnByValue: true });
   if (wrappedLast.result.value !== 'Reset color settings' || wrappedFirst.result.value !== 'Home') throw new Error(`command keyboard wrapping failed: ${wrappedLast.result.value} -> ${wrappedFirst.result.value}`);
+  await key(send, 'Escape', 'Escape');
+
+  await send('Runtime.evaluate', { expression: `portfolioAppearancePicker.open()` });
+  await key(send, 'k', 'KeyK', 1);
+  const exclusiveOverlay = await send('Runtime.evaluate', { expression: `({commands:document.querySelector('.command-palette').open,pickerVisible:portfolioAppearancePicker.visible,pickerOpen:document.querySelector('.palette-picker').open,overlay:portfolioOverlay.active})`, returnByValue: true });
+  if (!exclusiveOverlay.result.value.commands || exclusiveOverlay.result.value.pickerVisible || exclusiveOverlay.result.value.pickerOpen || !exclusiveOverlay.result.value.overlay) throw new Error(`overlay exclusivity failed: ${JSON.stringify(exclusiveOverlay.result.value)}`);
   await key(send, 'Escape', 'Escape');
 
   await send('Runtime.evaluate', { expression: `(()=>{const button=document.createElement('button');button.id='picker-return';document.body.append(button);button.focus();portfolioAppearancePicker.open()})()` });
@@ -77,6 +94,6 @@ try {
 
   console.log('Interaction contract passed command, shortcut, picker, glyph, and case-study behaviors.');
 } finally {
-  browser?.close();
+  await browser?.close();
   await server.close();
 }

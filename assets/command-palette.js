@@ -95,11 +95,13 @@
     };
     const runCommand = (command) => {
       if (!command) return;
+      if (dialog.contains(document.activeElement)) document.activeElement.blur();
       dialog.close();
       if (command.run) command.run();
       else location.href = command.href;
     };
     function openCommands(query = '') {
+      pickerUi.close();
       input.value = query;
       active = 0;
       renderCommands();
@@ -109,8 +111,11 @@
       input.focus();
     }
     dialog.addEventListener('close', () => {
-      if (!dialog.open) input.setAttribute('aria-expanded', 'false');
-      overlay.set('commands', false);
+      if (!dialog.open) {
+        input.setAttribute('aria-expanded', 'false');
+        if (dialog.contains(document.activeElement)) document.activeElement.blur();
+      }
+      overlay.set('commands', dialog.open);
     });
     input.addEventListener('input', () => { active = 0; renderCommands(); });
     results.addEventListener('pointermove', (event) => {
