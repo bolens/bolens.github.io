@@ -12,6 +12,8 @@ main:focus { outline: 0; }
 .visually-hidden { position:absolute!important; width:1px!important; height:1px!important; margin:-1px!important; padding:0!important; overflow:hidden!important; clip:rect(0 0 0 0)!important; clip-path:inset(50%)!important; border:0!important; white-space:nowrap!important; }
 a { color: inherit; text-decoration-thickness: .08em; text-underline-offset: .18em; }
 svg { display: block; max-width: 100%; }
+.trail-glyph,.trail-arrow svg,.principle-glyph,.command-search-glyph { --glyph-primary:currentColor; --glyph-accent:var(--copper); --glyph-secondary:var(--lichen); --glyph-warm:var(--art-warm); --glyph-cool:var(--art-cool); }
+.button .trail-arrow svg,.nav-cta .trail-arrow svg { --glyph-accent:currentColor; --glyph-secondary:currentColor; --glyph-warm:currentColor; --glyph-cool:currentColor; }
 .palette-picker { position: fixed; z-index: 30; right: max(1rem,calc((100vw - 1180px)/2)); bottom: 1rem; color: var(--ink); font: 700 .72rem/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 .palette-picker[hidden] { display: none; }
 .palette-picker summary { display: flex; align-items: center; gap: .55rem; padding: .7rem .85rem; border: 1px solid var(--line); border-radius: 999px; background: color-mix(in srgb,var(--snow) 92%,transparent); box-shadow: 0 8px 24px color-mix(in srgb,var(--ink) 12%,transparent); cursor: pointer; list-style: none; backdrop-filter: blur(10px); }
@@ -74,7 +76,7 @@ nav a:not(.nav-cta):hover, nav a[aria-current="page"] { background-size: 100% 2p
 .signal-map { animation:hero-map-in 1s .2s cubic-bezier(.16,1,.3,1) both; }
 .eyebrow { margin: 0 0 1.4rem; font: 700 clamp(.7rem,.67rem + .12vw,.77rem)/1.45 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
 .eyebrow:has(.trail-glyph) { display:flex; align-items:center; gap:.58rem; }
-.trail-glyph { width:1.35rem; height:1.35rem; flex:0 0 auto; overflow:visible; color:var(--copper); fill:none; stroke:currentColor; stroke-width:1.55; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
+.trail-glyph { width:1.35rem; height:1.35rem; flex:0 0 auto; overflow:visible; color:var(--ink); fill:none; stroke:currentColor; stroke-width:1.55; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
 .case-story .trail-glyph { color:var(--lichen); }
 .contact .trail-glyph { color:var(--art-warm); }
 .about-principles .trail-glyph { width:1.15rem; height:1.15rem; }
