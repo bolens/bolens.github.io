@@ -112,6 +112,10 @@ try {
 
   await send('Page.navigate', { url: `${server.origin}/case-studies/uddns/#confirm` });
   await waitFor(send, `document.querySelector('.case-story .is-active')?.id==='confirm'&&document.querySelectorAll('.case-route a[data-visited]').length===4&&getComputedStyle(document.querySelector('.case-route')).getPropertyValue('--case-progress').trim()==='1'`, 'case-study hash state');
+  await key(send, 'k', 'KeyK', 1);
+  const caseCommands = await send('Runtime.evaluate', { expression: `(()=>{const dialog=document.querySelector('.command-palette');return [...dialog.querySelectorAll('[role="option"] b')].map((item)=>item.textContent)})()`, returnByValue: true });
+  for (const label of ['Next project','Next case-study section','Previous case-study section','Copy link to current section','Copy current repository URL','Open next project repository','Return to project index','Toggle reduced motion']) if (!caseCommands.result.value.includes(label)) throw new Error(`missing contextual command: ${label}`);
+  await key(send, 'Escape', 'Escape');
   const confirm = await send('Runtime.evaluate', { expression: `({active:document.querySelector('.case-story .is-active')?.id,visited:[...document.querySelectorAll('.case-route a[data-visited]')].length,progress:getComputedStyle(document.querySelector('.case-route')).getPropertyValue('--case-progress').trim()})`, returnByValue: true });
   if (confirm.result.value.active !== 'confirm' || confirm.result.value.visited !== 4 || confirm.result.value.progress !== '1') throw new Error(`case-study confirm state failed: ${JSON.stringify(confirm.result.value)}`);
   await send('Runtime.evaluate', { expression: `location.hash='#cause'` });
