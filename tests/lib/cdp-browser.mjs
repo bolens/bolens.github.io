@@ -5,27 +5,54 @@ export async function startBrowser(onEvent) {
   const executable = ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium'].find(existsSync);
   if (!executable) throw new Error('Chrome or Chromium is required for the browser smoke test');
   const profile = mkdtempSync('/tmp/bolens-site-smoke-');
-  const process = spawn(executable, ['--headless=new', '--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox', '--no-first-run', '--no-default-browser-check', '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'] });
+  const process = spawn(executable, ['--headless=new', '--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox', '--no-first-run', '--no-default-browser-check', '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { detached: true, stdio: ['ignore', 'ignore', 'pipe'] });
   let log = '';
   let socket;
   let closed = false;
   const pending = new Map();
   process.stderr.on('data', (chunk) => { log += chunk.toString(); });
 
-  const removeProfile = () => setTimeout(() => rmSync(profile, { recursive: true, force: true }), 250);
-  const stop = () => {
-    if (closed) return;
+  let closing;
+  const stop = (reason = new Error('browser connection closed'), closeSocket = true) => {
+    if (closing) return closing;
     closed = true;
-    socket?.close();
-    const error = new Error('browser connection closed');
-    for (const request of pending.values()) request.reject(error);
-    pending.clear();
-    if (process.exitCode === null) {
-      process.once('exit', removeProfile);
-      process.kill('SIGTERM');
-    } else {
-      removeProfile();
+    if (closeSocket) socket?.close();
+    for (const request of pending.values()) {
+      clearTimeout(request.timeout);
+      request.reject(reason);
     }
+    pending.clear();
+    closing = (async () => {
+      const groupExists = () => {
+        try {
+          globalThis.process.kill(-process.pid, 0);
+          return true;
+        } catch {
+          return false;
+        }
+      };
+      if (groupExists()) {
+        globalThis.process.kill(-process.pid, 'SIGTERM');
+        const gracefulDeadline = Date.now() + 2_000;
+        while (groupExists() && Date.now() < gracefulDeadline) {
+          await new Promise((done) => setTimeout(done, 25));
+        }
+        if (groupExists()) globalThis.process.kill(-process.pid, 'SIGKILL');
+        const forcedDeadline = Date.now() + 2_000;
+        while (groupExists() && Date.now() < forcedDeadline) {
+          await new Promise((done) => setTimeout(done, 25));
+        }
+      }
+      const cleanupDeadline = Date.now() + 2_000;
+      let absentChecks = 0;
+      while (absentChecks < 3 && Date.now() < cleanupDeadline) {
+        rmSync(profile, { recursive: true, force: true });
+        await new Promise((done) => setTimeout(done, 25));
+        absentChecks = existsSync(profile) ? 0 : absentChecks + 1;
+      }
+      rmSync(profile, { recursive: true, force: true });
+    })();
+    return closing;
   };
 
   try {
@@ -50,22 +77,29 @@ export async function startBrowser(onEvent) {
       if (message.id && pending.has(message.id)) {
         const handler = pending.get(message.id);
         pending.delete(message.id);
+        clearTimeout(handler.timeout);
         return message.error ? handler.reject(message.error) : handler.resolve(message.result);
       }
       onEvent(message);
     };
+    socket.onclose = () => { void stop(new Error('browser connection closed unexpectedly'), false).catch(() => {}); };
+    socket.onerror = () => { void stop(new Error('browser connection closed unexpectedly'), false).catch(() => {}); };
     return {
       debugPort: port,
-      send: (method, params = {}) => new Promise((resolve, reject) => {
+      send: (method, params = {}, timeoutMs = 30_000) => new Promise((resolve, reject) => {
         if (closed) return reject(new Error('browser connection is closed'));
         const requestId = ++id;
-        pending.set(requestId, { resolve, reject });
+        const timeout = setTimeout(() => {
+          pending.delete(requestId);
+          reject(new Error(`browser command timed out after ${timeoutMs}ms: ${method}`));
+        }, timeoutMs);
+        pending.set(requestId, { resolve, reject, timeout });
         socket.send(JSON.stringify({ id: requestId, method, params }));
       }),
       close: stop,
     };
   } catch (error) {
-    stop();
+    await stop();
     throw error;
   }
 }

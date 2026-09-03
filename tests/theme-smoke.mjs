@@ -184,6 +184,6 @@ try {
 
   console.log('Theme smoke passed preference and storage fallbacks, metadata, atomic state transitions, synchronization, automatic palettes, overlay composition, increased contrast, and no-JavaScript defaults.');
 } finally {
-  browser?.close();
+  await browser?.close();
   await server.close();
 }

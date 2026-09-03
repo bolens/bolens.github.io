@@ -295,6 +295,6 @@ try {
   if (errors.length) throw new Error(`browser errors: ${errors.join('; ')}`);
   console.log('Browser smoke passed 16 responsive route renders, custom 404, dark mode, reduced motion, print, and forced colors with no page, console, or network errors.');
 } finally {
-  browser?.close();
+  await browser?.close();
   await server.close();
 }
