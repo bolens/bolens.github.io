@@ -9,11 +9,16 @@ const css = readFileSync(resolve(root, 'assets/404.css'), 'utf8');
 const scene = readFileSync(resolve(root, 'assets/404-scene.js'), 'utf8');
 
 test('tree rows occupy independent parallax depths', () => {
-  assert.match(html, /class="horizon-forest depth-back"/);
-  assert.match(html, /class="deep-forest depth-mid"/);
+  assert.match(html, /class="horizon-forest depth-back scene-layer"/);
+  assert.match(html, /class="forest-transition depth-far scene-layer"/);
+  assert.match(html, /class="deep-forest depth-mid scene-layer"/);
   assert.match(css, /\.depth-back \{ translate:var\(--parallax-back-x,0\)/);
+  assert.match(css, /\.depth-far \{ translate:var\(--parallax-far-x,0\)/);
+  assert.match(css, /\.depth-mid \{ translate:var\(--parallax-mid-x,0\)/);
   assert.match(scene, /--parallax-back-x/);
   assert.match(scene, /--parallax-back-y/);
+  assert.match(scene, /--parallax-far-x/);
+  assert.match(scene, /--parallax-mid-x/);
 });
 
 test('celestial and weather geometry is reusable', () => {
@@ -21,9 +26,11 @@ test('celestial and weather geometry is reusable', () => {
     assert.match(html, new RegExp(`<symbol id="${symbol}"`), `missing ${symbol}`);
   }
   assert.equal([...html.matchAll(/href="#sky-orb"/g)].length, 2);
-  assert.equal([...html.matchAll(/href="#cloud-bank"/g)].length, 4);
+  assert.equal([...html.matchAll(/href="#cloud-bank"/g)].length, 8);
   assert.equal([...html.matchAll(/href="#aurora-strand"/g)].length, 5);
   assert.match(css, /data-weather="cloudy"/);
+  assert.match(css, /data-weather="overcast"/);
+  assert.match(html, /class="weather-overcast scene-layer"[^>]+data-region="overcast-cloud-deck"/);
   assert.match(css, /data-weather="rainy"/);
   assert.match(css, /data-weather="snowy"/);
   assert.match(html, /class="weather-snow"[^>]+href="#snow-field"/);

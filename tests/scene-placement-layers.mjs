@@ -19,10 +19,15 @@ test('major scene bands publish an explicit paint-order vocabulary', () => {
 
   const anchors = [
     'data-scene-layer="sky-base"',
+    'data-scene-layer="sky-subject"',
     'data-scene-layer="terrain-far"',
+    'data-scene-layer="terrain-middle"',
+    'data-scene-layer="terrain-near"',
     'data-scene-layer="forest-back"',
+    'data-scene-layer="forest-far"',
     'data-scene-layer="ground-base"',
     'data-scene-layer="water-mid"',
+    'data-scene-layer="forest-path"',
     'data-scene-layer="forest-mid"',
     'data-scene-layer="clearing-ground"',
     'data-scene-layer="campsite-back"',
@@ -38,9 +43,13 @@ test('major scene bands publish an explicit paint-order vocabulary', () => {
 
 test('tree scale increases from distant rows to the camp frame', () => {
   const distant = widths('horizon-forest', 'distant-pine');
+  const transition = widths('forest-transition', 'distant-pine');
   const mid = widths('deep-forest', 'distant-pine');
   const near = widths('camp-pines', 'distant-pine');
-  assert.ok(distant.length >= 10 && mid.length >= 10 && near.length >= 5);
+  assert.ok(distant.length >= 10 && transition.length >= 10 && mid.length >= 10 && near.length >= 5);
+  assert.ok(Math.min(...transition) > Math.min(...distant));
+  assert.ok(Math.max(...transition) > Math.max(...mid));
+  assert.ok(Math.max(...transition) < Math.max(...near));
   assert.ok(Math.max(...distant) < Math.max(...near) * .55);
   assert.ok(Math.max(...mid) < Math.max(...near) * .55);
   assert.ok(Math.min(...near) > 80);

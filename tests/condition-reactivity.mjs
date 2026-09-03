@@ -30,11 +30,18 @@ test('drought lowers the river and exposes its bed', () => {
 });
 
 test('reusable camp props react to visibility and shelter conditions', () => {
-  assert.match(css, /data-weather="cloudy"[^\n]+\.background-ufo \{ display:none; \}/);
+  assert.match(css, /data-theme="day"\] \.day-flight-ufo \{ display:inline; \}/);
+  assert.doesNotMatch(css, /data-weather="cloudy"[^\n]+\.background-ufo \{ display:none; \}/);
   assert.match(css, /data-weather="rainy"[^\n]+\.tent-lantern \{ --lantern-outer-opacity:\.14;--lantern-inner-opacity:\.32; \}/);
   assert.match(css, /data-weather="drought"\] \.tent-lantern \{ --lantern-outer-opacity:\.06;--lantern-inner-opacity:\.15;--lantern-light:#efb95c; \}/);
   assert.match(css, /\.lantern-halo \{[^}]+animation:lantern-glow/);
   assert.doesNotMatch(css, /\.tent-lantern circle/);
+});
+
+test('overcast uses diffuse light and subdued campsite activity', () => {
+  assert.match(css, /data-weather="overcast"[^\n]+\.terrain-asset \{ --asset-weather-brightness:\.8;--asset-weather-saturation:\.54;--asset-cloud-opacity:\.32;--asset-overcast-opacity:\.28; \}/);
+  assert.match(css, /data-weather="overcast"\] :is\(\.scene-orb,\.camp-aurora\) \{ opacity:\.2; \}/);
+  assert.match(css, /data-weather="overcast"\] \.flame-stack \{ scale:\.86 \.8; \}/);
 });
 
 test('sheltered camera and windhound react without moving their whole scene', () => {

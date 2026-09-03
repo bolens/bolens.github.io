@@ -47,7 +47,7 @@ test('every named palette defines a valid fallback condition', () => {
     signal: 'clear',
     forest: 'wet',
     coast: 'rainy',
-    meadow: 'cloudy',
+    meadow: 'overcast',
     volcanic: 'dry',
   });
   for (const condition of Object.values(configured)) assert.ok(weatherModes.includes(condition));
@@ -86,13 +86,14 @@ test('404 weather visibility is controlled only by the resolved condition', () =
   assert.ok(appearanceIndex < weatherIndex && weatherIndex < sceneIndex, 'weather must initialize after appearance and before scene effects');
   assert.doesNotMatch(css, /data-theme="day"\] \.weather-clouds \{ display:inline/);
   assert.match(css, /data-weather="cloudy"\] \.weather-clouds/);
+  assert.match(css, /data-weather="overcast"\] :is\(\.weather-clouds,\.weather-overcast\)/);
   assert.match(css, /data-weather="rainy"\] \.weather-rain/);
   assert.match(css, /data-weather="snowy"\] \.weather-snow/);
   assert.match(css, /data-weather="drought"\] \.weather-drought/);
 });
 
 test('canvas atmosphere profiles follow every resolved weather condition', () => {
-  for (const condition of ['clear', 'cloudy', 'rainy', 'wet', 'dry', 'snowy', 'drought']) {
+  for (const condition of ['clear', 'cloudy', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought']) {
     assert.match(sceneSource, new RegExp(`${condition}: Object\\.freeze\\(\\{ stars: [^}]+fog: [^}]+fireflies: [^}]+embers: [^}]+\\}\\)`));
   }
   assert.match(sceneSource, /portfolioWeather\?\.subscribe\(\(\{ condition \}\) =>/);

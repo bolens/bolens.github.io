@@ -30,6 +30,7 @@ try {
   expectFailure('unknown default palette', ({ themes: value }) => { value.defaultPalette = 'missing'; }, /defaultPalette/);
   expectFailure('invalid modes', ({ themes: value }) => { value.modes = ['day', 'night']; }, /modes must/);
   expectFailure('invalid weather modes', ({ themes: value }) => { value.weatherModes = ['clear']; }, /weatherModes must/);
+  expectFailure('invalid time modes', ({ themes: value }) => { value.timeModes = ['day', 'night']; }, /timeModes must/);
   expectFailure('invalid palette ID', ({ themes: value }) => { value.palettes['Bad ID'] = value.palettes.alpine; }, /invalid palette ID/);
   expectFailure('missing palette label', ({ themes: value }) => { value.palettes.alpine.label = ''; }, /missing a label/);
   expectFailure('invalid palette weather', ({ themes: value }) => { value.palettes.alpine.weather = 'hail'; }, /alpine\.weather/);

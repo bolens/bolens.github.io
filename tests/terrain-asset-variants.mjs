@@ -44,9 +44,11 @@ const assets = [
   'riverbank-profile',
   'exposed-root',
   'river-pebble-cluster',
+  'forest-trail',
 ];
 const lightModes = ['ambient', 'sun', 'moon', 'fire', 'shadow'];
-const weatherModes = ['clear', 'cloudy', 'rainy', 'wet', 'dry', 'snowy', 'drought'];
+const weatherModes = ['clear', 'cloudy', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought'];
+const timeModes = ['day', 'night', 'morning', 'evening', 'twilight'];
 
 test('every reusable terrain symbol exposes shared condition marks', () => {
   for (const asset of assets) {
@@ -59,7 +61,8 @@ test('every reusable terrain symbol exposes shared condition marks', () => {
 test('lighting and weather modes form an orthogonal variant matrix', () => {
   for (const mode of lightModes) assert.match(css, new RegExp(`data-light="${mode}"`), `missing ${mode} light mode`);
   for (const mode of weatherModes) assert.match(css, new RegExp(`data-weather="${mode}"`), `missing ${mode} weather mode`);
-  assert.equal(lightModes.length * weatherModes.length * assets.length, 1295);
+  for (const mode of timeModes) assert.match(css, new RegExp(`data-scene-time="${mode}"[^}]+\\.terrain-asset`), `missing ${mode} scene-time mode`);
+  assert.equal(timeModes.length * lightModes.length * weatherModes.length * assets.length, 7600);
 });
 
 test('snow supports asset-level selection and scene-wide accumulation', () => {
@@ -76,7 +79,7 @@ test('drought supports asset-level selection and scene-wide stress', () => {
 
 test('every terrain placement opts into valid light and weather modes', () => {
   const placements = [...html.matchAll(/<use class="[^"]*\bterrain-asset\b[^"]*"[^>]+href="#([^"]+)"[^>]*>/g)].map((match) => match[0]);
-  assert.equal(placements.length, 159);
+  assert.equal(placements.length, 161);
   for (const placement of placements) {
     const asset = placement.match(/href="#([^"]+)"/)?.[1];
     const light = placement.match(/data-light="([^"]+)"/)?.[1];

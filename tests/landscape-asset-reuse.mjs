@@ -12,11 +12,13 @@ test('seating and firewood share one scalable detailed log', () => {
   assert.doesNotMatch(html, /charred-log-detail/);
 });
 
-test('both mountain ranges reuse one scalable detailed peak', () => {
+test('all mountain ranges reuse one scalable detailed peak', () => {
   assert.match(html, /<symbol id="alpine-peak" viewBox="0 0 240 220"[^>]*>/);
-  assert.equal([...html.matchAll(/href="#alpine-peak"/g)].length, 13);
+  assert.equal([...html.matchAll(/href="#alpine-peak"/g)].length, 20);
   assert.match(html, /class="mountain-range mountain-range-far depth-far scene-layer"/);
+  assert.match(html, /class="mountain-range mountain-range-middle depth-far scene-layer"/);
   assert.match(html, /class="mountain-range mountain-range-near depth-far scene-layer"/);
+  assert.match(html, /data-region="middle-mountain-ridge"/);
   assert.doesNotMatch(html, /class="mountain-faces/);
 });
 
@@ -24,6 +26,7 @@ test('landscape brush is layered from horizon to clearing edge', () => {
   const regions = [
     'horizon-tree-line',
     'horizon-brush',
+    'transition-tree-line',
     'midground-tree-line',
     'midstory-brush',
     'clearing-understory',
@@ -35,6 +38,7 @@ test('landscape brush is layered from horizon to clearing edge', () => {
     assert.notEqual(position, -1, `${regions[index]} region is required`);
   });
   assert.deepEqual(positions, [...positions].sort((a, b) => a - b));
+  assert.equal([...html.matchAll(/class="forest-transition depth-far scene-layer"/g)].length, 1);
   assert.equal([...html.matchAll(/class="midstory-brush depth-mid scene-layer"/g)].length, 1);
   assert.equal([...html.matchAll(/class="understory-shrubs depth-near scene-layer"/g)].length, 1);
 });
@@ -76,6 +80,14 @@ test('riverbank profile, roots, and pebbles use configurable assets', () => {
   assert.doesNotMatch(html, /class="riverbank-structure"[^>]*>\s*<path/);
   assert.doesNotMatch(html, /class="bank-root-patches"[^>]*>\s*<path/);
   assert.doesNotMatch(html, /class="bank-pebble-patches"[^>]*>\s*<ellipse/);
+});
+
+test('the forest trail reuses a condition-aware path beneath the tree frame', () => {
+  assert.match(html, /<symbol id="forest-trail"[^>]+data-regions="trail-bed,trail-edge,trail-wear,embedded-stones,root-crossings,conditions"/);
+  assert.equal([...html.matchAll(/href="#forest-trail"/g)].length, 1);
+  assert.match(html, /class="terrain-asset background-trail depth-mid scene-layer"[^>]+data-region="winding-forest-trail"/);
+  assert.ok(html.indexOf('data-region="winding-forest-trail"') < html.indexOf('data-region="midground-tree-line"'));
+  assert.doesNotMatch(html, /<g class="background-trail"/);
 });
 
 test('firefly phases reuse a configurable light pair', () => {
@@ -120,8 +132,15 @@ test('camp food and sky glints use reusable detailed symbols', () => {
 test('tent gear and the distant craft use condition-aware symbols', () => {
   for (const asset of ['scout-ufo', 'sleeping-roll', 'camp-lantern']) {
     assert.match(html, new RegExp(`<symbol id="${asset}"[^>]+data-regions="[^"]*conditions"`));
-    assert.equal([...html.matchAll(new RegExp(`href="#${asset}"`, 'g'))].length, 1);
+    const expectedUses = asset === 'scout-ufo' ? 2 : 1;
+    assert.equal([...html.matchAll(new RegExp(`href="#${asset}"`, 'g'))].length, expectedUses);
   }
+  assert.match(html, /class="terrain-asset background-ufo night-docked-ufo depth-mid scene-layer"[^>]+data-ufo-state="docked"[^>]+data-region="nighttime-docked-ufo"/);
+  assert.match(html, /class="terrain-asset day-flight-ufo depth-back scene-layer"[^>]+data-ufo-state="flying"[^>]+data-region="daytime-flying-ufo"/);
+  assert.ok(html.indexOf('data-region="daytime-flying-ufo"') < html.indexOf('class="weather-clouds weather-clouds-front"'));
+  assert.ok(html.indexOf('data-region="nighttime-docked-ufo"') > html.indexOf('data-region="midground-tree-line"'));
+  assert.ok(html.indexOf('data-region="nighttime-docked-ufo"') < html.indexOf('data-region="camp-tree-frame"'));
+  assert.doesNotMatch(html, /<g class="day-ufo"/);
   assert.doesNotMatch(html, /<g class="background-ufo"/);
   assert.doesNotMatch(html, /<g class="tent-sleeping-bag"/);
   assert.doesNotMatch(html, /<g class="tent-lantern"/);
