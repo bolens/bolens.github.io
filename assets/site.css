@@ -132,6 +132,7 @@ svg:has(>use[href$="#glyph-cloud"]),svg:has(>use[href$="#glyph-database"]),svg:h
 .shortcut-overlay td { text-align:right; }
 .shortcut-overlay kbd { display:inline-block; min-width:3.7rem; padding:.2rem .4rem; border:1px solid var(--line); border-bottom-width:2px; border-radius:3px; background:var(--paper); color:var(--muted); font:700 .68rem/1.2 var(--mono); text-align:center; white-space:nowrap; }
 .glyph-explorer { color-scheme:inherit; width:min(58rem,calc(100vw - 2rem)); max-height:calc(100dvh - 2rem); grid-template-rows:auto auto minmax(0,1fr) auto; margin:1rem auto; padding:0; overflow:hidden; border:1px solid var(--line); border-radius:var(--surface-radius); background:var(--snow); color:var(--ink); box-shadow:var(--surface-shadow); }
+.glyph-explorer:focus { outline:0; }
 .glyph-explorer[open] { display:grid; }
 .glyph-explorer::backdrop { background:color-mix(in srgb,var(--ink) 42%,transparent); backdrop-filter:blur(7px); }
 .glyph-explorer-help { margin:0; padding:.8rem 1rem; border-bottom:1px solid var(--line); color:var(--muted); font:.82rem/1.4 var(--sans); }

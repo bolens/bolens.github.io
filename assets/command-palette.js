@@ -120,6 +120,7 @@
     document.body.append(shortcutDialog);
     const glyphDialog = document.createElement('dialog');
     glyphDialog.className = 'glyph-explorer';
+    glyphDialog.tabIndex = -1;
     glyphDialog.setAttribute('aria-labelledby', 'glyph-explorer-title');
     glyphDialog.setAttribute('aria-describedby', 'glyph-explorer-help');
     glyphDialog.innerHTML = `<header class="overlay-header"><div class="overlay-heading"><svg class="overlay-heading-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-stars"></use></svg><div><p>Trail marks</p><h2 id="glyph-explorer-title">Glyph explorer</h2></div></div><button class="overlay-close" type="button" aria-label="Close glyph explorer" data-tooltip="Close glyph explorer"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-close"></use></svg></button></header><p class="glyph-explorer-help" id="glyph-explorer-help">Hover or focus a glyph to preview its motion.</p><div class="glyph-explorer-grid">${glyphNames.map((name) => `<button class="glyph-explorer-item" type="button" aria-label="Preview ${name.replaceAll('-', ' ')} glyph"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-${name}"></use></svg><span>${name.replaceAll('-', ' ')}</span></button>`).join('')}</div><footer>Press <kbd>Esc</kbd> to close</footer>`;
@@ -252,7 +253,7 @@
       if (shortcutDialog.open) shortcutDialog.close();
       glyphReturnFocus = returnTarget;
       if (!glyphDialog.open) glyphDialog.showModal();
-      glyphDialog.querySelector('.overlay-close').focus({ preventScroll: true });
+      glyphDialog.focus({ preventScroll: true });
       scrollTo({ top: scrollPosition });
       overlay.set('glyphs', true);
     }
