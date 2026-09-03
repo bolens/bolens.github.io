@@ -56,6 +56,8 @@
     root.dataset.sceneCycle = state.cycle;
     root.style.setProperty('--scene-orb-x', `${state.x.toFixed(2)}px`);
     root.style.setProperty('--scene-orb-y', `${state.y.toFixed(2)}px`);
+    root.style.setProperty('--scene-orb-center-x', `${(1002 + state.x).toFixed(2)}px`);
+    root.style.setProperty('--scene-orb-center-y', `${(118 + state.y).toFixed(2)}px`);
     root.style.setProperty('--scene-cycle-darkness', state.darkness.toFixed(3));
     root.style.setProperty('--scene-cycle-warmth', state.warmth.toFixed(3));
     root.style.setProperty('--scene-star-opacity', clamp(state.darkness * .9).toFixed(3));
@@ -64,6 +66,17 @@
     root.style.setProperty('--scene-ray-opacity', clamp((1 - state.darkness) * (.45 + state.warmth * .35)).toFixed(3));
     root.style.setProperty('--scene-cloud-brightness', mix(.78, 1, 1 - state.darkness).toFixed(3));
     root.style.setProperty('--scene-ufo-glint-opacity', mix(.3, .78, 1 - state.darkness).toFixed(3));
+    const orbCenter = 1002 + state.x;
+    const shadowX = clamp((600 - orbCenter) / 58, -8, 8);
+    const shadowY = mix(2.5, 6.5, clamp(state.y / 104));
+    const shadowBlur = mix(3, 5.5, state.darkness);
+    const shadowAlpha = mix(.24, .12, state.darkness);
+    const shadowColor = state.warmth > .45 ? `rgba(74,42,34,${shadowAlpha.toFixed(3)})` : `rgba(8,20,26,${shadowAlpha.toFixed(3)})`;
+    root.style.setProperty('--scene-shadow-x', `${shadowX.toFixed(2)}px`);
+    root.style.setProperty('--scene-shadow-y', `${shadowY.toFixed(2)}px`);
+    root.style.setProperty('--scene-shadow-blur', `${shadowBlur.toFixed(2)}px`);
+    root.style.setProperty('--scene-shadow-color', shadowColor);
+    root.style.setProperty('--scene-cast-shadow', `drop-shadow(${shadowX.toFixed(2)}px ${shadowY.toFixed(2)}px ${shadowBlur.toFixed(2)}px ${shadowColor})`);
     for (const subscriber of subscribers) subscriber(state);
     dispatchEvent(new CustomEvent('portfolio-scene-time-change', { detail: state }));
     return state;
