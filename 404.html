@@ -89,6 +89,20 @@
             <path d="M0 19v90M-8 35Q0 29 9 35M-17 53Q0 43 17 52M-23 74Q0 60 23 72M-26 94Q0 78 26 91" fill="none"/>
             <path d="m-9 36-10 1m27-2 11 2m-35 17-10 3m42-4 10 3m-49 19-9 5m55-7 9 5m-57 17-8 5m58-7 9 5" fill="none" stroke-width="1.4"/>
           </symbol>
+          <symbol id="camp-log" viewBox="0 0 320 44">
+            <rect x="17" y="4" width="286" height="36" rx="18" fill="var(--log-bark,url(#bark-grain))" stroke="var(--log-outline,#281a16)" stroke-width="5"/>
+            <path d="M38 13q52 8 104 0t103 1q25 4 47-2M55 30q35-7 69 0m49-1q31-8 62 0" fill="none" stroke="var(--log-highlight,#c17849)" stroke-width="3" stroke-linecap="round" opacity=".72"/>
+            <g fill="none" stroke="var(--log-char,#251814)" stroke-width="2.5" stroke-linecap="round"><path d="m81 14 18 6m40-3 21 5m49-6 19 6m-126 11q12-11 24 0m69-5q12-10 25 0"/><path d="m261 15 13 4m-7 8 16-5"/></g>
+            <g fill="var(--log-end,#70452d)" stroke="var(--log-outline,#281a16)" stroke-width="4"><ellipse cx="18" cy="22" rx="15" ry="18"/><ellipse cx="302" cy="22" rx="15" ry="18"/></g>
+            <g fill="none" stroke="var(--log-ring,#a86940)" stroke-width="2.5"><ellipse cx="18" cy="22" rx="8" ry="11"/><ellipse cx="302" cy="22" rx="8" ry="11"/><path d="m13 16 11 13m-12 0 12-14m273 1 11 13m-12 0 12-14"/></g>
+          </symbol>
+          <symbol id="alpine-peak" viewBox="0 0 240 220">
+            <path d="M0 220 120 10l120 210Z" fill="var(--peak-fill,url(#mountain-near))"/>
+            <path d="m120 10 120 210-82-78-38 45-22-54-42 49Z" fill="var(--peak-shadow,#173744)" opacity="var(--peak-shadow-opacity,.82)"/>
+            <path d="m120 10 37 65-25-18-13 18-18-15-23 20Z" fill="var(--peak-snow,#d4e0dc)" opacity="var(--peak-snow-opacity,.52)"/>
+            <path d="m120 10-22 123m22-58 38 67m-60-9-42 49m102-40 33 31" fill="none" stroke="var(--peak-ridge,#31515a)" stroke-width="4" stroke-linecap="round" opacity="var(--peak-ridge-opacity,.6)"/>
+            <path d="m81 118 18-15 13 4m42 18 15-9 15 6" fill="none" stroke="var(--peak-glint,#6f898b)" stroke-width="2.5" stroke-linecap="round" opacity=".42"/>
+          </symbol>
           <symbol id="terrain-condition-marks" viewBox="0 0 100 100" overflow="visible">
             <g class="asset-cloud-mark" fill="none" stroke="var(--asset-cloud-color,#c1d0ce)" stroke-linecap="round" opacity="var(--asset-cloud-opacity,0)"><path d="M6 20q19-9 38-1t39-1" stroke-width="8"/><path d="M17 29q15-6 29 0t28-1" stroke-width="3"/></g>
             <g class="asset-rain-mark" fill="none" stroke="var(--asset-rain-color,#b9e0e4)" stroke-width="3" stroke-linecap="round" opacity="var(--asset-rain-opacity,0)"><path d="m18 14-8 19m31-24-9 22m34-16-9 23m31-17-8 20"/><path d="m27 47-7 17m31-20-8 20m31-13-7 17" stroke-width="2"/></g>
@@ -165,23 +179,22 @@
           <path d="M1033 81a48 48 0 0 1 4 70c8-22 8-48-4-70Z" fill="#6e7f7c" opacity=".18"/>
         </g>
 
-        <path class="depth-far" d="M0 421 84 335l65 39 91-116 75 68 96-159 112 151 72-74 75 82 111-153 111 122 89-84 74 79 145 126v112H0Z" fill="url(#mountain-far)" opacity=".78"/>
-        <path class="depth-far" d="M0 397 126 276l93 72 112-161 134 156 91-83 95 103 119-170 131 145 91-101 208 183v141H0Z" fill="url(#mountain-near)"/>
-        <g class="mountain-faces depth-far">
-          <path d="m126 276 93 72-49-8-34 43-10-62-48 43Z" fill="#173542"/><path d="m331 187 134 156-91-72-43 53-27-73-59 60Z" fill="#173744"/>
-          <path d="m556 260 95 103-59-48-36 47-24-58-43 40Z" fill="#0c2631"/><path d="m770 193 131 145-85-69-46 54-29-79-54 58Z" fill="#193946"/>
-          <path d="m992 237 208 183-127-112-81 77-35-91-72 67Z" fill="#0c2631"/>
-          <path d="m245 311 86-124 84 98-48-35-35 25-28-24Zm460-40 65-78 72 80-42-27-29 18-28-20Z" fill="#b8d1ce" opacity=".72"/>
-          <path d="m331 187-27 64 28 24 12-21 23-4 48 35-34-50Z" fill="#d4e0dc" opacity=".42"/>
-          <path d="m770 193-27 51 28 20 16-18 13 0 42 27-26-45Z" fill="#d4e0dc" opacity=".45"/>
-          <path d="m126 276-17 35 17 10 12-14 32 33-21-47Zm866-39-23 46 23 11 18-20 63 34-45-50Z" fill="#91aaa9" opacity=".38"/>
-          <g fill="none" stroke="#31515a" stroke-width="4" opacity=".6"><path d="m36 389 90-113 18 67 75 5m0 0 112-161 1 88 69 52m80 16 75-83 6 64m98 39 110-170 1 71 65 5m85 69 91-101 1 57 80 14"/></g>
-          <g fill="none" stroke-linecap="round" opacity=".38">
-            <path d="m244 310 31-22 18-37 22 5 16-69m2 66 20-14 16 10 28-7m290 59 25-25 16 5 18-37 17 7 27-58m2 70 23-21 22 9 28-13m70 122 24-30 21 7 18-43 27 10 19-58" stroke="#6f898b" stroke-width="3"/>
-            <path d="m93 364 19-9 14-79m74 70 19 2 24-35m263 38 22-8 28-83m74 82 21 21 19-25m290 52 28-19 24-134" stroke="#071c25" stroke-width="5"/>
-          </g>
-
-
+        <g class="mountain-range mountain-range-far depth-far" opacity=".78" style="--peak-fill:url(#mountain-far);--peak-shadow:#102b35;--peak-snow:#91aaa9;--peak-snow-opacity:.3;--peak-ridge:#31515a">
+          <use href="#alpine-peak" x="25" y="335" width="118" height="108" style="--peak-shadow-opacity:.66"/>
+          <use href="#alpine-peak" x="136" y="258" width="193" height="177" style="--peak-snow-opacity:.24"/>
+          <use href="#alpine-peak" x="261" y="167" width="292" height="268" style="--peak-shadow-opacity:.72"/>
+          <use href="#alpine-peak" x="481" y="244" width="208" height="191" style="--peak-snow-opacity:.2"/>
+          <use href="#alpine-peak" x="632" y="173" width="286" height="262" style="--peak-shadow-opacity:.7"/>
+          <use href="#alpine-peak" x="878" y="221" width="233" height="214" style="--peak-snow-opacity:.26"/>
+          <use href="#alpine-peak" x="1060" y="294" width="153" height="141" style="--peak-shadow-opacity:.68"/>
+        </g>
+        <g class="mountain-range mountain-range-near depth-far" style="--peak-fill:url(#mountain-near);--peak-shadow:#173744;--peak-snow:#d4e0dc;--peak-snow-opacity:.48;--peak-ridge:#31515a">
+          <use href="#alpine-peak" x="22" y="276" width="190" height="174" style="--peak-shadow:#173542;--peak-snow-opacity:.34"/>
+          <use href="#alpine-peak" x="181" y="187" width="287" height="263" style="--peak-shadow-opacity:.86;--peak-snow-opacity:.52"/>
+          <use href="#alpine-peak" x="446" y="260" width="207" height="190" style="--peak-shadow:#0c2631;--peak-snow-opacity:.3"/>
+          <use href="#alpine-peak" x="624" y="193" width="280" height="257" style="--peak-shadow:#193946;--peak-snow-opacity:.5"/>
+          <use href="#alpine-peak" x="870" y="237" width="232" height="213" style="--peak-shadow:#0c2631;--peak-snow-opacity:.32"/>
+          <use href="#alpine-peak" x="1013" y="270" width="196" height="180" style="--peak-shadow-opacity:.76;--peak-snow-opacity:.38"/>
         </g>
         <path d="M0 435q105-62 207-21 98 39 191-13 106-60 212 3 90 54 189 4 117-58 201 8 86 67 200 8v103H0Z" fill="#163a3c" opacity=".78"/>
         <path d="M0 446c169-55 331-34 486-2 206 43 386-27 714-14v330H0Z" fill="url(#forest-floor-depth)"/>
@@ -414,18 +427,12 @@
         </g>
         <g class="bench bench-left" stroke-linecap="round" stroke-linejoin="round">
           <ellipse cx="387" cy="653" rx="170" ry="16" fill="#071716" opacity=".6"/>
-          <path d="M224 628q155 16 319 0" fill="none" stroke="#281a16" stroke-width="39"/>
-          <path d="M226 624q154 14 315 0" fill="none" stroke="url(#bark-grain)" stroke-width="31"/>
-          <ellipse cx="224" cy="628" rx="16" ry="20" fill="#70452d" stroke="#261914" stroke-width="4"/><ellipse cx="224" cy="628" rx="9" ry="13" fill="none" stroke="#a86940" stroke-width="3"/><path d="m218 620 13 14m-14 2 12-15" stroke="#332019" stroke-width="2"/>
-          <path d="M244 618q139 14 278 1" fill="none" stroke="#c17849" stroke-width="4" opacity=".7"/><path d="m271 628 24 5m47-1 27 4m58 0 24-2m44-2 20-4m-218 16q15-13 31 1m76-8q14-11 29 1m63-2q12-9 26 0" fill="none" stroke="#251814" stroke-width="3"/>
+          <use href="#camp-log" x="216" y="606" width="330" height="46"/>
           <path d="m270 648-15 17m249-14 16 17" stroke="#3a241b" stroke-width="13"/>
         </g>
         <g class="bench bench-right" stroke-linecap="round" stroke-linejoin="round">
           <ellipse cx="822" cy="653" rx="130" ry="16" fill="#071716" opacity=".6"/>
-          <path d="M702 628q115 16 240 0" fill="none" stroke="#281a16" stroke-width="39"/>
-          <path d="M704 624q114 14 238 0" fill="none" stroke="url(#bark-grain)" stroke-width="31"/>
-          <ellipse cx="942" cy="628" rx="16" ry="20" fill="#684029" stroke="#261914" stroke-width="4"/><ellipse cx="942" cy="628" rx="9" ry="13" fill="none" stroke="#a2643d" stroke-width="3"/><path d="m935 620 14 14m-14 2 13-15" stroke="#332019" stroke-width="2"/>
-          <path d="M722 618q105 14 198 1" fill="none" stroke="#bd7246" stroke-width="4" opacity=".7"/><path d="m746 628 22 5m46-1 27 4m52-1 22-5m-142 14q15-13 31 1m70-8q14-11 29 1" fill="none" stroke="#251814" stroke-width="3"/>
+          <use href="#camp-log" x="699" y="610" width="246" height="35" style="--log-end:#684029;--log-ring:#a2643d"/>
           <path d="m743 648-15 17m187-15 15 17" stroke="#3a241b" stroke-width="13"/>
         </g>
         <g class="seat-shadows" fill="#071514" opacity=".58"><ellipse cx="350" cy="622" rx="55" ry="11"/><ellipse cx="499" cy="622" rx="43" ry="10"/><ellipse cx="755" cy="622" rx="43" ry="10"/><ellipse cx="870" cy="622" rx="51" ry="11"/></g>
@@ -567,13 +574,10 @@
         <g class="campfire" transform="translate(134 143) scale(.78)">
           <g class="coal-bed" stroke="#2c211d" stroke-width="3"><ellipse cx="559" cy="670" rx="18" ry="9" fill="#7e3326"/><ellipse cx="585" cy="679" rx="19" ry="9" fill="#472725"/><ellipse cx="615" cy="679" rx="20" ry="10" fill="#92392a"/><ellipse cx="644" cy="669" rx="18" ry="9" fill="#512624"/><circle cx="574" cy="665" r="5" fill="#ff9a45"/><circle cx="628" cy="668" r="4" fill="#ffd05c"/></g>
           <g class="fire-logs" stroke-linecap="round">
-            <path d="m522 651 142 0" fill="none" stroke="#3a211b" stroke-width="19"/><path d="m529 648 128 0" fill="none" stroke="#6d3927" stroke-width="9"/>
-            <path d="m536 677 115-52" fill="none" stroke="#3a211b" stroke-width="19"/><path d="m541 673 105-47" fill="none" stroke="#71402b" stroke-width="9"/>
-            <path d="m539 625 110 55" fill="none" stroke="#34201b" stroke-width="19"/><path d="m544 627 100 50" fill="none" stroke="#653522" stroke-width="9"/>
-            <g fill="none" stroke="#b66a3e" stroke-width="2" opacity=".65"><path d="m548 649 12 5m19-6 13 5m22-5 11 5m-70 8 8 4m18-19 7 4m29-13 8 3m-64-7 8 7m18 3 9 7m17 3 8 7"/></g>
-            <g fill="#241817" stroke="#1a1211" stroke-width="2"><ellipse cx="523" cy="651" rx="6" ry="9"/><ellipse cx="650" cy="679" rx="7" ry="9" transform="rotate(-63 650 679)"/><ellipse cx="538" cy="625" rx="7" ry="9" transform="rotate(-63 538 625)"/></g>
+            <use href="#camp-log" x="522" y="642" width="142" height="20" style="--log-bark:#6d3927;--log-outline:#3a211b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
+            <use href="#camp-log" x="531" y="642" width="124" height="18" transform="rotate(-24 593 651)" style="--log-bark:#71402b;--log-outline:#3a211b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
+            <use href="#camp-log" x="532" y="642" width="122" height="17" transform="rotate(27 593 651)" style="--log-bark:#653522;--log-outline:#34201b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
           </g>
-          <g class="charred-log-detail" fill="none" stroke-linecap="round"><path d="M541 645q19-9 37 0t38-1 31 2M549 666q18-7 34 1m25-25q15 5 27 17" stroke="#1c1715" stroke-width="5" opacity=".82"/><path d="m553 649 7-7 6 8 8-9 7 8m34 7 7-8 6 9m-64 12 7-6 7 8" stroke="#f07b3f" stroke-width="2.5" opacity=".68"/></g>
           <g class="fire-ash" fill="#b5aaa0" opacity=".42"><ellipse cx="548" cy="687" rx="13" ry="3"/><ellipse cx="584" cy="693" rx="9" ry="2.4"/><ellipse cx="631" cy="690" rx="12" ry="2.5"/><circle cx="567" cy="682" r="2"/><circle cx="616" cy="687" r="1.7"/></g>
           <path class="flame flame-outer" d="M592 646c-45-34-15-68 1-84 5 22 19 18 15-17 50 39 46 85 8 105Z" fill="#ef6a3f"/>
           <path class="flame flame-veil" d="M581 645q-20-30 5-56-2 24 15 28 13-24 10-51 32 36 23 72-20 17-53 7Z" fill="#ff9b45" opacity=".34"/>
@@ -628,7 +632,7 @@
             <g class="day-tent-duplicate"><path d="M861 655 934 530l99 125Z" fill="var(--lost-day-tent)" stroke="var(--lost-day-tent-edge)" stroke-width="4"/><path d="M934 530 988 654h-107Z" fill="#344f4d" opacity=".76"/><path d="m934 530 54 124m-54-124-53 124" fill="none" stroke="#f5d4b5" stroke-width="3"/></g>
             <g class="day-campers"><g transform="translate(850 525)"><circle cx="0" cy="0" r="18" fill="#e5b18a"/><path d="M-17-3q1-24 18-24 18 1 18 25L9-16q-13 8-26 13Z" fill="#b96743"/><path d="M-15 2h12m6 0h12M-3 2h6" fill="none" stroke="#202628" stroke-width="3"/><path d="M-3 13q5 3 10 0m-9 4q5 7 10 0" fill="none" stroke="#724737" stroke-width="2"/><path d="M-17 21q18-11 36 0l8 77h-55Z" fill="#547b72"/><path d="M-14 97-25 132m41-35 21 35M-17 34l-28 34m62-34 27 26" fill="none" stroke="#425e58" stroke-width="12"/></g><g transform="translate(926 527)"><circle cx="0" cy="0" r="18" fill="#d9a27f"/><path d="M-19 2q-1-28 19-29 22 2 20 31L10-15q-17 8-29 17Z" fill="#49302c"/><path d="M-9 3h2m14 0h2M-7 13q7 4 14 0" fill="none" stroke="#51362f" stroke-width="2.5"/><path d="M-18 22q18-11 36 0l9 76h-54Z" fill="#b45f4a"/><path d="M-14 97-24 132m39-35 20 35M-17 35l-26 31m60-31 25 25" fill="none" stroke="#8e493d" stroke-width="12"/><path d="M40 57q18-13 30 2" fill="none" stroke="#d9a27f" stroke-width="8"/></g>
               <g class="day-windhound" transform="translate(988 628)"><path d="M-12 8q13-36 42-28 25 8 38 31l-13 17h-58Z" fill="#eee9df"/><path d="M42-8q7-31 28-32 20 5 16 34L70 17 52 9Z" fill="#252e31"/><path d="M58-31q-12-18-22-12 0 17 14 25m30-13q12-17 21-10-1 17-15 24" fill="#252e31"/><path d="M63-10q8-5 15 0m-12 10 9 0" fill="none" stroke="#d6d0c7" stroke-width="2"/><ellipse cx="72" cy="4" rx="4" ry="3" fill="#101315"/><path d="M4 26-2 45m48-18 2 18m23-25 10 21" fill="none" stroke="#eee9df" stroke-width="8"/></g></g>
-            <g class="day-log-stack" transform="translate(610 654)"><ellipse cx="0" cy="26" rx="75" ry="18" fill="#23392f" opacity=".35"/><path d="m-54 12 108 0m-43-30 38 52m-92 0 43-52" fill="none" stroke="#3a241b" stroke-width="20"/><path d="m-51 9 102 0m-39-25 35 48m-87 0 40-48" fill="none" stroke="#825237" stroke-width="10"/><g fill="#3f271e" stroke="#b47a50" stroke-width="2"><circle cx="-54" cy="12" r="9"/><circle cx="49" cy="33" r="9"/><circle cx="-40" cy="33" r="9"/></g><g fill="none" stroke-linecap="round"><path d="M-43 5q19 8 38 0t39 2M-25-2q14 5 27-1m9 23q14 6 27 0" stroke="#b7794d" stroke-width="2.5"/><path d="m-58 11 8-5m91 25 9-5m-96 10 8-6" stroke="#2d1d17" stroke-width="3"/><circle cx="-54" cy="12" r="5" stroke="#8e5b3c"/><circle cx="49" cy="33" r="5" stroke="#8e5b3c"/></g></g>
+            <g class="day-log-stack" transform="translate(610 654)"><ellipse cx="0" cy="26" rx="75" ry="18" fill="#23392f" opacity=".35"/><use href="#camp-log" x="-54" y="3" width="108" height="15" style="--log-bark:#825237;--log-outline:#3a241b;--log-highlight:#b7794d"/><use href="#camp-log" x="-47" y="4" width="98" height="14" transform="rotate(52)" style="--log-bark:#825237;--log-outline:#3a241b;--log-highlight:#b7794d"/><use href="#camp-log" x="-49" y="3" width="101" height="14" transform="rotate(-52)" style="--log-bark:#825237;--log-outline:#3a241b;--log-highlight:#b7794d"/></g>
           </g>
           <g class="day-dogman-bush" transform="translate(1080 555)"><g class="day-added-bush" fill="var(--lost-day-shrub)" stroke="var(--lost-day-pine-dark)" stroke-width="3"><circle cx="-48" cy="66" r="43"/><circle cx="0" cy="48" r="55"/><circle cx="53" cy="70" r="45"/><circle cx="13" cy="91" r="52"/></g><g class="day-dogman"><path d="m-22 37 7-38 20 24L26-1l8 39q-4 37-28 48-26-11-28-49Z" fill="#55453d"/><path d="M-12 42Q5 26 24 43l-4 25L6 80-10 68Z" fill="#322a27"/><ellipse cx="-4" cy="42" rx="3" ry="2" fill="#c9d8cf"/><ellipse cx="17" cy="42" rx="3" ry="2" fill="#d7a846"/><ellipse cx="6" cy="60" rx="7" ry="5" fill="#111"/></g></g>
           <g class="day-foreground" fill="none" stroke-linecap="round"><path d="M26 736q8-48 39-87m-22 66-24-19m35 5 29-28m146 57q4-43 29-78m-18 59-21-17m31 4 25-26m761 58q7-47 36-83m-21 64-23-18m34 5 27-27" stroke="var(--lost-day-fern)" stroke-width="5"/><path d="m73 715 28-13m-13 24 31-9m188 10 29-12m-10 24 32-10m628-4 30-13m-12 25 34-11" stroke="#8b7047" stroke-width="3"/></g>
