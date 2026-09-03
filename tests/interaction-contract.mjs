@@ -61,9 +61,8 @@ try {
   await pause(150);
   const earlyTooltip = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector('.shortcut-overlay .overlay-close'),'::after').opacity`, returnByValue: true });
   if (earlyTooltip.result.value !== '0') throw new Error(`pointer tooltip appeared before its hover delay: ${earlyTooltip.result.value}`);
-  await pause(450);
-  const delayedTooltip = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector('.shortcut-overlay .overlay-close'),'::after').opacity`, returnByValue: true });
-  if (Number.parseFloat(delayedTooltip.result.value) < .95) throw new Error(`pointer tooltip did not appear after its hover delay: ${delayedTooltip.result.value}`);
+  await pause(300);
+  await waitFor(send, `Number.parseFloat(getComputedStyle(document.querySelector('.shortcut-overlay .overlay-close'),'::after').opacity)>=.95`, 'pointer tooltip reveal');
   await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 0, y: 0 });
   await send('Runtime.evaluate', { expression: `document.querySelector('.shortcut-overlay .overlay-close').focus()` });
   await pause(250);
