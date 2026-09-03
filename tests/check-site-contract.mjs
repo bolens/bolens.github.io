@@ -24,7 +24,24 @@ try {
   if (result.status === 0 || !/site\.css: broken stylesheet reference \/assets\/missing-contract-image\.png/.test(output) || !/site\.css: broken stylesheet reference \/assets\/missing-contract-import\.css/.test(output)) {
     throw new Error(`missing stylesheet asset was not rejected (status ${result.status}, error ${result.error ?? 'none'}): ${output}`);
   }
-  console.log('Site checker contract passed stylesheet asset, import, comment, and URL-scheme validation.');
+
+  writeFileSync(stylesheet, original);
+  const page = join(fixture, 'about/index.html');
+  writeFileSync(page, readFileSync(page, 'utf8').replace('</body>', `<!-- <img src="/assets/documentation-example.png"> --></body>`));
+  const regenerated = spawnSync(process.execPath, ['scripts/build-site.mjs'], { cwd: fixture, encoding: 'utf8' });
+  if (regenerated.status !== 0) throw new Error(`HTML comment fixture could not be generated: ${regenerated.stderr}`);
+  const htmlCommentResult = run();
+  if (htmlCommentResult.status !== 0) throw new Error(`commented HTML example was treated as a dependency: ${htmlCommentResult.stderr}`);
+
+  writeFileSync(page, readFileSync(page, 'utf8').replace(/(<meta name="viewport"[^>]*>)/, '<!-- $1 -->'));
+  const regeneratedCommentedMetadata = spawnSync(process.execPath, ['scripts/build-site.mjs'], { cwd: fixture, encoding: 'utf8' });
+  if (regeneratedCommentedMetadata.status !== 0) throw new Error(`commented metadata fixture could not be generated: ${regeneratedCommentedMetadata.stderr}`);
+  const commentedMetadata = run();
+  if (commentedMetadata.status === 0 || !/about\/index\.html: missing viewport metadata/.test(commentedMetadata.stderr)) {
+    throw new Error(`commented metadata satisfied a live requirement: ${commentedMetadata.stderr}`);
+  }
+
+  console.log('Site checker contract passed stylesheet and HTML reference filtering.');
 } finally {
   rmSync(fixture, { recursive: true, force: true });
 }

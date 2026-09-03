@@ -23,7 +23,7 @@ const cssFiles = siteFiles.filter((file) => file.endsWith('.css'));
 const canonicalUrls = new Set();
 
 for (const file of htmlFiles) {
-  const html = readFileSync(file, 'utf8');
+  const html = readFileSync(file, 'utf8').replace(/<!--[\s\S]*?-->/g, '');
   const isErrorPage = file.endsWith('/404.html');
   const count = (pattern) => html.match(pattern)?.length ?? 0;
 
