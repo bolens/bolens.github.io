@@ -20,6 +20,7 @@ const glyphs = {
   keyboard: null, palette: null, role: null, layers: null, repository: null, backpack: null,
   shield: null, terminal: null, network: null, wrench: null,
   cloud: null, database: null, lock: null, refresh: null, package: null, bug: null, monitor: null, code: null,
+  mug: null, river: null, flag: null, 'first-aid': null,
 };
 const internalMotions = {
   trailhead: ['--glyph-trailhead-motion', 'glyph-trailhead-sign-flip'],
@@ -56,6 +57,10 @@ const internalMotions = {
   bug: ['--glyph-bug-motion', 'glyph-bug-inspect'],
   monitor: ['--glyph-monitor-motion', 'glyph-monitor-cursor-blink'],
   code: ['--glyph-code-motion', 'glyph-code-slash-compile'],
+  mug: ['--glyph-mug-motion', 'glyph-mug-steam-rise'],
+  river: ['--glyph-river-motion', 'glyph-river-current-flow'],
+  flag: ['--glyph-flag-motion', 'glyph-flag-wave'],
+  'first-aid': ['--glyph-first-aid-motion', 'glyph-first-aid-pulse'],
 };
 const secondaryMotions = {
   cairn: [['--glyph-cairn-middle-motion', 'glyph-cairn-middle-stack'], ['--glyph-cairn-upper-motion', 'glyph-cairn-upper-stack']],
@@ -104,6 +109,11 @@ if (!/glyph-pine-canopy[\s\S]*glyph-pine-trunk/.test(sprite)) throw new Error('p
 if (!/glyph-search-lens[\s\S]*glyph-search-handle[\s\S]*glyph-search-scan/.test(sprite)) throw new Error('search scan must move independently inside a fixed magnifier');
 if (!/glyph-database-shell[\s\S]*glyph-database-row-a" pathLength="1"[\s\S]*glyph-database-row-b" pathLength="1"/.test(sprite)) throw new Error('database rows must read independently inside a fixed shell');
 if (!/glyph-boot-body" d="[^"]*V12H7V3\.5Z/.test(sprite) || !/glyph-boot-laces[\s\S]*glyph-boot-tread/.test(sprite)) throw new Error('boot must have a closed rear contour with independent laces and tread');
+if (!/@keyframes glyph-wrench-tighten\{42%\{transform:rotate\(32deg\) scale\(1\.35\)\}/.test(sprite)) throw new Error('wrench bolt must visibly turn instead of landing on a symmetric angle');
+if (!/glyph-mug-body[\s\S]*glyph-mug-steam/.test(sprite)) throw new Error('mug steam must animate independently from the cup');
+if (!/glyph-river-banks[\s\S]*glyph-river-current" pathLength="1"/.test(sprite)) throw new Error('river current must flow between fixed banks');
+if (!/glyph-flag-pole[\s\S]*glyph-flag-cloth/.test(sprite)) throw new Error('flag cloth must wave independently from its pole');
+if (!/glyph-first-aid-kit[\s\S]*glyph-first-aid-cross/.test(sprite)) throw new Error('first-aid cross must pulse independently from its kit');
 for (const glyph of ['shield', 'terminal', 'network', 'wrench']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const glyph of ['cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const [, motion] of allInternalMotions) if (!sprite.includes(`@keyframes ${motion}`)) throw new Error(`${motion} must be defined inside the external sprite`);
@@ -178,7 +188,7 @@ try {
   await send('Page.navigate', { url: `${server.origin}/` });
   await waitFor(send, `document.readyState==='complete'&&!!window.portfolioAppearancePicker`, 'home glyph gallery');
 
-  await send('Runtime.evaluate', { expression: `(()=>{const gallery=document.createElement('section');gallery.id='glyph-motion-gallery';gallery.setAttribute('aria-label','Glyph motion test gallery');gallery.innerHTML=${JSON.stringify(Object.keys(glyphs).map((name) => `<button class="overlay-close" data-glyph="${name}" aria-label="Animate ${name}"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/trail-glyphs.svg#glyph-${name}"></use></svg><small>${name}</small></button>`).join(''))};gallery.style.cssText='position:fixed;z-index:100;inset:1rem;display:grid;grid-template-columns:repeat(7,1fr);gap:.65rem;padding:1rem;overflow:auto;background:var(--paper)';gallery.querySelectorAll('button').forEach((button)=>button.style.cssText='width:auto;height:5.4rem;border-radius:5px;display:grid;place-items:center;gap:.25rem');gallery.querySelectorAll('svg').forEach((svg)=>svg.style.cssText='width:2rem;height:2rem');gallery.querySelectorAll('small').forEach((label)=>label.style.cssText='font:600 10px var(--mono)');document.body.append(gallery)})()` });
+  await send('Runtime.evaluate', { expression: `(()=>{const gallery=document.createElement('section');gallery.id='glyph-motion-gallery';gallery.setAttribute('aria-label','Glyph motion test gallery');gallery.innerHTML=${JSON.stringify(Object.keys(glyphs).map((name) => `<button class="overlay-close glyph-explorer-item" data-glyph="${name}" aria-label="Animate ${name}"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/trail-glyphs.svg#glyph-${name}"></use></svg><small>${name}</small></button>`).join(''))};gallery.style.cssText='position:fixed;z-index:100;inset:1rem;display:grid;grid-template-columns:repeat(7,1fr);gap:.65rem;padding:1rem;overflow:auto;background:var(--paper)';gallery.querySelectorAll('button').forEach((button)=>button.style.cssText='width:auto;height:5.4rem;border-radius:5px;display:grid;place-items:center;gap:.25rem');gallery.querySelectorAll('svg').forEach((svg)=>svg.style.cssText='width:2rem;height:2rem');gallery.querySelectorAll('small').forEach((label)=>label.style.cssText='font:600 10px var(--mono)');document.body.append(gallery)})()` });
 
   const idle = await send('Runtime.evaluate', { expression: `document.querySelectorAll('#glyph-motion-gallery use').length===${Object.keys(glyphs).length}&&[...document.querySelectorAll('#glyph-motion-gallery use')].every((use)=>use.getAnimations().length===0&&getComputedStyle(use).transform==='none')`, returnByValue: true });
   if (!idle.result.value) throw new Error('glyphs must remain static before hover');

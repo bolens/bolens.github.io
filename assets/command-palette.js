@@ -4,7 +4,7 @@
   const overlay = window.portfolioOverlay;
   if (!appearance || !pickerUi || !overlay) return;
   const { palettes } = appearance;
-  const glyphNames = ['trailhead', 'compass', 'map', 'cairn', 'switchback', 'shelter', 'lantern', 'binoculars', 'fire', 'pine', 'summit', 'boot', 'stars', 'arrow-east', 'arrow-north-east', 'arrow-north', 'arrow-north-west', 'arrow-west', 'arrow-south-west', 'arrow-south', 'arrow-south-east', 'waypoint', 'search', 'close', 'command', 'keyboard', 'palette', 'role', 'layers', 'repository', 'backpack', 'shield', 'terminal', 'network', 'wrench', 'cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code'];
+  const glyphNames = ['trailhead', 'compass', 'map', 'cairn', 'switchback', 'shelter', 'lantern', 'binoculars', 'fire', 'pine', 'summit', 'boot', 'stars', 'arrow-east', 'arrow-north-east', 'arrow-north', 'arrow-north-west', 'arrow-west', 'arrow-south-west', 'arrow-south', 'arrow-south-east', 'waypoint', 'search', 'close', 'command', 'keyboard', 'palette', 'role', 'layers', 'repository', 'backpack', 'shield', 'terminal', 'network', 'wrench', 'cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code', 'mug', 'river', 'flag', 'first-aid'];
 
   const mountCommands = () => {
     let announce = () => {};
