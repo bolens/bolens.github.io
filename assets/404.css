@@ -14,7 +14,9 @@
 .lost-lede { max-width: 29rem; margin: 1.1rem 0 1.4rem; color: var(--lost-muted); font-size: clamp(1rem,1vw + .72rem,1.14rem); line-height: 1.62; letter-spacing: .004em; }
 .lost-button { border-color: var(--lost-copy); background: var(--lost-copy); color: var(--lost-sky); }
 .lost-button:is(:hover,:focus-visible) { border-color: var(--lost-accent); background: var(--lost-accent); color: var(--lost-sky); }
-.cryptid-camp { position: absolute; inset: 0; margin: 0; display: grid; align-items: end; }
+.cryptid-camp { position: absolute; inset: 0; margin: 0; display: grid; align-items: end; opacity:1; transition:opacity .24s ease-out; }
+.is-loading .cryptid-camp { opacity:0; }
+.is-loading .cryptid-camp::after { display:none; }
 .cryptid-camp svg { width: 100%; height: 100%; min-height: 620px; object-fit: cover; object-position: center bottom; }
 .cryptid-camp figcaption { position: absolute; right: clamp(1rem,3vw,2.5rem); bottom: 1rem; color: color-mix(in srgb,var(--lost-copy) 70%,transparent); font: 700 .67rem/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
 .palette-wash { fill:var(--lost-night-tint);opacity:.085;mix-blend-mode:color; }
@@ -34,7 +36,7 @@
 }
 :root[data-theme="day"] .theme-light-wash { display:inline; }
 :root[data-theme="day"] .scene-orb { --orb-glow:var(--lost-day-sun);--orb-glow-opacity:.16;--orb-fill:var(--lost-day-sun);--orb-highlight:#fff7c9;--orb-highlight-opacity:.34;--orb-crater-opacity:0;--orb-rays-opacity:1; }
-:root[data-theme="day"] .weather-clouds { opacity:.68; }
+:root[data-theme="day"] .weather-clouds { --weather-layer-opacity:.68; }
 :root[data-theme="day"] .weather-cloud { --cloud-fill:#f7fbf6;--cloud-edge:#d5e3e3;--cloud-shadow:#9ebfc2; }
 :root[data-theme="day"] .palette-wash { opacity:.035;mix-blend-mode:soft-light; }
 :root[data-theme="day"] :is(.campfire-glow,.firelight-rings,.fire-rim-light) { opacity:.42; }
@@ -148,17 +150,17 @@
 :root[data-weather="snowy"] .terrain-asset[data-light="fire"] { --asset-weather-brightness:1.08;--asset-weather-saturation:.92;--asset-wet-opacity:.28;--asset-snow-opacity:.14; }
 .terrain-asset[data-weather="drought"],:root[data-weather="drought"] .terrain-asset { --asset-weather-brightness:1.03;--asset-weather-saturation:.44;--asset-weather-sepia:.34;--asset-dry-opacity:.48;--asset-drought-opacity:.78; }
 :root[data-weather="drought"] .terrain-asset[data-light="fire"] { --asset-weather-brightness:1.16;--asset-weather-saturation:1.08;--asset-weather-sepia:.2;--asset-drought-opacity:.24; }
-.condition-detail { display:none; }
-:root:is([data-weather="rainy"],[data-weather="wet"]) .condition-wet { display:inline; }
-:root[data-weather="dry"] .condition-dry { display:inline; }
-:root[data-weather="snowy"] .condition-snow { display:inline; }
-:root[data-weather="drought"] .condition-drought { display:inline; }
+.condition-detail { display:inline;opacity:0;visibility:hidden;transition:opacity .38s ease,visibility 0s linear .38s; }
+:root:is([data-weather="rainy"],[data-weather="wet"]) .condition-wet,
+:root[data-weather="dry"] .condition-dry,
+:root[data-weather="snowy"] .condition-snow,
+:root[data-weather="drought"] .condition-drought { opacity:1;visibility:visible;transition-delay:0s; }
 :root:is([data-weather="rainy"],[data-weather="snowy"]) .forest-fireflies,
 :root:is([data-weather="dry"],[data-weather="drought"]) :is(.river-ferns,.water-foam-patches),
 :root:is([data-weather="rainy"],[data-weather="wet"],[data-weather="snowy"]) .dry-ferns,
 :root:is([data-weather="dry"],[data-weather="drought"],[data-weather="snowy"]) :is(.fly-agarics,.moss-patches) { display:none; }
-:root[data-weather="drought"] :is(.campfire,.campfire-glow,.fire-ring-stones,.firelight-rings,.fire-rim-light,.smoke-404) { display:none; }
-:root[data-weather="drought"] :is(.roasting-marshmallow,.smores-kit) { display:none; }
+:is(.campfire,.campfire-glow,.fire-ring-stones,.firelight-rings,.fire-rim-light,.smoke-404,.roasting-marshmallow,.smores-kit) { transition:opacity .38s ease,visibility 0s linear .38s; }
+:root[data-weather="drought"] :is(.campfire,.campfire-glow,.fire-ring-stones,.firelight-rings,.fire-rim-light,.smoke-404,.roasting-marshmallow,.smores-kit) { opacity:0;visibility:hidden;transition-delay:0s; }
 .day-cloud-404 text { fill:#fff;stroke:color-mix(in srgb,var(--lost-day-sky-top) 38%,#fff);stroke-width:6;paint-order:stroke fill;font:700 112px/1 var(--serif);letter-spacing:7px;opacity:.82; }
 .day-sunbeams { transform-box:view-box;transform-origin:var(--scene-orb-center-x,982px) var(--scene-orb-center-y,112px);animation:day-ray-breathe 14s ease-in-out infinite alternate; }
 .day-sun { transform-box:fill-box;transform-origin:center;animation:day-sun-breathe 9s ease-in-out infinite alternate; }
@@ -193,14 +195,14 @@
 :root:is([data-weather="dry"],[data-weather="drought"]) .meteor { --traveler-dust-opacity:.58;--traveler-fragment-opacity:.88; }
 .stellar-color circle { transform-box:fill-box;transform-origin:center;animation:stellar-breathe 9s ease-in-out infinite alternate; }.stellar-color circle:nth-child(2n) { animation-delay:-4s;animation-duration:12s; }
 .scene-orb { --orb-glow:url(#moon-glow);--orb-glow-opacity:.42;--orb-fill:url(#moon-surface);--orb-highlight-opacity:0;--orb-crater-opacity:.34;--orb-rays-opacity:0;translate:var(--scene-orb-x,0) var(--scene-orb-y,0);transform-box:fill-box;transform-origin:center;animation:moon-breathe 8s ease-in-out infinite;transition:translate 1.2s ease; }
-.weather-clouds,.weather-overcast,.weather-rain,.weather-snow,.weather-drought { display:none;pointer-events:none; }
-:root[data-weather="cloudy"] .weather-clouds,:root[data-weather="overcast"] :is(.weather-clouds,.weather-overcast),:root[data-weather="rainy"] .weather-clouds,:root[data-weather="snowy"] .weather-clouds,:root[data-weather="rainy"] .weather-rain,:root[data-weather="snowy"] .weather-snow,:root[data-weather="drought"] .weather-drought { display:inline; }
-.weather-clouds { opacity:.46;filter:drop-shadow(0 8px 9px rgba(4,18,25,.18)); }
+.weather-clouds,.weather-overcast,.weather-rain,.weather-snow,.weather-drought { display:inline;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .38s ease,visibility 0s linear .38s; }
+:root[data-weather="cloudy"] .weather-clouds,:root[data-weather="overcast"] :is(.weather-clouds,.weather-overcast),:root[data-weather="rainy"] .weather-clouds,:root[data-weather="snowy"] .weather-clouds,:root[data-weather="rainy"] .weather-rain,:root[data-weather="snowy"] .weather-snow,:root[data-weather="drought"] .weather-drought { opacity:var(--weather-layer-opacity,1);visibility:visible;transition-delay:0s; }
+.weather-clouds { --weather-layer-opacity:.46;filter:drop-shadow(0 8px 9px rgba(4,18,25,.18)); }
 .weather-cloud { --cloud-fill:#9bb8bd;--cloud-edge:#6f9299;--cloud-shadow:#496d76; }
 .weather-cloud-right { --cloud-fill:#8baab1;--cloud-edge:#65858e;--cloud-shadow:#3c626c; }
-.weather-overcast { opacity:.88;filter:drop-shadow(0 10px 12px rgba(4,18,25,.2));animation:overcast-drift 18s ease-in-out infinite alternate; }
+.weather-overcast { --weather-layer-opacity:.88;filter:drop-shadow(0 10px 12px rgba(4,18,25,.2));animation:overcast-drift 18s ease-in-out infinite alternate; }
 .overcast-cloud { --cloud-fill:#82969b;--cloud-edge:#657b81;--cloud-shadow:#526c73;--cloud-shadow-opacity:.44; }
-:root[data-theme="day"][data-weather="overcast"] .weather-overcast { opacity:.72; }
+:root[data-theme="day"][data-weather="overcast"] .weather-overcast { --weather-layer-opacity:.72; }
 :root[data-theme="day"][data-weather="overcast"] .overcast-cloud { --cloud-fill:#aab9ba;--cloud-edge:#879da0;--cloud-shadow:#718b90;--cloud-shadow-opacity:.38; }
 :root[data-weather="overcast"] :is(.scene-orb,.camp-aurora) { opacity:.2; }
 :root[data-weather="overcast"] :is(.camp-stars,.star-dust,.deep-stars,.stellar-color) { opacity:.08; }
@@ -239,7 +241,6 @@
 :root:is([data-weather="cloudy"],[data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .tent-camera { --camera-glint-opacity:.24; }
 :root:is([data-weather="clear"],[data-weather="dry"]) .tent-camera { --camera-glint-opacity:.72; }
 :root[data-weather="drought"] .tent-camera { --camera-glint-opacity:.38; }
-.camera-glint { animation:camera-snapshot 8s steps(1) infinite; }
 .camper { filter:none;opacity:1;visibility:visible;shape-rendering:geometricPrecision; }
 .bigfoot { transform-box:view-box; transform-origin:350px 643px; scale:1.1; filter:none; }
 .moth-wing { transform-box: view-box; }.wing-left { transform-origin: 752px 512px; animation: wing-left 6s ease-in-out infinite; }.wing-right { transform-origin: 758px 512px; animation: wing-right 6s ease-in-out infinite; }
@@ -249,7 +250,7 @@
 .flame-stack { transform-box:view-box;transform-origin:608px 648px;transition:scale .8s ease,opacity .8s ease; }
 :root[data-weather="cloudy"] .flame-stack { scale:.9 .88; }
 :root[data-weather="overcast"] .flame-stack { scale:.86 .8; }
-:root[data-weather="rainy"] .flame-stack { scale:.68 .58;animation:rain-flame-flicker .68s steps(4,end) infinite; }
+:root[data-weather="rainy"] .flame-stack { scale:.68 .58;animation:rain-flame-flicker 1.1s ease-in-out infinite; }
 :root[data-weather="snowy"] .flame-stack { scale:.82 .76; }
 :root[data-weather="rainy"] :is(.flame-outer,.flame-side-left,.flame-side-right) { animation-duration:.42s; }
 :root[data-weather="rainy"] :is(.flame-inner,.flame-core) { animation-duration:.31s; }
@@ -303,11 +304,10 @@
 @keyframes fern-sway { from { rotate:-1deg; } to { rotate:1.4deg; } }
 @keyframes ufo-lights { 0% { opacity:.26; } 42% { opacity:.58; } 72% { opacity:.82; } 100% { opacity:.38; } }
 @keyframes dog-look { 0%,35%,100% { rotate:0deg; } 50%,68% { rotate:-5deg; } }
-@keyframes camera-snapshot { 0%,66%,69%,100% { opacity:1; } 67% { opacity:.1; } 68% { opacity:1; } }
 @keyframes wing-left { 0%,100% { rotate:0deg; } 50% { rotate:-4deg; } } @keyframes wing-right { 0%,100% { rotate:0deg; } 50% { rotate:4deg; } }
 @keyframes roast-turn { 0%,100% { rotate:-2deg; } 50% { rotate:3deg; } }
 @keyframes fire-dance { from { scale:.92 1; rotate:-2deg; } to { scale:1.04 .92; rotate:3deg; } }
-@keyframes rain-flame-flicker { 0%,100% { opacity:.72;rotate:-1deg; } 35% { opacity:.92;rotate:2deg; } 58% { opacity:.58;rotate:-2deg; } 78% { opacity:.82;rotate:1deg; } }
+@keyframes rain-flame-flicker { 0%,100% { opacity:.7;rotate:-1deg; } 48% { opacity:.84;rotate:1.5deg; } 72% { opacity:.66;rotate:-1.5deg; } }
 @keyframes fire-side-left { from { scale:.88 1;rotate:-4deg; } to { scale:1.05 .9;rotate:3deg; } }
 @keyframes fire-side-right { from { scale:1 .9;rotate:3deg; } to { scale:.9 1.04;rotate:-3deg; } }
 @keyframes campfire-glow { from { opacity:.68;scale:.98 .96; } to { opacity:.92;scale:1.025 1.04; } }

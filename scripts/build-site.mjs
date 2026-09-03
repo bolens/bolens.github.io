@@ -71,7 +71,13 @@ const themeMeta = `<meta name="theme-color" content="${defaultTheme.day.paper}" 
 const syncThemeMeta = (source) => source.replace(/<meta name="theme-color"[^>]*>(?:\s*<meta name="theme-color"[^>]*>)?/, themeMeta);
 const loadingBootstrap = '<script>document.documentElement.classList.add("is-loading")</script>';
 const runtimeScripts = `${loadingBootstrap}<script src="/assets/theme-data.js"></script><script src="/assets/appearance-controller.js"></script><script src="/assets/project-data.js" defer></script><script src="/assets/ui-overlay.js" defer></script><script src="/assets/appearance-picker.js" defer></script><script src="/assets/command-palette.js" defer></script><script src="/assets/loading-state.js" defer></script>`;
-const syncRuntimeScripts = (source) => source.replace(/(?:<script>document\.documentElement\.classList\.add\("is-loading"\)<\/script>)?<script src="\/assets\/theme-data\.js"><\/script>[\s\S]*?<script src="\/assets\/command-palette\.js" defer><\/script>(?:<script src="\/assets\/loading-state\.js" defer><\/script>)?/, runtimeScripts);
+const sceneStateScripts = '<script src="/assets/404-weather.js"></script><script src="/assets/404-time.js"></script>';
+const syncRuntimeScripts = (source) => {
+  const scripts = source.includes('/assets/404-scene.js')
+    ? runtimeScripts.replace('<script src="/assets/project-data.js"', `${sceneStateScripts}<script src="/assets/project-data.js"`)
+    : runtimeScripts;
+  return source.replace(/(?:<script>document\.documentElement\.classList\.add\("is-loading"\)<\/script>)?<script src="\/assets\/theme-data\.js"><\/script>[\s\S]*?<script src="\/assets\/command-palette\.js" defer><\/script>(?:<script src="\/assets\/loading-state\.js" defer><\/script>)?/, scripts);
+};
 outputs.set('404.html', syncRuntimeScripts(syncThemeMeta(readFileSync(resolve(root, '404.html'), 'utf8'))));
 const browserData = caseStudies.map(({ name, caseLabel, slug, commandDetail, site, repository }) => ({ name, caseLabel, slug, commandDetail, ...(site ? { site } : {}), repository }));
 outputs.set('assets/project-data.js', `window.portfolioProjects=${JSON.stringify(browserData)};\n`);
