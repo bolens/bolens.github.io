@@ -142,6 +142,7 @@
 .water-foam { animation:water-foam 4s ease-in-out infinite alternate; }
 .river-ferns { transform-box:fill-box;transform-origin:center bottom;animation:fern-sway 6.8s ease-in-out infinite alternate; }.dry-ferns { transform-box:fill-box;transform-origin:center bottom;animation:fern-sway 8.2s -3s ease-in-out infinite alternate-reverse; }
 .background-ufo { filter: drop-shadow(0 4px 8px rgba(0,0,0,.32)) drop-shadow(0 0 8px rgba(116,184,189,.14)); }
+:root:is([data-weather="cloudy"],[data-weather="rainy"],[data-weather="snowy"]) .background-ufo { display:none; }
 .ufo-lights { fill:#eab94e; animation:ufo-lights 5.6s ease-in-out infinite alternate; }
 .ufo-lights circle:nth-child(2) { opacity:.7; }.ufo-lights circle:nth-child(3) { opacity:.48; }.ufo-lights circle:nth-child(4) { opacity:.28; }
 .tent-peekers { transform:none; }
@@ -184,7 +185,9 @@
 .smoke-puffs { opacity:1;animation:smoke-puff-drift 9s -2s ease-in-out infinite alternate; }
 .smoke-fine-wisps { opacity:1;animation:smoke-fine-drift 11s -4s ease-in-out infinite alternate; }
 .smoke-thread { animation: smoke-thread 4s ease-in-out infinite; }
-.tent-lantern circle { transform-box:fill-box;transform-origin:center;animation:lantern-glow 2.8s ease-in-out infinite alternate; }
+.lantern-halo { transform-box:fill-box;transform-origin:center;animation:lantern-glow 2.8s ease-in-out infinite alternate; }
+:root:is([data-weather="cloudy"],[data-weather="rainy"],[data-weather="snowy"]) .tent-lantern { --lantern-outer-opacity:.14;--lantern-inner-opacity:.32; }
+:root[data-weather="drought"] .tent-lantern { --lantern-outer-opacity:.06;--lantern-inner-opacity:.15;--lantern-light:#efb95c; }
 @keyframes camp-aurora { 0% { opacity:.22; translate:-.7% 2px; } 50% { opacity:.38; } 100% { opacity:.28; translate:.8% -3px; } }
 @keyframes aurora-shimmer { from { opacity:.22;translate:-3px 1px; } to { opacity:.48;translate:4px -2px; } }
 @keyframes aurora-curtain-breathe { from { opacity:.64;scale:1 .97; } to { opacity:.9;scale:1 1.02; } }
