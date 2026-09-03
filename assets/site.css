@@ -87,6 +87,11 @@ nav a:not(.nav-cta):hover, nav a[aria-current="page"] { background-size: 100% 2p
 .nav-cta:hover { background: var(--ink); color: var(--snow); }
 .hero { min-height: calc(100svh - 92px); display: grid; grid-template-columns: 1.03fr .97fr; align-items: center; gap: clamp(1rem, 5vw, 5rem); padding-block: clamp(2rem, 5vw, 5rem) 5rem; }
 .eyebrow { margin: 0 0 1.4rem; font: 700 clamp(.7rem,.67rem + .12vw,.77rem)/1.45 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+.eyebrow:has(.trail-glyph) { display:flex; align-items:center; gap:.58rem; }
+.trail-glyph { width:1.35rem; height:1.35rem; flex:0 0 auto; overflow:visible; color:var(--copper); fill:none; stroke:currentColor; stroke-width:1.55; stroke-linecap:round; stroke-linejoin:round; vector-effect:non-scaling-stroke; }
+.case-story .trail-glyph { color:var(--lichen); }
+.contact .trail-glyph { color:var(--art-warm); }
+.about-principles .trail-glyph { width:1.15rem; height:1.15rem; }
 .status-dot { display: inline-block; width: .56rem; aspect-ratio: 1; margin-right: .5rem; border-radius: 50%; background: var(--copper); box-shadow: 0 0 0 4px color-mix(in srgb, var(--copper) 18%, transparent); }
 h1,h2,h3 { text-wrap: balance; }
 p,dd,small { text-wrap: pretty; }
@@ -419,6 +424,7 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
 @media (forced-colors: active) {
   :root,:root[data-palette] { --paper: Canvas; --snow: Canvas; --ink: CanvasText; --muted: CanvasText; --copper: LinkText; --lichen: Highlight; --line: GrayText; }
   .skip-link { border-color:CanvasText; background:Canvas; color:CanvasText; box-shadow:none; }
+  .trail-glyph { color:LinkText; }
   .button, .nav-cta { forced-color-adjust: none; background: ButtonFace; color: ButtonText; border-color: ButtonText; }
   .signal-path, .case-route-line { stroke: LinkText; }.hobby-trail > path { stroke: GrayText; }.hobby-traveler,.hobby-landed-disc { fill: Highlight; }.traveler-ufo .ufo-beam { fill: Canvas; stroke: Highlight; }.map-node .pulse { display: none; }.project-visual { border: 1px solid CanvasText; background: Canvas; }
 }
