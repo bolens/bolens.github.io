@@ -23,6 +23,8 @@ const glyphs = {
   mug: null, river: null, flag: null, 'first-aid': null,
   journal: null, beacon: null, 'trail-camera': null, carabiner: null,
   headlamp: null, cabin: null, 'trail-blaze': null, radio: null,
+  filter: null, sort: null, clock: null, globe: null,
+  microphone: null, key: null, bell: null, 'hard-drive': null,
 };
 const internalMotions = {
   trailhead: ['--glyph-trailhead-motion', 'glyph-trailhead-sign-flip'],
@@ -70,7 +72,15 @@ const internalMotions = {
   headlamp: ['--glyph-headlamp-motion', 'glyph-headlamp-beam-shine'],
   cabin: ['--glyph-cabin-motion', 'glyph-cabin-smoke-a-rise'],
   'trail-blaze': ['--glyph-trail-blaze-motion', 'glyph-trail-blaze-paint'],
-  radio: ['--glyph-radio-motion', 'glyph-radio-signal-a-pulse'],
+  radio: ['--glyph-radio-motion', 'glyph-radio-note-a-float'],
+  filter: ['--glyph-filter-motion', 'glyph-filter-particle-a-drop'],
+  sort: ['--glyph-sort-motion', 'glyph-sort-bar-a-settle'],
+  clock: ['--glyph-clock-motion', 'glyph-clock-minute-sweep'],
+  globe: ['--glyph-globe-motion', 'glyph-globe-route-draw'],
+  microphone: ['--glyph-microphone-motion', 'glyph-microphone-level-a-rise'],
+  key: ['--glyph-key-motion', 'glyph-key-pin-set'],
+  bell: ['--glyph-bell-motion', 'glyph-bell-clapper-swing'],
+  'hard-drive': ['--glyph-hard-drive-motion', 'glyph-hard-drive-arm-seek'],
 };
 const secondaryMotions = {
   cairn: [['--glyph-cairn-middle-motion', 'glyph-cairn-middle-stack'], ['--glyph-cairn-upper-motion', 'glyph-cairn-upper-stack']],
@@ -86,7 +96,14 @@ const secondaryMotions = {
   palette: [['--glyph-palette-dot-b-motion', 'glyph-palette-dot-b-mix'], ['--glyph-palette-dot-c-motion', 'glyph-palette-dot-c-mix'], ['--glyph-palette-dot-d-motion', 'glyph-palette-dot-d-mix']],
   beacon: [['--glyph-beacon-ring-b-motion', 'glyph-beacon-ring-b-pulse']],
   cabin: [['--glyph-cabin-smoke-b-motion', 'glyph-cabin-smoke-b-rise']],
-  radio: [['--glyph-radio-signal-b-motion', 'glyph-radio-signal-b-pulse']],
+  'trail-camera': [['--glyph-trail-camera-flash-motion', 'glyph-trail-camera-flash-pop']],
+  'trail-blaze': [['--glyph-trail-blaze-b-motion', 'glyph-trail-blaze-paint-b'], ['--glyph-trail-blaze-c-motion', 'glyph-trail-blaze-paint-c']],
+  radio: [['--glyph-radio-note-b-motion', 'glyph-radio-note-b-float']],
+  filter: [['--glyph-filter-particle-b-motion', 'glyph-filter-particle-b-drop']],
+  sort: [['--glyph-sort-bar-b-motion', 'glyph-sort-bar-b-settle'], ['--glyph-sort-bar-c-motion', 'glyph-sort-bar-c-settle']],
+  clock: [['--glyph-clock-hour-motion', 'glyph-clock-hour-nudge']],
+  microphone: [['--glyph-microphone-level-b-motion', 'glyph-microphone-level-b-rise'], ['--glyph-microphone-level-c-motion', 'glyph-microphone-level-c-rise']],
+  'hard-drive': [['--glyph-hard-drive-light-motion', 'glyph-hard-drive-light-blink']],
 };
 const allInternalMotions = Object.values(internalMotions).map(([property, name, duration = 680]) => [property, name, duration])
   .concat(Object.values(secondaryMotions).flat().map(([property, name]) => [property, name, 680]));
@@ -129,12 +146,20 @@ if (!/glyph-flag-pole[\s\S]*glyph-flag-cloth/.test(sprite)) throw new Error('fla
 if (!/glyph-first-aid-kit[\s\S]*glyph-first-aid-cross/.test(sprite)) throw new Error('first-aid cross must pulse independently from its kit');
 if (!/glyph-journal-cover[\s\S]*glyph-journal-check" pathLength="1"/.test(sprite)) throw new Error('journal check must draw independently on its fixed cover');
 if (!/glyph-beacon-base[\s\S]*glyph-beacon-ring-a[\s\S]*glyph-beacon-ring-b/.test(sprite)) throw new Error('beacon signal rings must pulse independently from its base');
-if (!/glyph-trail-camera-body[\s\S]*glyph-trail-camera-shutter/.test(sprite)) throw new Error('trail camera shutter must animate independently from its housing');
-if (!/glyph-carabiner-body[\s\S]*glyph-carabiner-gate/.test(sprite)) throw new Error('carabiner gate must open independently from its body');
+if (!/glyph-trail-camera-body[\s\S]*glyph-trail-camera-shutter[\s\S]*glyph-trail-camera-flash/.test(sprite)) throw new Error('trail camera shutter and flash must animate independently from its housing');
+if (!/glyph-carabiner-body[\s\S]*glyph-carabiner-gate/.test(sprite) || /glyph-carabiner-body[^>]*d="[^"]*m-7 9 7-7/.test(sprite)) throw new Error('carabiner body must leave a real gap for its animated gate');
 if (!/glyph-headlamp-housing[\s\S]*glyph-headlamp-beam/.test(sprite)) throw new Error('headlamp beam must animate independently from its housing');
-if (!/glyph-cabin-body[\s\S]*glyph-cabin-smoke-a[\s\S]*glyph-cabin-smoke-b/.test(sprite)) throw new Error('cabin smoke curls must rise independently from the cabin');
-if (!/glyph-trail-blaze-tree[\s\S]*glyph-trail-blaze-paint" pathLength="1"/.test(sprite)) throw new Error('trail blaze paint must draw onto a fixed tree');
-if (!/glyph-radio-body[\s\S]*glyph-radio-signal-a[\s\S]*glyph-radio-signal-b/.test(sprite)) throw new Error('radio signal marks must pulse independently from its body');
+if (!/glyph-cabin-body[\s\S]*glyph-cabin-logs[\s\S]*glyph-cabin-smoke-a[\s\S]*glyph-cabin-smoke-b/.test(sprite)) throw new Error('log cabin courses must remain fixed while chimney smoke rises');
+if (!/glyph-trail-blaze-tree[\s\S]*glyph-trail-blaze-paint-a" pathLength="1"[\s\S]*glyph-trail-blaze-paint-c" pathLength="1"/.test(sprite)) throw new Error('three paint strokes must form the blaze on a fixed tree');
+if (!/glyph-radio-body[\s\S]*glyph-radio-note-a[\s\S]*glyph-radio-note-b/.test(sprite)) throw new Error('radio music notes must float independently from its body');
+if (!/glyph-filter-frame[\s\S]*glyph-filter-particle-a[\s\S]*glyph-filter-particle-b/.test(sprite)) throw new Error('filter particles must pass through a fixed funnel');
+if (!/glyph-sort-frame[\s\S]*glyph-sort-bar-a[\s\S]*glyph-sort-bar-c/.test(sprite)) throw new Error('sort bars must settle independently inside a fixed frame');
+if (!/glyph-clock-face[\s\S]*glyph-clock-hour[\s\S]*glyph-clock-minute/.test(sprite)) throw new Error('clock hands must move independently from its face');
+if (!/glyph-globe-frame[\s\S]*glyph-globe-route" pathLength="1"/.test(sprite)) throw new Error('globe route must trace independently across its frame');
+if (!/glyph-microphone-body[\s\S]*glyph-microphone-level-a[\s\S]*glyph-microphone-level-c/.test(sprite)) throw new Error('microphone levels must animate independently from its body');
+if (!/glyph-key-body[\s\S]*glyph-key-pin/.test(sprite)) throw new Error('key pin must set independently from its body');
+if (!/glyph-bell-body[\s\S]*glyph-bell-clapper/.test(sprite)) throw new Error('bell clapper must swing independently inside its body');
+if (!/glyph-hard-drive-body[\s\S]*glyph-hard-drive-arm[\s\S]*glyph-hard-drive-light/.test(sprite)) throw new Error('hard-drive arm and light must animate independently from its housing');
 for (const glyph of ['shield', 'terminal', 'network', 'wrench']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const glyph of ['cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const [, motion] of allInternalMotions) if (!sprite.includes(`@keyframes ${motion}`)) throw new Error(`${motion} must be defined inside the external sprite`);
