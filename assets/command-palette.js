@@ -101,8 +101,8 @@
     }
     const dialog = document.createElement('dialog');
     dialog.className = 'command-palette';
-    dialog.setAttribute('aria-label', 'Site search and commands');
-    dialog.innerHTML = `<div class="command-search"><svg class="command-search-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-search"></use></svg><input type="search" role="combobox" autocomplete="off" spellcheck="false" aria-label="Search pages and commands" aria-autocomplete="list" aria-controls="command-results" aria-expanded="false" placeholder="Search pages and commands…"><kbd>Esc</kbd></div><div class="command-results" id="command-results" role="listbox" aria-label="Results"></div><p class="command-empty" role="status" hidden>No matching trail found.</p><footer><span><kbd>↑</kbd><kbd>↓</kbd> Move</span><span><kbd>↵</kbd> Open</span><span><kbd>Home</kbd><kbd>End</kbd> Jump</span></footer>`;
+    dialog.setAttribute('aria-labelledby', 'command-palette-title');
+    dialog.innerHTML = `<header class="overlay-header"><div class="overlay-heading"><svg class="overlay-heading-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-command"></use></svg><div><p>Trail controls</p><h2 id="command-palette-title">Search and commands</h2></div></div><button class="overlay-close" type="button" aria-label="Close search and commands" data-tooltip="Close search and commands"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-close"></use></svg></button></header><div class="command-search"><svg class="command-search-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-search"></use></svg><input type="search" role="combobox" autocomplete="off" spellcheck="false" aria-label="Search pages and commands" aria-autocomplete="list" aria-controls="command-results" aria-expanded="false" placeholder="Search pages and commands…"><kbd>Esc</kbd></div><div class="command-results" id="command-results" role="listbox" aria-label="Results"></div><p class="command-empty" role="status" hidden>No matching trail found.</p><footer><span><kbd>↑</kbd><kbd>↓</kbd> Move</span><span><kbd>↵</kbd> Open</span><span><kbd>Home</kbd><kbd>End</kbd> Jump</span></footer>`;
     document.body.append(dialog);
     const status = document.createElement('p');
     status.className = 'command-status visually-hidden';
@@ -114,7 +114,7 @@
     const shortcutDialog = document.createElement('dialog');
     shortcutDialog.className = 'shortcut-overlay';
     shortcutDialog.setAttribute('aria-labelledby', 'shortcut-overlay-title');
-    shortcutDialog.innerHTML = `<header><div><p>Quick reference</p><h2 id="shortcut-overlay-title">Keyboard shortcuts</h2></div><button type="button" aria-label="Close keyboard shortcuts">Close</button></header><table><thead><tr><th scope="col">Action</th><th scope="col">Shortcut</th></tr></thead><tbody>${shortcutCommands.map((command) => `<tr><th scope="row">${command.label}</th><td><kbd>${command.shortcut}</kbd></td></tr>`).join('')}</tbody></table><footer>Press <kbd>Esc</kbd> to close</footer>`;
+    shortcutDialog.innerHTML = `<header class="overlay-header"><div class="overlay-heading"><svg class="overlay-heading-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-keyboard"></use></svg><div><p>Quick reference</p><h2 id="shortcut-overlay-title">Keyboard shortcuts</h2></div></div><button class="overlay-close" type="button" aria-label="Close keyboard shortcuts" data-tooltip="Close keyboard shortcuts"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-close"></use></svg></button></header><table><thead><tr><th scope="col">Action</th><th scope="col">Shortcut</th></tr></thead><tbody>${shortcutCommands.map((command) => `<tr><th scope="row">${command.label}</th><td><kbd>${command.shortcut}</kbd></td></tr>`).join('')}</tbody></table><footer>Press <kbd>Esc</kbd> to close</footer>`;
     document.body.append(shortcutDialog);
     const footer = document.querySelector('.site-footer');
     if (footer && !footer.querySelector('.shortcut-hint')) {
@@ -131,6 +131,7 @@
     let commandReturnFocus = null;
     let shortcutReturnFocus = null;
     let recentLabels = [];
+    dialog.querySelector('.overlay-close').addEventListener('click', () => dialog.close());
     try {
       const saved = JSON.parse(localStorage.getItem('portfolio-recent-commands') ?? '[]');
       if (Array.isArray(saved)) recentLabels = saved.filter((label) => typeof label === 'string').slice(0, 5);
@@ -242,7 +243,7 @@
       if (!dialog.open && canRestoreFocus(commandReturnFocus) && !shortcutDialog.open) commandReturnFocus.focus();
       if (!dialog.open && !shortcutDialog.open) commandReturnFocus = null;
     });
-    shortcutDialog.querySelector('button').addEventListener('click', () => shortcutDialog.close());
+    shortcutDialog.querySelector('.overlay-close').addEventListener('click', () => shortcutDialog.close());
     shortcutDialog.addEventListener('click', (event) => { if (event.target === shortcutDialog) shortcutDialog.close(); });
     shortcutDialog.addEventListener('close', () => {
       overlay.set('shortcuts', false);

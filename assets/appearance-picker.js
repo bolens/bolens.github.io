@@ -12,8 +12,8 @@
     picker.className = 'palette-picker';
     picker.hidden = true;
     picker.innerHTML = `
-      <summary aria-keyshortcuts="Alt+P"><span class="palette-current" aria-hidden="true"></span><span class="palette-name"></span></summary>
-      <div class="palette-panels"><fieldset aria-describedby="palette-help">
+      <summary aria-keyshortcuts="Alt+P"><svg class="summary-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-palette"></use></svg><span class="palette-current" aria-hidden="true"></span><span class="palette-name"></span></summary>
+      <div class="palette-panels"><header class="overlay-header palette-panel-heading"><div class="overlay-heading"><svg class="overlay-heading-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-palette"></use></svg><div><p>Trail colors</p><h2>Color and appearance</h2></div></div><button class="overlay-close" type="button" aria-label="Close color and appearance controls" data-tooltip="Close color and appearance controls"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-close"></use></svg></button></header><div class="palette-panel-body"><fieldset aria-describedby="palette-help">
         <legend>Choose a color palette</legend>
         <p class="visually-hidden" id="palette-help">Changes apply immediately. Use the arrow keys to move between palettes.</p>
         ${Object.entries(palettes).map(([name, palette]) => `
@@ -22,12 +22,12 @@
             <span class="palette-swatches" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
             <span>${palette.label}</span>
           </label>`).join('')}
-      </fieldset></div>`;
+      </fieldset></div></div>`;
     const themeFieldset = document.createElement('fieldset');
     themeFieldset.className = 'theme-options';
     themeFieldset.setAttribute('aria-describedby', 'appearance-help');
     themeFieldset.innerHTML = `<legend>Choose an appearance</legend><p class="visually-hidden" id="appearance-help">Changes apply immediately. System follows your device setting.</p>${appearance.modes.map((theme) => `<label><input type="radio" name="portfolio-theme" value="${theme}"${theme === selectedTheme ? ' checked' : ''}><span>${theme === 'auto' ? 'System' : theme[0].toUpperCase() + theme.slice(1)}</span></label>`).join('')}`;
-    picker.querySelector('.palette-panels').append(themeFieldset);
+    picker.querySelector('.palette-panel-body').append(themeFieldset);
 
     const status = document.createElement('p');
     status.className = 'palette-status visually-hidden';
@@ -73,6 +73,7 @@
       else choosePalette(event.target.value);
     });
     picker.addEventListener('toggle', () => overlay.set('appearance', picker.open && !picker.hidden));
+    picker.querySelector('.overlay-close').addEventListener('click', close);
     document.addEventListener('pointerdown', (event) => { if (picker.open && !picker.contains(event.target)) collapse(); });
     document.body.append(picker, status);
     window.portfolioAppearancePicker = { open, close, toggle, announce: () => sync(true), get visible() { return !picker.hidden; } };
