@@ -103,6 +103,17 @@ try {
     }
   };
   await Promise.all(['Page.enable', 'Runtime.enable', 'Network.enable', 'Log.enable'].map((method) => send(method)));
+  await send('Page.addScriptToEvaluateOnNewDocument', { source: `
+    window.__hybridReadyPainted = null;
+    new MutationObserver((_, observer) => {
+      const figure = document.querySelector('.cryptid-camp.hybrid-effects-ready');
+      const canvas = figure?.querySelector('.camp-atmosphere');
+      if (!canvas) return;
+      const pixels = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+      window.__hybridReadyPainted = pixels.some((channel, index) => index % 4 === 3 && channel > 0);
+      observer.disconnect();
+    }).observe(document, { attributes: true, childList: true, subtree: true });
+  ` });
 
   const missing = await fetch(`${origin}/missing-route`);
   if (missing.status !== 404 || !(await missing.text()).includes('This signal')) throw new Error('custom 404 response failed');
@@ -113,6 +124,8 @@ try {
     if (ready.result.value) break;
     await new Promise((done) => setTimeout(done, 50));
   }
+  const hybridHandoff = await send('Runtime.evaluate', { expression: 'window.__hybridReadyPainted', returnByValue: true });
+  if (hybridHandoff.result.value !== true) throw new Error(`404 hybrid handoff exposed an unpainted canvas: ${hybridHandoff.result.value}`);
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'k', code: 'KeyK', windowsVirtualKeyCode: 75, modifiers: 1 });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'k', code: 'KeyK', windowsVirtualKeyCode: 75, modifiers: 1 });
   const commandMotion = await send('Runtime.evaluate', { expression: `(()=>({overlay:document.documentElement.classList.contains('ui-overlay-open'),open:document.querySelector('.command-palette').open,motion:getComputedStyle(document.querySelector('.camp-stars circle')).animationPlayState}))()`, returnByValue: true });

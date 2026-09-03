@@ -94,7 +94,7 @@
       grainContext.fillRect(speck.x * width, speck.y * height, speck.radius, speck.radius);
     });
     grainContext.globalAlpha = 1;
-    if (reducedMotion.matches) draw(7.25);
+    draw(reducedMotion.matches ? 7.25 : performance.now() / 1000);
   };
 
   const sceneTransform = () => {
