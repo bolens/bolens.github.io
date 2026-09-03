@@ -171,6 +171,19 @@
 .milky-way { animation:milky-way-breathe 12s ease-in-out infinite alternate; }
 .camp-stars circle { transform-box: fill-box; transform-origin: center; animation: camp-twinkle 5.8s ease-in-out infinite; }
 .camp-stars circle:nth-child(3n+1) { animation-duration:7.1s;animation-delay:-2.1s; }.camp-stars circle:nth-child(3n+2) { animation-duration:4.9s;animation-delay:-3.4s; }.camp-stars circle:nth-child(5n) { animation-duration:8.3s;animation-delay:-5.2s; }
+.night-sky-travelers { display:none;pointer-events:none;opacity:var(--sky-traveler-visibility,1); }
+:root:is([data-scene-time="twilight"],[data-scene-time="night"]) .night-sky-travelers { display:inline; }
+:root[data-scene-time="evening"] .night-sky-travelers { display:inline;--sky-traveler-visibility:.18; }
+:root[data-scene-time="twilight"] .night-sky-travelers { --sky-traveler-visibility:.48; }
+.sky-traveler { transform-box:fill-box;transform-origin:center;will-change:transform,opacity; }
+.shooting-star { --traveler-ion-width:1.8;--traveler-dust-width:2.5;--traveler-dust-opacity:.12;--traveler-head-rx:3;--traveler-head-ry:2;animation:shooting-star-pass 19s linear infinite; }
+.shooting-star-two { --traveler-ion:#d9d0f5;animation-duration:31s;animation-delay:-14s; }
+.meteor { --traveler-ion:#ffd0a0;--traveler-dust:#e88c59;--traveler-head:#fff0bf;--traveler-ion-width:3.4;--traveler-dust-width:7;--traveler-dust-opacity:.42;--traveler-head-rx:7;--traveler-head-ry:4.5;--traveler-fragment-opacity:.72;animation:meteor-pass 37s -21s linear infinite; }
+.comet { --traveler-ion:#bce8ec;--traveler-dust:#ddd8c3;--traveler-head:#eefbf1;--traveler-ion-width:2.8;--traveler-dust-width:9;--traveler-dust-opacity:.3;--traveler-head-rx:6;--traveler-head-ry:5;animation:comet-pass 53s -8s ease-in-out infinite; }
+:root[data-weather="cloudy"] .night-sky-travelers { --sky-traveler-visibility:.28; }
+:root:is([data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .night-sky-travelers { display:none; }
+:root[data-weather="wet"] .night-sky-travelers { --sky-traveler-visibility:.72; }
+:root:is([data-weather="dry"],[data-weather="drought"]) .meteor { --traveler-dust-opacity:.58;--traveler-fragment-opacity:.88; }
 .stellar-color circle { transform-box:fill-box;transform-origin:center;animation:stellar-breathe 9s ease-in-out infinite alternate; }.stellar-color circle:nth-child(2n) { animation-delay:-4s;animation-duration:12s; }
 .scene-orb { --orb-glow:url(#moon-glow);--orb-glow-opacity:.42;--orb-fill:url(#moon-surface);--orb-highlight-opacity:0;--orb-crater-opacity:.34;--orb-rays-opacity:0;translate:var(--scene-orb-x,0) var(--scene-orb-y,0);transform-box:fill-box;transform-origin:center;animation:moon-breathe 8s ease-in-out infinite;transition:translate 1.2s ease; }
 .weather-clouds,.weather-overcast,.weather-rain,.weather-snow,.weather-drought { display:none;pointer-events:none; }
@@ -185,6 +198,11 @@
 :root[data-weather="overcast"] :is(.scene-orb,.camp-aurora) { opacity:.2; }
 :root[data-weather="overcast"] :is(.camp-stars,.star-dust,.deep-stars,.stellar-color) { opacity:.08; }
 :root[data-weather="overcast"] .forest-mist { opacity:.13; }
+:root[data-weather="cloudy"] .solar-ray-field { opacity:calc(var(--scene-ray-opacity,.5) * .42); }
+:root:is([data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .solar-ray-field { display:none; }
+:root[data-weather="cloudy"] .terrain-asset { --asset-time-shadow:drop-shadow(var(--scene-shadow-x) var(--scene-shadow-y) calc(var(--scene-shadow-blur) + 2px) rgba(8,20,26,.1)); }
+:root:is([data-weather="overcast"],[data-weather="rainy"]) .terrain-asset { --asset-time-shadow:drop-shadow(var(--scene-shadow-x) var(--scene-shadow-y) calc(var(--scene-shadow-blur) + 3px) rgba(8,20,26,.045)); }
+:root[data-weather="snowy"] .terrain-asset { --asset-time-shadow:drop-shadow(var(--scene-shadow-x) var(--scene-shadow-y) calc(var(--scene-shadow-blur) + 2px) rgba(57,72,80,.08)); }
 .weather-rain { transform-box:view-box;transform-origin:center;animation:weather-rain-fall 1.1s linear infinite; }
 .weather-snow { transform-box:view-box;transform-origin:center;animation:weather-snow-drift 7.5s ease-in-out infinite alternate; }
 .weather-drought { transform-box:view-box;transform-origin:center;animation:weather-drought-drift 12s ease-in-out infinite alternate; }
@@ -264,6 +282,9 @@
 @keyframes milky-way-breathe { from { opacity:.55; } to { opacity:1; } }
 @keyframes camp-twinkle { 0%,100% { opacity:.42; scale:.86; } 50% { opacity:.92; scale:1.12; } }
 @keyframes stellar-breathe { from { opacity:.5;scale:.92; } to { opacity:.82;scale:1.08; } }
+@keyframes shooting-star-pass { 0%,72% { opacity:0;translate:-46px -22px; } 74% { opacity:.16; } 77% { opacity:.92; } 83% { opacity:.56; } 86%,100% { opacity:0;translate:118px 64px; } }
+@keyframes meteor-pass { 0%,49% { opacity:0;translate:-72px -38px;scale:.82; } 51% { opacity:.3; } 54% { opacity:1;scale:1.05; } 60%,100% { opacity:0;translate:154px 112px;scale:.62; } }
+@keyframes comet-pass { 0%,18% { opacity:0;translate:-34px -8px; } 22% { opacity:.22; } 29%,38% { opacity:.72; } 46%,100% { opacity:0;translate:72px 28px; } }
 @keyframes firefly-glow { 0%,100% { opacity:.06;scale:.55; } 42% { opacity:.72;scale:1.12; } 68% { opacity:.28;scale:.82; } }
 @keyframes moon-breathe { 0%,100% { opacity:.92; } 50% { opacity:1; } }
 @keyframes weather-rain-fall { from { translate:0 -8px; } to { translate:-4px 10px; } }
@@ -351,6 +372,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .lost-page *, .lost-page *::before, .lost-page *::after { animation:none !important; transition:none !important; }
+  .night-sky-travelers { display:none!important; }
   .depth-back,.depth-far,.depth-mid,.depth-near,.weather-overcast,.weather-rain,.weather-snow,.weather-drought { translate:0 0!important; }
   .smoke-number-main { opacity:.76; translate:0; scale:1; }
   .smoke-number-haze { opacity:.16; }

@@ -40,7 +40,14 @@ export async function hoverElement(send, selector, timeout = 10_000) {
       expression: `document.querySelector(${JSON.stringify(selector)}).matches(':hover')`,
       returnByValue: true,
     });
-    if (hovered.result.value) return;
+    if (hovered.result.value) {
+      await waitForFrames(send);
+      const stable = await send('Runtime.evaluate', {
+        expression: `document.querySelector(${JSON.stringify(selector)}).matches(':hover')`,
+        returnByValue: true,
+      });
+      if (stable.result.value) return;
+    }
     await pause(pollInterval);
   }
   throw new Error(`timed out acquiring ${selector} hover after ${timeout}ms (last hit: ${lastHit ?? 'none'})`);

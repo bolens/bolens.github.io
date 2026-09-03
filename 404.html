@@ -333,6 +333,12 @@
           <symbol id="sky-glint" viewBox="0 0 14 14" data-regions="vertical-ray,horizontal-ray">
             <path d="M7 1v12M1 7h12" fill="none" stroke="var(--glint-fill,#f2fbf3)" stroke-width="var(--glint-width,1.4)" stroke-linecap="round"/>
           </symbol>
+          <symbol id="sky-traveler" viewBox="0 0 160 40" data-regions="ion-tail,dust-tail,heated-head,fragment-trail">
+            <path d="M154 20Q102 5 8 13" fill="none" stroke="var(--traveler-ion,#c9f2ef)" stroke-width="var(--traveler-ion-width,2.2)" stroke-linecap="round" opacity="var(--traveler-ion-opacity,.72)"/>
+            <path d="M154 20Q96 31 24 29" fill="none" stroke="var(--traveler-dust,#d8d5b0)" stroke-width="var(--traveler-dust-width,5)" stroke-linecap="round" opacity="var(--traveler-dust-opacity,.24)"/>
+            <ellipse cx="153" cy="20" rx="var(--traveler-head-rx,5)" ry="var(--traveler-head-ry,3.5)" fill="var(--traveler-head,#f8f1cb)"/>
+            <g fill="var(--traveler-fragment,#e7bf83)" opacity="var(--traveler-fragment-opacity,0)"><circle cx="128" cy="15" r="1.5"/><circle cx="112" cy="24" r="1"/><circle cx="91" cy="18" r=".8"/></g>
+          </symbol>
           <symbol id="scout-ufo" viewBox="0 0 168 84" data-regions="ground-shadow,landing-gear,saucer-hull,glass-dome,hull-rim,signal-lights,conditions">
             <ellipse cx="84" cy="68" rx="79" ry="10" fill="var(--ufo-shadow,#071b1c)" opacity="var(--ufo-ground-shadow-opacity,.72)"/>
             <path d="m39 55-12 19m102-19 12 19M23 74h17m88 0h17" fill="none" stroke="var(--ufo-gear,#526a69)" stroke-width="5" stroke-linecap="round" opacity="var(--ufo-landing-gear-opacity,1)"/>
@@ -417,6 +423,12 @@
           <circle cx="66" cy="90" r="2"/><circle cx="140" cy="157" r="1.5"/><circle cx="216" cy="75" r="1.6"/><circle cx="335" cy="134" r="1.7"/><circle cx="433" cy="61" r="1.2"/><circle cx="522" cy="118" r="2"/><circle cx="682" cy="72" r="1.5"/><circle cx="760" cy="151" r="1.2"/><circle cx="906" cy="72" r="1.8"/><circle cx="1095" cy="151" r="1.5"/>
           <circle cx="31" cy="206" r=".8"/><circle cx="99" cy="43" r=".8"/><circle cx="173" cy="114" r=".7"/><circle cx="254" cy="179" r="1"/><circle cx="291" cy="43" r=".7"/><circle cx="379" cy="101" r=".8"/><circle cx="468" cy="180" r=".7"/><circle cx="558" cy="48" r="1"/><circle cx="619" cy="167" r=".7"/><circle cx="716" cy="111" r=".8"/><circle cx="818" cy="39" r=".7"/><circle cx="848" cy="187" r="1"/><circle cx="958" cy="201" r=".8"/><circle cx="1045" cy="46" r=".7"/><circle cx="1157" cy="92" r="1"/>
           <use href="#sky-glint" x="178" y="41" width="12" height="12"/><use href="#sky-glint" x="868" y="100" width="14" height="14"/><use href="#sky-glint" x="1097" y="215" width="11" height="11"/>
+        </g>
+        <g class="night-sky-travelers depth-back scene-layer" data-scene-layer="sky-travelers" data-region="occasional-night-sky-travelers" aria-hidden="true">
+          <use class="sky-traveler shooting-star shooting-star-one" data-traveler-kind="shooting-star" href="#sky-traveler" x="82" y="64" width="176" height="44"/>
+          <use class="sky-traveler shooting-star shooting-star-two" data-traveler-kind="shooting-star" href="#sky-traveler" x="604" y="88" width="142" height="36"/>
+          <use class="sky-traveler meteor" data-traveler-kind="meteor" href="#sky-traveler" x="318" y="28" width="194" height="49"/>
+          <use class="sky-traveler comet" data-traveler-kind="comet" href="#sky-traveler" x="742" y="42" width="252" height="63"/>
         </g>
 
 

@@ -83,6 +83,7 @@ try {
       }
 
       await hover(selector);
+      await waitFor(send, `getComputedStyle(document.querySelector(${JSON.stringify(selector)})?.querySelector(':scope>svg use')).getPropertyValue(${JSON.stringify(property)}).trim().startsWith(${JSON.stringify(`${motion} 680ms`)})`, `${path} ${selector} hover motion`);
       const active = await send('Runtime.evaluate', {
         expression: `(()=>{const use=document.querySelector(${JSON.stringify(selector)})?.querySelector(':scope>svg use');return {outer:use?.getAnimations()[0]?.animationName??'none',motion:getComputedStyle(use).getPropertyValue(${JSON.stringify(property)}).trim()}})()`,
         returnByValue: true,
@@ -129,6 +130,7 @@ try {
           throw new Error(`${trigger} control glyph idle state failed: ${JSON.stringify(idle.result.value)}`);
         }
         await hover(trigger);
+        await waitFor(send, `getComputedStyle(document.querySelector(${JSON.stringify(trigger)}).querySelector('.control-glyph use')).getPropertyValue(${JSON.stringify(property)}).trim().startsWith(${JSON.stringify(`${motion} 680ms`)})`, `${trigger} control hover motion`);
         const hovered = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector(${JSON.stringify(trigger)}).querySelector('.control-glyph use')).getPropertyValue(${JSON.stringify(property)}).trim()`, returnByValue: true });
         if (!hovered.result.value.startsWith(`${motion} 680ms`)) throw new Error(`${trigger} control glyph hover failed: ${hovered.result.value}`);
         await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 0, y: 0 });
