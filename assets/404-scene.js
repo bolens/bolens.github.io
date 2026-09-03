@@ -55,6 +55,26 @@
   let previousTime = 0;
   let visible = !document.hidden;
   let overlayActive = document.documentElement.classList.contains('ui-overlay-open');
+  let parallaxFrame = 0;
+
+  const setParallax = (x = 0, y = 0) => {
+    figure.style.setProperty('--parallax-far-x', `${(-x * 1.5).toFixed(2)}px`);
+    figure.style.setProperty('--parallax-far-y', `${(-y * .7).toFixed(2)}px`);
+    figure.style.setProperty('--parallax-mid-x', `${(x * 2.6).toFixed(2)}px`);
+    figure.style.setProperty('--parallax-mid-y', `${(y * 1.3).toFixed(2)}px`);
+    figure.style.setProperty('--parallax-near-x', `${(x * 5.2).toFixed(2)}px`);
+    figure.style.setProperty('--parallax-near-y', `${(y * 2.5).toFixed(2)}px`);
+  };
+
+  figure.addEventListener('pointermove', (event) => {
+    if (reducedMotion.matches || overlayActive || event.pointerType === 'touch') return;
+    const bounds = figure.getBoundingClientRect();
+    const x = (event.clientX - bounds.left) / bounds.width - .5;
+    const y = (event.clientY - bounds.top) / bounds.height - .5;
+    cancelAnimationFrame(parallaxFrame);
+    parallaxFrame = requestAnimationFrame(() => setParallax(x, y));
+  }, { passive: true });
+  figure.addEventListener('pointerleave', () => setParallax());
 
   const resize = () => {
     const bounds = figure.getBoundingClientRect();
@@ -189,9 +209,10 @@
   });
   window.addEventListener('ui-overlay-change', (event) => {
     overlayActive = Boolean(event.detail?.active);
+    if (overlayActive) setParallax();
     updateMotion();
   });
-  reducedMotion.addEventListener?.('change', updateMotion);
+  reducedMotion.addEventListener?.('change', () => { setParallax(); updateMotion(); });
   new ResizeObserver(resize).observe(figure);
   resize();
   figure.classList.add('hybrid-effects-ready');
