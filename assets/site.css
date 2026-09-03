@@ -130,10 +130,11 @@ svg:has(>use[href$="#glyph-palette"]) { --glyph-motion:glyph-palette-mix; }
 .shortcut-overlay kbd { display:inline-block; min-width:3.7rem; padding:.2rem .4rem; border:1px solid var(--line); border-bottom-width:2px; border-radius:3px; background:var(--paper); color:var(--muted); font:700 .68rem/1.2 var(--mono); text-align:center; white-space:nowrap; }
 .shortcut-overlay footer { padding:.65rem 1.15rem; color:var(--muted); font:700 .65rem/1.4 var(--mono); }
 .wrap { width: var(--wrap); margin-inline: auto; }
-.skip-link { position:fixed; z-index:50; top:.75rem; left:.75rem; display:inline-flex; min-height:var(--control-height); align-items:center; padding:.7rem 1rem; border:1px solid var(--ink); border-radius:var(--control-radius); background:var(--ink); color:var(--snow); box-shadow:var(--control-shadow); translate:0 calc(-100% - 1rem); text-decoration:none; font-size:.86rem; font-weight:700; }
-.skip-link:is(:focus,:focus-visible) { translate:0!important; }
-.skip-link:hover { border-color:var(--copper); background:var(--copper); }
-.skip-link:focus-visible { border-color:currentColor; background:var(--copper); }
+.skip-link { position:fixed; z-index:50; isolation:isolate; top:.75rem; left:.75rem; display:inline-flex; min-height:var(--control-height); align-items:center; overflow:clip; padding:.85rem 1.15rem; border:1px solid var(--ink); border-radius:var(--control-radius); background:var(--ink); color:var(--snow); box-shadow:var(--control-shadow); transform:translateY(calc(-100% - 1rem)); text-decoration:none; font-size:.86rem; font-weight:700; transition:translate var(--motion-medium) var(--ease-route),scale var(--motion-fast),background var(--motion-fast),color var(--motion-fast),border-color var(--motion-fast),box-shadow var(--motion-medium) var(--ease-route),transform 0s var(--motion-medium); }
+.skip-link::after { content:''; position:absolute; z-index:-1; inset:-40% auto -40% -35%; width:24%; pointer-events:none; background:color-mix(in srgb,var(--snow) 24%,transparent); rotate:14deg; translate:-220% 0; transition:translate var(--motion-page) var(--ease-route); }
+.skip-link:is(:focus,:focus-visible) { transform:none; translate:0 var(--motion-hover-lift); border-color:var(--copper); background:var(--copper); box-shadow:0 9px 22px color-mix(in srgb,var(--ink) 14%,transparent); transition-delay:0s; }
+.skip-link:is(:focus,:focus-visible)::after { translate:620% 0; }
+.skip-link:active { translate:0; scale:.97; }
 :focus-visible { outline: 3px solid var(--copper); outline-offset: 4px; }
 .site-header { position:relative; z-index:10; min-height:92px; display:flex; justify-content:space-between; align-items:center; }
 .wordmark { display:flex; width:auto; align-items:center; gap:.85rem; color:var(--ink); text-decoration:none; }
