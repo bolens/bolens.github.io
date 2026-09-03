@@ -1,69 +1,25 @@
-import { createServer } from 'node:http';
-import { createReadStream, existsSync, mkdtempSync, statSync, writeFileSync } from 'node:fs';
-import { extname, join, normalize, resolve } from 'node:path';
-import { spawn } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
+import { resolve } from 'node:path';
+import { startBrowser } from './lib/cdp-browser.mjs';
+import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const captureEvidence = process.argv.includes('--capture-evidence');
-const mime = { '.css': 'text/css', '.html': 'text/html', '.png': 'image/png', '.svg': 'image/svg+xml', '.xml': 'application/xml', '.txt': 'text/plain' };
-const server = createServer((request, response) => {
-  const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
-  let file = join(root, normalize(pathname).replace(/^\/+/, ''));
-  if (pathname.endsWith('/')) file = join(file, 'index.html');
-  if (!existsSync(file) || statSync(file).isDirectory()) {
-    response.writeHead(404, { 'content-type': 'text/html' });
-    createReadStream(join(root, '404.html')).pipe(response);
-    return;
-  }
-  response.writeHead(200, { 'content-type': mime[extname(file)] ?? 'application/octet-stream' });
-  createReadStream(file).pipe(response);
-});
-await new Promise((done) => server.listen(0, '127.0.0.1', done));
-const origin = `http://127.0.0.1:${server.address().port}`;
-
-const browser = ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium'].find(existsSync);
-if (!browser) throw new Error('Chrome or Chromium is required for the browser smoke test');
-const profile = mkdtempSync('/tmp/bolens-site-smoke-');
-const chrome = spawn(browser, ['--headless=new', '--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox', '--no-first-run', '--no-default-browser-check', '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=9222', `--user-data-dir=${profile}`, 'about:blank'], { stdio: ['ignore', 'ignore', 'pipe'] });
-let browserLog = '';
-chrome.stderr.on('data', (chunk) => { browserLog += chunk.toString(); });
-
-async function waitForDebugger() {
-  const deadline = Date.now() + 45_000;
-  while (Date.now() < deadline) {
-    if (chrome.exitCode !== null) throw new Error(`browser exited before debugger startup with ${browser} (code ${chrome.exitCode}): ${browserLog.slice(-1200)}`);
-    try { return await fetch('http://127.0.0.1:9222/json/version').then((result) => result.json()); } catch { await new Promise((done) => setTimeout(done, 100)); }
-  }
-  throw new Error(`browser debugger did not start within 45s with ${browser}: ${browserLog.slice(-1200)}`);
-}
-
-let socket;
+const server = await startSiteServer(root);
+const { origin } = server;
+const errors = [];
+let browser;
 try {
-  await waitForDebugger();
-  const target = await fetch('http://127.0.0.1:9222/json/new?about:blank', { method: 'PUT' }).then((result) => result.json());
-  socket = new WebSocket(target.webSocketDebuggerUrl);
-  await new Promise((done, reject) => { socket.onopen = done; socket.onerror = reject; });
-  let id = 0;
-  const pending = new Map();
-  const errors = [];
-  socket.onmessage = ({ data }) => {
-    const message = JSON.parse(data);
-    if (message.id && pending.has(message.id)) {
-      const handler = pending.get(message.id); pending.delete(message.id);
-      return message.error ? handler.reject(message.error) : handler.resolve(message.result);
-    }
-    if (message.method === 'Runtime.exceptionThrown') errors.push(message.params.exceptionDetails.text);
+  browser = await startBrowser((message) => {
+    if (message.method === 'Runtime.exceptionThrown') errors.push(message.params.exceptionDetails.exception?.description ?? message.params.exceptionDetails.text);
     if (message.method === 'Log.entryAdded' && message.params.entry.level === 'error') {
       const { text: entryText, url: entryUrl = '' } = message.params.entry;
       const expected404 = entryUrl === `${origin}/missing-route` && entryText.includes('404');
       if (!expected404) errors.push(`${entryText}${entryUrl ? ` (${entryUrl})` : ''}`);
     }
     if (message.method === 'Network.loadingFailed' && !message.params.canceled) errors.push(message.params.errorText);
-  };
-  const send = (method, params = {}) => new Promise((resolve, reject) => {
-    const requestId = ++id; pending.set(requestId, { resolve, reject });
-    socket.send(JSON.stringify({ id: requestId, method, params }));
   });
+  const { send } = browser;
   const capturePhase = async (width, name, selector, time, path = '/') => {
     await send('Page.navigate', { url: `${origin}${path}` });
     await new Promise((done) => setTimeout(done, 200));
@@ -344,5 +300,5 @@ try {
   if (errors.length) throw new Error(`browser errors: ${errors.join('; ')}`);
   console.log('Browser smoke passed 16 responsive route renders, custom 404, dark mode, reduced motion, print, and forced colors with no page, console, or network errors.');
 } finally {
-  socket?.close(); chrome.kill('SIGTERM'); server.close();
+  browser?.close(); server.close();
 }
