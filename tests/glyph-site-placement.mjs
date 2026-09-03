@@ -63,8 +63,12 @@ const workControls = [
 ];
 
 const hover = async (selector) => {
+  await send('Runtime.evaluate', {
+    expression: `(()=>{document.documentElement.style.scrollBehavior='auto';document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center',behavior:'auto'})})()`,
+  });
+  await waitFor(send, `(()=>{const box=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return box.bottom>0&&box.top<innerHeight})()`, `${selector} visible after scroll`);
   const point = await send('Runtime.evaluate', {
-    expression: `(()=>{const element=document.querySelector(${JSON.stringify(selector)});element.scrollIntoView({block:'center',behavior:'instant'});const box=element.getBoundingClientRect();return {x:box.left+box.width/2,y:box.top+box.height/2}})()`,
+    expression: `(()=>{const box=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:box.left+box.width/2,y:Math.max(0,box.top)+Math.min(box.height,innerHeight-Math.max(0,box.top))/2}})()`,
     returnByValue: true,
   });
   await send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...point.result.value });
