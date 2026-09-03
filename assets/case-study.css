@@ -48,4 +48,4 @@
 .case-story .prose p { margin-bottom: 1.5rem; }.case-story code { font-family: var(--mono); font-size: .88em; }
 .case-next { display: grid; grid-template-columns: .55fr 1fr; justify-content: initial; align-items: baseline; gap: 2rem; padding-top: clamp(4rem, 8vw, 7rem); }
 .case-next { view-transition-name: case-next; }
-.case-next a { font: 400 clamp(2rem,5vw,4.4rem)/1.04 var(--serif); text-decoration: none; letter-spacing: -.035em; transition:color var(--motion-fast),translate var(--motion-medium) var(--ease-route); }.case-next a:is(:hover,:focus-visible) { color: var(--copper); translate:.35rem 0; }
+.case-next a { display:flex; align-items:center; font: 400 clamp(2rem,5vw,4.4rem)/1.04 var(--serif); text-decoration: none; letter-spacing: -.035em; transition:color var(--motion-fast),translate var(--motion-medium) var(--ease-route); }.case-next a:is(:hover,:focus-visible) { color: var(--copper); translate:.35rem 0; }

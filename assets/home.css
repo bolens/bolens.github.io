@@ -31,7 +31,7 @@
 @keyframes toggle { 50% { fill: var(--art-success); translate: 28px 0; }}
 .project-copy { padding: clamp(1.4rem, 3vw, 2.4rem); }
 .project-meta { margin: 0 0 1rem; color: var(--muted); font: 700 .75rem/1.4 var(--mono); letter-spacing: .08em; text-transform: uppercase; }
-.project h3 { display: flex; justify-content: space-between; gap: 1rem; margin: 0; font: 400 clamp(1.8rem,3.6vw,3.1rem)/1.08 var(--serif); letter-spacing: -.032em; }
+.project h3 { display: flex; align-items:center; justify-content: space-between; gap: 1rem; margin: 0; font: 400 clamp(1.8rem,3.6vw,3.1rem)/1.08 var(--serif); letter-spacing: -.032em; }
 .project-copy > p:last-child { max-width: 62ch; margin: 1rem 0 0; color: var(--muted); line-height: 1.62; }
 .project-evidence { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; margin:1.25rem 0 0; border-top:1px solid var(--line); background:var(--line); }
 .project-evidence div { min-width:0; padding:.85rem .75rem 0 0; background:var(--snow); }
