@@ -194,6 +194,38 @@
             <path d="M8 31q49-3 100-19M34 28 25 15m42 7 7-13" fill="none" stroke="var(--branch-highlight,#8a6241)" stroke-width="2.5" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="120" height="45"/>
           </symbol>
+          <symbol id="reed-clump" viewBox="0 0 36 44">
+            <g fill="none" stroke="var(--reed-stem,#668061)" stroke-linecap="round">
+              <path d="M9 42 6 12m7 29 10-35m-4 34 15-22" stroke-width="3"/>
+              <path d="m4 12 6 6M20 7l6 6m3 6 5 5" stroke="var(--reed-tip,#91a06d)" stroke-width="2"/>
+            </g>
+            <use href="#terrain-condition-marks" width="36" height="44"/>
+          </symbol>
+          <symbol id="trail-boots" viewBox="0 0 34 24">
+            <path d="M2 20V9Q6 1 11 9v11Zm18 0V8q5-8 11 0v12Z" fill="var(--boot-fill,#322a25)" stroke="var(--boot-outline,#171b1a)" stroke-width="2" stroke-linejoin="round"/>
+            <path d="m5 10 5 4 4-4m9-1 5 4 4-5M3 20h12m5 0h13" fill="none" stroke="var(--boot-lace,#8b6850)" stroke-width="1.8" stroke-linecap="round"/>
+            <use href="#terrain-condition-marks" width="34" height="24"/>
+          </symbol>
+          <symbol id="camp-storage" viewBox="0 0 32 34">
+            <path d="M3 6h26v25H3Z" fill="var(--storage-fill,#17363a)" stroke="var(--storage-outline,#557076)" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M6 8q10 8 20 0m-16 8 5 5 9-8" fill="none" stroke="var(--storage-detail,#758b8d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M10 3h12" fill="none" stroke="var(--storage-handle,#9aaaa7)" stroke-width="3" stroke-linecap="round"/>
+            <use href="#terrain-condition-marks" width="32" height="34"/>
+          </symbol>
+          <symbol id="river-ripple" viewBox="0 0 84 28">
+            <g fill="none" stroke="var(--ripple-color,#a5d1ca)" stroke-linecap="round">
+              <path d="M3 9q20 8 40 0t38-1" stroke-width="var(--ripple-width,3)"/>
+              <path d="M20 21q12 5 25 0m10 1q8 3 17-1" stroke-width="1.8" opacity="var(--ripple-detail-opacity,.72)"/>
+            </g>
+            <use href="#terrain-condition-marks" width="84" height="28"/>
+          </symbol>
+          <symbol id="water-foam" viewBox="0 0 58 22">
+            <g fill="var(--foam-fill,#cce3dc)" opacity="var(--foam-opacity,.52)">
+              <circle cx="8" cy="13" r="4"/><circle cx="18" cy="9" r="2.7"/><circle cx="28" cy="14" r="2.2"/><circle cx="40" cy="8" r="3.2"/><circle cx="50" cy="12" r="2"/>
+            </g>
+            <path d="M3 18q24-5 51-2" fill="none" stroke="var(--foam-line,#d9eee8)" stroke-width="1.4" stroke-linecap="round" opacity=".34"/>
+            <use href="#terrain-condition-marks" width="58" height="22"/>
+          </symbol>
           <symbol id="river-stone" viewBox="0 0 30 20">
             <path d="m2 13 8-8 12 1 6 7-7 5H8Z" fill="var(--stone-fill,#536862)" stroke="#18302f" stroke-width="1.8" stroke-linejoin="round"/>
             <path d="m9 8 8-1 5 3" fill="none" stroke="#91a8a0" stroke-width="1.4" stroke-linecap="round" opacity=".45"/>
@@ -328,9 +360,11 @@
           <path d="M590 349q-18 23-49 39-31 16-55 44" fill="none" stroke="#75aaa6" stroke-width="3" opacity=".38" stroke-linecap="round"/>
           <path d="M474 365c-45 47-15 78-63 113-53 39-135 42-190 78-66 43-94 88-221 119v85h94c38-57 67-88 132-119 68-33 163-41 211-91 43-45 30-88 70-129Z" fill="#1b4f59"/>
           <path d="M481 380c-35 43-12 72-61 108-55 40-134 44-191 79-67 41-104 81-197 111" fill="none" stroke="#7ab1ad" stroke-width="7" opacity=".48" stroke-linecap="round"/>
-          <g class="river-ripples" fill="none" stroke="#a5d1ca" stroke-width="3" stroke-linecap="round" opacity=".55">
-            <path d="M300 560q37 10 73-4M198 607q35 10 69-4M82 664q33 8 65-4M388 492q30 8 57-4"/>
-            <path d="M337 531q18 5 36 0m-122 56q19 6 38 0M135 635q21 7 41 0M41 700q24 6 47-2" stroke-width="1.8"/>
+          <g class="river-ripples" opacity=".55">
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-ripple" x="286" y="537" width="94" height="31" transform="rotate(-4 333 553)"/>
+            <use class="terrain-asset" data-light="moon" data-weather="rainy" href="#river-ripple" x="188" y="584" width="88" height="29" transform="rotate(-5 232 599)" style="--ripple-detail-opacity:.58"/>
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-ripple" x="73" y="642" width="82" height="27" transform="rotate(-6 114 656)"/>
+            <use class="terrain-asset" data-light="shadow" data-weather="clear" href="#river-ripple" x="382" y="475" width="70" height="24" transform="rotate(-3 417 487)" style="--ripple-color:#91c0ba;--ripple-width:2.6"/>
           </g>
           <path d="M0 674q77-18 151-62m153-64q55-28 105-42" fill="none" stroke="#0c3238" stroke-width="18" opacity=".75"/>
           <path d="M0 665q78-20 146-64 69-45 145-56 73-11 119-48" fill="none" stroke="#315a50" stroke-width="9" opacity=".8"/>
@@ -354,8 +388,16 @@
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fern-spray" x="218" y="503" width="43" height="53"/>
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fern-spray" x="320" y="476" width="37" height="45"/>
           </g>
-          <g class="bank-reeds" fill="none" stroke="#668061" stroke-width="3" stroke-linecap="round"><path d="m81 647-4-27m5 25 9-30m-5 29 15-19m82-39-2-25m4 23 10-27m-4 26 13-18m87-20-1-23m5 21 10-25"/><path d="m75 620 5 5m7-10 5 5m85-59 6 5m8-9 5 5m91-40 6 5m7-9 5 5" stroke-width="2"/></g>
-          <g class="water-foam" fill="#cce3dc" opacity=".42"><circle cx="68" cy="656" r="3"/><circle cx="76" cy="652" r="2"/><circle cx="126" cy="617" r="2.5"/><circle cx="187" cy="580" r="2"/><circle cx="245" cy="553" r="2"/><circle cx="335" cy="515" r="2.5"/></g>
+          <g class="bank-reeds">
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#reed-clump" x="72" y="605" width="34" height="43"/>
+            <use class="terrain-asset" data-light="ambient" data-weather="rainy" href="#reed-clump" x="176" y="548" width="33" height="41" transform="rotate(5 193 569)" style="--reed-stem:#5f7b5d"/>
+            <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#reed-clump" x="284" y="505" width="31" height="39" transform="rotate(-4 300 525)" style="--reed-tip:#82936c"/>
+          </g>
+          <g class="water-foam-patches">
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#water-foam" x="53" y="642" width="54" height="21" transform="rotate(-7 80 653)"/>
+            <use class="terrain-asset" data-light="moon" data-weather="rainy" href="#water-foam" x="170" y="565" width="48" height="18" transform="rotate(-8 194 574)" style="--foam-opacity:.44"/>
+            <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#water-foam" x="308" y="501" width="45" height="17" transform="rotate(-6 331 510)" style="--foam-fill:#b9d9d2"/>
+          </g>
           <g class="river-accents" fill="none" stroke-linecap="round">
             <g stroke="#b8d8cf" opacity=".34"><path d="M29 704q21 5 42-4m23-21q20 6 41-3m17-27q17 5 35-3m23-25q17 4 34-3m22-24q15 4 31-3m21-22q14 4 29-3m22-23q12 4 25-2m19-24q11 3 22-2" stroke-width="2.2"/><path d="m51 690 12-2m51-22 15-3m52-29 13-3m54-27 12-3m55-29 11-3m48-28 10-3" stroke-width="1"/></g>
             <g stroke="#345f5d" opacity=".72"><path d="M15 722q34-7 62-24m34-20q27-16 53-24m33-18q24-14 47-20m37-18q22-12 42-18m35-19q19-11 35-23" stroke-width="4"/><path d="M57 674q9 8 19 1m82-45q10 7 20 0m85-43q9 6 18-1m75-42q8 5 16-1" stroke-width="2"/></g>
@@ -465,8 +507,9 @@
             <path d="M934 485v158M874 623q60-39 126 1" fill="none" stroke="#365052" stroke-width="3" opacity=".8"/>
             <path d="M862 626q70-35 145 0v25H862Z" fill="#352d2b"/>
             <path d="M868 635q65-25 134 1l-2 15H866Z" fill="#594538" stroke="#8b684f" stroke-width="2"/>
-            <g class="tent-floor-detail" fill="none" stroke-linecap="round"><path d="m873 642 26-5m12 6 29-7m16 7 31-6" stroke="#9b7252" stroke-width="2"/><path d="M873 628q10-15 21 0v12h-21Zm103 0q10-15 20 0v12h-20Z" stroke="#2b211e" stroke-width="3"/><path d="m878 629 5 5 6-5m92 0 5 5 6-5" stroke="#775545" stroke-width="2"/></g>
-            <g class="tent-storage" stroke-linejoin="round"><path d="M875 551h28v26h-28Z" fill="#17363a" stroke="#557076" stroke-width="2"/><path d="M878 553q11 9 22 0" fill="none" stroke="#758b8d" stroke-width="2"/><path d="m881 560 6 5 10-8" fill="none" stroke="#456167" stroke-width="2"/><path d="M979 550h20v29h-20Z" fill="#223b3b" stroke="#557076" stroke-width="2"/><path d="M982 557h14m-14 6h14" stroke="#75908c" stroke-width="2"/></g>
+            <g class="tent-floor-detail" fill="none" stroke-linecap="round"><path d="m873 642 26-5m12 6 29-7m16 7 31-6" stroke="#9b7252" stroke-width="2"/></g>
+            <g class="tent-boots"><use class="terrain-asset" data-light="shadow" data-weather="dry" href="#trail-boots" x="871" y="619" width="30" height="22"/><use class="terrain-asset" data-light="shadow" data-weather="wet" href="#trail-boots" x="974" y="619" width="29" height="21" style="--boot-fill:#3b3029;--boot-lace:#765544"/></g>
+            <g class="tent-storage"><use class="terrain-asset" data-light="shadow" data-weather="dry" href="#camp-storage" x="873" y="546" width="32" height="34"/><use class="terrain-asset" data-light="shadow" data-weather="wet" href="#camp-storage" x="976" y="546" width="27" height="34" style="--storage-fill:#223b3b;--storage-detail:#75908c"/></g>
             <g class="tent-poles" fill="none" stroke-linecap="round"><path d="M934 485 872 646m62-161 66 161" stroke="#bac2b5" stroke-width="2" opacity=".55"/><path d="M930 489h8m-67 153 8 3m113 0 9-3" stroke="#e2d5b7" stroke-width="3"/></g>
             <path d="M872 635q29-30 58-2l-8 17h-58Z" fill="#35545a" stroke="#72908b" stroke-width="3"/>
             <path d="M981 609h16v30h-16Z" fill="#70452e"/><path d="M975 609q14-25 28 0Z" fill="#f4c45d" stroke="#a66c3e" stroke-width="3"/><circle cx="989" cy="605" r="5" fill="#fff1ad"/>
