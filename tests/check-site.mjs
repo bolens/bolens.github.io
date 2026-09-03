@@ -62,9 +62,9 @@ for (const file of htmlFiles) {
   }
 }
 
-const png = readFileSync(join(root, 'assets/social-card.png'));
+const png = readFileSync(join(root, 'assets/social-card-v2.png'));
 if (png.readUInt32BE(16) !== 1200 || png.readUInt32BE(20) !== 630) {
-  fail(join(root, 'assets/social-card.png'), 'social card must be 1200 by 630 pixels');
+  fail(join(root, 'assets/social-card-v2.png'), 'social card must be 1200 by 630 pixels');
 }
 
 const sitemap = readFileSync(join(root, 'sitemap.xml'), 'utf8');

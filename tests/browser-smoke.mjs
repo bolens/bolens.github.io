@@ -108,16 +108,16 @@ try {
 
   for (const width of [390, 1440]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: width === 390 ? 844 : 1000, deviceScaleFactor: 1, mobile: width === 390 });
-    for (const route of ['/', '/work/', '/about/', '/case-studies/uddns/', '/case-studies/aur-response-toolkit/', '/case-studies/privacy-devices/']) {
+    for (const route of ['/', '/work/', '/about/', '/case-studies/uddns/', '/case-studies/aur-response-toolkit/', '/case-studies/privacy-devices/', '/case-studies/launch-layer/', '/case-studies/millennium-helpers/']) {
       await send('Page.navigate', { url: `${origin}${route}` });
       for (let attempt = 0; attempt < 40; attempt++) {
         const state = await send('Runtime.evaluate', { expression: 'document.readyState', returnByValue: true });
         if (state.result.value === 'complete') break;
         await new Promise((done) => setTimeout(done, 50));
       }
-      const check = await send('Runtime.evaluate', { expression: `({h1:document.querySelectorAll('h1').length,main:!!document.querySelector('main'),overflow:document.documentElement.scrollWidth>innerWidth,title:document.title})`, returnByValue: true });
+      const check = await send('Runtime.evaluate', { expression: `({h1:document.querySelectorAll('h1').length,main:!!document.querySelector('main'),overflow:document.documentElement.scrollWidth>innerWidth,title:document.title,shortcutHint:document.querySelector('.shortcut-hint')?.textContent.trim()})`, returnByValue: true });
       const value = check.result.value;
-      if (value.h1 !== 1 || !value.main || value.overflow || !value.title) throw new Error(`${width}px ${route}: ${JSON.stringify(value)}`);
+      if (value.h1 !== 1 || !value.main || value.overflow || !value.title || value.shortcutHint !== 'Press Alt + / for shortcuts') throw new Error(`${width}px ${route}: ${JSON.stringify(value)}`);
     }
     if (captureEvidence) {
       const fineAbduction=Array.from({length:41},(_,index)=>2640+index*120);
@@ -276,7 +276,7 @@ try {
   const forced = await send('Runtime.evaluate', { expression: `({active:matchMedia('(forced-colors: active)').matches,button:getComputedStyle(document.querySelector('.button')).forcedColorAdjust,pulse:getComputedStyle(document.querySelector('.map-node .pulse')).display})`, returnByValue: true });
   if (!forced.result.value.active || forced.result.value.button !== 'none' || forced.result.value.pulse !== 'none') throw new Error(`forced-colors override failed: ${JSON.stringify(forced.result.value)}`);
   if (errors.length) throw new Error(`browser errors: ${errors.join('; ')}`);
-  console.log('Browser smoke passed 12 responsive route renders, custom 404, dark mode, reduced motion, print, and forced colors with no page, console, or network errors.');
+  console.log('Browser smoke passed 16 responsive route renders, custom 404, dark mode, reduced motion, print, and forced colors with no page, console, or network errors.');
 } finally {
   socket?.close(); chrome.kill('SIGTERM'); server.close();
 }
