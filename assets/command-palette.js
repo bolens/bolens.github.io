@@ -140,6 +140,7 @@
         pickerUi.close();
         return;
       }
+      if (isEditing) return;
       if (keyCode === 'KeyK' && (altShortcut || fallbackShortcut)) {
         event.preventDefault();
         if (dialog.open) dialog.close();
@@ -156,7 +157,6 @@
         openCommands('shortcut');
         return;
       }
-      if (isEditing) return;
       if (!altShortcut) return;
       const shortcuts = {
         KeyH: () => { location.href = '/'; },

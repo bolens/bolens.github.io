@@ -55,5 +55,12 @@ if (routeLinks.length && sections.length) {
       setActiveSection(location.hash.slice(1));
     }
   });
-  requestAnimationFrame(updateFromScroll);
+  if (location.hash) {
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      document.getElementById(initialId)?.scrollIntoView();
+      setActiveSection(initialId);
+    }));
+  } else {
+    requestAnimationFrame(updateFromScroll);
+  }
 }
