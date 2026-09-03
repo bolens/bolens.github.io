@@ -26,3 +26,11 @@ test('celestial and weather geometry is reusable', () => {
   assert.match(css, /data-weather="cloudy"/);
   assert.match(css, /data-weather="rainy"/);
 });
+
+test('day and night keep one active scene composition', () => {
+  assert.match(html, /<use class="scene-orb sky-orb"/);
+  assert.match(css, /\.day-scene \{ display:none!important; \}/);
+  assert.match(css, /data-theme="day"\] \.scene-orb/);
+  assert.doesNotMatch(css, /data-theme="day"\][^{]+\.camper[^}]+display:none/);
+  assert.doesNotMatch(css, /data-theme="day"\][^{]+\.campfire[^}]+display:none/);
+});
