@@ -30,6 +30,48 @@ svg { display: block; max-width: 100%; }
 @keyframes skeleton-trace { to { background-position:360% 0,0 0,0 0; } }
 .trail-glyph,.trail-arrow svg,.principle-glyph,.command-search-glyph,.summary-glyph,.overlay-heading-glyph,.overlay-close svg { --glyph-primary:currentColor; --glyph-accent:var(--copper); --glyph-secondary:currentColor; --glyph-warm:var(--copper); --glyph-cool:var(--copper); fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; }
 .button .trail-arrow svg,.nav-cta .trail-arrow svg { --glyph-accent:currentColor; --glyph-secondary:currentColor; --glyph-warm:currentColor; --glyph-cool:currentColor; }
+svg:has(>use[href*="#glyph-"])>use { transform-box:view-box; transform-origin:center; }
+svg:has(>use[href$="#glyph-trailhead"]) { --glyph-motion:glyph-sign-flip; }
+svg:has(>use[href$="#glyph-compass"]) { --glyph-motion:glyph-compass-spin; }
+svg:has(>use[href$="#glyph-map"]) { --glyph-motion:glyph-map-unfold; }
+svg:has(>use[href$="#glyph-cairn"]) { --glyph-motion:glyph-cairn-balance; }
+svg:has(>use[href$="#glyph-switchback"]) { --glyph-motion:glyph-switchback-trace; }
+svg:has(>use[href$="#glyph-shelter"]) { --glyph-motion:glyph-shelter-pop; }
+svg:has(>use[href$="#glyph-lantern"]) { --glyph-motion:glyph-lantern-swing; }
+svg:has(>use[href$="#glyph-binoculars"]) { --glyph-motion:glyph-binoculars-peek; }
+svg:has(>use[href$="#glyph-fire"]) { --glyph-motion:glyph-fire-flicker; }
+svg:has(>use[href$="#glyph-pine"]) { --glyph-motion:glyph-pine-sway; }
+svg:has(>use[href$="#glyph-summit"]) { --glyph-motion:glyph-summit-rise; }
+svg:has(>use[href$="#glyph-boot"]) { --glyph-motion:glyph-boot-step; }
+svg:has(>use[href$="#glyph-stars"]) { --glyph-motion:glyph-stars-twinkle; }
+svg:has(>use[href*="#glyph-arrow-"]) { --glyph-motion:glyph-arrow-dash; }
+svg:has(>use[href$="#glyph-waypoint"]) { --glyph-motion:glyph-waypoint-hop; }
+svg:has(>use[href$="#glyph-search"]) { --glyph-motion:glyph-search-look; }
+svg:has(>use[href$="#glyph-close"]) { --glyph-motion:glyph-close-snap; }
+svg:has(>use[href$="#glyph-command"]) { --glyph-motion:glyph-command-prompt; }
+svg:has(>use[href$="#glyph-keyboard"]) { --glyph-motion:glyph-keyboard-tap; }
+svg:has(>use[href$="#glyph-palette"]) { --glyph-motion:glyph-palette-mix; }
+:is(.eyebrow:hover>.trail-glyph,.principles li:hover>.principle-glyph,a:hover .trail-arrow svg,summary:hover>.summary-glyph,.overlay-heading:hover>.overlay-heading-glyph,.overlay-close:hover>svg,.command-search:hover>.command-search-glyph,.eyebrow:focus-within>.trail-glyph,.principles li:focus-within>.principle-glyph,a:focus-visible .trail-arrow svg,summary:focus-visible>.summary-glyph,.overlay-heading:focus-within>.overlay-heading-glyph,.overlay-close:focus-visible>svg,.command-search:focus-within>.command-search-glyph)>use { animation:var(--glyph-motion) 680ms var(--ease-pop); }
+@keyframes glyph-sign-flip { 45% { transform:perspective(32px) rotateY(90deg) scale(.9); } 55% { transform:perspective(32px) rotateY(-90deg) scale(.9); } }
+@keyframes glyph-compass-spin { 70% { transform:rotate(380deg); } 86% { transform:rotate(354deg); } }
+@keyframes glyph-map-unfold { 35% { transform:scaleX(.68) skewY(-5deg); } 72% { transform:scaleX(1.06) skewY(2deg); } }
+@keyframes glyph-cairn-balance { 28% { transform:rotate(-7deg) translateY(-1px); } 58% { transform:rotate(5deg); } 82% { transform:rotate(-2deg); } }
+@keyframes glyph-switchback-trace { 28% { transform:translateX(3px); } 55% { transform:translateX(-2px); } 78% { transform:translateX(1px); } }
+@keyframes glyph-shelter-pop { 42% { transform:translateY(-2px) scale(1.08,.92); } 68% { transform:translateY(1px) scale(.97,1.04); } }
+@keyframes glyph-lantern-swing { 25% { transform:rotate(9deg); } 55% { transform:rotate(-7deg); } 78% { transform:rotate(3deg); } }
+@keyframes glyph-binoculars-peek { 30% { transform:translateY(-2px) scale(1.06); } 58% { transform:translateX(1.5px); } 78% { transform:translateX(-1px); } }
+@keyframes glyph-fire-flicker { 22% { transform:translateY(-1px) scale(.96,1.12) rotate(-2deg); } 48% { transform:scale(1.06,.94) rotate(2deg); } 70% { transform:translateY(-1px) scale(.98,1.08) rotate(-1deg); } }
+@keyframes glyph-pine-sway { 28% { transform:skewX(-5deg) rotate(-2deg); } 58% { transform:skewX(4deg) rotate(2deg); } 80% { transform:skewX(-2deg); } }
+@keyframes glyph-summit-rise { 38% { transform:translateY(3px) scale(.94); } 70% { transform:translateY(-2px) scale(1.05); } }
+@keyframes glyph-boot-step { 30% { transform:translate(2px,-2px) rotate(-8deg); } 62% { transform:translate(-1px,0) rotate(3deg); } }
+@keyframes glyph-stars-twinkle { 30% { transform:rotate(-8deg) scale(.82); opacity:.55; } 62% { transform:rotate(7deg) scale(1.16); opacity:1; } }
+@keyframes glyph-arrow-dash { 30% { transform:translateX(-2px); } 62% { transform:translateX(3px); } 82% { transform:translateX(1px); } }
+@keyframes glyph-waypoint-hop { 38% { transform:translateY(-3px) scale(.92,1.08); } 68% { transform:translateY(1px) scale(1.06,.94); } }
+@keyframes glyph-search-look { 30% { transform:translate(-1px,-1px) rotate(-9deg); } 62% { transform:translate(1px,1px) rotate(7deg); } }
+@keyframes glyph-close-snap { 38% { transform:rotate(96deg) scale(.82); } 68% { transform:rotate(84deg) scale(1.1); } }
+@keyframes glyph-command-prompt { 28% { transform:translateX(-2px); opacity:.62; } 56% { transform:translateX(2px); opacity:1; } 78% { transform:translateX(1px); } }
+@keyframes glyph-keyboard-tap { 28% { transform:translateY(1.5px) scale(.98,.9); } 55% { transform:translateY(-1px) scale(1.03); } 78% { transform:translateY(.5px); } }
+@keyframes glyph-palette-mix { 32% { transform:rotate(-12deg) scale(.96); } 66% { transform:rotate(15deg) scale(1.06); } 84% { transform:rotate(-4deg); } }
 .palette-picker { position: fixed; z-index: 30; right: max(1rem,calc((100vw - 1180px)/2)); bottom: 1rem; color: var(--ink); font: 700 .72rem/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
 .palette-picker[hidden] { display: none; }
 .palette-picker summary { display: flex; min-height:var(--control-height); align-items: center; gap: .55rem; padding: .7rem .85rem; border: 1px solid var(--line); border-radius: var(--control-radius); background: color-mix(in srgb,var(--snow) 92%,transparent); box-shadow:var(--control-shadow); cursor: pointer; list-style: none; backdrop-filter: blur(10px); transition:translate var(--motion-medium) var(--ease-route),background var(--motion-fast),border-color var(--motion-fast),box-shadow var(--motion-fast); }
