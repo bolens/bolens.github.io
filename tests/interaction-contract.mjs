@@ -1,8 +1,10 @@
+import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
+const captureEvidence = process.argv.includes('--capture-evidence');
 const server = await startSiteServer(root);
 let browser;
 const pause = (duration = 50) => new Promise((done) => setTimeout(done, duration));
@@ -39,6 +41,13 @@ try {
   if (!shortcutOverlay.result.value.open || shortcutOverlay.result.value.commandsOpen || shortcutOverlay.result.value.rows < 8 || shortcutOverlay.result.value.title !== 'Keyboard shortcuts' || !shortcutOverlay.result.value.overlay) throw new Error(`shortcut overlay failed: ${JSON.stringify(shortcutOverlay.result.value)}`);
   await key(send, 'Escape', 'Escape');
   await waitFor(send, `!document.querySelector('.shortcut-overlay').open&&!portfolioOverlay.active`, 'shortcut overlay close');
+
+  const overlayChrome = await send('Runtime.evaluate', { expression: `(()=>{const dialogs=[...document.querySelectorAll('.command-palette,.shortcut-overlay')];const iconButtons=[...document.querySelectorAll('.overlay-close')];const palette=document.querySelector('.palette-picker');return {dialogs:dialogs.length,headers:dialogs.filter((dialog)=>dialog.querySelector(':scope>.overlay-header')).length,headingGlyphs:dialogs.filter((dialog)=>dialog.querySelector('.overlay-heading-glyph[aria-hidden="true"]')).length,iconButtons:iconButtons.length,named:iconButtons.every((button)=>button.getAttribute('aria-label')&&button.dataset.tooltip===button.getAttribute('aria-label')),decorative:iconButtons.every((button)=>button.querySelector('svg[aria-hidden="true"][focusable="false"]')),paletteHeader:!!palette.querySelector('.palette-panel-heading .overlay-heading-glyph[aria-hidden="true"]'),paletteClose:!!palette.querySelector('.overlay-close[aria-label="Close color and appearance controls"]')}})()`, returnByValue: true });
+  if (JSON.stringify(overlayChrome.result.value) !== JSON.stringify({ dialogs: 2, headers: 2, headingGlyphs: 2, iconButtons: 3, named: true, decorative: true, paletteHeader: true, paletteClose: true })) throw new Error(`overlay chrome semantics failed: ${JSON.stringify(overlayChrome.result.value)}`);
+  await send('Runtime.evaluate', { expression: `(()=>{const shortcuts=document.querySelector('.shortcut-overlay');shortcuts.showModal();shortcuts.querySelector('.overlay-close').focus()})()` });
+  await pause(250);
+  const tooltipState = await send('Runtime.evaluate', { expression: `(()=>{const close=document.querySelector('.shortcut-overlay .overlay-close');const tooltip=getComputedStyle(close,'::after');const state={opacity:tooltip.opacity,content:tooltip.content,focused:document.activeElement===close};close.closest('dialog').close();return state})()`, returnByValue: true });
+  if (tooltipState.result.value.opacity !== '1' || !tooltipState.result.value.content.includes('Close keyboard shortcuts') || !tooltipState.result.value.focused) throw new Error(`keyboard tooltip failed: ${JSON.stringify(tooltipState.result.value)}`);
 
   await send('Runtime.evaluate', { expression: `(()=>{const button=document.createElement('button');button.id='command-return';document.body.append(button);button.focus()})()` });
   await key(send, '/', 'Slash');
@@ -101,6 +110,20 @@ try {
   const wrappedFirst = await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette [aria-selected="true"] b').textContent`, returnByValue: true });
   if (wrappedLast.result.value !== 'Reset all site preferences' || wrappedFirst.result.value !== 'Toggle reduced motion') throw new Error(`command keyboard wrapping failed: ${wrappedLast.result.value} -> ${wrappedFirst.result.value}`);
   await key(send, 'Escape', 'Escape');
+
+  if (captureEvidence) {
+    for (const [width, height, name] of [[1440, 1000, 'desktop'], [390, 844, 'mobile']]) {
+      await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
+      await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette').showModal();document.querySelector('.command-palette input').focus()` });
+      const commands = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+      writeFileSync(`/tmp/bolens-overlay-commands-${name}.png`, Buffer.from(commands.data, 'base64'));
+      await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette').close();portfolioAppearancePicker.open()` });
+      const appearanceCapture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+      writeFileSync(`/tmp/bolens-overlay-appearance-${name}.png`, Buffer.from(appearanceCapture.data, 'base64'));
+      await send('Runtime.evaluate', { expression: `portfolioAppearancePicker.close()` });
+    }
+    await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
+  }
 
   await send('Runtime.evaluate', { expression: `portfolioAppearancePicker.open()` });
   await key(send, 'k', 'KeyK', 1);
