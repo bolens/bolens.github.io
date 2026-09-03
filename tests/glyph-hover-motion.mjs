@@ -80,7 +80,7 @@ const internalMotions = {
   clock: ['--glyph-clock-motion', 'glyph-clock-minute-sweep'],
   globe: ['--glyph-globe-motion', 'glyph-globe-route-draw'],
   microphone: ['--glyph-microphone-motion', 'glyph-microphone-level-a-rise'],
-  key: ['--glyph-key-motion', 'glyph-key-pin-set'],
+  key: ['--glyph-key-motion', 'glyph-key-turn-lock'],
   bell: ['--glyph-bell-motion', 'glyph-bell-clapper-swing'],
   'hard-drive': ['--glyph-hard-drive-motion', 'glyph-hard-drive-arm-seek'],
   owl: ['--glyph-owl-motion', 'glyph-owl-eye-a-blink'],
@@ -90,7 +90,7 @@ const internalMotions = {
   marshmallow: ['--glyph-marshmallow-motion', 'glyph-marshmallow-toast-draw'],
   'paw-print': ['--glyph-paw-print-motion', 'glyph-paw-pad-land'],
   pinecone: ['--glyph-pinecone-motion', 'glyph-pinecone-scale-a-open'],
-  snowshoe: ['--glyph-snowshoe-motion', 'glyph-snowshoe-step'],
+  snowshoe: ['--glyph-snowshoe-motion', 'glyph-snowshoe-left-step'],
 };
 const secondaryMotions = {
   cairn: [['--glyph-cairn-middle-motion', 'glyph-cairn-middle-stack'], ['--glyph-cairn-upper-motion', 'glyph-cairn-upper-stack']],
@@ -123,7 +123,7 @@ const secondaryMotions = {
   mushroom: [['--glyph-mushroom-spore-b-motion', 'glyph-mushroom-spore-b-float']],
   'paw-print': [['--glyph-paw-toe-a-motion', 'glyph-paw-toe-a-land'], ['--glyph-paw-toe-b-motion', 'glyph-paw-toe-b-land'], ['--glyph-paw-toe-c-motion', 'glyph-paw-toe-c-land'], ['--glyph-paw-toe-d-motion', 'glyph-paw-toe-d-land']],
   pinecone: [['--glyph-pinecone-scale-b-motion', 'glyph-pinecone-scale-b-open'], ['--glyph-pinecone-scale-c-motion', 'glyph-pinecone-scale-c-open']],
-  snowshoe: [['--glyph-snowshoe-binding-motion', 'glyph-snowshoe-binding-settle']],
+  snowshoe: [['--glyph-snowshoe-right-motion', 'glyph-snowshoe-right-step']],
 };
 const allInternalMotions = Object.values(internalMotions).map(([property, name, duration = 680]) => [property, name, duration])
   .concat(Object.values(secondaryMotions).flat().map(([property, name]) => [property, name, 680]));
@@ -177,13 +177,13 @@ if (!/glyph-sort-frame[\s\S]*glyph-sort-bar-a[\s\S]*glyph-sort-bar-c/.test(sprit
 if (!/glyph-clock-face[\s\S]*glyph-clock-hour[\s\S]*glyph-clock-minute/.test(sprite)) throw new Error('clock hands must move independently from its face');
 if (!/glyph-globe-frame[\s\S]*glyph-globe-route" pathLength="1"[\s\S]*glyph-globe-traveler[\s\S]*glyph-globe-destination/.test(sprite)) throw new Error('globe route, traveler, and destination must animate independently inside its fixed frame');
 if (!/glyph-microphone-body[\s\S]*glyph-microphone-level-a[\s\S]*glyph-microphone-level-c/.test(sprite)) throw new Error('microphone levels must animate independently from its body');
-if (!/glyph-key-body[\s\S]*glyph-key-pin/.test(sprite)) throw new Error('key pin must set independently from its body');
+if (!/glyph-key-turn[\s\S]*glyph-key-bow[\s\S]*glyph-keyhole[\s\S]*glyph-key-shaft/.test(sprite)) throw new Error('key must have a conventional bow, keyhole, shaft, and stepped teeth');
 if (!/glyph-bell-body[\s\S]*glyph-bell-clapper/.test(sprite)) throw new Error('bell clapper must swing independently inside its body');
 if (!/glyph-hard-drive-body[\s\S]*glyph-hard-drive-arm[\s\S]*glyph-hard-drive-light/.test(sprite)) throw new Error('hard-drive arm and light must animate independently from its housing');
 if (!/glyph-river-banks" d="M10 3[^"]*M14 3[^"]*8 18"/.test(sprite)) throw new Error('river banks must form a winding channel that widens toward the foreground');
 if (!/glyph-carabiner-body" d="M16 4C10 1 5 5 5 11v3[^"]*"[\s\S]*glyph-carabiner-spine[\s\S]*glyph-carabiner-gate[\s\S]*glyph-carabiner-hinge/.test(sprite)) throw new Error('carabiner must use an asymmetric D-profile, fixed load-bearing spine, hinged gate, and exact closure');
 if (!/glyph-trail-camera-flash" d="M19 1v4m-2-2h4m-3\.5-1\.5 3 3m0-3-3 3"/.test(sprite)) throw new Error('trail-camera flash must use four radial rays');
-if (!/glyph-key-pin[\s\S]*glyph-key-spark/.test(sprite)) throw new Error('key unlock glint must animate independently from its body');
+if (!/glyph-key-turn[\s\S]*glyph-key-spark/.test(sprite) || !/transform-origin:20\.5px 12px/.test(sprite)) throw new Error('key must turn around its lock-end while its unlock glint animates independently');
 if (!/glyph-bell-clapper[\s\S]*glyph-bell-sound-a[\s\S]*glyph-bell-sound-b/.test(sprite)) throw new Error('bell sound ticks must follow its swinging clapper');
 if (!/glyph-owl-body[\s\S]*glyph-owl-eye-a[\s\S]*glyph-owl-eye-b/.test(sprite)) throw new Error('owl eyes must blink independently from its body');
 if (!/glyph-trout-body[\s\S]*glyph-trout-tail[\s\S]*glyph-trout-bubble/.test(sprite)) throw new Error('trout tail and bubble must animate independently from its body');
@@ -192,7 +192,7 @@ if (!/glyph-mushroom-body[\s\S]*glyph-mushroom-spore-a[\s\S]*glyph-mushroom-spor
 if (!/glyph-marshmallow-stick" d="M3 21 13\.3 10\.7"[\s\S]*glyph-marshmallow-body" transform="rotate\(38 16 7\)"[\s\S]*<rect class="glyph-primary" x="11" y="3\.5" width="10" height="7" rx="2\.2"[\s\S]*glyph-marshmallow-toast" pathLength="1"/.test(sprite) || /glyph-marshmallow-spark/.test(sprite)) throw new Error('marshmallow must be a soft rectangular roast on a clearly terminated skewer without a flame-like spark');
 if (!/glyph-paw-pad[\s\S]*glyph-paw-toe-a[\s\S]*glyph-paw-toe-d/.test(sprite)) throw new Error('paw pad and toes must land independently');
 if (!/glyph-pinecone-body[\s\S]*glyph-pinecone-scale-a[\s\S]*glyph-pinecone-scale-c/.test(sprite)) throw new Error('pinecone scales must open independently from its body');
-if (!/glyph-snowshoe-angle" transform="rotate\(-14 12 12\)"><g class="glyph-snowshoe-step">[\s\S]*glyph-snowshoe-frame[\s\S]*glyph-snowshoe-decking[\s\S]*glyph-snowshoe-binding/.test(sprite)) throw new Error('snowshoe must keep its resting angle around a moving tapered frame with open decking and a distinct foot binding');
+if (!/glyph-snowshoe-left-angle" transform="translate\(-1 1\) rotate\(-10 8 12\)"><g class="glyph-snowshoe-left">[\s\S]*glyph-snowshoe-left-frame[\s\S]*glyph-snowshoe-left-decking[\s\S]*glyph-snowshoe-left-binding[\s\S]*glyph-snowshoe-right-angle" transform="translate\(1 -1\) rotate\(-10 16 12\)"><g class="glyph-snowshoe-right">[\s\S]*glyph-snowshoe-right-frame[\s\S]*glyph-snowshoe-right-decking[\s\S]*glyph-snowshoe-right-binding/.test(sprite)) throw new Error('snowshoe glyph must pair offset parallel tapered frames, open decking, and distinct foot bindings at stable resting angles');
 for (const glyph of ['shield', 'terminal', 'network', 'wrench']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const glyph of ['cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const [, motion] of allInternalMotions) if (!sprite.includes(`@keyframes ${motion}`)) throw new Error(`${motion} must be defined inside the external sprite`);
