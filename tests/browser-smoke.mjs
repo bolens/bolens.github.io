@@ -243,7 +243,13 @@ try {
   }
   if (matrixValue.overlap !== 0 || matrixValue.panelRight > matrixValue.viewport) throw new Error(`palette layout failed: ${JSON.stringify(matrixValue)}`);
   await send('Page.navigate', { url: `${origin}/` });
-  await new Promise((done) => setTimeout(done, 200));
+  let homeReady = false;
+  for (let attempt = 0; attempt < 100; attempt++) {
+    const ready = await send('Runtime.evaluate', { expression: `document.readyState==='complete'&&!!document.querySelector('.skip-link')`, returnByValue: true });
+    if (ready.result.value) { homeReady = true; break; }
+    await new Promise((done) => setTimeout(done, 50));
+  }
+  if (!homeReady) throw new Error('home page did not become ready for skip-link check');
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
   const skipLink = await send('Runtime.evaluate', { expression: `(()=>{const link=document.querySelector('.skip-link');const style=getComputedStyle(link);const box=link.getBoundingClientRect();return {focused:document.activeElement===link,matchesFocus:link.matches(':focus-visible'),transform:style.transform,background:style.backgroundColor,color:style.color,border:style.borderColor,outline:style.outlineStyle,outlineWidth:style.outlineWidth,width:box.width,height:box.height,top:box.top}})()`, returnByValue: true });
