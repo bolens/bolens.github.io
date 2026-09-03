@@ -143,10 +143,12 @@
       const label = command.label.toLowerCase();
       if (label.includes(term)) return score + label.indexOf(term);
       const labelPositions = fuzzyPositions(label, term);
-      if (labelPositions) return score + 20 + labelPositions.at(-1) - labelPositions[0];
+      const labelSpan = labelPositions ? labelPositions.at(-1) - labelPositions[0] + 1 : Infinity;
+      if (term.length >= 3 && labelSpan <= term.length * 2) return score + 20 + labelSpan;
       if (command.searchText.includes(term)) return score + 100 + command.searchText.indexOf(term);
       const searchPositions = fuzzyPositions(command.searchText, term);
-      return searchPositions ? score + 200 + searchPositions.at(-1) - searchPositions[0] : Infinity;
+      const searchSpan = searchPositions ? searchPositions.at(-1) - searchPositions[0] + 1 : Infinity;
+      return term.length >= 3 && searchSpan <= term.length * 2 ? score + 200 + searchSpan : Infinity;
     }, 0);
     const highlight = (label, query) => {
       const positions = fuzzyPositions(label, query);

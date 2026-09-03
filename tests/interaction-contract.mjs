@@ -88,7 +88,7 @@ try {
   const wrappedLast = await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette [aria-selected="true"] b').textContent`, returnByValue: true });
   await key(send, 'ArrowDown', 'ArrowDown');
   const wrappedFirst = await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette [aria-selected="true"] b').textContent`, returnByValue: true });
-  if (wrappedLast.result.value !== 'Reset color settings' || wrappedFirst.result.value !== 'Home') throw new Error(`command keyboard wrapping failed: ${wrappedLast.result.value} -> ${wrappedFirst.result.value}`);
+  if (wrappedLast.result.value !== 'Reset all site preferences' || wrappedFirst.result.value !== 'Home') throw new Error(`command keyboard wrapping failed: ${wrappedLast.result.value} -> ${wrappedFirst.result.value}`);
   await key(send, 'Escape', 'Escape');
 
   await send('Runtime.evaluate', { expression: `portfolioAppearancePicker.open()` });
