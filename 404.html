@@ -32,7 +32,7 @@
       <canvas class="camp-atmosphere" aria-hidden="true"></canvas>
       <svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMax slice" role="img" aria-labelledby="camp-title camp-desc">
         <title id="camp-title">A cryptid campfire beneath the northern lights</title>
-        <desc id="camp-desc">Bigfoot, a gray alien, Mothman, and Dogman roast marshmallows around a fire whose smoke forms 404. A couple and their small greyhound peek from a tent beneath a full moon.</desc>
+        <desc id="camp-desc">At night, Bigfoot, a gray alien, Mothman, and Dogman roast marshmallows around a fire whose smoke forms 404. In daylight, the cryptids explore the campsite while two campers and their small windhound enjoy the mountain woods.</desc>
         <defs>
           <linearGradient id="night-sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#020914"/><stop offset=".28" stop-color="#071927"/><stop offset=".62" stop-color="#12313e"/><stop offset="1" stop-color="#28504b"/></linearGradient>
           <radialGradient id="sky-vignette" cx="52%" cy="26%" r="76%"><stop offset=".2" stop-color="#184050" stop-opacity=".2"/><stop offset=".7" stop-color="#061521" stop-opacity=".08"/><stop offset="1" stop-color="#01070e" stop-opacity=".62"/></radialGradient>
@@ -61,6 +61,10 @@
           <linearGradient id="moon-rock" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#718384"/><stop offset=".42" stop-color="#465a59"/><stop offset="1" stop-color="#1b302f"/></linearGradient>
           <linearGradient id="fire-rock" x1="0" y1="0" x2="1" y2=".65"><stop stop-color="#293b39"/><stop offset=".58" stop-color="#46504a"/><stop offset="1" stop-color="#a86542"/></linearGradient>
           <linearGradient id="marshmallow-toast" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff9e9"/><stop offset=".55" stop-color="#f2dfbe"/><stop offset="1" stop-color="#c9874f"/></linearGradient>
+          <linearGradient id="day-sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--lost-day-sky-top)"/><stop offset=".62" stop-color="var(--lost-day-sky-mid)"/><stop offset="1" stop-color="var(--lost-day-haze)"/></linearGradient>
+          <linearGradient id="day-mountain" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--lost-day-mountain-lit)"/><stop offset="1" stop-color="var(--lost-day-mountain-shadow)"/></linearGradient>
+          <linearGradient id="day-ground" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--lost-day-ground-lit)"/><stop offset="1" stop-color="var(--lost-day-ground-shadow)"/></linearGradient>
+          <linearGradient id="day-sunbeam" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--lost-day-sun)" stop-opacity=".42"/><stop offset="1" stop-color="var(--lost-day-sun)" stop-opacity="0"/></linearGradient>
           <pattern id="bark-grain" width="28" height="18" patternUnits="userSpaceOnUse" patternTransform="rotate(-4)"><rect width="28" height="18" fill="#4a2d20"/><path d="M-3 4Q7 0 17 4T33 4M2 13q8-4 17 0t15 0" fill="none" stroke="#79513a" stroke-width="3"/><circle cx="8" cy="8" r="2.5" fill="none" stroke="#2b1c18" stroke-width="1.5"/></pattern>
           <filter id="camp-soft"><feGaussianBlur stdDeviation="10"/></filter>
           <filter id="sky-haze"><feGaussianBlur stdDeviation="4"/></filter>
@@ -375,6 +379,7 @@
               <path d="M886 571q2-29 24-27 24 2 23 31-8-12-17-16-14 12-30 12Z" fill="#c97a48"/>
               <g fill="none" stroke="#11191d" stroke-width="3"><rect x="894" y="567" width="13" height="10" rx="1"/><rect x="911" y="567" width="13" height="10" rx="1"/><path d="M907 571h4"/></g>
               <circle cx="901" cy="572" r="1.8" fill="#17272a"/><circle cx="917" cy="572" r="1.8" fill="#17272a"/>
+              <path d="M909 580c-3-4-9-4-12 1 3 5 8 6 12 2 4 4 10 3 13-2-4-5-10-5-13-1Z" fill="#744433"/>
               <path d="M899 584q10 13 20 0v9q-11 8-20 0Z" fill="#a45f3c"/><path d="M903 586q7 5 13-1" fill="none" stroke="#704139" stroke-width="2"/>
               <path d="M905 589q4 3 8 0l3 8q-7 7-14 0Z" fill="#7b4938"/><path d="m905 594 2 5m3-6v7m3-6-1 5" stroke="#4f3029" stroke-width="1.2" stroke-linecap="round"/>
             </g>
@@ -578,7 +583,10 @@
             <g fill="none" stroke="#b66a3e" stroke-width="2" opacity=".65"><path d="m548 649 12 5m19-6 13 5m22-5 11 5m-70 8 8 4m18-19 7 4m29-13 8 3m-64-7 8 7m18 3 9 7m17 3 8 7"/></g>
             <g fill="#241817" stroke="#1a1211" stroke-width="2"><ellipse cx="523" cy="651" rx="6" ry="9"/><ellipse cx="650" cy="679" rx="7" ry="9" transform="rotate(-63 650 679)"/><ellipse cx="538" cy="625" rx="7" ry="9" transform="rotate(-63 538 625)"/></g>
           </g>
+          <g class="charred-log-detail" fill="none" stroke-linecap="round"><path d="M541 645q19-9 37 0t38-1 31 2M549 666q18-7 34 1m25-25q15 5 27 17" stroke="#1c1715" stroke-width="5" opacity=".82"/><path d="m553 649 7-7 6 8 8-9 7 8m34 7 7-8 6 9m-64 12 7-6 7 8" stroke="#f07b3f" stroke-width="2.5" opacity=".68"/></g>
+          <g class="fire-ash" fill="#b5aaa0" opacity=".42"><ellipse cx="548" cy="687" rx="13" ry="3"/><ellipse cx="584" cy="693" rx="9" ry="2.4"/><ellipse cx="631" cy="690" rx="12" ry="2.5"/><circle cx="567" cy="682" r="2"/><circle cx="616" cy="687" r="1.7"/></g>
           <path class="flame flame-outer" d="M592 646c-45-34-15-68 1-84 5 22 19 18 15-17 50 39 46 85 8 105Z" fill="#ef6a3f"/>
+          <path class="flame flame-veil" d="M581 645q-20-30 5-56-2 24 15 28 13-24 10-51 32 36 23 72-20 17-53 7Z" fill="#ff9b45" opacity=".34"/>
           <path class="flame flame-side flame-side-left" d="M588 647q-35-18-17-48 4 18 17 20 10 10 0 28Z" fill="#f28a43"/>
           <path class="flame flame-side flame-side-right" d="M626 649q32-24 11-51-1 18-14 24-8 12 3 27Z" fill="#f08a3f"/>
           <path class="flame flame-inner" d="M599 647c-20-20 0-39 8-53 20 20 25 42 8 57Z" fill="#ffd05c"/>
@@ -604,11 +612,46 @@
             <g class="smoke-character-entry"><text class="smoke-number smoke-number-main" x="795" y="400">4</text></g>
           </g>
           <g class="smoke-wisps" fill="none" stroke="#d4dedb" stroke-linecap="round"><path d="M585 394q-27-19-4-39t-5-39"/><path d="M698 390q25-18 4-38t8-43"/><path d="M851 391q-24-17-3-36t-5-37"/></g>
+          <g class="smoke-fine-wisps" fill="none" stroke-linecap="round"><path d="M616 389q-17-20 2-38t-3-36q-13-17 3-34"/><path d="M731 396q-15-16 4-34t-2-39q-12-15 5-31"/><path d="M822 391q18-18-1-35t3-37q11-15-3-30"/></g>
           <g class="smoke-puffs" fill="#d4dedb"><circle cx="603" cy="277" r="7"/><circle cx="675" cy="329" r="5"/><circle cx="758" cy="267" r="6"/><circle cx="842" cy="303" r="5"/><circle cx="893" cy="352" r="7"/></g>
         </g>
         <path class="smoke-thread" d="M612 555c-24-29 23-38-4-69s18-42 0-78" fill="none" stroke="#d4dedb" stroke-width="8" stroke-linecap="round" opacity=".58"/>
+        <rect class="palette-wash" width="1200" height="760" pointer-events="none"/>
+
+        <g class="day-scene">
+          <rect width="1200" height="760" fill="url(#day-sky)"/>
+          <g class="day-sunbeams" fill="url(#day-sunbeam)"><path d="M962 116 690 530h165l135-403Z"/><path d="M1000 126 866 546h116l45-414Z" opacity=".68"/><path d="M936 103 540 454h143l281-333Z" opacity=".52"/></g>
+          <circle cx="982" cy="112" r="92" fill="var(--lost-day-sun)" opacity=".13"/>
+          <g class="day-sun"><circle cx="982" cy="112" r="48" fill="var(--lost-day-sun)"/><circle cx="969" cy="98" r="8" fill="#fff7c9" opacity=".34"/><path d="M982 43v-22m0 182v-22m69-69h22m-182 0h22m118-49 16-16M917 177l16-16m98 16 16 16M917 47l16 16" stroke="var(--lost-day-sun)" stroke-width="6" stroke-linecap="round"/></g>
+          <g class="day-clouds" fill="#fff" opacity=".68"><path d="M20 182q20-31 48-10 19-31 48-5 31-7 39 25H17Z"/><path d="M1010 244q18-27 43-9 17-27 42-4 27-6 35 22h-123Z"/></g>
+          <g class="day-cloud-404" text-anchor="middle"><text x="730" y="145">404</text><path d="M616 158q113 18 228-2" fill="none" stroke="#fff" stroke-width="10" stroke-linecap="round" opacity=".22"/></g>
+          <path d="M0 436 108 316l87 65 119-171 137 158 116-112 108 121 131-187 146 168 98-96 150 169v107H0Z" fill="url(#day-mountain)"/>
+          <g fill="var(--lost-day-snow)" opacity=".82"><path d="m108 316 29 21 15-12 43 56-87-65Zm206-106 38 44 25-18 74 132-137-158Zm253 46 34 38 22-16 52 99-108-121Zm239-66 45 52 30-20 71 136-146-168Zm244 72 37 42 24-17 89 144-150-169Z"/></g>
+          <path d="M0 428q137-55 271-4 122 47 246 4 128-44 257 5 137 51 426-7v334H0Z" fill="url(#day-ground)"/>
+          <path d="M0 652q126-32 228-107 91-67 193-95" fill="none" stroke="var(--lost-day-river)" stroke-width="62" stroke-linecap="round"/><path d="M0 642q119-28 218-100 91-66 196-99" fill="none" stroke="#d7f2ec" stroke-width="5" opacity=".58" stroke-linecap="round"/>
+          <g class="day-distant-forest" fill="var(--lost-day-pine)"><use href="#distant-pine" x="28" y="330" width="74" height="160"/><use href="#distant-pine" x="104" y="354" width="62" height="134"/><use href="#distant-pine" x="177" y="316" width="82" height="176"/><use href="#distant-pine" x="302" y="339" width="70" height="151"/><use href="#distant-pine" x="510" y="320" width="79" height="170"/><use href="#distant-pine" x="590" y="351" width="62" height="134"/><use href="#distant-pine" x="684" y="315" width="82" height="177"/><use href="#distant-pine" x="1017" y="324" width="78" height="168"/><use href="#distant-pine" x="1100" y="348" width="65" height="140"/></g>
+          <g class="day-bigfoot-tree" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M445 690q16-157 5-347-5-89 16-207" fill="none" stroke="#302318" stroke-width="54"/><path d="M445 690q14-169 5-344-4-92 16-210" fill="none" stroke="var(--lost-day-bark)" stroke-width="43"/><path d="M457 312q-46-52-88-68m88 4q42-63 90-89m-94 229q-55-37-102-39m101-15q47-46 96-54" fill="none" stroke="var(--lost-day-bark)" stroke-width="18"/>
+            <g fill="var(--lost-day-pine)" stroke="var(--lost-day-pine-dark)" stroke-width="3"><path d="M312 276q48-80 101-27 31-81 88-32 53-72 98-6 42 61-25 101-62 37-119 7-63 32-111-1-44 1-32-42Z"/><path d="M325 364q43-67 89-23 34-69 82-23 50-55 88 3 25 54-30 78-57 24-104 0-53 27-93-3-43 2-32-32Z"/></g>
+            <g class="day-bigfoot" transform="translate(13)"><path d="M481 411q40-12 63 22 21 32 5 85l-44 57-34-13 22-63-18-38Z" fill="#72503a"/><path d="M476 401q5-48 46-54 43 8 45 53-7 37-43 48-37-9-48-47Z" fill="#513629"/><path d="M487 393q35-22 68 2l-7 29q-25 18-51 1Z" fill="#8a5c40"/><ellipse cx="509" cy="402" rx="3" ry="2" fill="#17120f"/><ellipse cx="535" cy="402" rx="3" ry="2" fill="#17120f"/><path d="M510 416q13 8 25 0m-21-9h17" fill="none" stroke="#35231c" stroke-width="3"/><path d="M486 455q27 20 57 5m-52 30q24 15 48 2" fill="none" stroke="#b17a51" stroke-width="4" opacity=".55"/></g>
+          </g>
+          <g class="day-moth-tree" stroke-linecap="round" stroke-linejoin="round"><path d="M811 648q13-189 3-415" fill="none" stroke="#3b291d" stroke-width="41"/><path d="M811 648q12-190 3-415" fill="none" stroke="var(--lost-day-bark)" stroke-width="31"/><path d="M814 274q-52-45-98-53m100 7q43-55 91-72m-92 185q-49-33-89-31m90-18q43-40 85-45" fill="none" stroke="var(--lost-day-bark)" stroke-width="13"/><g fill="var(--lost-day-pine)" stroke="var(--lost-day-pine-dark)" stroke-width="3"><path d="M669 232q49-73 97-27 32-75 82-28 48-67 93-5 29 57-31 87-58 28-105 0-54 27-99 0-43 3-37-27Z"/><path d="M690 326q42-60 84-20 31-61 75-21 44-50 79 2 25 47-27 69-49 22-92 0-47 23-84-2-41 2-35-28Z"/></g>
+            <g class="day-mothman" transform="translate(0 -2)"><path d="M776 190q36-50 72 0l-9 65h-55Z" fill="#33283a"/><path d="M782 205q-45-39-74-13 24 16 56 42Zm61 0q43-39 73-13-25 16-57 42Z" fill="#473650"/><ellipse cx="798" cy="201" rx="7" ry="5" fill="#cf3735"/><ellipse cx="826" cy="201" rx="7" ry="5" fill="#cf3735"/><path d="M793 224q19 14 39 0m-47 34 27-17 27 17" fill="none" stroke="#86658c" stroke-width="4"/><path d="M785 259q28 18 56 0" fill="none" stroke="#221a27" stroke-width="9"/></g>
+          </g>
+          <g class="day-ufo" transform="translate(680 235)"><ellipse cx="0" cy="34" rx="91" ry="23" fill="#526b70" stroke="#29444a" stroke-width="4"/><path d="M-55 15Q0-48 55 15Z" fill="#91d2dc" stroke="#426c73" stroke-width="4" opacity=".9"/><g class="day-alien"><ellipse cx="0" cy="-2" rx="22" ry="27" fill="#aabbb6"/><ellipse cx="-8" cy="-4" rx="6" ry="11" fill="#111b1e" transform="rotate(-16 -8 -4)"/><ellipse cx="9" cy="-4" rx="6" ry="11" fill="#111b1e" transform="rotate(16 9 -4)"/><path d="M-4 12q5 3 9 0" fill="none" stroke="#526663" stroke-width="2"/></g><path d="M-88 31q88 34 176 0" fill="none" stroke="#adc3bf" stroke-width="5"/><g fill="var(--lost-accent)"><circle cx="-55" cy="43" r="4"/><circle cx="-20" cy="49" r="4"/><circle cx="20" cy="49" r="4"/><circle cx="55" cy="43" r="4"/></g></g>
+          <g class="day-camp" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M861 655 934 530l99 125Z" fill="var(--lost-day-tent)" stroke="var(--lost-day-tent-edge)" stroke-width="4"/><path d="M934 530 988 654h-107Z" fill="#344f4d" opacity=".76"/><path d="m934 530 54 124m-54-124-53 124" fill="none" stroke="#f5d4b5" stroke-width="3"/>
+            <g class="day-campers"><g transform="translate(850 525)"><circle cx="0" cy="0" r="18" fill="#e5b18a"/><path d="M-17-3q1-24 18-24 18 1 18 25L9-16q-13 8-26 13Z" fill="#b96743"/><path d="M-15 2h12m6 0h12M-3 2h6" fill="none" stroke="#202628" stroke-width="3"/><path d="M-3 13q5 3 10 0m-9 4q5 7 10 0" fill="none" stroke="#724737" stroke-width="2"/><path d="M-17 21q18-11 36 0l8 77h-55Z" fill="#547b72"/><path d="M-14 97-25 132m41-35 21 35M-17 34l-28 34m62-34 27 26" fill="none" stroke="#425e58" stroke-width="12"/></g><g transform="translate(926 527)"><circle cx="0" cy="0" r="18" fill="#d9a27f"/><path d="M-19 2q-1-28 19-29 22 2 20 31L10-15q-17 8-29 17Z" fill="#49302c"/><path d="M-9 3h2m14 0h2M-7 13q7 4 14 0" fill="none" stroke="#51362f" stroke-width="2.5"/><path d="M-18 22q18-11 36 0l9 76h-54Z" fill="#b45f4a"/><path d="M-14 97-24 132m39-35 20 35M-17 35l-26 31m60-31 25 25" fill="none" stroke="#8e493d" stroke-width="12"/><path d="M40 57q18-13 30 2" fill="none" stroke="#d9a27f" stroke-width="8"/></g>
+              <g class="day-windhound" transform="translate(988 628)"><path d="M-12 8q13-36 42-28 25 8 38 31l-13 17h-58Z" fill="#eee9df"/><path d="M42-8q7-31 28-32 20 5 16 34L70 17 52 9Z" fill="#252e31"/><path d="M58-31q-12-18-22-12 0 17 14 25m30-13q12-17 21-10-1 17-15 24" fill="#252e31"/><path d="M63-10q8-5 15 0m-12 10 9 0" fill="none" stroke="#d6d0c7" stroke-width="2"/><ellipse cx="72" cy="4" rx="4" ry="3" fill="#101315"/><path d="M4 26-2 45m48-18 2 18m23-25 10 21" fill="none" stroke="#eee9df" stroke-width="8"/></g></g>
+            <g class="day-log-stack" transform="translate(610 654)"><ellipse cx="0" cy="26" rx="75" ry="18" fill="#23392f" opacity=".35"/><path d="m-54 12 108 0m-43-30 38 52m-92 0 43-52" fill="none" stroke="#3a241b" stroke-width="20"/><path d="m-51 9 102 0m-39-25 35 48m-87 0 40-48" fill="none" stroke="#825237" stroke-width="10"/><g fill="#3f271e" stroke="#b47a50" stroke-width="2"><circle cx="-54" cy="12" r="9"/><circle cx="49" cy="33" r="9"/><circle cx="-40" cy="33" r="9"/></g><g fill="none" stroke-linecap="round"><path d="M-43 5q19 8 38 0t39 2M-25-2q14 5 27-1m9 23q14 6 27 0" stroke="#b7794d" stroke-width="2.5"/><path d="m-58 11 8-5m91 25 9-5m-96 10 8-6" stroke="#2d1d17" stroke-width="3"/><circle cx="-54" cy="12" r="5" stroke="#8e5b3c"/><circle cx="49" cy="33" r="5" stroke="#8e5b3c"/></g></g>
+          </g>
+          <g class="day-dogman-bush" transform="translate(1080 555)"><g fill="var(--lost-day-shrub)" stroke="var(--lost-day-pine-dark)" stroke-width="3"><circle cx="-48" cy="66" r="43"/><circle cx="0" cy="48" r="55"/><circle cx="53" cy="70" r="45"/><circle cx="13" cy="91" r="52"/></g><g class="day-dogman"><path d="m-22 37 7-38 20 24L26-1l8 39q-4 37-28 48-26-11-28-49Z" fill="#55453d"/><path d="M-12 42Q5 26 24 43l-4 25L6 80-10 68Z" fill="#322a27"/><ellipse cx="-4" cy="42" rx="3" ry="2" fill="#c9d8cf"/><ellipse cx="17" cy="42" rx="3" ry="2" fill="#d7a846"/><ellipse cx="6" cy="60" rx="7" ry="5" fill="#111"/></g></g>
+          <g class="day-foreground" fill="none" stroke-linecap="round"><path d="M26 736q8-48 39-87m-22 66-24-19m35 5 29-28m146 57q4-43 29-78m-18 59-21-17m31 4 25-26m761 58q7-47 36-83m-21 64-23-18m34 5 27-27" stroke="var(--lost-day-fern)" stroke-width="5"/><path d="m73 715 28-13m-13 24 31-9m188 10 29-12m-10 24 32-10m628-4 30-13m-12 25 34-11" stroke="#8b7047" stroke-width="3"/></g>
+          <path class="day-guy-mustache" d="M850 535c-3-4-9-4-12 1 3 5 8 6 12 2 4 4 10 3 13-2-4-5-10-5-13-1Z" fill="#744433"/>
+          <rect class="day-palette-wash" width="1200" height="760" pointer-events="none"/>
+        </g>
       </svg>
-      <figcaption>Somewhere off the marked trail · after dark</figcaption>
+      <figcaption><span class="caption-night">Somewhere off the marked trail · after dark</span><span class="caption-day">Somewhere off the marked trail · broad daylight</span></figcaption>
     </figure>
   </main>
 </body>

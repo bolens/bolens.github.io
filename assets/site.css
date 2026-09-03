@@ -453,8 +453,10 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
 :root[data-theme="day"] .caption-night { display:none; }
 :root[data-theme="day"] .camp-atmosphere { display:none; }
 :root[data-theme="day"] .lost-page { --lost-sky:var(--paper);--lost-panel:color-mix(in srgb,var(--snow) 88%,transparent);--lost-copy:var(--ink);--lost-muted:var(--muted);--lost-accent:var(--copper);--lost-line:color-mix(in srgb,var(--line) 72%,transparent); }
+:root[data-theme="day"] .lost-button { border-color:var(--ink);background:var(--ink);color:var(--paper); }
+:root[data-theme="day"] .lost-button:hover { border-color:var(--copper);background:var(--copper);color:var(--paper); }
 .day-palette-wash { fill:var(--lost-night-tint);opacity:.06;mix-blend-mode:soft-light; }
-.day-cloud-404 text { fill:#fff;stroke:color-mix(in srgb,var(--lost-day-sky-top) 38%,#fff);stroke-width:7;paint-order:stroke fill;font:700 148px/1 var(--serif);letter-spacing:8px;opacity:.82; }
+.day-cloud-404 text { fill:#fff;stroke:color-mix(in srgb,var(--lost-day-sky-top) 38%,#fff);stroke-width:6;paint-order:stroke fill;font:700 112px/1 var(--serif);letter-spacing:7px;opacity:.82; }
 .day-sunbeams { transform-box:view-box;transform-origin:982px 112px;animation:day-ray-breathe 14s ease-in-out infinite alternate; }
 .day-sun { transform-box:fill-box;transform-origin:center;animation:day-sun-breathe 9s ease-in-out infinite alternate; }
 .day-ufo { transform-box:view-box;transform-origin:680px 235px;animation:day-ufo-flight 9s ease-in-out infinite alternate; }
@@ -560,6 +562,8 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
   :root:not([data-theme]) .caption-night { display:none; }
   :root:not([data-theme]) .camp-atmosphere { display:none; }
   :root:not([data-theme]) .lost-page { --lost-sky:var(--paper);--lost-panel:color-mix(in srgb,var(--snow) 88%,transparent);--lost-copy:var(--ink);--lost-muted:var(--muted);--lost-accent:var(--copper);--lost-line:color-mix(in srgb,var(--line) 72%,transparent); }
+  :root:not([data-theme]) .lost-button { border-color:var(--ink);background:var(--ink);color:var(--paper); }
+  :root:not([data-theme]) .lost-button:hover { border-color:var(--copper);background:var(--copper);color:var(--paper); }
 }
 @media (max-width: 760px) {
   .lost-copy { top:1rem; left:1rem; width:calc(100vw - 2rem); margin:0; padding:1rem; }
