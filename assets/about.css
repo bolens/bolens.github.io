@@ -8,6 +8,7 @@
 .about-prologue p:first-child { color: var(--ink); font-family: var(--serif); font-size: clamp(1.35rem,2vw,1.75rem); line-height: 1.45; }
 .about-principles { position: relative; }
 .about-principles::before { content: ''; position: absolute; top: 0; bottom: 0; left: 7px; width: 1px; background: var(--line); }
+.about-principles .eyebrow::before { width:1.15rem; height:1.15rem; }
 .about-principles article { position: relative; padding: 2.7rem 0 2.7rem 3rem; border-bottom: 1px solid var(--line); transition:padding var(--motion-medium) var(--ease-route),background var(--motion-fast); }
 .about-principles article:hover { padding-left:3.55rem; background:linear-gradient(90deg,color-mix(in srgb,var(--copper) 7%,transparent),transparent 72%); }
 .about-principles article::before { content: ''; position: absolute; z-index: 1; top: 3rem; left: 0; width: 15px; aspect-ratio: 1; border: 3px solid var(--paper); border-radius: 50%; background: var(--copper); box-shadow: 0 0 0 1px var(--copper); transition:scale var(--motion-medium) var(--ease-pop),box-shadow var(--motion-medium) var(--ease-route); }
