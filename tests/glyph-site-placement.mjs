@@ -1,3 +1,4 @@
+import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
 import { waitFor } from './lib/browser-test.mjs';
@@ -7,12 +8,16 @@ const root = resolve(import.meta.dirname, '..');
 const server = await startSiteServer(root);
 const browser = await startBrowser(() => {});
 const { send } = browser;
+const captureEvidence = process.argv.includes('--capture-evidence');
 
 const pages = [
   ['/', [
     ['#currently .eyebrow', 'clock', '--glyph-clock-motion', 'glyph-clock-minute-sweep'],
     ['#off-the-clock .eyebrow', 'owl', '--glyph-owl-motion', 'glyph-owl-eye-a-blink'],
     ['#contact .eyebrow', 'radio', '--glyph-radio-motion', 'glyph-radio-note-a-float'],
+    ['.toolbox dl div:nth-child(1) dt', 'hard-drive', '--glyph-hard-drive-motion', 'glyph-hard-drive-arm-seek'],
+    ['.toolbox dl div:nth-child(2) dt', 'code', '--glyph-code-motion', 'glyph-code-slash-compile'],
+    ['.toolbox dl div:nth-child(3) dt', 'wrench', '--glyph-wrench-motion', 'glyph-wrench-tighten'],
   ]],
   ['/about/', [
     ['.about-field-notes header .eyebrow', 'journal', '--glyph-journal-motion', 'glyph-journal-check-draw'],
@@ -48,6 +53,13 @@ const pages = [
     ['.case-intro>.eyebrow', 'wrench', '--glyph-wrench-motion', 'glyph-wrench-tighten'],
     ['.case-facts div:nth-child(2) dt', 'layers', '--glyph-layers-motion', 'glyph-layers-top-settle'],
   ]],
+];
+const workControls = [
+  ['.work-search', '[name="project-search"]', 'search', '--glyph-search-motion', 'glyph-search-scan-sweep'],
+  ['label:has([name="project-language"])', '[name="project-language"]', 'code', '--glyph-code-motion', 'glyph-code-slash-compile'],
+  ['label:has([name="project-kind"])', '[name="project-kind"]', 'filter', '--glyph-filter-motion', 'glyph-filter-particle-a-drop'],
+  ['label:has([name="project-sort"])', '[name="project-sort"]', 'sort', '--glyph-sort-motion', 'glyph-sort-bar-a-settle'],
+  ['.work-reset', '.work-reset', 'refresh', '--glyph-refresh-motion', 'glyph-refresh-cycle'],
 ];
 
 const hover = async (selector) => {
@@ -88,6 +100,16 @@ try {
       await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 0, y: 0 });
     }
 
+    if (path === '/' && captureEvidence) {
+      for (const [width, height, name] of [[1440, 1000, 'desktop'], [390, 844, 'mobile']]) {
+        await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
+        await send('Runtime.evaluate', { expression: `document.querySelector('.toolbox').scrollIntoView({block:'center',behavior:'instant'})` });
+        const capture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+        writeFileSync(`/tmp/bolens-context-glyphs-home-${name}.png`, Buffer.from(capture.data, 'base64'));
+      }
+      await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
+    }
+
     if (path === '/work/') {
       const arrows = await send('Runtime.evaluate', {
         expression: `(()=>[...document.querySelectorAll('.index-list>a')].map((row)=>({href:row.href,glyph:row.querySelector('.trail-arrow use')?.getAttribute('href')})))()`,
@@ -104,6 +126,21 @@ try {
         if (!focused.result.value.focused || !focused.result.value.motion.startsWith(`${motion} 680ms`)) {
           throw new Error(`${selector} keyboard motion failed: ${JSON.stringify(focused.result.value)}`);
         }
+      }
+      for (const [trigger, focusTarget, glyph, property, motion] of workControls) {
+        const idle = await send('Runtime.evaluate', {
+          expression: `(()=>{const trigger=document.querySelector(${JSON.stringify(trigger)});const svg=trigger.querySelector('.control-glyph');const use=svg?.querySelector('use');return {count:trigger.querySelectorAll('.control-glyph').length,href:use?.getAttribute('href'),hidden:svg?.getAttribute('aria-hidden'),focusable:svg?.getAttribute('focusable'),motion:use?getComputedStyle(use).getPropertyValue(${JSON.stringify(property)}).trim():''}})()`,
+          returnByValue: true,
+        });
+        if (idle.result.value.count !== 1 || idle.result.value.href !== `/assets/trail-glyphs.svg#glyph-${glyph}` || idle.result.value.hidden !== 'true' || idle.result.value.focusable !== 'false' || idle.result.value.motion) {
+          throw new Error(`${trigger} control glyph idle state failed: ${JSON.stringify(idle.result.value)}`);
+        }
+        await hover(trigger);
+        const hovered = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector(${JSON.stringify(trigger)}).querySelector('.control-glyph use')).getPropertyValue(${JSON.stringify(property)}).trim()`, returnByValue: true });
+        if (!hovered.result.value.startsWith(`${motion} 680ms`)) throw new Error(`${trigger} control glyph hover failed: ${hovered.result.value}`);
+        await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 0, y: 0 });
+        const focused = await send('Runtime.evaluate', { expression: `(()=>{document.querySelector(${JSON.stringify(focusTarget)}).focus();return getComputedStyle(document.querySelector(${JSON.stringify(trigger)}).querySelector('.control-glyph use')).getPropertyValue(${JSON.stringify(property)}).trim()})()`, returnByValue: true });
+        if (!focused.result.value.startsWith(`${motion} 680ms`)) throw new Error(`${trigger} control glyph keyboard focus failed: ${focused.result.value}`);
       }
       await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: true });
       const mobile = await send('Runtime.evaluate', {
@@ -128,7 +165,7 @@ try {
     throw new Error(`contextual glyph reduced motion failed: ${JSON.stringify(reduced.result.value)}`);
   }
 
-  console.log(`Glyph site placement passed ${pages.reduce((count, [, placements]) => count + placements.length, 0)} semantic placements with idle, hover, keyboard, mobile-layout, and reduced-motion checks.`);
+  console.log(`Glyph site placement passed ${pages.reduce((count, [, placements]) => count + placements.length, workControls.length)} semantic placements with idle, hover, keyboard, mobile-layout, and reduced-motion checks.`);
 } finally {
   await browser.close();
   await server.close();

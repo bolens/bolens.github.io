@@ -91,6 +91,10 @@ try {
   if (captureEvidence) {
     for (const [width, height, name] of [[1440, 1000, 'desktop'], [390, 844, 'mobile']]) {
       await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
+      await send('Runtime.evaluate', { expression: `(()=>{document.querySelector('.page-intro').style.display='';document.querySelector('.work-tools').style.display='';document.querySelector('.work-tools').scrollIntoView({block:'center',behavior:'instant'})})()` });
+      await waitForFrames(send);
+      const controlsCapture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+      writeFileSync(`/tmp/bolens-work-controls-${name}.png`, Buffer.from(controlsCapture.data, 'base64'));
       await send('Runtime.evaluate', { expression: `(()=>{document.querySelector('.page-intro').style.display='none';document.querySelector('.work-tools').style.display='none';document.querySelector('.index-list').style.marginTop='0';scrollTo(0,0)})()` });
       await waitForFrames(send);
       const capture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });

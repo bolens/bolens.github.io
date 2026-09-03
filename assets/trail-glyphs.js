@@ -60,6 +60,12 @@
     if (fieldGlyphs[index]) term.prepend(makeGlyph(fieldGlyphs[index], 'field-note-glyph'));
   });
 
+  const detailGlyphs = { systems: 'hard-drive', languages: 'code', operations: 'wrench' };
+  document.querySelectorAll('.toolbox dt').forEach((term) => {
+    const name = detailGlyphs[term.textContent.trim().toLowerCase()];
+    if (name) term.prepend(makeGlyph(name, 'detail-glyph'));
+  });
+
   const projectGlyphs = {
     uddns: 'cloud',
     'aur response toolkit': 'shield',
@@ -74,6 +80,14 @@
     const name = projectGlyphs[project.dataset.projectName];
     if (name) project.prepend(makeGlyph(name, 'project-glyph'));
   });
+
+  const controlGlyphs = { 'name or keyword': 'search', language: 'code', 'project type': 'filter', 'sort by': 'sort' };
+  document.querySelectorAll('.work-controls label>span').forEach((label) => {
+    const name = controlGlyphs[label.textContent.trim().toLowerCase()];
+    if (name) label.prepend(makeGlyph(name, 'control-glyph'));
+  });
+  const reset = document.querySelector('.work-reset');
+  if (reset) reset.prepend(makeGlyph('refresh', 'control-glyph'));
 
   const arrows = { '→': 'east', '↗': 'north-east', '↑': 'north', '↖': 'north-west', '←': 'west', '↙': 'south-west', '↓': 'south', '↘': 'south-east' };
   document.querySelectorAll('span[aria-hidden="true"], strong[aria-hidden="true"]').forEach((marker) => {
