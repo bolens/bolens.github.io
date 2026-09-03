@@ -60,6 +60,8 @@ try {
   const shortcutCommand = await send('Runtime.evaluate', { expression: `({shortcutsOpen:document.querySelector('.shortcut-overlay').open,commandsOpen:document.querySelector('.command-palette').open})`, returnByValue: true });
   if (!shortcutCommand.result.value.shortcutsOpen || shortcutCommand.result.value.commandsOpen) throw new Error(`shortcut command failed: ${JSON.stringify(shortcutCommand.result.value)}`);
   await key(send, 'Escape', 'Escape');
+  const shortcutFocusReturn = await send('Runtime.evaluate', { expression: `document.activeElement?.id`, returnByValue: true });
+  if (shortcutFocusReturn.result.value !== 'command-return') throw new Error(`shortcut focus returned to ${shortcutFocusReturn.result.value}`);
 
   await key(send, 'k', 'KeyK', 10);
   await send('Runtime.evaluate', { expression: `(()=>{const input=document.querySelector('.command-palette input');input.value='no trail matches this';input.dispatchEvent(new Event('input',{bubbles:true}))})()` });
@@ -82,13 +84,22 @@ try {
   const pageActions = await send('Runtime.evaluate', { expression: `({copied:__copied,shared:__shared,title:document.title,url:location.href})`, returnByValue: true });
   const pageActionValue = pageActions.result.value;
   if (pageActionValue.copied.join('|') !== `${pageActionValue.title}|${pageActionValue.url}` || pageActionValue.shared.length !== 1 || pageActionValue.shared[0].title !== pageActionValue.title || pageActionValue.shared[0].url !== pageActionValue.url) throw new Error(`page command actions failed: ${JSON.stringify(pageActionValue)}`);
+  await waitFor(send, `document.querySelector('.command-status').textContent==='Copied to clipboard.'`, 'clipboard confirmation');
+
+  await key(send, 'k', 'KeyK', 1);
+  const scopedSearch = await send('Runtime.evaluate', { expression: `(()=>{const dialog=document.querySelector('.command-palette');const input=dialog.querySelector('input');input.value='@ privacy';input.dispatchEvent(new Event('input',{bubbles:true}));const projects=[...dialog.querySelectorAll('[role="option"] b')].map((item)=>item.textContent);input.value='> reduced';input.dispatchEvent(new Event('input',{bubbles:true}));const actions=[...dialog.querySelectorAll('[role="option"] b')].map((item)=>item.textContent);return {projects,actions}})()`, returnByValue: true });
+  if (!scopedSearch.result.value.projects.includes('Privacy Devices') || scopedSearch.result.value.projects.includes('Home') || scopedSearch.result.value.actions.join('|') !== 'Toggle reduced motion') throw new Error(`command scopes failed: ${JSON.stringify(scopedSearch.result.value)}`);
+  await key(send, 'Enter', 'Enter');
+  await waitFor(send, `document.querySelector('.command-status').textContent==='Reduced motion enabled.'`, 'motion preference confirmation');
+  const motionCommand = await send('Runtime.evaluate', { expression: `({motion:portfolioAppearance.motion,status:document.querySelector('.command-status').textContent})`, returnByValue: true });
+  if (motionCommand.result.value.motion !== 'reduced' || motionCommand.result.value.status !== 'Reduced motion enabled.') throw new Error(`motion command failed: ${JSON.stringify(motionCommand.result.value)}`);
 
   await key(send, 'k', 'KeyK', 1);
   await key(send, 'ArrowUp', 'ArrowUp');
   const wrappedLast = await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette [aria-selected="true"] b').textContent`, returnByValue: true });
   await key(send, 'ArrowDown', 'ArrowDown');
   const wrappedFirst = await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette [aria-selected="true"] b').textContent`, returnByValue: true });
-  if (wrappedLast.result.value !== 'Reset all site preferences' || wrappedFirst.result.value !== 'Share page') throw new Error(`command keyboard wrapping failed: ${wrappedLast.result.value} -> ${wrappedFirst.result.value}`);
+  if (wrappedLast.result.value !== 'Reset all site preferences' || wrappedFirst.result.value !== 'Toggle reduced motion') throw new Error(`command keyboard wrapping failed: ${wrappedLast.result.value} -> ${wrappedFirst.result.value}`);
   await key(send, 'Escape', 'Escape');
 
   await send('Runtime.evaluate', { expression: `portfolioAppearancePicker.open()` });

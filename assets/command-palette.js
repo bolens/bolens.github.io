@@ -10,7 +10,10 @@
     const runAppearance = (action) => () => { action(); pickerUi.announce(); };
     const choosePalette = (name) => runAppearance(() => appearance.setPalette(name));
     const chooseTheme = (mode) => runAppearance(() => appearance.setTheme(mode));
-    const copyText = (value, message = 'Copied to clipboard.') => navigator.clipboard?.writeText(value).then(() => announce(message)).catch(() => announce('Clipboard access was unavailable.'));
+    const copyText = (value, message = 'Copied to clipboard.') => {
+      if (!navigator.clipboard?.writeText) return announce('Clipboard access was unavailable.');
+      return navigator.clipboard.writeText(value).then(() => announce(message)).catch(() => announce('Clipboard access was unavailable.'));
+    };
     const sharePage = () => {
       if (navigator.share) return navigator.share({ title: document.title, url: location.href }).catch(() => {});
       return copyText(location.href);
@@ -82,7 +85,7 @@
       { label: 'Bottom of page', detail: 'Jump to the end of the page', group: 'On this page', keywords: 'scroll end footer', run: () => scrollTo({ top: document.documentElement.scrollHeight, behavior: 'smooth' }) },
       { label: 'Focus main content', detail: 'Move keyboard focus past navigation', group: 'Accessibility', keywords: 'skip content', shortcut: 'Alt M', ariaShortcut: 'Alt+M', run: () => document.querySelector('main')?.focus() },
       { label: 'Command palette', detail: 'Search pages and run site actions', group: 'Command', keywords: 'shortcut search commands', shortcut: 'Alt K', ariaShortcut: 'Alt+K', run: () => openCommands() },
-      { label: 'Keyboard shortcuts', detail: 'Show every available keyboard shortcut', group: 'Command', keywords: 'help hotkeys bindings', shortcut: 'Alt /', ariaShortcut: 'Alt+/', run: () => openShortcuts(commandReturnFocus) },
+      { label: 'Keyboard shortcuts', detail: 'Show every available keyboard shortcut', group: 'Command', keywords: 'help hotkeys bindings', shortcut: 'Alt /', ariaShortcut: 'Alt+/', run: ({ returnFocus }) => openShortcuts(returnFocus) },
       { label: 'Choose palette', detail: 'Open color and appearance controls', group: 'Command', keywords: 'theme colors shortcut', shortcut: 'Alt P', ariaShortcut: 'Alt+P', run: pickerUi.open },
       { label: 'Cycle color palette', detail: 'Move to the next color scheme', group: 'Palette', keywords: 'next theme colors', run: runAppearance(appearance.cyclePalette) },
       ...Object.entries(palettes).map(([name, palette]) => ({ label: `Use ${palette.label} palette`, detail: 'Change the site color scheme', group: 'Palette', keywords: `${name} theme colors`, run: choosePalette(name) })),
@@ -200,9 +203,10 @@
     const runCommand = (command) => {
       if (!command) return;
       recordRecent(command);
+      const returnFocus = commandReturnFocus;
       if (dialog.contains(document.activeElement)) document.activeElement.blur();
       dialog.close();
-      if (command.run) command.run();
+      if (command.run) command.run({ returnFocus });
       else location.href = command.href;
     };
     function openCommands(query = '') {
