@@ -16,7 +16,7 @@ const waitFor = async (send, expression, description) => {
   throw new Error(`timed out waiting for ${description}`);
 };
 const key = async (send, value, code, modifiers = 0) => {
-  const windowsVirtualKeyCode = value.length === 1 ? value.toUpperCase().charCodeAt(0) : { Escape: 27, Enter: 13, ArrowUp: 38, ArrowDown: 40 }[value];
+  const windowsVirtualKeyCode = value.length === 1 ? value.toUpperCase().charCodeAt(0) : { Escape: 27, Enter: 13, Home: 36, End: 35, ArrowUp: 38, ArrowDown: 40 }[value];
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: value, code, windowsVirtualKeyCode, modifiers });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: value, code, windowsVirtualKeyCode, modifiers });
 };
@@ -39,6 +39,21 @@ try {
   if (!shortcutOverlay.result.value.open || shortcutOverlay.result.value.commandsOpen || shortcutOverlay.result.value.rows < 8 || shortcutOverlay.result.value.title !== 'Keyboard shortcuts' || !shortcutOverlay.result.value.overlay) throw new Error(`shortcut overlay failed: ${JSON.stringify(shortcutOverlay.result.value)}`);
   await key(send, 'Escape', 'Escape');
   await waitFor(send, `!document.querySelector('.shortcut-overlay').open&&!portfolioOverlay.active`, 'shortcut overlay close');
+
+  await send('Runtime.evaluate', { expression: `(()=>{const button=document.createElement('button');button.id='command-return';document.body.append(button);button.focus()})()` });
+  await key(send, '/', 'Slash');
+  await send('Runtime.evaluate', { expression: `(()=>{const input=document.querySelector('.command-palette input');input.value='prvcy';input.dispatchEvent(new Event('input',{bubbles:true}))})()` });
+  const fuzzySearch = await send('Runtime.evaluate', { expression: `(()=>{const dialog=document.querySelector('.command-palette');return {open:dialog.open,first:dialog.querySelector('[role="option"] b')?.textContent,marks:dialog.querySelectorAll('[role="option"] mark').length,groups:dialog.querySelectorAll('.command-group').length}})()`, returnByValue: true });
+  if (!fuzzySearch.result.value.open || fuzzySearch.result.value.first !== 'Privacy Devices' || fuzzySearch.result.value.marks < 1 || fuzzySearch.result.value.groups < 1) throw new Error(`fuzzy command search failed: ${JSON.stringify(fuzzySearch.result.value)}`);
+  await send('Runtime.evaluate', { expression: `(()=>{const input=document.querySelector('.command-palette input');input.value='';input.dispatchEvent(new Event('input',{bubbles:true}))})()` });
+  await key(send, 'End', 'End');
+  const selectedEnd = await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette [aria-selected="true"] b').textContent`, returnByValue: true });
+  await key(send, 'Home', 'Home');
+  const selectedHome = await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette [aria-selected="true"] b').textContent`, returnByValue: true });
+  if (selectedEnd.result.value !== 'Reset all site preferences' || selectedHome.result.value !== 'Home') throw new Error(`command Home/End failed: ${selectedHome.result.value} -> ${selectedEnd.result.value}`);
+  await key(send, 'Escape', 'Escape');
+  const commandFocusReturn = await send('Runtime.evaluate', { expression: `document.activeElement?.id`, returnByValue: true });
+  if (commandFocusReturn.result.value !== 'command-return') throw new Error(`command focus returned to ${commandFocusReturn.result.value}`);
 
   await key(send, 'k', 'KeyK', 1);
   await send('Runtime.evaluate', { expression: `(()=>{const dialog=document.querySelector('.command-palette');const input=dialog.querySelector('input');input.value='keyboard shortcuts';input.dispatchEvent(new Event('input',{bubbles:true}));dialog.querySelector('[role="option"]').click()})()` });
