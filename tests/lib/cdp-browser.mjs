@@ -82,22 +82,27 @@ export async function startBrowser(onEvent) {
       }
       onEvent(message);
     };
+    const send = (method, params = {}, timeoutMs = 30_000) => new Promise((resolve, reject) => {
+      if (closed) return reject(new Error('browser connection is closed'));
+      const requestId = ++id;
+      const timeout = setTimeout(() => {
+        pending.delete(requestId);
+        reject(new Error(`browser command timed out after ${timeoutMs}ms: ${method}`));
+      }, timeoutMs);
+      pending.set(requestId, { resolve, reject, timeout });
+      socket.send(JSON.stringify({ id: requestId, method, params }));
+    });
+    const close = async () => {
+      if (!closed) {
+        try {
+          await send('Browser.close', {}, 2_000);
+        } catch {}
+      }
+      return stop();
+    };
     socket.onclose = () => { void stop(new Error('browser connection closed unexpectedly'), false).catch(() => {}); };
     socket.onerror = () => { void stop(new Error('browser connection closed unexpectedly'), false).catch(() => {}); };
-    return {
-      debugPort: port,
-      send: (method, params = {}, timeoutMs = 30_000) => new Promise((resolve, reject) => {
-        if (closed) return reject(new Error('browser connection is closed'));
-        const requestId = ++id;
-        const timeout = setTimeout(() => {
-          pending.delete(requestId);
-          reject(new Error(`browser command timed out after ${timeoutMs}ms: ${method}`));
-        }, timeoutMs);
-        pending.set(requestId, { resolve, reject, timeout });
-        socket.send(JSON.stringify({ id: requestId, method, params }));
-      }),
-      close: stop,
-    };
+    return { debugPort: port, send, close };
   } catch (error) {
     await stop();
     throw error;
