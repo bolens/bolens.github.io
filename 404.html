@@ -141,10 +141,16 @@
           </symbol>
           <symbol id="fire-ring-stone" viewBox="0 0 44 30">
             <path d="M3 17 12 5l20 1 9 11-8 10-21 1Z" fill="var(--ring-stone-fill,#566059)" stroke="var(--ring-stone-outline,#263432)" stroke-width="2.5" stroke-linejoin="round"/>
-            <path d="m12 7 15 1 8 7-18 2Z" fill="var(--ring-stone-face,#84908a)" opacity=".38"/>
-            <path d="m15 9 5 7-6 7m17-13-6 8 5 6" fill="none" stroke="var(--ring-stone-crack,#242d2b)" stroke-width="1.8" stroke-linecap="round"/>
+            <path d="m12 7 15 1 8 7-18 2Z" fill="var(--ring-stone-face,#84908a)" opacity="var(--ring-stone-face-opacity,.38)"/>
+            <path d="m15 9 5 7-6 7m17-13-6 8 5 6" fill="none" stroke="var(--ring-stone-crack,#242d2b)" stroke-width="1.8" stroke-linecap="round" opacity="var(--ring-stone-crack-opacity,1)"/>
             <path d="M7 20q14-6 29 0" fill="none" stroke="var(--ring-stone-ember,#d26f3e)" stroke-width="2" stroke-linecap="round" opacity="var(--ring-stone-ember-opacity,.22)"/>
             <use href="#terrain-condition-marks" width="44" height="30"/>
+          </symbol>
+          <symbol id="fire-bed" viewBox="0 0 180 65">
+            <ellipse cx="90" cy="33" rx="83" ry="27" fill="var(--fire-bed-fill,#191e1d)" stroke="var(--fire-bed-edge,#37403d)" stroke-width="5" opacity=".72"/>
+            <g fill="var(--fire-bed-coal,#7e3326)" stroke="#2c211d" stroke-width="2"><ellipse cx="53" cy="31" rx="13" ry="7"/><ellipse cx="82" cy="41" rx="16" ry="8"/><ellipse cx="113" cy="39" rx="15" ry="8"/><ellipse cx="136" cy="28" rx="12" ry="6"/></g>
+            <g fill="none" stroke="var(--fire-bed-ash,#b5aaa0)" stroke-linecap="round" opacity=".42"><path d="m29 42 22 5m67 4 25-6m-66-24 24 4" stroke-width="3"/><path d="m62 50 8 2m42-31 10 2" stroke-width="2"/></g>
+            <use href="#terrain-condition-marks" width="180" height="65"/>
           </symbol>
           <symbol id="moss-clump" viewBox="0 0 80 28">
             <path d="M3 25q5-16 16-8 7-20 20-7 8-13 19-4 12-7 19 9l-3 10Z" fill="var(--moss-fill,#52765b)" stroke="var(--moss-outline,#284b3b)" stroke-width="2" stroke-linejoin="round"/>
@@ -165,6 +171,28 @@
             <g fill="var(--fungi-cap,#d7953f)" stroke="var(--fungi-outline,#5c3827)" stroke-width="2" stroke-linejoin="round"><path d="M4 27Q21 7 38 27 21 38 4 27Z"/><path d="M31 34q13-15 26 0-13 9-26 0Z"/><path d="M49 39q10-11 19 0-10 7-19 0Z"/></g>
             <path d="M9 27q12 7 24 0m3 7q9 5 17 0" fill="none" stroke="var(--fungi-gill,#f4c46e)" stroke-width="1.5" opacity=".72"/>
             <use href="#terrain-condition-marks" width="70" height="52"/>
+          </symbol>
+          <symbol id="shelf-fungi" viewBox="0 0 58 42">
+            <path d="M7 35q17-14 34 1-18 10-34-1Zm15-15q14-12 29 1-15 9-29-1Z" fill="var(--shelf-fill,#c98d57)" stroke="var(--shelf-outline,#5c3827)" stroke-width="2" stroke-linejoin="round"/>
+            <path d="m13 34 21 3m-5-17 17 3" fill="none" stroke="var(--shelf-gill,#f0bd78)" stroke-width="2" stroke-linecap="round"/>
+            <use href="#terrain-condition-marks" width="58" height="42"/>
+          </symbol>
+          <symbol id="pinecone-sprig" viewBox="0 0 72 48">
+            <path d="M5 39 63 9M18 32l-9-13m19 8-3-17m14 11 7-16m2 11 15 7" fill="none" stroke="var(--cone-needle,#526b4d)" stroke-width="3" stroke-linecap="round"/>
+            <path d="M38 25q12-13 22 1-2 16-12 18-11-5-10-19Z" fill="var(--cone-fill,#6c4d32)" stroke="var(--cone-outline,#30271e)" stroke-width="2"/>
+            <path d="m42 27 13 9m-15-2 12 7m-5-18 10 7" fill="none" stroke="var(--cone-scale,#b18452)" stroke-width="2"/>
+            <use href="#terrain-condition-marks" width="72" height="48"/>
+          </symbol>
+          <symbol id="wildflower-clump" viewBox="0 0 62 58">
+            <g fill="none" stroke="var(--flower-stem,#52745a)" stroke-width="2.5" stroke-linecap="round"><path d="M30 56 19 17m12 39 3-47m-3 47 19-34M25 39l-12-8m21 5 11-9"/></g>
+            <g fill="var(--flower-petal,#c8b5d8)" stroke="var(--flower-outline,#594b69)" stroke-width="1.5"><path d="m19 17-8-5 7-4 3-7 5 7 8 2-6 6 1 8-8-3-7 4Z"/><path d="m34 9-6-4 6-4 5 4 7 1-5 5 1 7-7-3-6 3Z"/><path d="m50 22-6-4 6-4 5 4 7 1-5 5 1 7-7-3-6 3Z"/></g>
+            <g fill="var(--flower-center,#d7a846)"><circle cx="20" cy="12" r="3"/><circle cx="35" cy="8" r="3"/><circle cx="51" cy="21" r="3"/></g>
+            <use href="#terrain-condition-marks" width="62" height="58"/>
+          </symbol>
+          <symbol id="fallen-branch" viewBox="0 0 120 45">
+            <path d="M5 35Q48 31 112 13M37 31 24 13m43 11 8-17m15 11 18 8" fill="none" stroke="var(--branch-fill,#5d402c)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M8 31q49-3 100-19M34 28 25 15m42 7 7-13" fill="none" stroke="var(--branch-highlight,#8a6241)" stroke-width="2.5" stroke-linecap="round"/>
+            <use href="#terrain-condition-marks" width="120" height="45"/>
           </symbol>
           <symbol id="river-stone" viewBox="0 0 30 20">
             <path d="m2 13 8-8 12 1 6 7-7 5H8Z" fill="var(--stone-fill,#536862)" stroke="#18302f" stroke-width="1.8" stroke-linejoin="round"/>
@@ -284,6 +312,14 @@
           <use class="terrain-asset floor-sprig" data-light="ambient" data-weather="dry" href="#ground-sprig" x="236" y="679" width="38" height="43"/>
           <use class="terrain-asset floor-sprig" data-light="fire" data-weather="clear" href="#ground-sprig" x="456" y="676" width="43" height="49" style="--sprig-highlight:#9b744c"/>
           <use class="terrain-asset floor-sprig" data-light="shadow" data-weather="wet" href="#ground-sprig" x="991" y="680" width="45" height="51"/>
+          <use class="terrain-asset" data-light="moon" data-weather="dry" href="#pinecone-sprig" x="82" y="708" width="62" height="41" transform="rotate(-8 113 729)"/>
+          <use class="terrain-asset" data-light="fire" data-weather="clear" href="#pinecone-sprig" x="407" y="704" width="55" height="37" transform="rotate(12 435 723)" style="--cone-scale:#d09455"/>
+          <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#pinecone-sprig" x="886" y="708" width="60" height="40"/>
+          <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#wildflower-clump" x="150" y="675" width="44" height="42" style="--flower-petal:#b9cfa4"/>
+          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#wildflower-clump" x="748" y="690" width="39" height="37" style="--flower-petal:#c9a879;--flower-center:#efb24e"/>
+          <use class="terrain-asset" data-light="moon" data-weather="rainy" href="#wildflower-clump" x="1090" y="685" width="42" height="40" style="--flower-petal:#9d91bd"/>
+          <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fallen-branch" x="23" y="650" width="115" height="43" transform="rotate(-6 81 672)"/>
+          <use class="terrain-asset" data-light="ambient" data-weather="dry" href="#fallen-branch" x="1034" y="625" width="103" height="39" transform="rotate(7 1086 645)" style="--branch-fill:#68462e"/>
           <path d="M20 746q91-22 178-9m82-5q92-18 176-2m342 5q91-20 179-4m70 5q67-14 131-2" fill="none" stroke="#172823" stroke-width="3" opacity=".6"/>
         </g>
 
@@ -412,13 +448,7 @@
           <g class="moss-patches"><use class="terrain-asset" data-light="moon" data-weather="wet" href="#moss-clump" x="55" y="541" width="84" height="29"/><use class="terrain-asset" data-light="ambient" data-weather="rainy" href="#moss-clump" x="178" y="681" width="47" height="21" style="--moss-fill:#456f53"/><use class="terrain-asset" data-light="fire" data-weather="dry" href="#moss-clump" x="295" y="690" width="72" height="26" style="--moss-fill:#65724e;--moss-highlight:#b38a54"/><use class="terrain-asset" data-light="shadow" data-weather="cloudy" href="#moss-clump" x="960" y="596" width="72" height="28"/></g>
           <g class="fly-agarics"><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fly-agaric" x="1025" y="651" width="39" height="47"/><use class="terrain-asset" data-light="ambient" data-weather="rainy" href="#fly-agaric" x="1055" y="667" width="29" height="35" style="--mushroom-cap:#a94338"/></g>
           <g class="fungi-patches"><use class="terrain-asset" data-light="fire" data-weather="dry" href="#fungi-cluster" x="230" y="665" width="66" height="49"/><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fungi-cluster" x="105" y="665" width="43" height="34" style="--fungi-cap:#c9a36e;--fungi-stem:#b9a58a"/><use class="terrain-asset" data-light="shadow" data-weather="cloudy" href="#fungi-cluster" x="925" y="657" width="46" height="35" style="--fungi-cap:#998772;--fungi-stem:#b7aa91"/></g>
-          <g class="shelf-fungi" fill="#c98d57" stroke="#5c3827" stroke-width="2"><path d="M171 700q12-9 23 1-12 7-23-1Z"/><path d="M183 691q11-8 21 1-11 6-21-1Z"/><path d="M991 704q12-9 23 1-12 7-23-1Z"/><path d="M1003 695q10-8 20 1-10 6-20-1Z"/><path d="M176 700q8 1 14 2m-2-11 12 2m795 11 15 2m-2-11 11 2" fill="none" stroke="#f0bd78"/></g>
-          <g class="mushroom-detail" fill="none" stroke-linecap="round">
-            <path d="M251 689q9 5 18-1m-15 3 3 7m4-8v7m10-1q7 4 14-1m-11 2 2 6m4-7v6m-44-3q6 3 12-1m-9 2 2 5m3-6v5" stroke="#f4c46e" stroke-width="1.3" opacity=".72"/>
-            <path d="M256 690q-2 7 2 13m7-14q3 7 0 13m11-5q-1 6 2 11" stroke="#9a6842" stroke-width="1.2" opacity=".7"/>
-            <path d="M248 684q8-8 16-7m5 14q7-6 13-5" stroke="#fff0cf" stroke-width="1.8" opacity=".42"/>
-            <g fill="#c9a36e" stroke="#49382b" stroke-width="1"><path d="M119 690q1-13 5-13t5 13Z"/><path d="M114 678q10-9 20 0-10 6-20 0Z"/><path d="M1148 700q1-12 5-12t5 12Z"/><path d="M1143 689q10-8 20 0-10 6-20 0Z"/></g>
-          </g>
+          <g class="shelf-fungi-patches"><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#shelf-fungi" x="164" y="670" width="48" height="35"/><use class="terrain-asset" data-light="shadow" data-weather="dry" href="#shelf-fungi" x="985" y="677" width="45" height="33" style="--shelf-fill:#a9784e"/></g>
         </g>
         <g class="understory-shrubs depth-near">
           <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#berry-shrub" x="8" y="565" width="155" height="108"/>
@@ -478,17 +508,17 @@
 
         <ellipse class="campfire-glow" cx="610" cy="641" rx="198" ry="105" fill="url(#fire-glow)" filter="url(#camp-soft)"/>
         <g class="fire-ring-stones depth-near">
-          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="505" y="644" width="52" height="35" style="--ring-stone-fill:#515b55"/>
-          <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="546" y="633" width="53" height="36" style="--ring-stone-fill:#626b62"/>
+          <use class="terrain-asset fire-bed" data-light="fire" data-weather="dry" href="#fire-bed" x="522" y="651" width="180" height="65"/>
+          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="505" y="644" width="52" height="35" transform="rotate(8 531 662)" style="--ring-stone-fill:#515b55;--ring-stone-crack-opacity:.7"/>
+          <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="546" y="633" width="53" height="36" transform="rotate(-5 573 651)" style="--ring-stone-fill:#626b62;--ring-stone-face-opacity:.52"/>
           <use class="terrain-asset" data-light="fire" data-weather="wet" href="#fire-ring-stone" x="589" y="628" width="53" height="36" style="--ring-stone-fill:#566059"/>
-          <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="632" y="636" width="52" height="35" style="--ring-stone-fill:#49534e"/>
-          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="673" y="650" width="50" height="34" style="--ring-stone-fill:#59615a"/>
-          <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fire-ring-stone" x="503" y="670" width="50" height="34" style="--ring-stone-fill:#48534f"/>
+          <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="632" y="636" width="52" height="35" transform="rotate(6 658 654)" style="--ring-stone-fill:#49534e;--ring-stone-crack-opacity:.55"/>
+          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="673" y="650" width="50" height="34" transform="rotate(12 698 667)" style="--ring-stone-fill:#59615a;--ring-stone-face-opacity:.25"/>
+          <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fire-ring-stone" x="503" y="670" width="50" height="34" transform="rotate(-10 528 687)" style="--ring-stone-fill:#48534f"/>
           <use class="terrain-asset" data-light="shadow" data-weather="clear" href="#fire-ring-stone" x="535" y="686" width="54" height="37" style="--ring-stone-fill:#424d49"/>
-          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="577" y="697" width="57" height="39" style="--ring-stone-fill:#56605a"/>
-          <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fire-ring-stone" x="624" y="694" width="55" height="38" style="--ring-stone-fill:#3f4a47"/>
-          <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="665" y="680" width="53" height="36" style="--ring-stone-fill:#58605a"/>
-          <ellipse cx="612" cy="681" rx="79" ry="28" fill="none" stroke="#191e1d" stroke-width="5" opacity=".52"/>
+          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="577" y="697" width="57" height="39" transform="rotate(-4 606 717)" style="--ring-stone-fill:#56605a;--ring-stone-face-opacity:.46"/>
+          <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fire-ring-stone" x="624" y="694" width="55" height="38" transform="rotate(5 652 713)" style="--ring-stone-fill:#3f4a47;--ring-stone-crack-opacity:.65"/>
+          <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="665" y="680" width="53" height="36" transform="rotate(9 692 698)" style="--ring-stone-fill:#58605a"/>
         </g>
         <g class="bench bench-left" stroke-linecap="round" stroke-linejoin="round">
           <ellipse cx="387" cy="653" rx="170" ry="16" fill="#071716" opacity=".6"/>
