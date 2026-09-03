@@ -20,6 +20,16 @@ export async function waitForFrames(send, count = 2) {
   });
 }
 
+export async function finishFiniteAnimations(send, selector) {
+  await waitForFrames(send);
+  const result = await send('Runtime.evaluate', {
+    expression: `(()=>{const scope=document.querySelector(${JSON.stringify(selector)});if(!scope)throw new Error(${JSON.stringify(`animation scope not found: ${selector}`)});let finished=0;for(const animation of document.getAnimations()){const target=animation.effect?.target;const timing=animation.effect?.getComputedTiming();if(target&&scope.contains(target)&&Number.isFinite(timing?.endTime)){try{animation.finish();finished+=1}catch{}}}return finished})()`,
+    returnByValue: true,
+  });
+  if (result.exceptionDetails) throw new Error(result.exceptionDetails.exception?.description ?? result.exceptionDetails.text);
+  return result.result.value;
+}
+
 export async function hoverElement(send, selector, timeout = 10_000) {
   await send('Runtime.evaluate', {
     expression: `(()=>{document.documentElement.style.scrollBehavior='auto';document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center',behavior:'auto'})})()`,
