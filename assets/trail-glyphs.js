@@ -35,4 +35,31 @@
     svg.append(use);
     eyebrow.prepend(svg);
   });
+
+  const arrows = { '→': 'east', '↗': 'north-east', '↑': 'north', '↓': 'south' };
+  document.querySelectorAll('span[aria-hidden="true"], strong[aria-hidden="true"]').forEach((marker) => {
+    const direction = arrows[marker.textContent.trim()];
+    if (!direction) return;
+    marker.textContent = '';
+    marker.classList.add('trail-arrow');
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('focusable', 'false');
+    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttribute('href', `/assets/trail-glyphs.svg#glyph-arrow-${direction}`);
+    svg.append(use);
+    marker.append(svg);
+  });
+
+  document.querySelectorAll('.principles li').forEach((item) => {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.classList.add('principle-glyph');
+    svg.setAttribute('viewBox', '0 0 24 24');
+    svg.setAttribute('aria-hidden', 'true');
+    svg.setAttribute('focusable', 'false');
+    const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+    use.setAttribute('href', '/assets/trail-glyphs.svg#glyph-waypoint');
+    svg.append(use);
+    item.prepend(svg);
+  });
 })();

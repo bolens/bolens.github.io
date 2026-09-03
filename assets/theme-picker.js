@@ -179,7 +179,7 @@
     const dialog = document.createElement('dialog');
     dialog.className = 'command-palette';
     dialog.setAttribute('aria-label', 'Site search and commands');
-    dialog.innerHTML = `<div class="command-search"><span aria-hidden="true">⌕</span><input type="search" role="combobox" autocomplete="off" spellcheck="false" aria-label="Search pages and commands" aria-autocomplete="list" aria-controls="command-results" aria-expanded="false" placeholder="Search pages and commands…"><kbd>Esc</kbd></div><div class="command-results" id="command-results" role="listbox" aria-label="Results"></div><p class="command-empty" role="status" hidden>No matching trail found.</p><footer><span><kbd>↑</kbd><kbd>↓</kbd> Move</span><span><kbd>↵</kbd> Open</span></footer>`;
+    dialog.innerHTML = `<div class="command-search"><svg class="command-search-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-search"></use></svg><input type="search" role="combobox" autocomplete="off" spellcheck="false" aria-label="Search pages and commands" aria-autocomplete="list" aria-controls="command-results" aria-expanded="false" placeholder="Search pages and commands…"><kbd>Esc</kbd></div><div class="command-results" id="command-results" role="listbox" aria-label="Results"></div><p class="command-empty" role="status" hidden>No matching trail found.</p><footer><span><kbd>↑</kbd><kbd>↓</kbd> Move</span><span><kbd>↵</kbd> Open</span></footer>`;
     document.body.append(dialog);
     const syncOverlayState = () => {
       const active = dialog.open || picker.open;
