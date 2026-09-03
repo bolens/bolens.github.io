@@ -29,11 +29,12 @@ let browserLog = '';
 chrome.stderr.on('data', (chunk) => { browserLog += chunk.toString(); });
 
 async function waitForDebugger() {
-  const deadline = Date.now() + 20_000;
+  const deadline = Date.now() + 45_000;
   while (Date.now() < deadline) {
+    if (chrome.exitCode !== null) throw new Error(`browser exited before debugger startup with ${browser} (code ${chrome.exitCode}): ${browserLog.slice(-1200)}`);
     try { return await fetch('http://127.0.0.1:9222/json/version').then((result) => result.json()); } catch { await new Promise((done) => setTimeout(done, 100)); }
   }
-  throw new Error(`browser debugger did not start within 20s with ${browser}: ${browserLog.slice(-1200)}`);
+  throw new Error(`browser debugger did not start within 45s with ${browser}: ${browserLog.slice(-1200)}`);
 }
 
 let socket;
