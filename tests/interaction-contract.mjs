@@ -1,22 +1,13 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
+import { pause, waitFor } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const captureEvidence = process.argv.includes('--capture-evidence');
 const server = await startSiteServer(root);
 let browser;
-const pause = (duration = 50) => new Promise((done) => setTimeout(done, duration));
-const waitFor = async (send, expression, description) => {
-  const deadline = Date.now() + 10_000;
-  while (Date.now() < deadline) {
-    const result = await send('Runtime.evaluate', { expression, returnByValue: true });
-    if (result.result.value) return result.result.value;
-    await pause();
-  }
-  throw new Error(`timed out waiting for ${description}`);
-};
 const key = async (send, value, code, modifiers = 0) => {
   const windowsVirtualKeyCode = value.length === 1 ? value.toUpperCase().charCodeAt(0) : { Escape: 27, Enter: 13, Home: 36, End: 35, ArrowUp: 38, ArrowDown: 40 }[value];
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: value, code, windowsVirtualKeyCode, modifiers });
@@ -65,7 +56,7 @@ try {
   await waitFor(send, `Number.parseFloat(getComputedStyle(document.querySelector('.shortcut-overlay .overlay-close'),'::after').opacity)>=.95`, 'pointer tooltip reveal');
   await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 0, y: 0 });
   await send('Runtime.evaluate', { expression: `document.querySelector('.shortcut-overlay .overlay-close').focus()` });
-  await pause(250);
+  await waitFor(send, `(()=>{const close=document.querySelector('.shortcut-overlay .overlay-close');return document.activeElement===close&&getComputedStyle(close,'::after').opacity==='1'})()`, 'keyboard tooltip reveal');
   const tooltipState = await send('Runtime.evaluate', { expression: `(()=>{const close=document.querySelector('.shortcut-overlay .overlay-close');const tooltip=getComputedStyle(close,'::after');const state={opacity:tooltip.opacity,content:tooltip.content,focused:document.activeElement===close};close.closest('dialog').close();return state})()`, returnByValue: true });
   if (tooltipState.result.value.opacity !== '1' || !tooltipState.result.value.content.includes('Close keyboard shortcuts') || !tooltipState.result.value.focused) throw new Error(`keyboard tooltip failed: ${JSON.stringify(tooltipState.result.value)}`);
 

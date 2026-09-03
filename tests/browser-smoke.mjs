@@ -1,6 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
+import { waitFor, waitForFrames } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -9,16 +10,6 @@ const server = await startSiteServer(root);
 const { origin } = server;
 const errors = [];
 let browser;
-const pause = (duration = 50) => new Promise((done) => setTimeout(done, duration));
-const waitFor = async (send, expression, description, timeout = 10_000) => {
-  const deadline = Date.now() + timeout;
-  while (Date.now() < deadline) {
-    const result = await send('Runtime.evaluate', { expression, returnByValue: true });
-    if (result.result.value) return result.result.value;
-    await pause();
-  }
-  throw new Error(`timed out waiting for ${description}`);
-};
 try {
   browser = await startBrowser((message) => {
     if (message.method === 'Runtime.exceptionThrown') errors.push(message.params.exceptionDetails.exception?.description ?? message.params.exceptionDetails.text);
@@ -39,13 +30,13 @@ try {
       const box=target.getBoundingClientRect();
       window.scrollTo(0,box.top+scrollY-(innerHeight-box.height)/2);
     ` });
-    await new Promise((done) => setTimeout(done, 100));
+    await waitForFrames(send);
     await send('Runtime.evaluate', { expression: `
       const target=document.querySelector(${JSON.stringify(selector)});
       document.getAnimations().filter((animation)=>target.contains(animation.effect?.target)).forEach((animation)=>{try{animation.pause();animation.currentTime=${time}}catch{}});
       target.querySelectorAll('svg').forEach((svg)=>{svg.pauseAnimations?.();svg.setCurrentTime?.(${time / 1000})});
     ` });
-    await new Promise((done) => setTimeout(done, 100));
+    await waitForFrames(send);
     const capture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
     writeFileSync(`/tmp/bolens-${name}-${width}-${time}.png`, Buffer.from(capture.data, 'base64'));
   };
@@ -58,18 +49,20 @@ try {
       const box=target.getBoundingClientRect();
       window.scrollTo(0,box.top+scrollY-(innerHeight-box.height)/2);
     ` });
-    await new Promise((done) => setTimeout(done, 100));
-    await send('Runtime.evaluate', { expression: `document.querySelector(${JSON.stringify(selector)}).querySelectorAll('svg').forEach((svg)=>svg.unpauseAnimations?.())` });
-    const started = Date.now();
+    await waitForFrames(send);
     for (const time of times) {
-      const remaining = time - (Date.now() - started);
-      if (remaining > 0) await new Promise((done) => setTimeout(done, remaining));
+      await send('Runtime.evaluate', { expression: `document.querySelector(${JSON.stringify(selector)}).querySelectorAll('svg').forEach((svg)=>{svg.pauseAnimations?.();svg.setCurrentTime?.(${time / 1000})})` });
+      await waitForFrames(send);
       const capture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
       writeFileSync(`/tmp/bolens-${name}-${width}-${time}.png`, Buffer.from(capture.data, 'base64'));
     }
   };
   await Promise.all(['Page.enable', 'Runtime.enable', 'Network.enable', 'Log.enable'].map((method) => send(method)));
   await send('Page.addScriptToEvaluateOnNewDocument', { source: `
+    const nativeFetch = window.fetch.bind(window);
+    window.fetch = (url, options) => String(url).includes('api.github.com/users/bolens/repos')
+      ? Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve([]) })
+      : nativeFetch(url, options);
     window.__hybridReadyState = null;
     new MutationObserver((_, observer) => {
       const figure = document.querySelector('.cryptid-camp.hybrid-effects-ready');
@@ -153,13 +146,13 @@ try {
   await send('Runtime.evaluate', { expression: `document.querySelector('.hobbies').scrollIntoView({block:'center'})` });
   await waitFor(send, `document.querySelector('.hobbies').dataset.motion==='running'`, 'visible hobby motion');
   const hobbyVisibleStart = await send('Runtime.evaluate', { expression: `document.querySelector('.hobby-flight-layer').getCurrentTime()`, returnByValue: true });
-  await pause(140);
+  await waitFor(send, `document.querySelector('.hobby-flight-layer').getCurrentTime()>${hobbyVisibleStart.result.value}`, 'visible hobby timeline advance');
   const hobbyVisible = await send('Runtime.evaluate', { expression: `(()=>{const section=document.querySelector('.hobbies');const traveler=document.querySelector('.hobby-traveler');return {state:section.dataset.motion,css:getComputedStyle(traveler).animationPlayState,svg:[...section.querySelectorAll('svg')].some((item)=>item.animationsPaused?.()===false),time:document.querySelector('.hobby-flight-layer').getCurrentTime()}})()`, returnByValue: true });
   if (hobbyVisible.result.value.state !== 'running' || hobbyVisible.result.value.css !== 'running' || !hobbyVisible.result.value.svg || hobbyVisible.result.value.time <= hobbyVisibleStart.result.value) throw new Error(`visible hobby motion failed: ${JSON.stringify({ start:hobbyVisibleStart.result.value,...hobbyVisible.result.value })}`);
   await send('Runtime.evaluate', { expression: `scrollTo(0,0)` });
   await waitFor(send, `document.querySelector('.hobbies').dataset.motion==='paused'`, 'offscreen hobby pause');
   const hobbyPausedStart = await send('Runtime.evaluate', { expression: `document.querySelector('.hobby-flight-layer').getCurrentTime()`, returnByValue: true });
-  await pause(140);
+  await waitForFrames(send, 8);
   const hobbyPausedEnd = await send('Runtime.evaluate', { expression: `document.querySelector('.hobby-flight-layer').getCurrentTime()`, returnByValue: true });
   if (Math.abs(hobbyPausedEnd.result.value-hobbyPausedStart.result.value) > .01) throw new Error(`paused hobby timeline advanced: ${hobbyPausedStart.result.value} to ${hobbyPausedEnd.result.value}`);
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'p', code: 'KeyP', windowsVirtualKeyCode: 80, modifiers: 1 });
@@ -302,7 +295,7 @@ try {
   if (!preferences.result.value.dark || !preferences.result.value.reduced || preferences.result.value.ddns !== 'none' || preferences.result.value.flight !== 'none' || preferences.result.value.landed === 'none' || preferences.result.value.hobbyState !== 'paused' || !preferences.result.value.hobbySvg || preferences.result.value.scrollAnimations.some((name)=>name !== 'none')) throw new Error(`preference emulation failed: ${JSON.stringify(preferences.result.value)}`);
   if (captureEvidence) {
     await send('Runtime.evaluate', { expression: `document.documentElement.style.scrollBehavior='auto';document.querySelector('#off-the-clock').scrollIntoView({block:'end'})` });
-    await new Promise((done) => setTimeout(done, 100));
+    await waitForFrames(send);
     const reducedCapture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
     writeFileSync('/tmp/bolens-hobbies-reduced-dark-1440.png', Buffer.from(reducedCapture.data, 'base64'));
   }

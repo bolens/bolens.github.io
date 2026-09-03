@@ -1,6 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
+import { waitFor, waitForFrames } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -19,20 +20,11 @@ const documentRepositories = [
   'https://github.com/bolens/omarchy-multi-monitor-workspaces',
 ];
 
-const pause = (duration = 50) => new Promise((done) => setTimeout(done, duration));
-const waitFor = async (send, expression, description) => {
-  for (let attempt = 0; attempt < 200; attempt += 1) {
-    const result = await send('Runtime.evaluate', { expression, returnByValue: true });
-    if (result.result.value) return result.result.value;
-    await pause();
-  }
-  throw new Error(`timed out waiting for ${description}`);
-};
-
 try {
   browser = await startBrowser(() => {});
   const { send } = browser;
   await Promise.all(['Page.enable', 'Runtime.enable'].map((method) => send(method)));
+  await send('Page.addScriptToEvaluateOnNewDocument', { source: `(()=>{const nativeFetch=window.fetch.bind(window);window.fetch=(url,options)=>String(url).includes('api.github.com/users/bolens/repos')?Promise.reject(new Error('unstubbed GitHub API request')):nativeFetch(url,options)})()` });
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
   await send('Page.navigate', { url: `${origin}/work/` });
   await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.work-tools')`, 'work controls');
@@ -100,7 +92,7 @@ try {
     for (const [width, height, name] of [[1440, 1000, 'desktop'], [390, 844, 'mobile']]) {
       await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: width < 600 });
       await send('Runtime.evaluate', { expression: `document.querySelector('.work-tools').scrollIntoView({block:'start'})` });
-      await pause(100);
+      await waitForFrames(send);
       const capture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
       writeFileSync(`/tmp/bolens-work-filters-${name}.png`, Buffer.from(capture.data, 'base64'));
     }

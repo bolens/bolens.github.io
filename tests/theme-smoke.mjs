@@ -1,5 +1,6 @@
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
+import { waitFor } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -7,16 +8,6 @@ const server = await startSiteServer(root);
 const { origin } = server;
 let browser;
 
-const pause = (duration = 100) => new Promise((done) => setTimeout(done, duration));
-const waitFor = async (send, expression, description = expression, timeout = 10_000) => {
-  const deadline = Date.now() + timeout;
-  while (Date.now() < deadline) {
-    const ready = await send('Runtime.evaluate', { expression, returnByValue: true });
-    if (ready.result.value) return ready.result.value;
-    await pause(50);
-  }
-  throw new Error(`timed out waiting for ${description} after ${timeout}ms`);
-};
 
 try {
   browser = await startBrowser(() => {});
