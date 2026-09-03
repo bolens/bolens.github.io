@@ -146,7 +146,13 @@
 .ufo-lights { fill:#eab94e; animation:ufo-lights 5.6s ease-in-out infinite alternate; }
 .ufo-lights circle:nth-child(2) { opacity:.7; }.ufo-lights circle:nth-child(3) { opacity:.48; }.ufo-lights circle:nth-child(4) { opacity:.28; }
 .tent-peekers { transform:none; }
-.tent-dog { animation: dog-look 6s -1s ease-in-out infinite; transform-box: view-box; transform-origin: 949px 620px; }
+.tent-dog { animation:dog-look 6s -1s ease-in-out infinite;transform-box:view-box;transform-origin:949px 620px;transition:translate .8s ease,scale .8s ease; }
+:root:is([data-weather="rainy"],[data-weather="snowy"]) .tent-dog { translate:0 5px;scale:.96; }
+:root[data-weather="drought"] .tent-dog { translate:0 -2px; }
+.tent-camera { --camera-glint-opacity:.58; }
+:root:is([data-weather="cloudy"],[data-weather="rainy"],[data-weather="snowy"]) .tent-camera { --camera-glint-opacity:.24; }
+:root:is([data-weather="clear"],[data-weather="dry"]) .tent-camera { --camera-glint-opacity:.72; }
+:root[data-weather="drought"] .tent-camera { --camera-glint-opacity:.38; }
 .camera-glint { animation:camera-snapshot 8s steps(1) infinite; }
 .camper { filter:none;opacity:1;visibility:visible;shape-rendering:geometricPrecision; }
 .bigfoot { transform-box:view-box; transform-origin:350px 643px; scale:1.1; filter:none; }

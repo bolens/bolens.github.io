@@ -13,7 +13,7 @@
     .camp-atmosphere { position:absolute; inset:0; z-index:1; width:100%; height:100%; pointer-events:none; mix-blend-mode:screen; }
     .cryptid-camp > svg { position:relative; z-index:0; }
     .cryptid-camp figcaption { z-index:2; }
-    .camera-glint { animation:none; opacity:.58; }
+    .camera-glint { animation:none; opacity:var(--camera-glint-opacity,.58); }
     .hybrid-effects-ready .forest-fireflies,.hybrid-effects-ready .embers,.hybrid-effects-ready .scene-grain { opacity:0; }
     @media (prefers-reduced-motion:reduce) { .camp-atmosphere { opacity:.72; } }
   </style>
@@ -345,6 +345,24 @@
             <path d="m24 23 6 9m-6 0 6-9" stroke="var(--lantern-glint,#fff0a4)" stroke-width="1.5"/>
             <circle class="lantern-halo lantern-halo-inner" cx="27" cy="27" r="9" fill="var(--lantern-light,#ffd76a)" opacity="var(--lantern-inner-opacity,.2)"/>
             <use href="#terrain-condition-marks" width="54" height="54"/>
+          </symbol>
+          <symbol id="trail-camera" viewBox="0 0 39 32" data-regions="camera-body,viewfinder,lens,lens-glass,lens-glint,conditions">
+            <rect y="7" width="39" height="25" rx="4" fill="var(--camera-body,#171d20)" stroke="var(--camera-edge,#4c5b5e)" stroke-width="3"/>
+            <path d="m7 7 5-7h13l5 7" fill="var(--camera-top,#252d30)" stroke="var(--camera-edge,#4c5b5e)" stroke-width="2"/>
+            <circle cx="20" cy="19" r="9" fill="var(--camera-lens,#071117)" stroke="var(--camera-lens-ring,#8ba4a2)" stroke-width="3"/>
+            <circle cx="20" cy="19" r="4" fill="var(--camera-glass,#406f75)"/>
+            <circle class="camera-glint" cx="17" cy="16" r="1.8" fill="var(--camera-glint,#dffdfa)"/>
+            <use href="#terrain-condition-marks" width="39" height="32"/>
+          </symbol>
+          <symbol id="camp-windhound" viewBox="0 0 64 64" data-regions="body,head,ears,ear-shadows,face-mask,eyes,muzzle,nose,conditions">
+            <path d="M0 64q2-39 31-43 31 4 33 43Z" fill="var(--hound-coat,#e8e5dc)"/>
+            <path d="M17 30q0-25 14-27 15 2 15 27l-5 17-10 8-10-8Z" fill="var(--hound-face,#f3f0e8)"/>
+            <path d="M20 17Q11-1 2 0 0 15 10 26q4 5 9 8l3-9Zm22 0Q51-1 60 0q2 15-8 26-4 5-9 8l-3-9Z" fill="var(--hound-ears,#20292d)"/>
+            <path d="M4 1q8 2 13 11l3 7-6 5Q4 16 4 1Zm54 0q-8 2-13 11l-3 7 6 5Q58 16 58 1Z" fill="var(--hound-ear-shadow,#394348)" opacity=".8"/>
+            <path d="M19 23q2-18 12-20 11 2 13 20l-4 17-9 7-9-7Z" fill="var(--hound-mask,#273034)"/>
+            <g fill="var(--hound-eye,#f5edc4)"><circle cx="26" cy="25" r="2"/><circle cx="37" cy="25" r="2"/></g>
+            <path d="M27 30q4-3 8 0l2 9-6 6-6-6Z" fill="var(--hound-muzzle,#f3f0e8)"/><ellipse cx="31" cy="38" rx="3.5" ry="2.5" fill="var(--hound-nose,#090d0e)"/>
+            <use href="#terrain-condition-marks" width="64" height="64"/>
           </symbol>
           <symbol id="river-stone" viewBox="0 0 30 20" data-regions="stone-body,stone-glint,conditions">
             <path d="m2 13 8-8 12 1 6 7-7 5H8Z" fill="var(--stone-fill,#536862)" stroke="#18302f" stroke-width="1.8" stroke-linejoin="round"/>
@@ -681,20 +699,10 @@
               <circle cx="951" cy="574" r="2.2" fill="#17272a"/><circle cx="966" cy="574" r="2.2" fill="#17272a"/><path d="M951 586q7 5 14 0" fill="none" stroke="#814f45" stroke-width="2"/>
               <g class="tent-camera">
                 <path d="m940 587-10 12m46-12 10 12" fill="none" stroke="#dca986" stroke-width="7" stroke-linecap="round"/>
-                <rect x="938" y="576" width="39" height="25" rx="4" fill="#171d20" stroke="#4c5b5e" stroke-width="3"/>
-                <path d="m945 576 5-7h13l5 7" fill="#252d30" stroke="#4c5b5e" stroke-width="2"/>
-                <circle cx="958" cy="588" r="9" fill="#071117" stroke="#8ba4a2" stroke-width="3"/>
-                <circle cx="958" cy="588" r="4" fill="#406f75"/><circle class="camera-glint" cx="955" cy="585" r="1.8" fill="#dffdfa"/>
+                <use class="terrain-asset" data-light="shadow" data-weather="clear" href="#trail-camera" x="938" y="569" width="39" height="32"/>
               </g>
             </g>
-            <g class="tent-dog" transform="translate(1 25)">
-              <path d="M918 638q2-39 31-43 31 4 33 43Z" fill="#e8e5dc"/>
-              <path d="M935 604q0-25 14-27 15 2 15 27l-5 17-10 8-10-8Z" fill="#f3f0e8"/>
-              <path d="M938 591q-9-18-18-17-2 15 8 26 4 5 9 8l3-9Zm22 0q9-18 18-17 2 15-8 26-4 5-9 8l-3-9Z" fill="#20292d"/>
-              <path d="M922 575q8 2 13 11l3 7-6 5q-10-8-10-23Zm54 0q-8 2-13 11l-3 7 6 5q10-8 10-23Z" fill="#394348" opacity=".8"/>
-              <path d="M937 597q2-18 12-20 11 2 13 20l-4 17-9 7-9-7Z" fill="#273034"/>
-              <circle cx="944" cy="599" r="2" fill="#f5edc4"/><circle cx="955" cy="599" r="2" fill="#f5edc4"/><path d="M945 604q4-3 8 0l2 9-6 6-6-6Z" fill="#f3f0e8"/><ellipse cx="949" cy="612" rx="3.5" ry="2.5" fill="#090d0e"/>
-            </g>
+            <use class="terrain-asset tent-dog" data-light="shadow" data-weather="clear" href="#camp-windhound" x="919" y="599" width="64" height="64"/>
             <use class="terrain-asset tent-sleeping-bag" data-light="shadow" data-weather="dry" href="#sleeping-roll" x="959" y="611" width="42" height="39"/>
             <use class="terrain-asset tent-lantern" data-light="fire" data-weather="clear" href="#camp-lantern" x="860" y="598" width="54" height="54" style="--asset-cloud-opacity:0;--asset-rain-opacity:0;--asset-wet-opacity:0;--asset-dry-opacity:0;--asset-snow-opacity:0;--asset-drought-opacity:0"/>
             <path d="M861 647h155" stroke="#e78461" stroke-width="7"/>
@@ -922,7 +930,7 @@
           <g class="day-camp" stroke-linecap="round" stroke-linejoin="round">
             <g class="day-tent-duplicate"><path d="M861 655 934 530l99 125Z" fill="var(--lost-day-tent)" stroke="var(--lost-day-tent-edge)" stroke-width="4"/><path d="M934 530 988 654h-107Z" fill="#344f4d" opacity=".76"/><path d="m934 530 54 124m-54-124-53 124" fill="none" stroke="#f5d4b5" stroke-width="3"/></g>
             <g class="day-campers"><g transform="translate(850 525)"><circle cx="0" cy="0" r="18" fill="#e5b18a"/><path d="M-17-3q1-24 18-24 18 1 18 25L9-16q-13 8-26 13Z" fill="#b96743"/><path d="M-15 2h12m6 0h12M-3 2h6" fill="none" stroke="#202628" stroke-width="3"/><path d="M-3 13q5 3 10 0m-9 4q5 7 10 0" fill="none" stroke="#724737" stroke-width="2"/><path d="M-17 21q18-11 36 0l8 77h-55Z" fill="#547b72"/><path d="M-14 97-25 132m41-35 21 35M-17 34l-28 34m62-34 27 26" fill="none" stroke="#425e58" stroke-width="12"/></g><g transform="translate(926 527)"><circle cx="0" cy="0" r="18" fill="#d9a27f"/><path d="M-19 2q-1-28 19-29 22 2 20 31L10-15q-17 8-29 17Z" fill="#49302c"/><path d="M-9 3h2m14 0h2M-7 13q7 4 14 0" fill="none" stroke="#51362f" stroke-width="2.5"/><path d="M-18 22q18-11 36 0l9 76h-54Z" fill="#b45f4a"/><path d="M-14 97-24 132m39-35 20 35M-17 35l-26 31m60-31 25 25" fill="none" stroke="#8e493d" stroke-width="12"/><path d="M40 57q18-13 30 2" fill="none" stroke="#d9a27f" stroke-width="8"/></g>
-              <g class="day-windhound" transform="translate(988 628)"><path d="M-12 8q13-36 42-28 25 8 38 31l-13 17h-58Z" fill="#eee9df"/><path d="M42-8q7-31 28-32 20 5 16 34L70 17 52 9Z" fill="#252e31"/><path d="M58-31q-12-18-22-12 0 17 14 25m30-13q12-17 21-10-1 17-15 24" fill="#252e31"/><path d="M63-10q8-5 15 0m-12 10 9 0" fill="none" stroke="#d6d0c7" stroke-width="2"/><ellipse cx="72" cy="4" rx="4" ry="3" fill="#101315"/><path d="M4 26-2 45m48-18 2 18m23-25 10 21" fill="none" stroke="#eee9df" stroke-width="8"/></g></g>
+              <use class="terrain-asset day-windhound" data-light="sun" data-weather="clear" href="#camp-windhound" x="976" y="585" width="113" height="113" style="--hound-coat:#eee9df;--hound-face:#eee9df"/></g>
             <g class="day-log-stack" transform="translate(610 654)"><ellipse cx="0" cy="26" rx="75" ry="18" fill="#23392f" opacity=".35"/><use href="#camp-log" x="-54" y="3" width="108" height="15" style="--log-bark:#825237;--log-outline:#3a241b;--log-highlight:#b7794d"/><use href="#camp-log" x="-47" y="4" width="98" height="14" transform="rotate(52)" style="--log-bark:#825237;--log-outline:#3a241b;--log-highlight:#b7794d"/><use href="#camp-log" x="-49" y="3" width="101" height="14" transform="rotate(-52)" style="--log-bark:#825237;--log-outline:#3a241b;--log-highlight:#b7794d"/></g>
           </g>
           <g class="day-dogman-bush" transform="translate(1080 555)"><g class="day-added-bush" fill="var(--lost-day-shrub)" stroke="var(--lost-day-pine-dark)" stroke-width="3"><circle cx="-48" cy="66" r="43"/><circle cx="0" cy="48" r="55"/><circle cx="53" cy="70" r="45"/><circle cx="13" cy="91" r="52"/></g><g class="day-dogman"><path d="m-22 37 7-38 20 24L26-1l8 39q-4 37-28 48-26-11-28-49Z" fill="#55453d"/><path d="M-12 42Q5 26 24 43l-4 25L6 80-10 68Z" fill="#322a27"/><ellipse cx="-4" cy="42" rx="3" ry="2" fill="#c9d8cf"/><ellipse cx="17" cy="42" rx="3" ry="2" fill="#d7a846"/><ellipse cx="6" cy="60" rx="7" ry="5" fill="#111"/></g></g>
