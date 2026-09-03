@@ -114,7 +114,7 @@ for (const [relativePath, prefix, current, workHref, aboutHref, footerHref, foot
     ...(relativePath.startsWith('case-studies/') ? [`${prefix}assets/case-study.css`] : []),
   ];
   const routeLinks = routeStyles.map((href) => `<link rel="stylesheet" href="${href}">`).join('');
-  const header = `<header class="site-header wrap"><a class="wordmark" href="${prefix || './'}" aria-label="Michael Bolens, home">${mark}</a><nav aria-label="Primary navigation"><a${current === 'work' ? ' aria-current="page"' : ''} href="${workHref}">Work</a><a${current === 'about' ? ' aria-current="page"' : ''} href="${aboutHref}">About</a><a class="nav-cta" rel="me" href="https://github.com/bolens">GitHub <span aria-hidden="true">↗</span></a></nav></header>`;
+  const header = `<header class="site-header wrap"><a class="wordmark" href="${prefix || './'}" aria-label="Michael Bolens, home">${mark}<span class="wordmark-copy"><b>Michael Bolens</b><small>Systems builder</small></span></a><nav aria-label="Primary navigation"><a${current === 'work' ? ' aria-current="page"' : ''} href="${workHref}">Work</a><a${current === 'about' ? ' aria-current="page"' : ''} href="${aboutHref}">About</a><a class="nav-cta" rel="me" href="https://github.com/bolens">GitHub <span aria-hidden="true">↗</span></a></nav></header>`;
   const footer = `<footer class="site-footer wrap"><p>Michael Bolens</p><a href="${footerHref}">${footerLabel} <span aria-hidden="true">${footerArrow}</span></a></footer>`;
   outputs.set(relativePath, source
     .replace(new RegExp(`<link rel="stylesheet" href="${prefix}assets/theme-tokens\\.css">`, 'g'), '')
