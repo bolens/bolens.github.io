@@ -377,4 +377,6 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
   *,*::before,*::after { animation: none !important; transition: none !important; }
 }
 
+.glyph-explorer-item:is(:hover,:focus-visible)>svg>use { --glyph-trail-blaze-brush-motion:glyph-trail-blaze-brush 680ms var(--ease-route); --glyph-marshmallow-roast-motion:glyph-marshmallow-roast-turn 680ms var(--ease-pop); }
+
 /* 404 · cryptid night watch */
