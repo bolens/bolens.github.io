@@ -51,6 +51,7 @@
   let width = 0;
   let height = 0;
   let pixelRatio = 1;
+  let view = { scale: 1, x: 0, y: 0 };
   let frameId = 0;
   let previousTime = 0;
   let visible = !document.hidden;
@@ -81,6 +82,7 @@
     width = Math.max(1, bounds.width);
     height = Math.max(1, bounds.height);
     pixelRatio = Math.min(devicePixelRatio || 1, restrained ? 1.25 : 1.5);
+    view = sceneTransform();
     canvas.width = Math.round(width * pixelRatio);
     canvas.height = Math.round(height * pixelRatio);
     context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
@@ -119,7 +121,6 @@
 
   const draw = (time) => {
     context.clearRect(0, 0, width, height);
-    const view = sceneTransform();
     const point = (x, y) => [view.x + x * view.scale, view.y + y * view.scale];
 
     context.save();

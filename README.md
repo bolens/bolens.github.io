@@ -13,6 +13,9 @@ Then open <http://localhost:4173>.
 ## Verify
 
 ```sh
+node scripts/build-site.mjs --check
 node tests/check-site.mjs
 node tests/browser-smoke.mjs
 ```
+
+Project listings, command-palette entries, shared page chrome, `sitemap.xml`, and `llms.txt` are generated from `data/projects.json` and `scripts/build-site.mjs`. Run `node scripts/build-site.mjs` after changing project data or shared navigation.

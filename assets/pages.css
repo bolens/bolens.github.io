@@ -1,0 +1,5 @@
+.inner-page { padding-block: clamp(5rem, 10vw, 9rem); }
+.page-intro { max-width: 950px; }
+.page-intro .lede { max-width: 43rem; }
+.prose h3 { margin: 0 0 .7rem; font: 400 clamp(1.65rem,2vw,1.9rem)/1.12 var(--serif); letter-spacing: -.018em; }
+.prose p { max-width: 65ch; margin: 0 0 3rem; color: var(--muted); font-size: clamp(1.03rem,.98rem + .2vw,1.1rem); line-height: 1.68; }

@@ -1,52 +1,11 @@
 (() => {
-  const palettes = {
-    alpine: { label: 'Alpine', light: '#edf4f3', dark: '#102322' },
-    desert: { label: 'High Desert', light: '#f3ead8', dark: '#211914' },
-    glacier: { label: 'Glacier', light: '#eaf1f4', dark: '#10232f' },
-    signal: { label: 'Night Signal', light: '#f0edf5', dark: '#1d1729' },
-    forest: { label: 'Forest Canopy', light: '#edf1e7', dark: '#172119' },
-    coast: { label: 'Pacific Coast', light: '#e8f0ef', dark: '#102326' },
-    meadow: { label: 'Wildflower', light: '#f1efe4', dark: '#202019' },
-    volcanic: { label: 'Volcanic', light: '#eeeae7', dark: '#211a18' },
-  };
-  const storageKey = 'portfolio-palette';
-  const themeStorageKey = 'portfolio-theme';
-  let selected = 'glacier';
-  let selectedTheme = 'auto';
-  const requested = new URLSearchParams(location.search).get('palette');
-
-  if (requested in palettes) selected = requested;
-  else try {
-    const saved = localStorage.getItem(storageKey);
-    if (saved in palettes) selected = saved;
-  } catch {}
-  try {
-    const savedTheme = localStorage.getItem(themeStorageKey);
-    if (['auto', 'day', 'night'].includes(savedTheme)) selectedTheme = savedTheme;
-  } catch {}
-
-  const applyPalette = (name) => {
-    selected = name in palettes ? name : 'glacier';
-    document.documentElement.dataset.palette = selected;
-    const palette = palettes[selected];
-    document.querySelector('meta[name="theme-color"][media*="light"]')?.setAttribute('content', selectedTheme === 'night' ? palette.dark : palette.light);
-    document.querySelector('meta[name="theme-color"][media*="dark"]')?.setAttribute('content', selectedTheme === 'day' ? palette.light : palette.dark);
-    document.querySelector('meta[name="theme-color"]:not([media])')?.setAttribute('content', selectedTheme === 'day' ? palette.light : palette.dark);
-    try { localStorage.setItem(storageKey, selected); } catch {}
-  };
-
-  applyPalette(selected);
-  const applyTheme = (theme) => {
-    selectedTheme = ['auto', 'day', 'night'].includes(theme) ? theme : 'auto';
-    if (selectedTheme === 'auto') delete document.documentElement.dataset.theme;
-    else document.documentElement.dataset.theme = selectedTheme;
-    const palette = palettes[selected];
-    document.querySelector('meta[name="theme-color"][media*="light"]')?.setAttribute('content', selectedTheme === 'night' ? palette.dark : palette.light);
-    document.querySelector('meta[name="theme-color"][media*="dark"]')?.setAttribute('content', selectedTheme === 'day' ? palette.light : palette.dark);
-    document.querySelector('meta[name="theme-color"]:not([media])')?.setAttribute('content', selectedTheme === 'day' ? palette.light : palette.dark);
-    try { localStorage.setItem(themeStorageKey, selectedTheme); } catch {}
-  };
-  applyTheme(selectedTheme);
+  const appearance = window.portfolioAppearance;
+  if (!appearance) return;
+  const { palettes } = appearance;
+  let selected = appearance.palette;
+  let selectedTheme = appearance.theme;
+  const applyPalette = (name) => { selected = appearance.applyPalette(name); };
+  const applyTheme = (theme) => { selectedTheme = appearance.applyTheme(theme); };
 
   const mountPicker = () => {
     let pickerReturnFocus = null;
@@ -139,21 +98,12 @@
       { label: 'All work', detail: 'Project index', group: 'Go to', href: '/work/', shortcut: 'Alt W', ariaShortcut: 'Alt+W' },
       { label: 'About Michael', detail: 'Approach, principles, and interests', group: 'Go to', href: '/about/', shortcut: 'Alt A', ariaShortcut: 'Alt+A' },
       ...pageSections.map(([id, label, detail]) => ({ label, detail, group: 'On this page', href: `#${id}`, keywords: `case study section ${id}` })),
-      { label: 'uDDNS case study', detail: 'Dynamic DNS across multiple providers', group: 'Case study', href: '/case-studies/uddns/' },
-      { label: 'AUR Response Toolkit', detail: 'Evidence-backed incident response', group: 'Case study', href: '/case-studies/aur-response-toolkit/' },
-      { label: 'Privacy Devices', detail: 'Local-first privacy controls', group: 'Case study', href: '/case-studies/privacy-devices/' },
-      { label: 'Launch Layer', detail: 'Layered Steam launch orchestration', group: 'Case study', href: '/case-studies/launch-layer/' },
-      { label: 'Millennium Helpers', detail: 'Cross-platform Steam tooling', group: 'Case study', href: '/case-studies/millennium-helpers/' },
+      ...(window.portfolioProjects ?? []).flatMap((project) => [
+        { label: project.caseLabel, detail: project.commandDetail, group: 'Case study', href: `/case-studies/${project.slug}/` },
+        ...(project.site ? [{ label: `${project.name} project site`, detail: 'Documentation and installation', group: 'Open', href: project.site }] : []),
+        { label: `${project.name} repository`, detail: 'Source on GitHub', group: 'Open', href: project.repository },
+      ]),
       { label: 'GitHub profile', detail: 'All repositories', group: 'Open', href: 'https://github.com/bolens' },
-      { label: 'uDDNS project site', detail: 'Documentation and installation', group: 'Open', href: 'https://bolens.github.io/uddns/' },
-      { label: 'uDDNS repository', detail: 'Source on GitHub', group: 'Open', href: 'https://github.com/bolens/uddns' },
-      { label: 'AUR Response Toolkit project site', detail: 'Documentation and installation', group: 'Open', href: 'https://bolens.github.io/aur-response-toolkit/' },
-      { label: 'AUR Response Toolkit repository', detail: 'Source on GitHub', group: 'Open', href: 'https://github.com/bolens/aur-response-toolkit' },
-      { label: 'Privacy Devices project site', detail: 'Documentation and installation', group: 'Open', href: 'https://bolens.github.io/omarchy-privacy-devices/' },
-      { label: 'Privacy Devices repository', detail: 'Source on GitHub', group: 'Open', href: 'https://github.com/bolens/omarchy-privacy-devices' },
-      { label: 'Launch Layer repository', detail: 'Source on GitHub', group: 'Open', href: 'https://github.com/bolens/launch-layer' },
-      { label: 'Millennium Helpers project site', detail: 'Documentation and installation', group: 'Open', href: 'https://bolens.github.io/millennium-helpers/' },
-      { label: 'Millennium Helpers repository', detail: 'Source on GitHub', group: 'Open', href: 'https://github.com/bolens/millennium-helpers' },
       { label: 'Back', detail: 'Return to the previous page', group: 'Browser', keywords: 'history previous', run: () => history.back() },
       { label: 'Forward', detail: 'Move to the next page in history', group: 'Browser', keywords: 'history next', run: () => history.forward() },
       { label: 'Reload page', detail: 'Refresh the current page', group: 'Browser', keywords: 'refresh', run: () => location.reload() },
@@ -176,6 +126,9 @@
       { label: 'Use night appearance', detail: 'Switch to the dark scene', group: 'Theme', keywords: 'dark', run: () => chooseTheme('night') },
       { label: 'Reset color settings', detail: 'Restore Glacier and system appearance', group: 'Theme', keywords: 'default clear preferences', run: () => { choosePalette('glacier'); chooseTheme('auto'); } },
     ];
+    for (const command of commands) {
+      command.searchText = `${command.label} ${command.detail} ${command.group} ${command.keywords ?? ''} ${command.shortcut ? `keyboard shortcut hotkey ${command.shortcut}` : ''}`.toLowerCase();
+    }
     const dialog = document.createElement('dialog');
     dialog.className = 'command-palette';
     dialog.setAttribute('aria-label', 'Site search and commands');
@@ -204,8 +157,7 @@
       const query = input.value.trim().toLowerCase();
       const terms = query.split(/\s+/).filter(Boolean);
       visible = commands.filter((command) => {
-        const searchable = `${command.label} ${command.detail} ${command.group} ${command.keywords ?? ''} ${command.shortcut ? `keyboard shortcut hotkey ${command.shortcut}` : ''}`.toLowerCase();
-        return terms.every((term) => searchable.includes(term));
+        return terms.every((term) => command.searchText.includes(term));
       });
       active = Math.min(active, Math.max(visible.length - 1, 0));
       results.innerHTML = visible.map((command, index) => `<button type="button" id="command-option-${index}" role="option" aria-selected="${index === active}"${command.ariaShortcut ? ` aria-keyshortcuts="${command.ariaShortcut}"` : ''} data-command-index="${index}"><span><b>${command.label}</b><small>${command.detail}</small></span><span class="command-meta"><i>${command.group}</i>${command.shortcut ? `<kbd>${command.shortcut}</kbd>` : ''}</span></button>`).join('');

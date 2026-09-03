@@ -1,0 +1,25 @@
+.about-intro-note { max-width: 35rem; margin: 2.3rem 0 0 auto; padding-left: 1.2rem; border-left: 3px solid var(--copper); color: var(--muted); font: 400 clamp(1rem,1.3vw,1.12rem)/1.6 var(--serif); }
+.about-grid { display: grid; grid-template-columns: .8fr 1.4fr; gap: clamp(3rem, 8vw, 8rem); margin-top: 8rem; padding-top: 4rem; border-top: 1px solid var(--line); }
+.about-heading { position: sticky; top: 2rem; align-self: start; }
+.about-heading h2 { max-width: 10ch; }
+.about-story { min-width: 0; }
+.about-prologue { padding-bottom: 3.5rem; border-bottom: 1px solid var(--line); }
+.about-prologue p { max-width: 58ch; margin: 0 0 1.25rem; color: var(--muted); font-size: clamp(1.08rem,1.4vw,1.22rem); line-height: 1.65; }
+.about-prologue p:first-child { color: var(--ink); font-family: var(--serif); font-size: clamp(1.35rem,2vw,1.75rem); line-height: 1.45; }
+.about-principles { position: relative; }
+.about-principles::before { content: ''; position: absolute; top: 0; bottom: 0; left: 7px; width: 1px; background: var(--line); }
+.about-principles article { position: relative; padding: 2.7rem 0 2.7rem 3rem; border-bottom: 1px solid var(--line); }
+.about-principles article::before { content: ''; position: absolute; z-index: 1; top: 3rem; left: 0; width: 15px; aspect-ratio: 1; border: 3px solid var(--paper); border-radius: 50%; background: var(--copper); box-shadow: 0 0 0 1px var(--copper); }
+.about-principles .eyebrow { margin-bottom: .55rem; color: var(--copper); }
+.about-principles h3 { margin: 0; font: 400 clamp(1.6rem,2.4vw,2.15rem)/1.1 var(--serif); letter-spacing: -.025em; }
+.about-principles article > p:last-child { max-width: 58ch; margin: .8rem 0 0; color: var(--muted); line-height: 1.65; }
+.about-field-notes { display: grid; grid-template-columns: .8fr 1.4fr; gap: clamp(3rem,8vw,8rem); padding-block: clamp(5rem,9vw,8rem); border-bottom: 1px solid var(--line); }
+.about-field-notes h2 { max-width: 10ch; margin: 0; font: 400 clamp(2.2rem,4.2vw,4rem)/1.02 var(--serif); letter-spacing: -.04em; }
+.about-field-notes dl { margin: 0; }
+.about-field-notes dl div { display: grid; grid-template-columns: minmax(8rem,.55fr) 1fr; gap: 1.5rem; padding: 1.35rem 0; border-bottom: 1px solid var(--line); }
+.about-field-notes dt { color: var(--copper); font: 700 .72rem/1.4 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+.about-field-notes dd { margin: 0; color: var(--muted); line-height: 1.6; }
+.availability { margin-top: 5rem; padding: clamp(2rem, 6vw, 5rem); background: var(--ink); color: var(--snow); }
+.availability h2 { max-width: 800px; }
+.availability .button { margin-top: 2.5rem; border-color: var(--snow); background: var(--snow); color: var(--ink); }
+.availability .button:hover { color: var(--snow); background: var(--copper); border-color: var(--copper); }

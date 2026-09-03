@@ -2,9 +2,11 @@ const routeLinks = [...document.querySelectorAll('.case-route a[href^="#"]')];
 const sections = routeLinks
   .map((link) => document.querySelector(link.getAttribute('href')))
   .filter(Boolean);
+const sectionIndex = new Map(sections.map((section, index) => [section.id, index]));
+const linksById = new Map(routeLinks.map((link) => [link.getAttribute('href').slice(1), link]));
 
 function setActiveSection(id) {
-  const activeIndex = sections.findIndex((section) => section.id === id);
+  const activeIndex = sectionIndex.get(id) ?? -1;
 
   for (const link of routeLinks) {
     const linkIndex = routeLinks.indexOf(link);

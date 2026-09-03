@@ -1,9 +1,13 @@
 import { existsSync, readFileSync, readdirSync, statSync } from 'node:fs';
 import { dirname, join, relative, resolve } from 'node:path';
+import { spawnSync } from 'node:child_process';
 
 const root = resolve(import.meta.dirname, '..');
 const failures = [];
 const fail = (file, message) => failures.push(`${relative(root, file)}: ${message}`);
+
+const generated = spawnSync(process.execPath, ['scripts/build-site.mjs', '--check'], { cwd: root, encoding: 'utf8' });
+if (generated.status !== 0) failures.push(generated.stderr.trim() || 'generated site content is stale');
 
 function walk(directory) {
   return readdirSync(directory).flatMap((name) => {

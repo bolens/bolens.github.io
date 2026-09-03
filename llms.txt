@@ -12,18 +12,21 @@ Michael Bolens builds open-source Linux and infrastructure tools that expose sys
 
 - uDDNS: https://bolens.github.io/case-studies/uddns/
 - AUR Response Toolkit: https://bolens.github.io/case-studies/aur-response-toolkit/
-- Privacy Devices: https://bolens.github.io/case-studies/privacy-devices/
 - Launch Layer: https://bolens.github.io/case-studies/launch-layer/
 - Millennium Helpers: https://bolens.github.io/case-studies/millennium-helpers/
+- Privacy Devices: https://bolens.github.io/case-studies/privacy-devices/
 
 ## Source repositories
 
 - Portfolio: https://github.com/bolens/bolens.github.io
 - uDDNS: https://github.com/bolens/uddns
 - AUR Response Toolkit: https://github.com/bolens/aur-response-toolkit
-- Privacy Devices: https://github.com/bolens/omarchy-privacy-devices
 - Launch Layer: https://github.com/bolens/launch-layer
 - Millennium Helpers: https://github.com/bolens/millennium-helpers
+- Privacy Devices: https://github.com/bolens/omarchy-privacy-devices
+- P2P Services: https://github.com/bolens/omarchy-p2p-services
+- App Drawer: https://github.com/bolens/omarchy-app-drawer
+- Multi-Monitor Workspaces: https://github.com/bolens/omarchy-multi-monitor-workspaces
 
 ## Contact
 
