@@ -55,7 +55,17 @@ try {
 
   const overlayChrome = await send('Runtime.evaluate', { expression: `(()=>{const dialogs=[...document.querySelectorAll('.command-palette,.shortcut-overlay,.glyph-explorer')];const iconButtons=[...document.querySelectorAll('.overlay-close')];const palette=document.querySelector('.palette-picker');return {dialogs:dialogs.length,headers:dialogs.filter((dialog)=>dialog.querySelector(':scope>.overlay-header')).length,headingGlyphs:dialogs.filter((dialog)=>dialog.querySelector('.overlay-heading-glyph[aria-hidden="true"]')).length,iconButtons:iconButtons.length,named:iconButtons.every((button)=>button.getAttribute('aria-label')&&button.dataset.tooltip===button.getAttribute('aria-label')),decorative:iconButtons.every((button)=>button.querySelector('svg[aria-hidden="true"][focusable="false"]')),paletteHeader:!!palette.querySelector('.palette-panel-heading .overlay-heading-glyph[aria-hidden="true"]'),paletteClose:!!palette.querySelector('.overlay-close[aria-label="Close color and appearance controls"]')}})()`, returnByValue: true });
   if (JSON.stringify(overlayChrome.result.value) !== JSON.stringify({ dialogs: 3, headers: 3, headingGlyphs: 3, iconButtons: 4, named: true, decorative: true, paletteHeader: true, paletteClose: true })) throw new Error(`overlay chrome semantics failed: ${JSON.stringify(overlayChrome.result.value)}`);
-  await send('Runtime.evaluate', { expression: `(()=>{const shortcuts=document.querySelector('.shortcut-overlay');shortcuts.showModal();shortcuts.querySelector('.overlay-close').focus()})()` });
+  await send('Runtime.evaluate', { expression: `(()=>{const shortcuts=document.querySelector('.shortcut-overlay');shortcuts.showModal();const close=shortcuts.querySelector('.overlay-close');close.blur();const box=close.getBoundingClientRect();window.__tooltipPoint={x:box.left+box.width/2,y:box.top+box.height/2}})()` });
+  const tooltipPoint = await send('Runtime.evaluate', { expression: 'window.__tooltipPoint', returnByValue: true });
+  await send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...tooltipPoint.result.value });
+  await pause(150);
+  const earlyTooltip = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector('.shortcut-overlay .overlay-close'),'::after').opacity`, returnByValue: true });
+  if (earlyTooltip.result.value !== '0') throw new Error(`pointer tooltip appeared before its hover delay: ${earlyTooltip.result.value}`);
+  await pause(450);
+  const delayedTooltip = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector('.shortcut-overlay .overlay-close'),'::after').opacity`, returnByValue: true });
+  if (Number.parseFloat(delayedTooltip.result.value) < .95) throw new Error(`pointer tooltip did not appear after its hover delay: ${delayedTooltip.result.value}`);
+  await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 0, y: 0 });
+  await send('Runtime.evaluate', { expression: `document.querySelector('.shortcut-overlay .overlay-close').focus()` });
   await pause(250);
   const tooltipState = await send('Runtime.evaluate', { expression: `(()=>{const close=document.querySelector('.shortcut-overlay .overlay-close');const tooltip=getComputedStyle(close,'::after');const state={opacity:tooltip.opacity,content:tooltip.content,focused:document.activeElement===close};close.closest('dialog').close();return state})()`, returnByValue: true });
   if (tooltipState.result.value.opacity !== '1' || !tooltipState.result.value.content.includes('Close keyboard shortcuts') || !tooltipState.result.value.focused) throw new Error(`keyboard tooltip failed: ${JSON.stringify(tooltipState.result.value)}`);
