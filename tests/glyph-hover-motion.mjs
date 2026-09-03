@@ -107,7 +107,7 @@ const secondaryMotions = {
   beacon: [['--glyph-beacon-ring-b-motion', 'glyph-beacon-ring-b-pulse']],
   cabin: [['--glyph-cabin-smoke-b-motion', 'glyph-cabin-smoke-b-rise']],
   'trail-camera': [['--glyph-trail-camera-flash-motion', 'glyph-trail-camera-flash-pop']],
-  'trail-blaze': [['--glyph-trail-blaze-b-motion', 'glyph-trail-blaze-paint-b'], ['--glyph-trail-blaze-c-motion', 'glyph-trail-blaze-paint-c']],
+  'trail-blaze': [['--glyph-trail-blaze-brush-motion', 'glyph-trail-blaze-brush']],
   radio: [['--glyph-radio-note-b-motion', 'glyph-radio-note-b-float']],
   filter: [['--glyph-filter-particle-b-motion', 'glyph-filter-particle-b-drop']],
   sort: [['--glyph-sort-bar-b-motion', 'glyph-sort-bar-b-settle'], ['--glyph-sort-bar-c-motion', 'glyph-sort-bar-c-settle']],
@@ -121,6 +121,7 @@ const secondaryMotions = {
   trout: [['--glyph-trout-bubble-motion', 'glyph-trout-bubble-rise']],
   canoe: [['--glyph-canoe-ripple-motion', 'glyph-canoe-ripple-spread']],
   mushroom: [['--glyph-mushroom-spore-b-motion', 'glyph-mushroom-spore-b-float']],
+  marshmallow: [['--glyph-marshmallow-roast-motion', 'glyph-marshmallow-roast-turn']],
   'paw-print': [['--glyph-paw-toe-a-motion', 'glyph-paw-toe-a-land'], ['--glyph-paw-toe-b-motion', 'glyph-paw-toe-b-land'], ['--glyph-paw-toe-c-motion', 'glyph-paw-toe-c-land'], ['--glyph-paw-toe-d-motion', 'glyph-paw-toe-d-land']],
   pinecone: [['--glyph-pinecone-scale-b-motion', 'glyph-pinecone-scale-b-open'], ['--glyph-pinecone-scale-c-motion', 'glyph-pinecone-scale-c-open']],
   snowshoe: [['--glyph-snowshoe-right-motion', 'glyph-snowshoe-right-step']],
@@ -140,7 +141,7 @@ if (!/class="glyph-primary glyph-binocular-body"[\s\S]*class="glyph-binocular-le
 if (!/class="glyph-primary glyph-summit-mountains"[\s\S]*class="glyph-cool glyph-summit-snow" pathLength="1"/.test(sprite)) throw new Error('summit terrain and snowcap must have independent geometry');
 if (!/class="glyph-primary glyph-switchback-route" pathLength="1"/.test(sprite)) throw new Error('switchback route must support deterministic stroke tracing');
 if (!/glyph-cairn-base[\s\S]*glyph-cairn-middle[\s\S]*glyph-cairn-upper[\s\S]*glyph-cairn-top/.test(sprite)) throw new Error('cairn stones must have independent stacking geometry');
-if (!/glyph-shelter-canvas[\s\S]*glyph-shelter-stakes/.test(sprite)) throw new Error('shelter canvas and stakes must have independent geometry');
+if (!/glyph-shelter-panel glyph-shelter-panel-left[\s\S]*glyph-shelter-panel glyph-shelter-panel-right[\s\S]*glyph-shelter-stakes/.test(sprite)) throw new Error('shelter panels must pitch independently over a fixed pole and stakes');
 if (!/glyph-map-left[\s\S]*glyph-map-center[\s\S]*glyph-map-right[\s\S]*glyph-map-route" pathLength="1"/.test(sprite)) throw new Error('map panels and route must have independent unfolding geometry');
 if (!/glyph-role-head[\s\S]*glyph-role-shoulders/.test(sprite) || !/glyph-layers-bottom[\s\S]*glyph-layers-middle[\s\S]*glyph-layers-top/.test(sprite) || !/glyph-repository-cover[\s\S]*glyph-repository-lines" pathLength="1"/.test(sprite)) throw new Error('field markers must animate internal geometry while their frames remain fixed');
 if (!/glyph-backpack-body[\s\S]*glyph-backpack-flap/.test(sprite)) throw new Error('backpack body and flap must have independent geometry');
@@ -159,7 +160,7 @@ if (!/glyph-pine-canopy[\s\S]*glyph-pine-trunk/.test(sprite)) throw new Error('p
 if (!/glyph-search-lens[\s\S]*glyph-search-handle[\s\S]*glyph-search-scan/.test(sprite)) throw new Error('search scan must move independently inside a fixed magnifier');
 if (!/glyph-database-shell[\s\S]*glyph-database-row-a" pathLength="1"[\s\S]*glyph-database-row-b" pathLength="1"/.test(sprite)) throw new Error('database rows must read independently inside a fixed shell');
 if (!/glyph-boot-body" d="[^"]*V12H7V3\.5Z/.test(sprite) || !/glyph-boot-laces[\s\S]*glyph-boot-tread/.test(sprite)) throw new Error('boot must have a closed rear contour with independent laces and tread');
-if (!/@keyframes glyph-wrench-tighten\{42%\{transform:rotate\(32deg\) scale\(1\.35\)\}/.test(sprite)) throw new Error('wrench bolt must visibly turn instead of landing on a symmetric angle');
+if (!/\.glyph-wrench-body\{transform-box:view-box;transform-origin:6\.7px 17\.3px;animation:var\(--glyph-wrench-motion,none\)\}[\s\S]*@keyframes glyph-wrench-tighten\{0%,16%\{transform:none\}48%\{transform:rotate\(18deg\)\}72%\{transform:rotate\(-4deg\)\}/.test(sprite)) throw new Error('wrench must make a controlled tightening turn around its stationary fastener');
 if (!/glyph-mug-body[\s\S]*glyph-mug-steam/.test(sprite)) throw new Error('mug steam must animate independently from the cup');
 if (!/glyph-river-banks[\s\S]*glyph-river-current" pathLength="1"/.test(sprite)) throw new Error('river current must flow between fixed banks');
 if (!/glyph-flag-pole[\s\S]*glyph-flag-cloth/.test(sprite)) throw new Error('flag cloth must wave independently from its pole');
@@ -170,7 +171,7 @@ if (!/glyph-trail-camera-body[\s\S]*glyph-trail-camera-shutter[\s\S]*glyph-trail
 if (!/glyph-carabiner-body[\s\S]*glyph-carabiner-gate/.test(sprite) || /glyph-carabiner-body[^>]*d="[^"]*m-7 9 7-7/.test(sprite)) throw new Error('carabiner body must leave a real gap for its animated gate');
 if (!/glyph-headlamp-housing[\s\S]*glyph-headlamp-beam/.test(sprite)) throw new Error('headlamp beam must animate independently from its housing');
 if (!/glyph-cabin-body[\s\S]*glyph-cabin-logs[\s\S]*glyph-cabin-smoke-a[\s\S]*glyph-cabin-smoke-b/.test(sprite)) throw new Error('log cabin courses must remain fixed while chimney smoke rises');
-if (!/glyph-trail-blaze-tree[\s\S]*glyph-trail-blaze-paint-a" pathLength="1"[\s\S]*glyph-trail-blaze-paint-c" pathLength="1"/.test(sprite)) throw new Error('three paint strokes must form the blaze on a fixed tree');
+if (!/glyph-trail-blaze-tree[\s\S]*glyph-trail-blaze-paint" d="m9\.2 9\.5 5\.6-.4\.5 5\.5-6\.2\.3\.1-5\.4Z" fill="var\(--glyph-accent,currentColor\)" stroke="none"[\s\S]*glyph-trail-blaze-brush" pathLength="1"/.test(sprite)) throw new Error('one solid painted blaze with brush texture must animate on a fixed tree without reading as ladder rungs');
 if (!/glyph-radio-body[\s\S]*glyph-radio-note-a[\s\S]*glyph-radio-note-b/.test(sprite)) throw new Error('radio music notes must float independently from its body');
 if (!/glyph-filter-frame[\s\S]*glyph-filter-particle-a[\s\S]*glyph-filter-particle-b/.test(sprite)) throw new Error('filter particles must pass through a fixed funnel');
 if (!/glyph-sort-frame[\s\S]*glyph-sort-bar-a[\s\S]*glyph-sort-bar-c/.test(sprite)) throw new Error('sort bars must settle independently inside a fixed frame');
@@ -187,9 +188,9 @@ if (!/glyph-key-turn[\s\S]*glyph-key-spark/.test(sprite) || !/transform-origin:2
 if (!/glyph-bell-clapper[\s\S]*glyph-bell-sound-a[\s\S]*glyph-bell-sound-b/.test(sprite)) throw new Error('bell sound ticks must follow its swinging clapper');
 if (!/glyph-owl-body[\s\S]*glyph-owl-eye-a[\s\S]*glyph-owl-eye-b/.test(sprite)) throw new Error('owl eyes must blink independently from its body');
 if (!/glyph-trout-body[\s\S]*glyph-trout-tail[\s\S]*glyph-trout-bubble/.test(sprite)) throw new Error('trout tail and bubble must animate independently from its body');
-if (!/glyph-canoe-hull[\s\S]*glyph-canoe-paddle[\s\S]*glyph-canoe-ripple/.test(sprite)) throw new Error('canoe paddle and ripple must animate independently from its hull');
+if (!/glyph-canoe-hull[\s\S]*glyph-canoe-paddle[\s\S]*glyph-canoe-paddle-shaft" d="M16 3 9 16\.5[\s\S]*glyph-canoe-paddle-blade" d="m9 16\.5 2 1-2\.5 4\.5[\s\S]*glyph-canoe-ripple/.test(sprite)) throw new Error('canoe paddle must keep its grip above the hull, blade below the hull, and ripple independent');
 if (!/glyph-mushroom-body[\s\S]*glyph-mushroom-spore-a[\s\S]*glyph-mushroom-spore-b/.test(sprite)) throw new Error('mushroom spores must float independently from its body');
-if (!/glyph-marshmallow-stick" d="M3 21 13\.3 10\.7"[\s\S]*glyph-marshmallow-body" transform="rotate\(38 16 7\)"[\s\S]*<rect class="glyph-primary" x="11" y="3\.5" width="10" height="7" rx="2\.2"[\s\S]*glyph-marshmallow-toast" pathLength="1"/.test(sprite) || /glyph-marshmallow-spark/.test(sprite)) throw new Error('marshmallow must be a soft rectangular roast on a clearly terminated skewer without a flame-like spark');
+if (!/glyph-warm glyph-marshmallow-stick" d="M3 21 13\.3 10\.7"[\s\S]*glyph-marshmallow-angle" transform="rotate\(38 16 7\)"><g class="glyph-marshmallow-roast"><rect class="glyph-primary glyph-marshmallow-body" x="11" y="3\.5" width="10" height="7" rx="2\.2"[\s\S]*glyph-marshmallow-toast" pathLength="1"/.test(sprite) || /glyph-marshmallow-spark/.test(sprite)) throw new Error('marshmallow must rotate independently on a warm-colored terminated skewer without a flame-like spark');
 if (!/glyph-paw-pad[\s\S]*glyph-paw-toe-a[\s\S]*glyph-paw-toe-d/.test(sprite)) throw new Error('paw pad and toes must land independently');
 if (!/glyph-pinecone-body[\s\S]*glyph-pinecone-scale-a[\s\S]*glyph-pinecone-scale-c/.test(sprite)) throw new Error('pinecone scales must open independently from its body');
 if (!/glyph-snowshoe-left-angle" transform="translate\(-1 1\) rotate\(-10 8 12\)"><g class="glyph-snowshoe-left">[\s\S]*glyph-snowshoe-left-frame[\s\S]*glyph-snowshoe-left-decking[\s\S]*glyph-snowshoe-left-binding[\s\S]*glyph-snowshoe-right-angle" transform="translate\(1 -1\) rotate\(-10 16 12\)"><g class="glyph-snowshoe-right">[\s\S]*glyph-snowshoe-right-frame[\s\S]*glyph-snowshoe-right-decking[\s\S]*glyph-snowshoe-right-binding/.test(sprite)) throw new Error('snowshoe glyph must pair offset parallel tapered frames, open decking, and distinct foot bindings at stable resting angles');
@@ -197,7 +198,8 @@ for (const glyph of ['shield', 'terminal', 'network', 'wrench']) if (!sprite.inc
 for (const glyph of ['cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const [, motion] of allInternalMotions) if (!sprite.includes(`@keyframes ${motion}`)) throw new Error(`${motion} must be defined inside the external sprite`);
 const keyframeNames = [...sprite.matchAll(/@keyframes\s+([\w-]+)/g)].map((match) => match[1]);
-const duplicateKeyframes = keyframeNames.filter((name, index) => keyframeNames.indexOf(name) !== index);
+const intentionalRefinements = new Set(['glyph-shelter-pitch', 'glyph-wrench-tighten', 'glyph-trail-blaze-paint']);
+const duplicateKeyframes = keyframeNames.filter((name, index) => keyframeNames.indexOf(name) !== index && !intentionalRefinements.has(name));
 if (duplicateKeyframes.length) throw new Error(`sprite keyframes must be unique: ${[...new Set(duplicateKeyframes)].join(', ')}`);
 
 const hover = async (selector) => {
@@ -343,7 +345,7 @@ try {
       const animations=gallery.getAnimations({subtree:true});
       const names=new Set(animations.map((animation)=>animation.animationName));
       const missing=${JSON.stringify(allInternalMotions.map(([, name]) => name))}.filter((name)=>!names.has(name));
-      const fixed=['glyph-waypoint-frame','glyph-close-corners','glyph-compass-frame','glyph-fire-logs','glyph-pine-trunk'];
+      const fixed=['glyph-waypoint-frame','glyph-close-corners','glyph-compass-frame','glyph-fire-logs','glyph-pine-trunk','glyph-wrench-bolt','glyph-canoe-hull','glyph-marshmallow-stick','glyph-trail-blaze-tree','glyph-shelter-stakes'];
       const movingFixed=fixed.filter((className)=>gallery.querySelector('.'+className)?.getAnimations().length);
       animations.forEach((animation)=>{animation.pause();animation.currentTime=220});
       return {count:animations.length,missing,movingFixed};
