@@ -12,7 +12,6 @@
   const results = tools.querySelector('.work-results');
   const updatedOption = sort.querySelector('[value="updated"]');
   const collator = new Intl.Collator(undefined, { sensitivity: 'base' });
-  tools.hidden = false;
 
   items.forEach((item, index) => { item.dataset.projectOrder = index; });
   const languages = [...new Set(items.flatMap((item) => item.dataset.projectLanguages.split('·').map((value) => value.trim())))].sort(collator.compare);
@@ -83,8 +82,11 @@
       }
       time.dateTime = updated;
       time.textContent = `Updated ${new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(updated))}`;
+      time.classList.add('is-resolved');
+      time.removeAttribute('aria-hidden');
       matched += 1;
     });
+    items.forEach((item) => item.querySelector('.project-updated:not(.is-resolved)')?.classList.add('is-unavailable'));
     if (matched) {
       updatedOption.textContent = 'Recently updated';
       tools.dataset.updates = 'live';
@@ -111,6 +113,7 @@
     })
     .catch(() => {
       if (!items.some((item) => item.dataset.projectUpdated)) {
+        items.forEach((item) => item.querySelector('.project-updated')?.classList.add('is-unavailable'));
         updatedOption.disabled = true;
         updatedOption.textContent = 'Recently updated · unavailable';
         if (sort.value === 'updated') sort.value = 'featured';

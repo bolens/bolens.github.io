@@ -25,6 +25,9 @@ main:focus { outline: 0; }
 .visually-hidden { position:absolute!important; width:1px!important; height:1px!important; margin:-1px!important; padding:0!important; overflow:hidden!important; clip:rect(0 0 0 0)!important; clip-path:inset(50%)!important; border:0!important; white-space:nowrap!important; }
 a { color: inherit; text-decoration-thickness: .08em; text-underline-offset: .18em; }
 svg { display: block; max-width: 100%; }
+.is-loading :is(.signal-map,.project-visual,.hobby-route,.cryptid-camp) { position:relative; }
+.is-loading :is(.signal-map,.project-visual,.hobby-route,.cryptid-camp)::after { content:''; position:absolute; z-index:12; inset:0; pointer-events:none; border:1px solid color-mix(in srgb,var(--line) 72%,transparent); border-radius:inherit; background:linear-gradient(105deg,transparent 28%,color-mix(in srgb,var(--snow) 55%,transparent) 43%,transparent 58%) -180% 0/55% 100% no-repeat,repeating-radial-gradient(ellipse at 18% 115%,transparent 0 16px,color-mix(in srgb,var(--copper) 10%,transparent) 17px 18px,transparent 19px 34px),color-mix(in srgb,var(--snow) 88%,var(--paper)); animation:skeleton-trace 1.25s var(--ease-route) infinite; }
+@keyframes skeleton-trace { to { background-position:360% 0,0 0,0 0; } }
 .trail-glyph,.trail-arrow svg,.principle-glyph,.command-search-glyph { --glyph-primary:currentColor; --glyph-accent:var(--copper); --glyph-secondary:currentColor; --glyph-warm:var(--copper); --glyph-cool:var(--copper); }
 .button .trail-arrow svg,.nav-cta .trail-arrow svg { --glyph-accent:currentColor; --glyph-secondary:currentColor; --glyph-warm:currentColor; --glyph-cool:currentColor; }
 .palette-picker { position: fixed; z-index: 30; right: max(1rem,calc((100vw - 1180px)/2)); bottom: 1rem; color: var(--ink); font: 700 .72rem/1.3 var(--mono); letter-spacing: .06em; text-transform: uppercase; }
@@ -245,6 +248,7 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
   .hero-copy,.signal-map,.hero::after { animation:none!important; }
   html { scroll-behavior:auto; scroll-snap-type:none!important; }.case-story section { scroll-snap-align:none; }.project-visual,.project-copy,.principles li,.toolbox dl div,.about-principles article,.about-field-notes dl div,.index-list a,.case-story>section>.eyebrow,.case-story>section>h2,.case-story>section>.prose { animation:none!important; opacity:1!important; translate:none!important; scale:1!important; }.hobby-traveler,.route-bigfoot,.route-bike,.ddns-packets { display: none; }.visual-shield .check { stroke-dashoffset: 0; }.hobby-landed-disc { display: block; }.hobby-route li,.hobby-route li > svg,.hobby-thrower,.throwing-arm { animation: none; } *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } ::view-transition-group(*),::view-transition-old(*),::view-transition-new(*) { animation-duration: .01ms !important; animation-delay: 0s !important; }
 }
+:root[data-motion="reduced"].is-loading :is(.signal-map,.project-visual,.hobby-route,.cryptid-camp)::after { animation:none; }
 :root[data-motion="reduced"] { scroll-behavior:auto; }
 :root[data-motion="reduced"] *,:root[data-motion="reduced"] *::before,:root[data-motion="reduced"] *::after { animation:none!important; transition:none!important; }
 @media (prefers-color-scheme: dark) {

@@ -64,8 +64,9 @@ outputs.set('assets/theme-tokens.css', themeCss);
 outputs.set('assets/theme-data.js', `window.portfolioThemeData=${JSON.stringify({ defaultPalette: themes.defaultPalette, modes: themes.modes, palettes: Object.fromEntries(paletteEntries.map(([name, palette]) => [name, { label: palette.label, light: palette.day.paper, dark: palette.night.paper }])) })};\n`);
 const themeMeta = `<meta name="theme-color" content="${defaultTheme.day.paper}" media="(prefers-color-scheme: light)"><meta name="theme-color" content="${defaultTheme.night.paper}" media="(prefers-color-scheme: dark)">`;
 const syncThemeMeta = (source) => source.replace(/<meta name="theme-color"[^>]*>(?:\s*<meta name="theme-color"[^>]*>)?/, themeMeta);
-const runtimeScripts = '<script src="/assets/theme-data.js"></script><script src="/assets/appearance-controller.js"></script><script src="/assets/project-data.js" defer></script><script src="/assets/ui-overlay.js" defer></script><script src="/assets/appearance-picker.js" defer></script><script src="/assets/command-palette.js" defer></script>';
-const syncRuntimeScripts = (source) => source.replace(/<script src="\/assets\/theme-data\.js"><\/script>[\s\S]*?<script src="\/assets\/command-palette\.js" defer><\/script>/, runtimeScripts);
+const loadingBootstrap = '<script>document.documentElement.classList.add("is-loading")</script>';
+const runtimeScripts = `${loadingBootstrap}<script src="/assets/theme-data.js"></script><script src="/assets/appearance-controller.js"></script><script src="/assets/project-data.js" defer></script><script src="/assets/ui-overlay.js" defer></script><script src="/assets/appearance-picker.js" defer></script><script src="/assets/command-palette.js" defer></script><script src="/assets/loading-state.js" defer></script>`;
+const syncRuntimeScripts = (source) => source.replace(/(?:<script>document\.documentElement\.classList\.add\("is-loading"\)<\/script>)?<script src="\/assets\/theme-data\.js"><\/script>[\s\S]*?<script src="\/assets\/command-palette\.js" defer><\/script>(?:<script src="\/assets\/loading-state\.js" defer><\/script>)?/, runtimeScripts);
 outputs.set('404.html', syncRuntimeScripts(syncThemeMeta(readFileSync(resolve(root, '404.html'), 'utf8'))));
 const browserData = caseStudies.map(({ name, caseLabel, slug, commandDetail, site, repository }) => ({ name, caseLabel, slug, commandDetail, ...(site ? { site } : {}), repository }));
 outputs.set('assets/project-data.js', `window.portfolioProjects=${JSON.stringify(browserData)};\n`);
@@ -88,7 +89,7 @@ const cards = projects.map((project) => {
   const href = project.slug ? `../case-studies/${project.slug}/` : project.repository;
   const kind = project.slug ? 'Case study' : 'Repository';
   const arrow = project.slug ? '→' : '↗';
-  return `      <a href="${href}" data-project-name="${project.name.toLowerCase()}" data-project-languages="${project.tech}" data-project-kind="${kind.toLowerCase()}" data-project-repository="${project.repository}"><span><b>${project.name}</b><small>${project.summary}</small><em>${project.status} · ${kind}</em></span><i>${project.tech}</i><strong aria-hidden="true">${arrow}</strong></a>`;
+  return `      <a href="${href}" data-project-name="${project.name.toLowerCase()}" data-project-languages="${project.tech}" data-project-kind="${kind.toLowerCase()}" data-project-repository="${project.repository}"><span><b>${project.name}</b><small>${project.summary}</small><em>${project.status} · ${kind}</em><time class="project-updated" aria-hidden="true">Updated date pending</time></span><i>${project.tech}</i><strong aria-hidden="true">${arrow}</strong></a>`;
 }).join('\n');
 outputs.set('work/index.html', work.replace(/<!-- projects:start -->[\s\S]*?<!-- projects:end -->/, `<!-- projects:start --><div class="index-list" id="project-list" data-reveal>\n${cards}\n    </div><!-- projects:end -->`));
 
