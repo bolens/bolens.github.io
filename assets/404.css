@@ -29,6 +29,31 @@
 .depth-far { translate:var(--parallax-far-x,0) var(--parallax-far-y,0); }
 .depth-mid { translate:var(--parallax-mid-x,0) var(--parallax-mid-y,0); }
 .depth-near { translate:var(--parallax-near-x,0) var(--parallax-near-y,0); }
+.terrain-asset {
+  --asset-light-brightness:.94;
+  --asset-light-saturation:.82;
+  --asset-light-sepia:.03;
+  --asset-light-hue:12deg;
+  --asset-light-shadow:drop-shadow(-2px 2px 3px rgba(125,191,204,.18));
+  --asset-weather-brightness:1;
+  --asset-weather-saturation:1;
+  --asset-weather-sepia:0;
+  --asset-cloud-opacity:0;
+  --asset-rain-opacity:0;
+  --asset-wet-opacity:0;
+  --asset-dry-opacity:0;
+  filter:brightness(var(--asset-light-brightness)) saturate(var(--asset-light-saturation)) sepia(var(--asset-light-sepia)) hue-rotate(var(--asset-light-hue)) brightness(var(--asset-weather-brightness)) saturate(var(--asset-weather-saturation)) sepia(var(--asset-weather-sepia)) var(--asset-light-shadow);
+}
+:root[data-theme="day"] .terrain-asset[data-light="ambient"] { --asset-light-brightness:1.12;--asset-light-saturation:1.05;--asset-light-sepia:.12;--asset-light-hue:-6deg;--asset-light-shadow:drop-shadow(3px 4px 3px rgba(54,68,45,.2)); }
+.terrain-asset[data-light="sun"] { --asset-light-brightness:1.12;--asset-light-saturation:1.05;--asset-light-sepia:.12;--asset-light-hue:-6deg;--asset-light-shadow:drop-shadow(3px 4px 3px rgba(54,68,45,.2)); }
+.terrain-asset[data-light="moon"] { --asset-light-brightness:.94;--asset-light-saturation:.82;--asset-light-sepia:.03;--asset-light-hue:12deg;--asset-light-shadow:drop-shadow(-2px 2px 3px rgba(125,191,204,.18)); }
+.terrain-asset[data-light="fire"] { --asset-light-brightness:1.13;--asset-light-saturation:1.25;--asset-light-sepia:.28;--asset-light-hue:-12deg;--asset-light-shadow:drop-shadow(-3px -1px 5px rgba(255,123,61,.34)); }
+.terrain-asset[data-light="shadow"] { --asset-light-brightness:.68;--asset-light-saturation:.62;--asset-light-sepia:0;--asset-light-hue:8deg;--asset-light-shadow:drop-shadow(2px 3px 2px rgba(2,9,12,.32)); }
+.terrain-asset[data-weather="clear"] { --asset-weather-brightness:1;--asset-weather-saturation:1; }
+.terrain-asset[data-weather="cloudy"] { --asset-weather-brightness:.88;--asset-weather-saturation:.72;--asset-cloud-opacity:.24; }
+.terrain-asset[data-weather="rainy"] { --asset-weather-brightness:.82;--asset-weather-saturation:.8;--asset-cloud-opacity:.22;--asset-rain-opacity:.52;--asset-wet-opacity:.3; }
+.terrain-asset[data-weather="wet"] { --asset-weather-brightness:1.04;--asset-weather-saturation:1.12;--asset-wet-opacity:.4; }
+.terrain-asset[data-weather="dry"] { --asset-weather-brightness:1.08;--asset-weather-saturation:.72;--asset-weather-sepia:.2;--asset-dry-opacity:.36; }
 .day-cloud-404 text { fill:#fff;stroke:color-mix(in srgb,var(--lost-day-sky-top) 38%,#fff);stroke-width:6;paint-order:stroke fill;font:700 112px/1 var(--serif);letter-spacing:7px;opacity:.82; }
 .day-sunbeams { transform-box:view-box;transform-origin:982px 112px;animation:day-ray-breathe 14s ease-in-out infinite alternate; }
 .day-sun { transform-box:fill-box;transform-origin:center;animation:day-sun-breathe 9s ease-in-out infinite alternate; }
@@ -139,6 +164,7 @@
   :root:not([data-theme]) .lost-page { --lost-sky:var(--paper);--lost-panel:color-mix(in srgb,var(--snow) 88%,transparent);--lost-copy:var(--ink);--lost-muted:var(--muted);--lost-accent:var(--copper);--lost-line:color-mix(in srgb,var(--line) 72%,transparent); }
   :root:not([data-theme]) .lost-button { border-color:var(--ink);background:var(--ink);color:var(--paper); }
   :root:not([data-theme]) .lost-button:is(:hover,:focus-visible) { border-color:var(--copper);background:var(--copper);color:var(--paper); }
+  :root:not([data-theme]) .terrain-asset[data-light="ambient"] { --asset-light-brightness:1.12;--asset-light-saturation:1.05;--asset-light-sepia:.12;--asset-light-hue:-6deg;--asset-light-shadow:drop-shadow(3px 4px 3px rgba(54,68,45,.2)); }
 }
 @media (max-width: 760px) {
   .lost-copy { top:1rem; left:1rem; width:calc(100vw - 2rem); margin:0; padding:1rem; }

@@ -59,7 +59,6 @@
           <radialGradient id="moth-head" cx="58%" cy="66%" r="74%"><stop stop-color="#59455d"/><stop offset=".5" stop-color="#3b303f"/><stop offset="1" stop-color="#211b27"/></radialGradient>
           <radialGradient id="dogman-head" cx="55%" cy="66%" r="76%"><stop stop-color="#806556"/><stop offset=".48" stop-color="#59473f"/><stop offset="1" stop-color="#2d2421"/></radialGradient>
           <linearGradient id="moon-rock" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#718384"/><stop offset=".42" stop-color="#465a59"/><stop offset="1" stop-color="#1b302f"/></linearGradient>
-          <linearGradient id="fire-rock" x1="0" y1="0" x2="1" y2=".65"><stop stop-color="#293b39"/><stop offset=".58" stop-color="#46504a"/><stop offset="1" stop-color="#a86542"/></linearGradient>
           <linearGradient id="marshmallow-toast" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff9e9"/><stop offset=".55" stop-color="#f2dfbe"/><stop offset="1" stop-color="#c9874f"/></linearGradient>
           <linearGradient id="day-sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--lost-day-sky-top)"/><stop offset=".62" stop-color="var(--lost-day-sky-mid)"/><stop offset="1" stop-color="var(--lost-day-haze)"/></linearGradient>
           <linearGradient id="day-mountain" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--lost-day-mountain-lit)"/><stop offset="1" stop-color="var(--lost-day-mountain-shadow)"/></linearGradient>
@@ -89,6 +88,46 @@
             <path d="M-2 4C-5 17-8 24-15 33l9-2c-5 9-11 17-19 25l12-3c-4 10-10 18-15 25l13-4c-4 9-9 17-13 23 8-2 15-3 24-4v27H5V93c9 1 16 2 23 4-4-7-9-15-13-23l13 4c-5-8-11-16-15-25l12 3C17 48 11 40 6 31l9 2C8 24 5 17 2 4Z"/>
             <path d="M0 19v90M-8 35Q0 29 9 35M-17 53Q0 43 17 52M-23 74Q0 60 23 72M-26 94Q0 78 26 91" fill="none"/>
             <path d="m-9 36-10 1m27-2 11 2m-35 17-10 3m42-4 10 3m-49 19-9 5m55-7 9 5m-57 17-8 5m58-7 9 5" fill="none" stroke-width="1.4"/>
+          </symbol>
+          <symbol id="terrain-condition-marks" viewBox="0 0 100 100" overflow="visible">
+            <g class="asset-cloud-mark" fill="none" stroke="var(--asset-cloud-color,#c1d0ce)" stroke-linecap="round" opacity="var(--asset-cloud-opacity,0)"><path d="M6 20q19-9 38-1t39-1" stroke-width="8"/><path d="M17 29q15-6 29 0t28-1" stroke-width="3"/></g>
+            <g class="asset-rain-mark" fill="none" stroke="var(--asset-rain-color,#b9e0e4)" stroke-width="3" stroke-linecap="round" opacity="var(--asset-rain-opacity,0)"><path d="m18 14-8 19m31-24-9 22m34-16-9 23m31-17-8 20"/><path d="m27 47-7 17m31-20-8 20m31-13-7 17" stroke-width="2"/></g>
+            <g class="asset-wet-mark" fill="none" stroke="var(--asset-wet-color,#d8f4ee)" stroke-linecap="round" opacity="var(--asset-wet-opacity,0)"><path d="M17 72q14-12 29-4m8 11q12-9 25-3" stroke-width="4"/><path d="M25 82q9 4 18 0m27 5q7 3 14-1" stroke-width="2"/></g>
+            <g class="asset-dry-mark" fill="none" stroke="var(--asset-dry-color,#c4a36d)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" opacity="var(--asset-dry-opacity,0)"><path d="m26 52 9 8-6 9 10 8m26-34-8 10 8 8-7 12"/><path d="m13 88 17-3m41 4 16-5" stroke-width="3"/></g>
+          </symbol>
+          <symbol id="alpine-boulder" viewBox="0 0 140 90">
+            <path d="M5 84 19 39 48 8l38 7 41 34 8 35Z" fill="var(--boulder-fill,url(#moon-rock))" stroke="#172826" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M19 39 48 8l12 40L8 84m52-36 26-33 41 34-43 35Z" fill="var(--boulder-facet,#354c49)" opacity=".86"/>
+            <path d="m24 41 24-25m15 34 20-27m8 52 27-24" fill="none" stroke="var(--boulder-glint,#91a8a3)" stroke-width="3" stroke-linecap="round" opacity=".46"/>
+            <g fill="#8da06f" opacity=".62"><circle cx="31" cy="37" r="4"/><circle cx="42" cy="30" r="2.5"/><circle cx="54" cy="39" r="3"/></g>
+            <use href="#terrain-condition-marks" width="140" height="90"/>
+          </symbol>
+          <symbol id="river-stone" viewBox="0 0 30 20">
+            <path d="m2 13 8-8 12 1 6 7-7 5H8Z" fill="var(--stone-fill,#536862)" stroke="#18302f" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="m9 8 8-1 5 3" fill="none" stroke="#91a8a0" stroke-width="1.4" stroke-linecap="round" opacity=".45"/>
+            <use href="#terrain-condition-marks" width="30" height="20"/>
+          </symbol>
+          <symbol id="fern-spray" viewBox="0 0 72 92">
+            <g fill="none" stroke="var(--fern-color,#6f9368)" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M35 89Q32 45 48 7M35 89Q29 56 12 30M34 88Q42 61 62 42" stroke-width="4"/>
+              <path d="m39 67-17-14m20 5 17-15m-15 3-10-14m15 3 13-14M29 70 16 61m11 1 2-14m12 20 13-9m-11 0 3-12" stroke-width="3"/>
+              <path d="m19 48-10-5m13 0-3-9m37 21 9-7m-7 14 9-2" stroke="#9aaa75" stroke-width="1.7" opacity=".72"/>
+            </g>
+            <use href="#terrain-condition-marks" width="72" height="92"/>
+          </symbol>
+          <symbol id="berry-shrub" viewBox="0 0 150 105">
+            <g fill="none" stroke="#355c47" stroke-linecap="round"><path d="M10 100Q38 44 76 21M43 87 29 55m29 20 1-40m18 28 26-45m-10 57 39-31M63 96q35-27 76-24" stroke-width="5"/><path d="m65 86 28 14m-6-22 25-13" stroke="#78916a" stroke-width="2.5" opacity=".7"/></g>
+            <g fill="var(--shrub-fill,#315c45)" stroke="#17382e" stroke-width="2"><path d="M12 58q14-18 29 0-15 15-29 0Z"/><path d="M32 81q17-19 34 1-18 15-34-1Z"/><path d="M48 42q16-20 31-1-15 16-31 1Z"/><path d="M68 67q18-20 36 1-19 16-36-1Z"/><path d="M87 31q15-18 30 0-16 14-30 0Z"/><path d="M109 58q17-18 33 2-18 14-33-2Z"/></g>
+            <g fill="#9aaa75" opacity=".72"><path d="m18 56 9-5 7 7-9 5Z"/><path d="m73 65 10-5 8 8-10 5Z"/><path d="m94 29 9-5 7 7-9 5Z"/></g>
+            <g fill="#6d4050" stroke="#2a2e28" stroke-width="1"><circle cx="47" cy="76" r="3"/><circle cx="83" cy="64" r="2.5"/><circle cx="119" cy="55" r="2.5"/></g>
+            <use href="#terrain-condition-marks" width="150" height="105"/>
+          </symbol>
+          <symbol id="fly-agaric" viewBox="0 0 42 50">
+            <path d="M15 47q1-25 7-25t8 25Z" fill="#e8d8b8" stroke="#512a25" stroke-width="2"/>
+            <path d="M3 23Q22-4 39 23 21 36 3 23Z" fill="var(--mushroom-cap,#bd4b3c)" stroke="#512a25" stroke-width="2" stroke-linejoin="round"/>
+            <path d="M7 24q14 8 28 0m-22 4 3 8m5-9 1 9m6-9-2 8" fill="none" stroke="#f0cda1" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+            <g fill="#f4dfc2"><circle cx="13" cy="17" r="2"/><circle cx="23" cy="11" r="2.4"/><circle cx="31" cy="18" r="1.8"/></g>
+            <use href="#terrain-condition-marks" width="42" height="50"/>
           </symbol>
           <clipPath id="tent-door"><path d="M933 521 1007 647H861Z"/></clipPath>
         </defs>
@@ -193,13 +232,20 @@
             <path d="M28 714q34-7 66-23m62-35 32-16m62-31 30-15m64-38 27-17" stroke="#6ed1b5" stroke-width="6" opacity=".2"/>
             <path d="M15 732q42-9 79-29m77-43 32-18m73-38 25-16" stroke="#9b82d0" stroke-width="3" opacity=".22"/>
           </g>
-          <g class="river-stones" stroke="#18302f" stroke-width="2">
-            <path d="m51 648 10-7 15 2 5 9-11 7-15-2Z" fill="#536862"/><path d="m111 618 9-6 14 2 5 8-10 6-14-1Z" fill="#435a56"/>
-            <path d="m174 580 8-5 13 1 5 7-9 6-13-1Z" fill="#586c65"/><path d="m238 552 7-5 12 2 4 7-9 5-11-2Z" fill="#405752"/>
-            <path d="m328 514 7-4 11 1 4 7-8 5-11-2Z" fill="#5a6b64"/>
+          <g class="river-stones">
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="50" y="640" width="32" height="21"/>
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="110" y="612" width="30" height="18" style="--stone-fill:#435a56"/>
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="173" y="575" width="28" height="16" style="--stone-fill:#586c65"/>
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="237" y="547" width="26" height="15" style="--stone-fill:#405752"/>
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="327" y="510" width="25" height="14" style="--stone-fill:#5a6b64"/>
           </g>
-          <g class="riverbank-structure" stroke-linecap="round" stroke-linejoin="round"><path d="M4 652q74-16 137-56 69-43 144-55 72-12 119-50" fill="none" stroke="#111f1b" stroke-width="15" opacity=".72"/><path d="M7 648q72-17 132-54 70-44 145-57 70-12 116-49" fill="none" stroke="#755f41" stroke-width="6" opacity=".72"/><path d="m48 632 18-12 19 2m51-31 17-13 22 2m54-27 18-10 21 3m57-20 17-11 18 2m26-19 15-12" fill="none" stroke="#aa895b" stroke-width="2.2" opacity=".62"/><g fill="#4c5e54" stroke="#203531" stroke-width="1.5"><path d="m28 645 11-7 15 3 3 8-12 6-14-2Z"/><path d="m157 574 10-7 14 2 4 8-11 7-14-2Z"/><path d="m276 531 9-6 13 2 3 7-10 6-12-2Z"/><path d="m371 495 8-5 11 2 3 6-9 5-10-2Z"/></g></g>
-          <g class="riparian-foliage" fill="none" stroke-linecap="round"><g stroke="#6f9368" stroke-width="2.5"><path d="M44 646q3-31 18-53m-12 42-13-13m19 2 12-16m-13 3-9-14M132 594q2-30 18-51m-12 40-13-12m19 1 12-15m-13 3-9-13M231 551q1-27 15-46m-10 36-11-11m17 1 10-14m-11 3-8-12M329 517q1-23 13-40m-9 32-10-9m15 0 9-12"/></g><g fill="#587858" stroke="#29473a" stroke-width="1"><ellipse cx="42" cy="619" rx="8" ry="3" transform="rotate(35 42 619)"/><ellipse cx="61" cy="602" rx="9" ry="3" transform="rotate(-42 61 602)"/><ellipse cx="129" cy="569" rx="8" ry="3" transform="rotate(38 129 569)"/><ellipse cx="151" cy="550" rx="9" ry="3" transform="rotate(-44 151 550)"/><ellipse cx="228" cy="528" rx="8" ry="3" transform="rotate(35 228 528)"/><ellipse cx="248" cy="510" rx="8" ry="3" transform="rotate(-42 248 510)"/></g></g>
+          <g class="riverbank-structure" stroke-linecap="round" stroke-linejoin="round"><path d="M4 652q74-16 137-56 69-43 144-55 72-12 119-50" fill="none" stroke="#111f1b" stroke-width="15" opacity=".72"/><path d="M7 648q72-17 132-54 70-44 145-57 70-12 116-49" fill="none" stroke="#755f41" stroke-width="6" opacity=".72"/><path d="m48 632 18-12 19 2m51-31 17-13 22 2m54-27 18-10 21 3m57-20 17-11 18 2m26-19 15-12" fill="none" stroke="#aa895b" stroke-width="2.2" opacity=".62"/><g><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="27" y="638" width="32" height="20" style="--stone-fill:#4c5e54"/><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="156" y="567" width="30" height="19" style="--stone-fill:#4c5e54"/><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="275" y="525" width="27" height="17" style="--stone-fill:#4c5e54"/><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="370" y="490" width="24" height="15" style="--stone-fill:#4c5e54"/></g></g>
+          <g class="riparian-foliage" style="--fern-color:#6f9368">
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fern-spray" x="31" y="590" width="48" height="61"/>
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fern-spray" x="119" y="540" width="47" height="59"/>
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fern-spray" x="218" y="503" width="43" height="53"/>
+            <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fern-spray" x="320" y="476" width="37" height="45"/>
+          </g>
           <g class="bank-reeds" fill="none" stroke="#668061" stroke-width="3" stroke-linecap="round"><path d="m81 647-4-27m5 25 9-30m-5 29 15-19m82-39-2-25m4 23 10-27m-4 26 13-18m87-20-1-23m5 21 10-25"/><path d="m75 620 5 5m7-10 5 5m85-59 6 5m8-9 5 5m91-40 6 5m7-9 5 5" stroke-width="2"/></g>
           <g class="water-foam" fill="#cce3dc" opacity=".42"><circle cx="68" cy="656" r="3"/><circle cx="76" cy="652" r="2"/><circle cx="126" cy="617" r="2.5"/><circle cx="187" cy="580" r="2"/><circle cx="245" cy="553" r="2"/><circle cx="335" cy="515" r="2.5"/></g>
           <g class="river-accents" fill="none" stroke-linecap="round">
@@ -264,26 +310,11 @@
           <g class="firefly-phase-three"><circle cx="279" cy="493" r="2"/><circle cx="445" cy="523" r="1.7"/><circle cx="628" cy="472" r="2.1"/><circle cx="807" cy="538" r="1.5"/><circle cx="980" cy="486" r="1.6"/><circle cx="1142" cy="553" r="2.2"/></g>
         </g>
 
-        <g class="camp-boulders depth-near" stroke="#172826" stroke-width="2.2" stroke-linejoin="round">
-          <g transform="translate(126 526)">
-            <path d="M-67 56-53 17-21-7 22 0 54 31 62 56Z" fill="url(#moon-rock)"/>
-            <path d="m-53 17 32-24 9 35-31 28m31-28L22 0l32 31-38 25Z" fill="#334b49"/>
-            <path d="m-48 18 27-18M-9 30l22-24m7 47 29-20" fill="none" stroke="#8ba09c" stroke-width="3" opacity=".45"/>
-            <path d="M-32 22q11-8 21 0m-34 20q12-7 22 1" fill="none" stroke="#1d3431" stroke-width="5" opacity=".8"/>
-          </g>
-          <g transform="translate(1037 568)">
-            <path d="M-74 67-60 24-27-10 18-4 64 32 78 67Z" fill="url(#moon-rock)"/>
-            <path d="m-60 24 33-34 13 41-38 36m38-36L18-4l46 36-32 35Z" fill="#3a504e"/>
-            <path d="M-51 25-28-2m17 29L15 2m18 61 25-28" fill="none" stroke="#91a8a3" stroke-width="3" opacity=".4"/>
-            <path d="m-43 45 15-7 12 8m35-24 17 4" fill="none" stroke="#203734" stroke-width="5"/>
-          </g>
-          <g transform="translate(357 686)">
-            <path d="M-61 41-43 5-7-12 32-3 58 41Z" fill="url(#fire-rock)"/>
-            <path d="m-43 5 36-17 5 29-39 24m39-24L32-3l26 44H21Z" fill="#4b5148"/>
-            <path d="m-37 7 28-13M2 17 27 1" fill="none" stroke="#d08a58" stroke-width="3" opacity=".62"/>
-          </g>
+        <g class="camp-boulders depth-near">
+          <use class="terrain-asset" data-light="ambient" data-weather="clear" href="#alpine-boulder" x="58" y="499" width="136" height="87"/>
+          <use class="terrain-asset" data-light="ambient" data-weather="cloudy" href="#alpine-boulder" x="960" y="537" width="158" height="101" style="--boulder-facet:#3a504e"/>
+          <use class="terrain-asset" data-light="ambient" data-weather="dry" href="#river-stone" x="310" y="697" width="106" height="48" style="--stone-fill:#4b5148"/>
         </g>
-        <g class="boulder-lichen" fill="#8da06f" opacity=".48"><circle cx="82" cy="548" r="4"/><circle cx="94" cy="543" r="2.5"/><circle cx="111" cy="553" r="3"/><circle cx="1003" cy="581" r="4"/><circle cx="1015" cy="574" r="2.5"/><circle cx="1030" cy="585" r="3.5"/><circle cx="340" cy="685" r="2.5"/><circle cx="354" cy="679" r="3"/></g>
         <g class="background-trail" stroke-linecap="round" stroke-linejoin="round">
           <path d="M616 450q73 17 116 48 31 23 58 52 30 31 95 51 48 15 91 45l-42 23q-37-28-87-44-73-22-108-58-28-30-57-48-37-24-93-35Z" fill="#66543a" opacity=".52"/>
           <path d="M616 456q70 17 110 47 34 25 60 54 29 32 91 51 48 15 78 37" fill="none" stroke="#aa895a" stroke-width="7" opacity=".4"/>
@@ -298,28 +329,24 @@
           <path d="m164 703 12-13m18 5 9-16m786 28 14-15m20 8 10-16" fill="none" stroke="#6f4930" stroke-width="4"/>
         </g>
         <g class="woodland-plants depth-near" stroke-linecap="round" stroke-linejoin="round">
-          <g class="river-ferns" fill="none" stroke="#6f9368"><path d="M166 650q2-36 23-62m-18 49-15-14m22 3 17-14m-20 1-10-13m20 2 13-12M207 638q-3-30 12-57m-8 45-13-10m16 0 13-13m-15 2-8-12m14 1 9-10" stroke-width="4"/><path d="M165 649q-2-30-17-49m11 39-14-7m11-5 11-10m-15 1-10-7" stroke-width="3"/></g>
-          <g class="dry-ferns" fill="none" stroke="#496f55"><path d="M1081 703q2-39 24-68m-18 53-17-14m24 1 18-16m-20 1-11-14m22 2 14-13M1124 705q-3-31 13-56m-10 43-14-10m17-1 13-13m-15 2-8-12" stroke-width="4"/></g>
+          <g class="river-ferns" style="--fern-color:#6f9368"><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fern-spray" x="138" y="579" width="68" height="78"/><use class="terrain-asset" data-light="ambient" data-weather="rainy" href="#fern-spray" x="190" y="576" width="56" height="67"/></g>
+          <g class="dry-ferns" style="--fern-color:#496f55"><use class="terrain-asset" data-light="ambient" data-weather="dry" href="#fern-spray" x="1061" y="628" width="68" height="82"/><use class="terrain-asset" data-light="ambient" data-weather="dry" href="#fern-spray" x="1107" y="642" width="55" height="67"/></g>
           <g class="moss" fill="#52765b" stroke="#284b3b" stroke-width="2"><path d="M61 563q9-15 19-5 8-17 18-3 9-14 19-2 9-10 17 3l-2 10H62Z"/><path d="M301 713q12-14 23-2 9-16 20-2 10-12 20 0l-4 9h-58Z"/><path d="M967 620q11-13 21-2 8-15 19-1 10-12 20 1l-3 8h-56Z"/><path d="M181 699q10-11 20-1 8-12 18 0l-4 7h-36Z"/></g>
-          <g class="fly-agarics" stroke="#512a25" stroke-width="2"><path d="M1035 690q2-22 9-22 8 0 9 22Z" fill="#e8d8b8"/><path d="M1027 670q17-20 34 0-17 11-34 0Z" fill="#bd4b3c"/><g fill="#f4dfc2" stroke="none"><circle cx="1037" cy="665" r="2"/><circle cx="1047" cy="661" r="2.2"/><circle cx="1053" cy="668" r="1.7"/></g><path d="M1061 696q1-16 7-16t7 16Z" fill="#e8d8b8"/><path d="M1056 681q12-14 24 0-12 8-24 0Z" fill="#a94338"/><g fill="#f4dfc2" stroke="none"><circle cx="1065" cy="678" r="1.5"/><circle cx="1072" cy="678" r="1.3"/></g></g>
+          <g class="fly-agarics"><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fly-agaric" x="1025" y="651" width="39" height="47"/><use class="terrain-asset" data-light="ambient" data-weather="rainy" href="#fly-agaric" x="1055" y="667" width="29" height="35" style="--mushroom-cap:#a94338"/></g>
           <g class="chanterelles" fill="#d7953f" stroke="#704827" stroke-width="2"><path d="M253 703q1-17 7-17t7 17Z"/><path d="M247 687q13-12 26 0-13 8-26 0Z"/><path d="M273 708q1-14 6-14t6 14Z"/><path d="M268 694q11-10 22 0-11 7-22 0Z"/><path d="M237 709q1-12 5-12t5 12Z"/><path d="M233 697q9-8 18 0-9 6-18 0Z"/></g>
           <g class="shelf-fungi" fill="#c98d57" stroke="#5c3827" stroke-width="2"><path d="M171 700q12-9 23 1-12 7-23-1Z"/><path d="M183 691q11-8 21 1-11 6-21-1Z"/><path d="M991 704q12-9 23 1-12 7-23-1Z"/><path d="M1003 695q10-8 20 1-10 6-20-1Z"/><path d="M176 700q8 1 14 2m-2-11 12 2m795 11 15 2m-2-11 11 2" fill="none" stroke="#f0bd78"/></g>
           <g class="tiny-caps" stroke="#403128" stroke-width="1.5"><path d="M444 703v12m18-7v10m-24-15q6-9 12 0Zm18 5q6-8 12 0Z" fill="#b9a58a"/><path d="M947 683v12m14-8v10m-20-14q6-9 12 0Zm14 4q6-8 12 0Z" fill="#998772"/></g>
           <g class="mushroom-detail" fill="none" stroke-linecap="round">
-            <path d="M1031 672q13 8 26-1m-23 3 3 7m4-6 1 8m4-9v8m5-10-2 7m10 4q9 5 18-1m-15 2 2 5m4-6v6m4-7-2 5" stroke="#f0cda1" stroke-width="1.4" opacity=".78"/>
             <path d="M251 689q9 5 18-1m-15 3 3 7m4-8v7m10-1q7 4 14-1m-11 2 2 6m4-7v6m-44-3q6 3 12-1m-9 2 2 5m3-6v5" stroke="#f4c46e" stroke-width="1.3" opacity=".72"/>
-            <path d="M1039 673q-2 10 2 17m7-17q3 8 1 16m16-6q-1 7 2 13M256 690q-2 7 2 13m7-14q3 7 0 13m11-5q-1 6 2 11" stroke="#9a6842" stroke-width="1.2" opacity=".7"/>
-            <path d="M1029 667q10-12 20-10m9 20q8-9 16-5M248 684q8-8 16-7m5 14q7-6 13-5" stroke="#fff0cf" stroke-width="1.8" opacity=".42"/>
+            <path d="M256 690q-2 7 2 13m7-14q3 7 0 13m11-5q-1 6 2 11" stroke="#9a6842" stroke-width="1.2" opacity=".7"/>
+            <path d="M248 684q8-8 16-7m5 14q7-6 13-5" stroke="#fff0cf" stroke-width="1.8" opacity=".42"/>
             <g fill="#c9a36e" stroke="#49382b" stroke-width="1"><path d="M119 690q1-13 5-13t5 13Z"/><path d="M114 678q10-9 20 0-10 6-20 0Z"/><path d="M1148 700q1-12 5-12t5 12Z"/><path d="M1143 689q10-8 20 0-10 6-20 0Z"/></g>
           </g>
         </g>
-        <g class="understory-shrubs depth-near" stroke-linecap="round" stroke-linejoin="round">
-          <g fill="none" stroke="#355c47"><path d="M22 650q28-42 66-61m-44 39-15-25m31 15 3-32m13 22 20-29m-8 39 31-18M274 651q25-48 66-72m-49 48-13-28m32 15 1-37m17 23 22-31m-10 42 34-20M1040 681q24-52 67-79m-49 52-17-30m35 16 1-41m17 26 24-34m-11 44 37-22" stroke-width="5"/><path d="M42 646q31-24 72-25m-25 11 20 15M293 646q35-26 77-24m-27 11 23 15m695 27q38-28 84-25m-30 13 24 15" stroke="#78916a" stroke-width="2.5" opacity=".68"/></g>
-          <g fill="#315c45" stroke="#17382e" stroke-width="2"><ellipse cx="31" cy="603" rx="13" ry="7" transform="rotate(28 31 603)"/><ellipse cx="48" cy="623" rx="15" ry="8" transform="rotate(-18 48 623)"/><ellipse cx="65" cy="587" rx="14" ry="7" transform="rotate(-48 65 587)"/><ellipse cx="79" cy="607" rx="16" ry="8" transform="rotate(22 79 607)"/><ellipse cx="98" cy="580" rx="13" ry="7" transform="rotate(-36 98 580)"/><ellipse cx="111" cy="601" rx="15" ry="8" transform="rotate(18 111 601)"/><ellipse cx="282" cy="599" rx="14" ry="7" transform="rotate(34 282 599)"/><ellipse cx="302" cy="622" rx="16" ry="8" transform="rotate(-22 302 622)"/><ellipse cx="320" cy="580" rx="15" ry="8" transform="rotate(-42 320 580)"/><ellipse cx="340" cy="600" rx="17" ry="8" transform="rotate(26 340 600)"/><ellipse cx="356" cy="572" rx="13" ry="7" transform="rotate(-31 356 572)"/><ellipse cx="371" cy="594" rx="15" ry="8" transform="rotate(19 371 594)"/><ellipse cx="1048" cy="627" rx="14" ry="7" transform="rotate(32 1048 627)"/><ellipse cx="1068" cy="652" rx="17" ry="8" transform="rotate(-24 1068 652)"/><ellipse cx="1087" cy="601" rx="15" ry="8" transform="rotate(-43 1087 601)"/><ellipse cx="1108" cy="625" rx="18" ry="9" transform="rotate(27 1108 625)"/><ellipse cx="1127" cy="593" rx="14" ry="7" transform="rotate(-34 1127 593)"/><ellipse cx="1144" cy="616" rx="16" ry="8" transform="rotate(20 1144 616)"/></g>
-          <g fill="#81915f" opacity=".7"><ellipse cx="35" cy="600" rx="5" ry="2" transform="rotate(28 35 600)"/><ellipse cx="82" cy="604" rx="6" ry="2.5" transform="rotate(22 82 604)"/><ellipse cx="324" cy="577" rx="6" ry="2.5" transform="rotate(-42 324 577)"/><ellipse cx="344" cy="597" rx="6" ry="2.5" transform="rotate(26 344 597)"/><ellipse cx="1091" cy="598" rx="6" ry="2.5" transform="rotate(-43 1091 598)"/><ellipse cx="1112" cy="622" rx="7" ry="3" transform="rotate(27 1112 622)"/></g>
-          <g fill="#6d4050" stroke="#2a2e28" stroke-width="1"><circle cx="51" cy="617" r="2.5"/><circle cx="75" cy="605" r="2"/><circle cx="306" cy="617" r="2.5"/><circle cx="346" cy="596" r="2"/><circle cx="1071" cy="647" r="2.5"/><circle cx="1113" cy="621" r="2"/></g>
-          <g class="brush-fine" fill="none" stroke-linecap="round"><path d="M12 660q23-20 51-25m-38 12-13-8m29 2-2-14m74 10q20-17 42-19m-31 10-10-8m24 3 1-12M256 665q20-19 44-24m-32 12-12-8m28 2-1-15M1015 694q23-22 50-27m-36 14-14-9m31 3-1-16m91-5q21-17 45-18m-32 9-11-8m27 3 2-13" stroke="#59775a" stroke-width="2.2"/><path d="m17 644 10-3m10-8 9-4m73-9 9-3m10-6 9-3m116 39 10-4m8-8 10-4m731 48 11-4m9-8 10-4m91-13 10-3m10-8 10-3" stroke="#9aaa75" stroke-width="1.2" opacity=".65"/></g>
-          <g class="botanical-underbrush" fill="none" stroke-linecap="round" stroke-linejoin="round"><g stroke="#486d52" stroke-width="2"><path d="M24 666q8-35 29-57m-21 45-15-12m21 3 2-20m8 8 16-16M118 648q5-31 25-52m-18 40-14-11m20 2 1-18m8 8 15-14M279 659q7-35 30-58m-22 45-15-13m22 3 1-20m9 9 16-17M1040 684q8-38 33-64m-24 49-17-14m24 3 1-22m10 10 18-19M1121 674q5-31 25-53m-18 42-14-12m20 3 2-20m8 9 16-16"/></g><g stroke="#87a572" stroke-width="1.5" opacity=".82"><path d="M67 670q-3-27-22-42m22 42q3-29 24-45M62 657l-16-6m18 0-13-11m19 17 15-8m-14 1 13-13M326 667q-4-30-26-48m26 48q5-31 28-50m-34 36-18-7m20 0-15-13m23 20 17-9m-15 2 15-14M1089 690q-4-34-28-55m28 55q4-35 30-57m-36 42-20-8m22 0-16-14m24 22 20-11m-17 3 16-16"/></g><g fill="#315b43" stroke="#172f28" stroke-width="1"><path d="M18 641q13-13 25 0-13 9-25 0Zm24-21q13-11 24 1-13 8-24-1Zm61 17q14-13 27 0-14 10-27 0Zm26-24q13-11 25 1-13 8-25-1ZM268 642q15-14 29 0-15 10-29 0Zm28-23q14-12 27 1-14 9-27-1Zm730 44q16-15 31 0-16 11-31 0Zm30-27q15-13 29 1-15 10-29-1Zm54 20q14-13 27 0-14 10-27 0Zm25-24q13-11 25 1-13 8-25-1Z"/></g></g>
+        <g class="understory-shrubs depth-near">
+          <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#berry-shrub" x="8" y="565" width="155" height="108"/>
+          <use class="terrain-asset" data-light="ambient" data-weather="clear" href="#berry-shrub" x="258" y="557" width="132" height="112"/>
+          <use class="terrain-asset" data-light="ambient" data-weather="dry" href="#berry-shrub" x="1014" y="582" width="170" height="119"/>
         </g>
 
         <g class="camp-tent" transform="translate(55)">
