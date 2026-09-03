@@ -33,6 +33,9 @@ const assets = [
   'ash-scatter',
   'ember-spark',
   'camp-tent-shell',
+  'camp-stove',
+  'toasted-marshmallow',
+  'camp-snack-plate',
   'riverbank-profile',
   'exposed-root',
   'river-pebble-cluster',
@@ -51,7 +54,7 @@ test('every reusable terrain symbol exposes shared condition marks', () => {
 test('lighting and weather modes form an orthogonal variant matrix', () => {
   for (const mode of lightModes) assert.match(css, new RegExp(`data-light="${mode}"`), `missing ${mode} light mode`);
   for (const mode of weatherModes) assert.match(css, new RegExp(`data-weather="${mode}"`), `missing ${mode} weather mode`);
-  assert.equal(lightModes.length * weatherModes.length * assets.length, 1015);
+  assert.equal(lightModes.length * weatherModes.length * assets.length, 1120);
 });
 
 test('snow supports asset-level selection and scene-wide accumulation', () => {
@@ -67,8 +70,8 @@ test('drought supports asset-level selection and scene-wide stress', () => {
 });
 
 test('every terrain placement opts into valid light and weather modes', () => {
-  const placements = [...html.matchAll(/<use class="terrain-asset"[^>]+href="#([^"]+)"[^>]*>/g)].map((match) => match[0]);
-  assert.equal(placements.length, 113);
+  const placements = [...html.matchAll(/<use class="[^"]*\bterrain-asset\b[^"]*"[^>]+href="#([^"]+)"[^>]*>/g)].map((match) => match[0]);
+  assert.equal(placements.length, 149);
   for (const placement of placements) {
     const asset = placement.match(/href="#([^"]+)"/)?.[1];
     const light = placement.match(/data-light="([^"]+)"/)?.[1];
@@ -77,4 +80,22 @@ test('every terrain placement opts into valid light and weather modes', () => {
     assert.ok(lightModes.includes(light), `invalid light mode ${light}`);
     assert.ok(weatherModes.includes(weather), `invalid weather mode ${weather}`);
   }
+});
+
+test('scene conditions swap secondary details without moving the campsite', () => {
+  const conditionRegions = {
+    wet: 'wet-growth',
+    dry: 'dry-ground-litter',
+    snow: 'snow-covered-ground-detail',
+    drought: 'drought-ground-debris',
+  };
+  for (const [condition, region] of Object.entries(conditionRegions)) {
+    assert.match(html, new RegExp(`class="condition-detail condition-${condition}[^>]+data-region="${region}"`));
+    assert.match(css, new RegExp(`condition-${condition} \\{ display:inline; \\}`));
+  }
+  for (const mode of weatherModes) {
+    assert.match(css, new RegExp(`data-weather="${mode}"\\] \\.terrain-asset`), `${mode} must override reusable assets scene-wide`);
+  }
+  assert.match(css, /data-weather="rainy"[^\n]+\.forest-fireflies/);
+  assert.match(css, /data-weather="drought"[^\n]+\.river-ferns/);
 });

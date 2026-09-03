@@ -7,6 +7,7 @@ import vm from 'node:vm';
 const root = resolve(import.meta.dirname, '..');
 const themeSource = readFileSync(resolve(root, 'assets/theme-data.js'), 'utf8');
 const weatherSource = readFileSync(resolve(root, 'assets/404-weather.js'), 'utf8');
+const sceneSource = readFileSync(resolve(root, 'assets/404-scene.js'), 'utf8');
 
 const setup = () => {
   let palette = 'glacier';
@@ -88,4 +89,12 @@ test('404 weather visibility is controlled only by the resolved condition', () =
   assert.match(css, /data-weather="rainy"\] \.weather-rain/);
   assert.match(css, /data-weather="snowy"\] \.weather-snow/);
   assert.match(css, /data-weather="drought"\] \.weather-drought/);
+});
+
+test('canvas atmosphere profiles follow every resolved weather condition', () => {
+  for (const condition of ['clear', 'cloudy', 'rainy', 'wet', 'dry', 'snowy', 'drought']) {
+    assert.match(sceneSource, new RegExp(`${condition}: Object\\.freeze\\(\\{ stars: [^}]+fog: [^}]+fireflies: [^}]+embers: [^}]+\\}\\)`));
+  }
+  assert.match(sceneSource, /portfolioWeather\?\.subscribe\(\(\{ condition \}\) =>/);
+  assert.match(sceneSource, /figure\.dataset\.atmosphereCondition = condition/);
 });
