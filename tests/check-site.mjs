@@ -17,7 +17,9 @@ function walk(directory) {
   });
 }
 
-const htmlFiles = walk(root).filter((file) => file.endsWith('.html'));
+const siteFiles = walk(root);
+const htmlFiles = siteFiles.filter((file) => file.endsWith('.html'));
+const cssFiles = siteFiles.filter((file) => file.endsWith('.css'));
 const canonicalUrls = new Set();
 
 for (const file of htmlFiles) {
@@ -76,6 +78,21 @@ for (const file of htmlFiles) {
   }
 }
 
+for (const file of cssFiles) {
+  const css = readFileSync(file, 'utf8');
+  const references = [
+    ...[...css.matchAll(/url\(\s*(['"]?)([^'"\)]+)\1\s*\)/g)].map((match) => match[2]),
+    ...[...css.matchAll(/@import\s+(['"])([^'"]+)\1/g)].map((match) => match[2]),
+  ];
+  for (const value of references) {
+    const reference = value.trim();
+    if (/^(?:#|data:|https?:)/.test(reference)) continue;
+    const clean = reference.split(/[?#]/, 1)[0];
+    const target = clean.startsWith('/') ? join(root, clean) : resolve(dirname(file), clean);
+    if (!existsSync(target)) fail(file, `broken stylesheet reference ${reference}`);
+  }
+}
+
 const png = readFileSync(join(root, 'assets/social-card-v2.png'));
 if (png.readUInt32BE(16) !== 1200 || png.readUInt32BE(20) !== 630) {
   fail(join(root, 'assets/social-card-v2.png'), 'social card must be 1200 by 630 pixels');
@@ -92,4 +109,4 @@ if (failures.length) {
   console.error(failures.join('\n'));
   process.exit(1);
 }
-console.log(`Checked ${htmlFiles.length} HTML files, ${canonicalUrls.size} canonical URLs, internal and fragment references, declarative JSON, and social-card dimensions.`);
+console.log(`Checked ${htmlFiles.length} HTML files, ${cssFiles.length} stylesheets, ${canonicalUrls.size} canonical URLs, internal and fragment references, declarative JSON, and social-card dimensions.`);

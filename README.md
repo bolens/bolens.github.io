@@ -16,6 +16,7 @@ Then open <http://localhost:4173>.
 node scripts/build-site.mjs --check
 node tests/build-site-contract.mjs
 node tests/check-site.mjs
+node tests/check-site-contract.mjs
 node tests/browser-isolation.mjs
 node tests/theme-smoke.mjs
 node tests/interaction-contract.mjs

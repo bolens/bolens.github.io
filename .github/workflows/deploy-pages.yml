@@ -27,7 +27,7 @@ jobs:
           node-version: 24
           package-manager-cache: false
       - name: Validate site
-        run: node scripts/build-site.mjs --check && node tests/build-site-contract.mjs && node tests/check-site.mjs
+        run: node scripts/build-site.mjs --check && node tests/build-site-contract.mjs && node tests/check-site.mjs && node tests/check-site-contract.mjs
       - name: Run browser smoke tests
         run: node tests/browser-isolation.mjs && node tests/theme-smoke.mjs && node tests/interaction-contract.mjs && node tests/browser-smoke.mjs
       - uses: actions/configure-pages@v5
