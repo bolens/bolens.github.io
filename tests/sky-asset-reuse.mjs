@@ -17,7 +17,7 @@ test('tree rows occupy independent parallax depths', () => {
 });
 
 test('celestial and weather geometry is reusable', () => {
-  for (const symbol of ['cloud-bank', 'sky-orb', 'aurora-strand', 'rain-field']) {
+  for (const symbol of ['cloud-bank', 'sky-orb', 'aurora-strand', 'rain-field', 'snow-field', 'drought-field']) {
     assert.match(html, new RegExp(`<symbol id="${symbol}"`), `missing ${symbol}`);
   }
   assert.equal([...html.matchAll(/href="#sky-orb"/g)].length, 2);
@@ -25,6 +25,10 @@ test('celestial and weather geometry is reusable', () => {
   assert.equal([...html.matchAll(/href="#aurora-strand"/g)].length, 5);
   assert.match(css, /data-weather="cloudy"/);
   assert.match(css, /data-weather="rainy"/);
+  assert.match(css, /data-weather="snowy"/);
+  assert.match(html, /class="weather-snow"[^>]+href="#snow-field"/);
+  assert.match(css, /data-weather="drought"/);
+  assert.match(html, /class="weather-drought"[^>]+href="#drought-field"/);
 });
 
 test('day and night keep one active scene composition', () => {

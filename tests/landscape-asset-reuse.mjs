@@ -49,3 +49,36 @@ test('river surface details reuse condition-aware assets', () => {
   assert.doesNotMatch(html, /<g class="river-ripples"[^>]+stroke=/);
   assert.doesNotMatch(html, /<g class="water-foam"/);
 });
+
+test('riverbank profile, roots, and pebbles use configurable assets', () => {
+  assert.equal([...html.matchAll(/href="#riverbank-profile"/g)].length, 1);
+  assert.equal([...html.matchAll(/href="#exposed-root"/g)].length, 3);
+  assert.equal([...html.matchAll(/href="#river-pebble-cluster"/g)].length, 3);
+  assert.doesNotMatch(html, /class="riverbank-structure"[^>]*>\s*<path/);
+  assert.doesNotMatch(html, /class="bank-root-patches"[^>]*>\s*<path/);
+  assert.doesNotMatch(html, /class="bank-pebble-patches"[^>]*>\s*<ellipse/);
+});
+
+test('firefly phases reuse a configurable light pair', () => {
+  assert.equal([...html.matchAll(/href="#firefly-pair"/g)].length, 9);
+  assert.equal([...html.matchAll(/class="firefly-phase-(?:one|two|three)"/g)].length, 3);
+  assert.doesNotMatch(html, /class="firefly-phase-(?:one|two|three)"[^>]*><circle/);
+});
+
+test('campfire coals, ash, and sparks use configurable assets', () => {
+  assert.equal([...html.matchAll(/href="#coal-piece"/g)].length, 4);
+  assert.equal([...html.matchAll(/href="#ash-scatter"/g)].length, 1);
+  assert.equal([...html.matchAll(/href="#ember-spark"/g)].length, 6);
+  assert.doesNotMatch(html, /class="coal-bed"[^>]*>\s*<ellipse/);
+  assert.doesNotMatch(html, /class="fire-ash"[^>]*>\s*<ellipse/);
+  assert.doesNotMatch(html, /class="embers"[^>]*>\s*<(?:circle|path)/);
+});
+
+test('tent shell and fire smoke use configurable symbols', () => {
+  assert.equal([...html.matchAll(/href="#camp-tent-shell"/g)].length, 1);
+  assert.equal([...html.matchAll(/href="#smoke-wisp"/g)].length, 6);
+  assert.equal([...html.matchAll(/href="#smoke-puff"/g)].length, 5);
+  assert.doesNotMatch(html, /class="camp-tent"[^>]*>\s*<path/);
+  assert.doesNotMatch(html, /class="smoke-wisps"[^>]*>\s*<path/);
+  assert.doesNotMatch(html, /class="smoke-puffs"[^>]*>\s*<circle/);
+});

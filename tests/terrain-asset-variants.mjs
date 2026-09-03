@@ -28,9 +28,17 @@ const assets = [
   'camp-storage',
   'river-ripple',
   'water-foam',
+  'firefly-pair',
+  'coal-piece',
+  'ash-scatter',
+  'ember-spark',
+  'camp-tent-shell',
+  'riverbank-profile',
+  'exposed-root',
+  'river-pebble-cluster',
 ];
 const lightModes = ['ambient', 'sun', 'moon', 'fire', 'shadow'];
-const weatherModes = ['clear', 'cloudy', 'rainy', 'wet', 'dry'];
+const weatherModes = ['clear', 'cloudy', 'rainy', 'wet', 'dry', 'snowy', 'drought'];
 
 test('every reusable terrain symbol exposes shared condition marks', () => {
   for (const asset of assets) {
@@ -43,12 +51,24 @@ test('every reusable terrain symbol exposes shared condition marks', () => {
 test('lighting and weather modes form an orthogonal variant matrix', () => {
   for (const mode of lightModes) assert.match(css, new RegExp(`data-light="${mode}"`), `missing ${mode} light mode`);
   for (const mode of weatherModes) assert.match(css, new RegExp(`data-weather="${mode}"`), `missing ${mode} weather mode`);
-  assert.equal(lightModes.length * weatherModes.length * assets.length, 525);
+  assert.equal(lightModes.length * weatherModes.length * assets.length, 1015);
+});
+
+test('snow supports asset-level selection and scene-wide accumulation', () => {
+  assert.match(html, /class="asset-snow-mark"/);
+  assert.match(css, /\.terrain-asset\[data-weather="snowy"\],:root\[data-weather="snowy"\] \.terrain-asset/);
+  assert.match(css, /:root\[data-weather="snowy"\] \.terrain-asset\[data-light="fire"\]/);
+});
+
+test('drought supports asset-level selection and scene-wide stress', () => {
+  assert.match(html, /class="asset-drought-mark"/);
+  assert.match(css, /\.terrain-asset\[data-weather="drought"\],:root\[data-weather="drought"\] \.terrain-asset/);
+  assert.match(css, /:root\[data-weather="drought"\] \.terrain-asset\[data-light="fire"\]/);
 });
 
 test('every terrain placement opts into valid light and weather modes', () => {
   const placements = [...html.matchAll(/<use class="terrain-asset"[^>]+href="#([^"]+)"[^>]*>/g)].map((match) => match[0]);
-  assert.equal(placements.length, 72);
+  assert.equal(placements.length, 100);
   for (const placement of placements) {
     const asset = placement.match(/href="#([^"]+)"/)?.[1];
     const light = placement.match(/data-light="([^"]+)"/)?.[1];
