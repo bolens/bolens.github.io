@@ -33,7 +33,7 @@
 }
 :root[data-theme="day"] .theme-light-wash { display:inline; }
 :root[data-theme="day"] .scene-orb { --orb-glow:var(--lost-day-sun);--orb-glow-opacity:.16;--orb-fill:var(--lost-day-sun);--orb-highlight:#fff7c9;--orb-highlight-opacity:.34;--orb-crater-opacity:0;--orb-rays-opacity:1; }
-:root[data-theme="day"] .weather-clouds { display:inline;opacity:.68; }
+:root[data-theme="day"] .weather-clouds { opacity:.68; }
 :root[data-theme="day"] .weather-cloud { --cloud-fill:#f7fbf6;--cloud-edge:#d5e3e3;--cloud-shadow:#9ebfc2; }
 :root[data-theme="day"] .palette-wash { opacity:.035;mix-blend-mode:soft-light; }
 :root[data-theme="day"] :is(.campfire-glow,.firelight-rings,.fire-rim-light) { opacity:.42; }
@@ -212,7 +212,7 @@
   :root:not([data-theme]) .camp-atmosphere { display:none; }
   :root:not([data-theme]) :is(.camp-stars,.star-dust,.deep-stars,.stellar-color,.milky-way,.sky-airglow,.aurora-curtains,.aurora-ray-filaments,.camp-aurora,.background-ufo) { display:none; }
   :root:not([data-theme]) .lost-page { --lost-sky:var(--paper);--lost-panel:color-mix(in srgb,var(--snow) 88%,transparent);--lost-copy:var(--ink);--lost-muted:var(--muted);--lost-accent:var(--copper);--lost-line:color-mix(in srgb,var(--line) 72%,transparent);--scene-sky-top:#5c9ec1;--scene-sky-upper:#78b9d8;--scene-sky-mid:#b9dbe2;--scene-sky-haze:#e8e2c5;--scene-sky-depth:#a8d1dd;--scene-sky-depth-opacity:.18;--scene-pine-lit:#5f8962;--scene-pine-mid:#315f43;--scene-pine-dark:#173b30;--scene-ground-lit:#668b5d;--scene-ground-mid:#3e6547;--scene-ground-dark:#213f32;--scene-mountain-far-lit:#9eb4b4;--scene-mountain-far-mid:#78959a;--scene-mountain-far-dark:#59787e;--scene-mountain-lit:#8fa8aa;--scene-mountain-mid:#6f8d91;--scene-mountain-shadow:#55757a;--scene-mountain-dark:#3f6166; }
-  :root:not([data-theme]) .theme-light-wash,:root:not([data-theme]) .weather-clouds { display:inline; }
+  :root:not([data-theme]) .theme-light-wash { display:inline; }
   :root:not([data-theme]) .scene-orb { --orb-glow:var(--lost-day-sun);--orb-glow-opacity:.16;--orb-fill:var(--lost-day-sun);--orb-highlight:#fff7c9;--orb-highlight-opacity:.34;--orb-crater-opacity:0;--orb-rays-opacity:1; }
   :root:not([data-theme]) .weather-cloud { --cloud-fill:#f7fbf6;--cloud-edge:#d5e3e3;--cloud-shadow:#9ebfc2; }
   :root:not([data-theme]) .deep-forest { fill:#315f43;stroke:#78916a;opacity:.72; }

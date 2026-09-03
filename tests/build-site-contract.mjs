@@ -29,8 +29,10 @@ try {
   expectFailure('duplicate case-study slug', ({ projects: value }) => { value[1].slug = value[0].slug; }, /duplicate case-study slug/);
   expectFailure('unknown default palette', ({ themes: value }) => { value.defaultPalette = 'missing'; }, /defaultPalette/);
   expectFailure('invalid modes', ({ themes: value }) => { value.modes = ['day', 'night']; }, /modes must/);
+  expectFailure('invalid weather modes', ({ themes: value }) => { value.weatherModes = ['clear']; }, /weatherModes must/);
   expectFailure('invalid palette ID', ({ themes: value }) => { value.palettes['Bad ID'] = value.palettes.alpine; }, /invalid palette ID/);
   expectFailure('missing palette label', ({ themes: value }) => { value.palettes.alpine.label = ''; }, /missing a label/);
+  expectFailure('invalid palette weather', ({ themes: value }) => { value.palettes.alpine.weather = 'hail'; }, /alpine\.weather/);
   expectFailure('missing theme token', ({ themes: value }) => { delete value.palettes.alpine.night.paper; }, /alpine\.night\.paper/);
   expectFailure('invalid theme color', ({ themes: value }) => { value.palettes.alpine.day.paper = 'red'; }, /six-digit hex color/);
   expectFailure('invalid 404 token', ({ themes: value }) => { value.palettes.alpine.scene404.bad = '#ffffff'; }, /scene404\.bad/);

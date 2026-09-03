@@ -5,9 +5,19 @@
     "day",
     "night"
   ],
+  "weatherModes": [
+    "clear",
+    "cloudy",
+    "rainy",
+    "wet",
+    "dry",
+    "snowy",
+    "drought"
+  ],
   "palettes": {
     "alpine": {
       "label": "Alpine",
+      "weather": "snowy",
       "day": {
         "paper": "#edf4f3",
         "snow": "#fbfdfb",
@@ -57,6 +67,7 @@
     },
     "desert": {
       "label": "High Desert",
+      "weather": "drought",
       "day": {
         "paper": "#f3ead8",
         "snow": "#fffaf0",
@@ -110,6 +121,7 @@
     },
     "glacier": {
       "label": "Glacier",
+      "weather": "snowy",
       "day": {
         "paper": "#eaf1f4",
         "snow": "#f9fcfd",
@@ -161,6 +173,7 @@
     },
     "signal": {
       "label": "Night Signal",
+      "weather": "clear",
       "day": {
         "paper": "#f0edf5",
         "snow": "#fcfaff",
@@ -211,6 +224,7 @@
     },
     "forest": {
       "label": "Forest Canopy",
+      "weather": "wet",
       "day": {
         "paper": "#edf1e7",
         "snow": "#fafcf6",
@@ -262,6 +276,7 @@
     },
     "coast": {
       "label": "Pacific Coast",
+      "weather": "rainy",
       "day": {
         "paper": "#e8f0ef",
         "snow": "#f8fcfb",
@@ -311,6 +326,7 @@
     },
     "meadow": {
       "label": "Wildflower",
+      "weather": "cloudy",
       "day": {
         "paper": "#f1efe4",
         "snow": "#fcfbf5",
@@ -361,6 +377,7 @@
     },
     "volcanic": {
       "label": "Volcanic",
+      "weather": "dry",
       "day": {
         "paper": "#eeeae7",
         "snow": "#faf8f6",

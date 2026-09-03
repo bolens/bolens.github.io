@@ -24,10 +24,13 @@ const colorPattern = /^#[0-9a-f]{6}$/i;
 const paletteEntries = Object.entries(themes.palettes);
 if (!themes.palettes[themes.defaultPalette]) throw new Error('data/themes.json: defaultPalette must name a palette');
 if (JSON.stringify(themes.modes) !== JSON.stringify(['auto', 'day', 'night'])) throw new Error('data/themes.json: modes must be auto, day, and night');
+const weatherModes = ['clear', 'cloudy', 'rainy', 'wet', 'dry', 'snowy', 'drought'];
+if (JSON.stringify(themes.weatherModes) !== JSON.stringify(weatherModes)) throw new Error(`data/themes.json: weatherModes must be ${weatherModes.join(', ')}`);
 const requiredTokens = Object.keys(themes.palettes[themes.defaultPalette].day);
 for (const [name, palette] of paletteEntries) {
   if (!/^[a-z][a-z0-9-]*$/.test(name)) throw new Error(`data/themes.json: invalid palette ID ${name}`);
   if (!palette.label) throw new Error(`data/themes.json: ${name} is missing a label`);
+  if (!weatherModes.includes(palette.weather)) throw new Error(`data/themes.json: ${name}.weather must name a supported weather mode`);
   for (const mode of ['day', 'night']) {
     for (const token of requiredTokens) {
       if (!colorPattern.test(palette[mode]?.[token] ?? '')) throw new Error(`data/themes.json: ${name}.${mode}.${token} must be a six-digit hex color`);
@@ -61,7 +64,7 @@ const themeCss = [
   '',
 ].join('\n');
 outputs.set('assets/theme-tokens.css', themeCss);
-outputs.set('assets/theme-data.js', `window.portfolioThemeData=${JSON.stringify({ defaultPalette: themes.defaultPalette, modes: themes.modes, palettes: Object.fromEntries(paletteEntries.map(([name, palette]) => [name, { label: palette.label, light: palette.day.paper, dark: palette.night.paper }])) })};\n`);
+outputs.set('assets/theme-data.js', `window.portfolioThemeData=${JSON.stringify({ defaultPalette: themes.defaultPalette, modes: themes.modes, weatherModes: themes.weatherModes, palettes: Object.fromEntries(paletteEntries.map(([name, palette]) => [name, { label: palette.label, light: palette.day.paper, dark: palette.night.paper, weather: palette.weather }])) })};\n`);
 const themeMeta = `<meta name="theme-color" content="${defaultTheme.day.paper}" media="(prefers-color-scheme: light)"><meta name="theme-color" content="${defaultTheme.night.paper}" media="(prefers-color-scheme: dark)">`;
 const syncThemeMeta = (source) => source.replace(/<meta name="theme-color"[^>]*>(?:\s*<meta name="theme-color"[^>]*>)?/, themeMeta);
 const loadingBootstrap = '<script>document.documentElement.classList.add("is-loading")</script>';
