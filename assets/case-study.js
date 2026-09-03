@@ -45,22 +45,29 @@ if (routeLinks.length && sections.length) {
       section.getBoundingClientRect().top <= readingLine ? section : active, sections[0]);
     setActiveSection(current.id);
   };
+  const scheduleHashAlignment = (id) => {
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(() => {
+      frame = requestAnimationFrame(() => {
+        frame = undefined;
+        if (location.hash.slice(1) !== id) return;
+        document.getElementById(id)?.scrollIntoView();
+        setActiveSection(id);
+      });
+    });
+  };
 
   addEventListener('scroll', () => {
     if (!frame) frame = requestAnimationFrame(updateFromScroll);
   }, { passive: true });
   addEventListener('resize', updateFromScroll);
   addEventListener('hashchange', () => {
-    if (sections.some((section) => section.id === location.hash.slice(1))) {
-      setActiveSection(location.hash.slice(1));
+    const id = location.hash.slice(1);
+    if (sections.some((section) => section.id === id)) {
+      setActiveSection(id);
+      scheduleHashAlignment(id);
     }
   });
-  if (location.hash) {
-    requestAnimationFrame(() => requestAnimationFrame(() => {
-      document.getElementById(initialId)?.scrollIntoView();
-      setActiveSection(initialId);
-    }));
-  } else {
-    requestAnimationFrame(updateFromScroll);
-  }
+  if (location.hash) scheduleHashAlignment(initialId);
+  else frame = requestAnimationFrame(updateFromScroll);
 }
