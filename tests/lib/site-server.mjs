@@ -21,5 +21,14 @@ export async function startSiteServer(root) {
     server.once('error', reject);
     server.listen(0, '127.0.0.1', resolve);
   });
-  return { origin: `http://127.0.0.1:${server.address().port}`, close: () => server.close() };
+  let closing;
+  return {
+    origin: `http://127.0.0.1:${server.address().port}`,
+    close: () => {
+      if (!closing) closing = new Promise((resolve, reject) => {
+        server.close((error) => error ? reject(error) : resolve());
+      });
+      return closing;
+    },
+  };
 }
