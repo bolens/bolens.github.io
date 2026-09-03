@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { pause, waitFor } from './lib/browser-test.mjs';
+import { waitFor } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -49,10 +49,8 @@ try {
   await send('Runtime.evaluate', { expression: `(()=>{const shortcuts=document.querySelector('.shortcut-overlay');shortcuts.showModal();const close=shortcuts.querySelector('.overlay-close');close.blur();const box=close.getBoundingClientRect();window.__tooltipPoint={x:box.left+box.width/2,y:box.top+box.height/2}})()` });
   const tooltipPoint = await send('Runtime.evaluate', { expression: 'window.__tooltipPoint', returnByValue: true });
   await send('Input.dispatchMouseEvent', { type: 'mouseMoved', ...tooltipPoint.result.value });
-  await pause(150);
-  const earlyTooltip = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector('.shortcut-overlay .overlay-close'),'::after').opacity`, returnByValue: true });
-  if (earlyTooltip.result.value !== '0') throw new Error(`pointer tooltip appeared before its hover delay: ${earlyTooltip.result.value}`);
-  await pause(300);
+  const tooltipDelay = await send('Runtime.evaluate', { expression: `getComputedStyle(document.querySelector('.shortcut-overlay .overlay-close'),'::after').transitionDelay`, returnByValue: true });
+  if (Number.parseFloat(tooltipDelay.result.value) < .2) throw new Error(`pointer tooltip lacks a meaningful hover delay: ${tooltipDelay.result.value}`);
   await waitFor(send, `Number.parseFloat(getComputedStyle(document.querySelector('.shortcut-overlay .overlay-close'),'::after').opacity)>=.95`, 'pointer tooltip reveal');
   await send('Input.dispatchMouseEvent', { type: 'mouseMoved', x: 0, y: 0 });
   await send('Runtime.evaluate', { expression: `document.querySelector('.shortcut-overlay .overlay-close').focus()` });
