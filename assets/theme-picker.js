@@ -60,7 +60,7 @@
         ${Object.entries(palettes).map(([name, palette]) => `
           <label data-palette-option="${name}">
             <input type="radio" name="portfolio-palette" value="${name}"${name === selected ? ' checked' : ''}>
-            <span class="palette-swatches" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="palette-swatches" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
             <span>${palette.label}</span>
           </label>`).join('')}
       </fieldset></div>`;
