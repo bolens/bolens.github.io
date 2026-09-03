@@ -88,9 +88,9 @@ const cards = projects.map((project) => {
   const href = project.slug ? `../case-studies/${project.slug}/` : project.repository;
   const kind = project.slug ? 'Case study' : 'Repository';
   const arrow = project.slug ? '→' : '↗';
-  return `      <a href="${href}"><span><b>${project.name}</b><small>${project.summary}</small><em>${project.status} · ${kind}</em></span><i>${project.tech}</i><strong aria-hidden="true">${arrow}</strong></a>`;
+  return `      <a href="${href}" data-project-name="${project.name.toLowerCase()}" data-project-languages="${project.tech}" data-project-kind="${kind.toLowerCase()}" data-project-repository="${project.repository}"><span><b>${project.name}</b><small>${project.summary}</small><em>${project.status} · ${kind}</em></span><i>${project.tech}</i><strong aria-hidden="true">${arrow}</strong></a>`;
 }).join('\n');
-outputs.set('work/index.html', work.replace(/<!-- projects:start -->[\s\S]*?<!-- projects:end -->/, `<!-- projects:start --><div class="index-list" data-reveal>\n${cards}\n    </div><!-- projects:end -->`));
+outputs.set('work/index.html', work.replace(/<!-- projects:start -->[\s\S]*?<!-- projects:end -->/, `<!-- projects:start --><div class="index-list" id="project-list" data-reveal>\n${cards}\n    </div><!-- projects:end -->`));
 
 const pages = [
   ['index.html', '', '', '#selected-work', 'about/', '#main', 'Back to top', '↑'],
