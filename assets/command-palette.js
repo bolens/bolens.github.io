@@ -1,94 +1,18 @@
 (() => {
   const appearance = window.portfolioAppearance;
-  if (!appearance) return;
+  const pickerUi = window.portfolioAppearancePicker;
+  const overlay = window.portfolioOverlay;
+  if (!appearance || !pickerUi || !overlay) return;
   const { palettes } = appearance;
-  let selected = appearance.palette;
-  let selectedTheme = appearance.theme;
-  const applyPalette = (name) => { selected = appearance.applyPalette(name); };
-  const applyTheme = (theme) => { selectedTheme = appearance.applyTheme(theme); };
 
-  const mountPicker = () => {
-    let pickerReturnFocus = null;
-    const picker = document.createElement('details');
-    picker.className = 'palette-picker';
-    picker.hidden = true;
-    picker.innerHTML = `
-      <summary aria-keyshortcuts="Alt+P"><span class="palette-current" aria-hidden="true"></span><span class="palette-name">${palettes[selected].label} · ${selectedTheme === 'auto' ? 'System' : selectedTheme[0].toUpperCase() + selectedTheme.slice(1)}</span></summary>
-      <div class="palette-panels"><fieldset aria-describedby="palette-help">
-        <legend>Choose a color palette</legend>
-        <p class="visually-hidden" id="palette-help">Changes apply immediately. Use the arrow keys to move between palettes.</p>
-        ${Object.entries(palettes).map(([name, palette]) => `
-          <label data-palette-option="${name}">
-            <input type="radio" name="portfolio-palette" value="${name}"${name === selected ? ' checked' : ''}>
-            <span class="palette-swatches" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span>
-            <span>${palette.label}</span>
-          </label>`).join('')}
-      </fieldset></div>`;
-
-    const themeFieldset = document.createElement('fieldset');
-    themeFieldset.className = 'theme-options';
-    themeFieldset.setAttribute('aria-describedby', 'appearance-help');
-    themeFieldset.innerHTML = `<legend>Choose an appearance</legend><p class="visually-hidden" id="appearance-help">Changes apply immediately. System follows your device setting.</p>${['auto', 'day', 'night'].map((theme) => `<label><input type="radio" name="portfolio-theme" value="${theme}"${theme === selectedTheme ? ' checked' : ''}><span>${theme === 'auto' ? 'System' : theme[0].toUpperCase() + theme.slice(1)}</span></label>`).join('')}`;
-    picker.querySelector('.palette-panels').append(themeFieldset);
-
-    const status = document.createElement('p');
-    status.className = 'palette-status visually-hidden';
-    status.setAttribute('aria-live', 'polite');
-    status.setAttribute('aria-atomic', 'true');
-    const syncPickerName = (announce = false) => {
-      const appearance = selectedTheme === 'auto' ? 'System' : selectedTheme[0].toUpperCase() + selectedTheme.slice(1);
-      const value = `${palettes[selected].label} · ${appearance}`;
-      picker.querySelector('.palette-name').textContent = value;
-      picker.querySelector('summary').setAttribute('aria-label', `Color palette and appearance. Current: ${palettes[selected].label}, ${appearance}`);
-      if (announce) status.textContent = `${palettes[selected].label} palette, ${appearance} appearance.`;
-    };
-    syncPickerName();
-    addEventListener('portfolio-appearance-change', (event) => {
-      selected = event.detail.palette;
-      selectedTheme = event.detail.theme;
-      const paletteControl = picker.querySelector(`input[name="portfolio-palette"][value="${selected}"]`);
-      const themeControl = picker.querySelector(`input[name="portfolio-theme"][value="${selectedTheme}"]`);
-      if (paletteControl) paletteControl.checked = true;
-      if (themeControl) themeControl.checked = true;
-      syncPickerName();
-    });
-
-    picker.addEventListener('change', (event) => {
-      if (!(event.target instanceof HTMLInputElement)) return;
-      if (event.target.name === 'portfolio-theme') applyTheme(event.target.value);
-      else applyPalette(event.target.value);
-      syncPickerName(true);
-    });
-    document.addEventListener('pointerdown', (event) => {
-      if (picker.open && !picker.contains(event.target)) picker.removeAttribute('open');
-    });
-    document.body.append(picker);
-    document.body.append(status);
-
-    const choosePalette = (name) => {
-      applyPalette(name);
-      const control = picker.querySelector(`input[name="portfolio-palette"][value="${name}"]`);
-      if (control) control.checked = true;
-      syncPickerName(true);
-    };
-    const chooseTheme = (theme) => {
-      applyTheme(theme);
-      const control = picker.querySelector(`input[name="portfolio-theme"][value="${theme}"]`);
-      if (control) control.checked = true;
-      syncPickerName(true);
-    };
+  const mountCommands = () => {
+    const runAppearance = (action) => () => { action(); pickerUi.announce(); };
+    const choosePalette = (name) => runAppearance(() => appearance.setPalette(name));
+    const chooseTheme = (mode) => runAppearance(() => appearance.setTheme(mode));
     const copyText = (value) => navigator.clipboard?.writeText(value).catch(() => {});
     const sharePage = () => {
       if (navigator.share) return navigator.share({ title: document.title, url: location.href }).catch(() => {});
       return copyText(location.href);
-    };
-    const toggleTheme = () => {
-      const isNight = selectedTheme === 'night' || (selectedTheme === 'auto' && matchMedia('(prefers-color-scheme: dark)').matches);
-      chooseTheme(isNight ? 'day' : 'night');
-    };
-    const cyclePalette = () => {
-      const names = Object.keys(palettes);
-      choosePalette(names[(names.indexOf(selected) + 1) % names.length]);
     };
     const sourcePath = location.pathname.endsWith('/') ? `${location.pathname.slice(1)}index.html` : location.pathname.slice(1);
     const pageSections = [
@@ -126,14 +50,14 @@
       { label: 'Focus main content', detail: 'Move keyboard focus past navigation', group: 'Accessibility', keywords: 'skip content', shortcut: 'Alt M', ariaShortcut: 'Alt+M', run: () => document.querySelector('main')?.focus() },
       { label: 'Command palette', detail: 'Search pages and run site actions', group: 'Command', keywords: 'shortcut search commands', shortcut: 'Alt K', ariaShortcut: 'Alt+K', run: () => openCommands() },
       { label: 'Keyboard shortcuts', detail: 'Show every available keyboard shortcut', group: 'Command', keywords: 'help hotkeys bindings', shortcut: 'Alt /', ariaShortcut: 'Alt+/', run: () => openCommands('shortcut') },
-      { label: 'Choose palette', detail: 'Open color and appearance controls', group: 'Command', keywords: 'theme colors shortcut', shortcut: 'Alt P', ariaShortcut: 'Alt+P', run: () => { pickerReturnFocus = document.activeElement; picker.hidden = false; picker.open = true; syncOverlayState(); picker.querySelector('summary')?.focus(); } },
-      { label: 'Cycle color palette', detail: 'Move to the next color scheme', group: 'Palette', keywords: 'next theme colors', run: cyclePalette },
-      ...Object.entries(palettes).map(([name, palette]) => ({ label: `Use ${palette.label} palette`, detail: 'Change the site color scheme', group: 'Palette', keywords: `${name} theme colors`, run: () => choosePalette(name) })),
-      { label: 'Toggle day or night', detail: 'Switch between light and dark scenes', group: 'Theme', keywords: 'appearance mode', run: toggleTheme },
-      { label: 'Use system appearance', detail: 'Follow the device setting', group: 'Theme', keywords: 'auto light dark', run: () => chooseTheme('auto') },
-      { label: 'Use day appearance', detail: 'Switch to the light scene', group: 'Theme', keywords: 'light', run: () => chooseTheme('day') },
-      { label: 'Use night appearance', detail: 'Switch to the dark scene', group: 'Theme', keywords: 'dark', run: () => chooseTheme('night') },
-      { label: 'Reset color settings', detail: 'Restore Glacier and system appearance', group: 'Theme', keywords: 'default clear preferences', run: () => { choosePalette('glacier'); chooseTheme('auto'); } },
+      { label: 'Choose palette', detail: 'Open color and appearance controls', group: 'Command', keywords: 'theme colors shortcut', shortcut: 'Alt P', ariaShortcut: 'Alt+P', run: pickerUi.open },
+      { label: 'Cycle color palette', detail: 'Move to the next color scheme', group: 'Palette', keywords: 'next theme colors', run: runAppearance(appearance.cyclePalette) },
+      ...Object.entries(palettes).map(([name, palette]) => ({ label: `Use ${palette.label} palette`, detail: 'Change the site color scheme', group: 'Palette', keywords: `${name} theme colors`, run: choosePalette(name) })),
+      { label: 'Toggle day or night', detail: 'Switch between light and dark scenes', group: 'Theme', keywords: 'appearance mode', run: runAppearance(appearance.toggleTheme) },
+      { label: 'Use system appearance', detail: 'Follow the device setting', group: 'Theme', keywords: 'auto light dark', run: chooseTheme('auto') },
+      { label: 'Use day appearance', detail: 'Switch to the light scene', group: 'Theme', keywords: 'light', run: chooseTheme('day') },
+      { label: 'Use night appearance', detail: 'Switch to the dark scene', group: 'Theme', keywords: 'dark', run: chooseTheme('night') },
+      { label: 'Reset color settings', detail: `Restore ${palettes[appearance.defaultPalette].label} and system appearance`, group: 'Theme', keywords: 'default clear preferences', run: runAppearance(appearance.reset) },
     ];
     for (const command of commands) {
       command.searchText = `${command.label} ${command.detail} ${command.group} ${command.keywords ?? ''} ${command.shortcut ? `keyboard shortcut hotkey ${command.shortcut}` : ''}`.toLowerCase();
@@ -143,12 +67,6 @@
     dialog.setAttribute('aria-label', 'Site search and commands');
     dialog.innerHTML = `<div class="command-search"><svg class="command-search-glyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><use href="/assets/trail-glyphs.svg#glyph-search"></use></svg><input type="search" role="combobox" autocomplete="off" spellcheck="false" aria-label="Search pages and commands" aria-autocomplete="list" aria-controls="command-results" aria-expanded="false" placeholder="Search pages and commands…"><kbd>Esc</kbd></div><div class="command-results" id="command-results" role="listbox" aria-label="Results"></div><p class="command-empty" role="status" hidden>No matching trail found.</p><footer><span><kbd>↑</kbd><kbd>↓</kbd> Move</span><span><kbd>↵</kbd> Open</span></footer>`;
     document.body.append(dialog);
-    const syncOverlayState = () => {
-      const active = dialog.open || picker.open;
-      document.documentElement.classList.toggle('ui-overlay-open', active);
-      window.dispatchEvent(new CustomEvent('ui-overlay-change', { detail: { active } }));
-    };
-    picker.addEventListener('toggle', syncOverlayState);
     const footer = document.querySelector('.site-footer');
     if (footer && !footer.querySelector('.shortcut-hint')) {
       const hint = document.createElement('span');
@@ -186,13 +104,13 @@
       active = 0;
       renderCommands();
       dialog.showModal();
-      syncOverlayState();
+      overlay.set('commands', true);
       input.setAttribute('aria-expanded', 'true');
       input.focus();
     }
     dialog.addEventListener('close', () => {
       if (!dialog.open) input.setAttribute('aria-expanded', 'false');
-      syncOverlayState();
+      overlay.set('commands', false);
     });
     input.addEventListener('input', () => { active = 0; renderCommands(); });
     results.addEventListener('pointermove', (event) => {
@@ -218,12 +136,8 @@
       const keyCode = event.code || `Key${event.key.toUpperCase()}`;
       const altShortcut = event.altKey && !event.metaKey && !event.ctrlKey && !event.shiftKey;
       const fallbackShortcut = event.ctrlKey && event.shiftKey && !event.altKey && !event.metaKey;
-      if (event.key === 'Escape' && !picker.hidden) {
-        picker.open = false;
-        picker.hidden = true;
-        syncOverlayState();
-        if (pickerReturnFocus instanceof HTMLElement) pickerReturnFocus.focus();
-        pickerReturnFocus = null;
+      if (event.key === 'Escape' && pickerUi.visible) {
+        pickerUi.close();
         return;
       }
       if (keyCode === 'KeyK' && (altShortcut || fallbackShortcut)) {
@@ -234,12 +148,7 @@
       }
       if (keyCode === 'KeyP' && (altShortcut || fallbackShortcut)) {
         event.preventDefault();
-        if (picker.hidden) pickerReturnFocus = document.activeElement;
-        picker.hidden = !picker.hidden;
-        picker.open = !picker.hidden;
-        syncOverlayState();
-        if (!picker.hidden) picker.querySelector('summary')?.focus();
-        else if (pickerReturnFocus instanceof HTMLElement) pickerReturnFocus.focus();
+        pickerUi.toggle();
         return;
       }
       if (keyCode === 'Slash' && altShortcut) {
@@ -262,6 +171,6 @@
     }, { capture: true });
   };
 
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountPicker, { once: true });
-  else mountPicker();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mountCommands, { once: true });
+  else mountCommands();
 })();
