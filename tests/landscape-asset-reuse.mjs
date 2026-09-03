@@ -126,3 +126,11 @@ test('tent gear and the distant craft use condition-aware symbols', () => {
   assert.doesNotMatch(html, /<g class="tent-sleeping-bag"/);
   assert.doesNotMatch(html, /<g class="tent-lantern"/);
 });
+
+test('the camera and windhound use responsive campsite symbols', () => {
+  assert.match(html, /<symbol id="trail-camera"[^>]+data-regions="[^"]*lens-glint[^"]*conditions"/);
+  assert.equal([...html.matchAll(/href="#trail-camera"/g)].length, 1);
+  assert.match(html, /<symbol id="camp-windhound"[^>]+data-regions="[^"]*face-mask[^"]*conditions"/);
+  assert.equal([...html.matchAll(/href="#camp-windhound"/g)].length, 2);
+  assert.doesNotMatch(html, /<g class="tent-dog"/);
+});

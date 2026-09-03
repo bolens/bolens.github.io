@@ -36,3 +36,10 @@ test('reusable camp props react to visibility and shelter conditions', () => {
   assert.match(css, /\.lantern-halo \{[^}]+animation:lantern-glow/);
   assert.doesNotMatch(css, /\.tent-lantern circle/);
 });
+
+test('sheltered camera and windhound react without moving their whole scene', () => {
+  assert.match(css, /data-weather="rainy"[^\n]+\.tent-dog \{ translate:0 5px;scale:\.96; \}/);
+  assert.match(css, /data-weather="drought"\] \.tent-dog \{ translate:0 -2px; \}/);
+  assert.match(css, /data-weather="cloudy"[^\n]+\.tent-camera \{ --camera-glint-opacity:\.24; \}/);
+  assert.match(html, /\.camera-glint \{ animation:none; opacity:var\(--camera-glint-opacity,\.58\); \}/);
+});

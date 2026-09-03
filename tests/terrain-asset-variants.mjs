@@ -39,6 +39,8 @@ const assets = [
   'scout-ufo',
   'sleeping-roll',
   'camp-lantern',
+  'trail-camera',
+  'camp-windhound',
   'riverbank-profile',
   'exposed-root',
   'river-pebble-cluster',
@@ -57,7 +59,7 @@ test('every reusable terrain symbol exposes shared condition marks', () => {
 test('lighting and weather modes form an orthogonal variant matrix', () => {
   for (const mode of lightModes) assert.match(css, new RegExp(`data-light="${mode}"`), `missing ${mode} light mode`);
   for (const mode of weatherModes) assert.match(css, new RegExp(`data-weather="${mode}"`), `missing ${mode} weather mode`);
-  assert.equal(lightModes.length * weatherModes.length * assets.length, 1225);
+  assert.equal(lightModes.length * weatherModes.length * assets.length, 1295);
 });
 
 test('snow supports asset-level selection and scene-wide accumulation', () => {
@@ -74,7 +76,7 @@ test('drought supports asset-level selection and scene-wide stress', () => {
 
 test('every terrain placement opts into valid light and weather modes', () => {
   const placements = [...html.matchAll(/<use class="[^"]*\bterrain-asset\b[^"]*"[^>]+href="#([^"]+)"[^>]*>/g)].map((match) => match[0]);
-  assert.equal(placements.length, 152);
+  assert.equal(placements.length, 155);
   for (const placement of placements) {
     const asset = placement.match(/href="#([^"]+)"/)?.[1];
     const light = placement.match(/data-light="([^"]+)"/)?.[1];
