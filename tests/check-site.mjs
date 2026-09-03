@@ -68,8 +68,10 @@ if (png.readUInt32BE(16) !== 1200 || png.readUInt32BE(20) !== 630) {
 }
 
 const sitemap = readFileSync(join(root, 'sitemap.xml'), 'utf8');
+const llms = readFileSync(join(root, 'llms.txt'), 'utf8');
 for (const canonical of canonicalUrls) {
   if (!sitemap.includes(`<loc>${canonical}</loc>`)) fail(join(root, 'sitemap.xml'), `missing ${canonical}`);
+  if (!llms.includes(canonical)) fail(join(root, 'llms.txt'), `missing ${canonical}`);
 }
 
 if (failures.length) {

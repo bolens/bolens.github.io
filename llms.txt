@@ -1,0 +1,30 @@
+# Michael Bolens
+
+Michael Bolens builds open-source Linux and infrastructure tools that expose system state, bound failures, and provide clear recovery paths.
+
+## Portfolio
+
+- Home: https://bolens.github.io/
+- Work index: https://bolens.github.io/work/
+- About: https://bolens.github.io/about/
+
+## Case studies
+
+- uDDNS: https://bolens.github.io/case-studies/uddns/
+- AUR Response Toolkit: https://bolens.github.io/case-studies/aur-response-toolkit/
+- Privacy Devices: https://bolens.github.io/case-studies/privacy-devices/
+- Launch Layer: https://bolens.github.io/case-studies/launch-layer/
+- Millennium Helpers: https://bolens.github.io/case-studies/millennium-helpers/
+
+## Source repositories
+
+- Portfolio: https://github.com/bolens/bolens.github.io
+- uDDNS: https://github.com/bolens/uddns
+- AUR Response Toolkit: https://github.com/bolens/aur-response-toolkit
+- Privacy Devices: https://github.com/bolens/omarchy-privacy-devices
+- Launch Layer: https://github.com/bolens/launch-layer
+- Millennium Helpers: https://github.com/bolens/millennium-helpers
+
+## Contact
+
+- GitHub: https://github.com/bolens
