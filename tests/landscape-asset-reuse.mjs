@@ -116,3 +116,13 @@ test('camp food and sky glints use reusable detailed symbols', () => {
   assert.match(html, /<symbol id="sky-glint"[^>]+data-regions="vertical-ray,horizontal-ray"/);
   assert.equal([...html.matchAll(/href="#sky-glint"/g)].length, 3);
 });
+
+test('tent gear and the distant craft use condition-aware symbols', () => {
+  for (const asset of ['scout-ufo', 'sleeping-roll', 'camp-lantern']) {
+    assert.match(html, new RegExp(`<symbol id="${asset}"[^>]+data-regions="[^"]*conditions"`));
+    assert.equal([...html.matchAll(new RegExp(`href="#${asset}"`, 'g'))].length, 1);
+  }
+  assert.doesNotMatch(html, /<g class="background-ufo"/);
+  assert.doesNotMatch(html, /<g class="tent-sleeping-bag"/);
+  assert.doesNotMatch(html, /<g class="tent-lantern"/);
+});

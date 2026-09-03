@@ -28,3 +28,11 @@ test('drought lowers the river and exposes its bed', () => {
   assert.match(css, /data-weather="drought"\] \.river-water \{ scale:1 \.88;translate:0 9px;opacity:\.78; \}/);
   assert.match(css, /data-weather="rainy"[^\n]+\.river-water \{ scale:1 1\.02;translate:0 -3px; \}/);
 });
+
+test('reusable camp props react to visibility and shelter conditions', () => {
+  assert.match(css, /data-weather="cloudy"[^\n]+\.background-ufo \{ display:none; \}/);
+  assert.match(css, /data-weather="rainy"[^\n]+\.tent-lantern \{ --lantern-outer-opacity:\.14;--lantern-inner-opacity:\.32; \}/);
+  assert.match(css, /data-weather="drought"\] \.tent-lantern \{ --lantern-outer-opacity:\.06;--lantern-inner-opacity:\.15;--lantern-light:#efb95c; \}/);
+  assert.match(css, /\.lantern-halo \{[^}]+animation:lantern-glow/);
+  assert.doesNotMatch(css, /\.tent-lantern circle/);
+});
