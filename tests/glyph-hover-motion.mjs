@@ -90,7 +90,7 @@ const internalMotions = {
   marshmallow: ['--glyph-marshmallow-motion', 'glyph-marshmallow-toast-draw'],
   'paw-print': ['--glyph-paw-print-motion', 'glyph-paw-pad-land'],
   pinecone: ['--glyph-pinecone-motion', 'glyph-pinecone-scale-a-open'],
-  snowshoe: ['--glyph-snowshoe-motion', 'glyph-snowshoe-binding-tighten'],
+  snowshoe: ['--glyph-snowshoe-motion', 'glyph-snowshoe-step'],
 };
 const secondaryMotions = {
   cairn: [['--glyph-cairn-middle-motion', 'glyph-cairn-middle-stack'], ['--glyph-cairn-upper-motion', 'glyph-cairn-upper-stack']],
@@ -121,9 +121,9 @@ const secondaryMotions = {
   trout: [['--glyph-trout-bubble-motion', 'glyph-trout-bubble-rise']],
   canoe: [['--glyph-canoe-ripple-motion', 'glyph-canoe-ripple-spread']],
   mushroom: [['--glyph-mushroom-spore-b-motion', 'glyph-mushroom-spore-b-float']],
-  marshmallow: [['--glyph-marshmallow-spark-motion', 'glyph-marshmallow-spark-pop']],
   'paw-print': [['--glyph-paw-toe-a-motion', 'glyph-paw-toe-a-land'], ['--glyph-paw-toe-b-motion', 'glyph-paw-toe-b-land'], ['--glyph-paw-toe-c-motion', 'glyph-paw-toe-c-land'], ['--glyph-paw-toe-d-motion', 'glyph-paw-toe-d-land']],
   pinecone: [['--glyph-pinecone-scale-b-motion', 'glyph-pinecone-scale-b-open'], ['--glyph-pinecone-scale-c-motion', 'glyph-pinecone-scale-c-open']],
+  snowshoe: [['--glyph-snowshoe-binding-motion', 'glyph-snowshoe-binding-settle']],
 };
 const allInternalMotions = Object.values(internalMotions).map(([property, name, duration = 680]) => [property, name, duration])
   .concat(Object.values(secondaryMotions).flat().map(([property, name]) => [property, name, 680]));
@@ -189,10 +189,10 @@ if (!/glyph-owl-body[\s\S]*glyph-owl-eye-a[\s\S]*glyph-owl-eye-b/.test(sprite)) 
 if (!/glyph-trout-body[\s\S]*glyph-trout-tail[\s\S]*glyph-trout-bubble/.test(sprite)) throw new Error('trout tail and bubble must animate independently from its body');
 if (!/glyph-canoe-hull[\s\S]*glyph-canoe-paddle[\s\S]*glyph-canoe-ripple/.test(sprite)) throw new Error('canoe paddle and ripple must animate independently from its hull');
 if (!/glyph-mushroom-body[\s\S]*glyph-mushroom-spore-a[\s\S]*glyph-mushroom-spore-b/.test(sprite)) throw new Error('mushroom spores must float independently from its body');
-if (!/glyph-marshmallow-stick[\s\S]*glyph-marshmallow-toast" pathLength="1"[\s\S]*glyph-marshmallow-spark/.test(sprite)) throw new Error('marshmallow toast and spark must animate independently from its stick');
+if (!/glyph-marshmallow-stick" d="M3 21 13\.3 10\.7"[\s\S]*glyph-marshmallow-body" transform="rotate\(38 16 7\)"[\s\S]*<rect class="glyph-primary" x="11" y="3\.5" width="10" height="7" rx="2\.2"[\s\S]*glyph-marshmallow-toast" pathLength="1"/.test(sprite) || /glyph-marshmallow-spark/.test(sprite)) throw new Error('marshmallow must be a soft rectangular roast on a clearly terminated skewer without a flame-like spark');
 if (!/glyph-paw-pad[\s\S]*glyph-paw-toe-a[\s\S]*glyph-paw-toe-d/.test(sprite)) throw new Error('paw pad and toes must land independently');
 if (!/glyph-pinecone-body[\s\S]*glyph-pinecone-scale-a[\s\S]*glyph-pinecone-scale-c/.test(sprite)) throw new Error('pinecone scales must open independently from its body');
-if (!/glyph-snowshoe-frame[\s\S]*glyph-snowshoe-binding/.test(sprite)) throw new Error('snowshoe binding must tighten independently from its frame');
+if (!/glyph-snowshoe-angle" transform="rotate\(-14 12 12\)"><g class="glyph-snowshoe-step">[\s\S]*glyph-snowshoe-frame[\s\S]*glyph-snowshoe-decking[\s\S]*glyph-snowshoe-binding/.test(sprite)) throw new Error('snowshoe must keep its resting angle around a moving tapered frame with open decking and a distinct foot binding');
 for (const glyph of ['shield', 'terminal', 'network', 'wrench']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const glyph of ['cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const [, motion] of allInternalMotions) if (!sprite.includes(`@keyframes ${motion}`)) throw new Error(`${motion} must be defined inside the external sprite`);
