@@ -19,3 +19,12 @@ test('both mountain ranges reuse one scalable detailed peak', () => {
   assert.match(html, /class="mountain-range mountain-range-near depth-far"/);
   assert.doesNotMatch(html, /class="mountain-faces/);
 });
+
+test('fire ring and forest floor use configurable asset families', () => {
+  assert.equal([...html.matchAll(/href="#fire-ring-stone"/g)].length, 10);
+  assert.equal([...html.matchAll(/href="#woodland-debris"/g)].length, 9);
+  assert.equal([...html.matchAll(/href="#ground-sprig"/g)].length, 4);
+  assert.equal([...html.matchAll(/href="#moss-clump"/g)].length, 4);
+  assert.equal([...html.matchAll(/href="#fungi-cluster"/g)].length, 3);
+  assert.doesNotMatch(html, /class="forest-litter"|class="forest-duff"|class="forest-floor-texture"/);
+});
