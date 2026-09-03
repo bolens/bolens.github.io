@@ -131,7 +131,7 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
 .lede { max-width: 39rem; margin: 2rem 0 0; color: var(--muted); font-size: clamp(1.1rem,1.35vw + .72rem,1.38rem); line-height: 1.58; letter-spacing: -.008em; }
 .hero-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 1.4rem; margin-top: 2.3rem; }
 .button { position:relative; isolation:isolate; display: inline-flex; min-height:var(--control-height); align-items: center; gap: 1.5rem; overflow:clip; border: 1px solid var(--ink); border-radius:var(--control-radius); padding: .85rem 1.15rem; background: var(--ink); color: var(--snow); text-decoration: none; font-size: .86rem; font-weight: 700; transition: translate var(--motion-medium) var(--ease-route), scale var(--motion-fast), background var(--motion-fast), color var(--motion-fast), border-color var(--motion-fast), box-shadow var(--motion-medium) var(--ease-route); }
-.button::after { content:''; position:absolute; z-index:-1; inset:-40% auto -40% -35%; width:24%; background:color-mix(in srgb,var(--snow) 24%,transparent); rotate:14deg; translate:-220% 0; transition:translate var(--motion-page) var(--ease-route); }
+.button::after { content:''; position:absolute; z-index:0; inset:-40% auto -40% -35%; width:24%; pointer-events:none; background:color-mix(in srgb,var(--snow) 24%,transparent); rotate:14deg; translate:-220% 0; transition:translate var(--motion-page) var(--ease-route); }
 .button:is(:hover,:focus-visible) { translate: 0 var(--motion-hover-lift); background: var(--copper); border-color: var(--copper); box-shadow:0 9px 22px color-mix(in srgb,var(--ink) 14%,transparent); }
 .button:is(:hover,:focus-visible)::after { translate:620% 0; }
 .button:active { translate: 0; scale: .97; }
