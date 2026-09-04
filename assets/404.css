@@ -106,7 +106,8 @@
 :root:is([data-scene-time="twilight"],[data-scene-time="night"]) .seat-shadows { --scene-ground-shadow-opacity:.27;--scene-ground-shadow-blur:1.4px; }
 :root:is([data-weather="cloudy"],[data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .seat-shadows { opacity:calc(var(--scene-ground-shadow-opacity,.58) * .58);filter:blur(1.6px); }
 .depth-back,.depth-far,.depth-mid,.depth-near { transform-box:view-box;transform-origin:center bottom;transition:translate .24s ease-out; }
-.cryptid-camp.is-parallax-tracking :is(.depth-back,.depth-far,.depth-mid,.depth-near) { transition:none; }
+.depth-back:not([data-parallax-plane]),.depth-far:not([data-parallax-plane]),.depth-mid:not([data-parallax-plane]),.depth-near:not([data-parallax-plane]) { translate:0 0;transition:none; }
+.cryptid-camp.is-parallax-tracking [data-parallax-plane] { transition:none; }
 .depth-back { translate:var(--parallax-back-x,0) var(--parallax-back-y,0); }
 .depth-far { translate:var(--parallax-far-x,0) var(--parallax-far-y,0); }
 .depth-mid { translate:var(--parallax-mid-x,0) var(--parallax-mid-y,0); }

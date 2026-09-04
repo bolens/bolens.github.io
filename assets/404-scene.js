@@ -69,6 +69,7 @@
   let visible = !document.hidden;
   let overlayActive = document.documentElement.classList.contains('ui-overlay-open');
   let parallaxFrame = 0;
+  const parallaxValues = new Map();
   let marshmallowExposure = 0;
   let atmosphere = profileFor(window.portfolioWeather?.condition);
   const fireStrength = Object.freeze({ clear:1, cloudy:.9, overcast:.8, rainy:.45, wet:.95, dry:1.08, snowy:.65, drought:0 });
@@ -100,15 +101,21 @@
   const densityForWidth = (viewportWidth) => viewportWidth <= 430 ? 'compact' : viewportWidth <= 760 ? 'reduced' : 'full';
 
   const stableParallaxPixel = (value) => (Math.round(value * 2) / 2).toFixed(2);
+  const setParallaxProperty = (name, value) => {
+    const next = `${stableParallaxPixel(value)}px`;
+    if (parallaxValues.get(name) === next) return;
+    parallaxValues.set(name, next);
+    figure.style.setProperty(name, next);
+  };
   const setParallax = (x = 0, y = 0) => {
-    figure.style.setProperty('--parallax-back-x', `${stableParallaxPixel(-x * .7)}px`);
-    figure.style.setProperty('--parallax-back-y', `${stableParallaxPixel(-y * .3)}px`);
-    figure.style.setProperty('--parallax-far-x', `${stableParallaxPixel(-x * 1.5)}px`);
-    figure.style.setProperty('--parallax-far-y', `${stableParallaxPixel(-y * .7)}px`);
-    figure.style.setProperty('--parallax-mid-x', `${stableParallaxPixel(x * 2.6)}px`);
-    figure.style.setProperty('--parallax-mid-y', `${stableParallaxPixel(y * 1.3)}px`);
-    figure.style.setProperty('--parallax-near-x', `${stableParallaxPixel(x * 5.2)}px`);
-    figure.style.setProperty('--parallax-near-y', `${stableParallaxPixel(y * 2.5)}px`);
+    setParallaxProperty('--parallax-back-x', -x * .7);
+    setParallaxProperty('--parallax-back-y', -y * .3);
+    setParallaxProperty('--parallax-far-x', -x * 1.5);
+    setParallaxProperty('--parallax-far-y', -y * .7);
+    setParallaxProperty('--parallax-mid-x', x * 2.6);
+    setParallaxProperty('--parallax-mid-y', y * 1.3);
+    setParallaxProperty('--parallax-near-x', x * 5.2);
+    setParallaxProperty('--parallax-near-y', y * 2.5);
   };
 
   figure.addEventListener('pointermove', (event) => {
