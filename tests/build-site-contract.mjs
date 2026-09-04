@@ -1,4 +1,4 @@
-import { cpSync, mkdtempSync, readFileSync, readdirSync, rmSync, statSync, writeFileSync } from 'node:fs';
+import { closeSync, cpSync, mkdtempSync, openSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
@@ -23,6 +23,7 @@ const expectFailure = (name, mutate, pattern) => {
   if (result.status === 0 || !pattern.test(output)) throw new Error(`${name} was not rejected as expected: ${output}`);
 };
 
+let originalOutput;
 try {
   expectFailure('missing project field', ({ projects: value }) => delete value[0].summary, /missing summary/);
   expectFailure('duplicate project name', ({ projects: value }) => { value[1].name = value[0].name; }, /duplicate project name/);
@@ -44,7 +45,8 @@ try {
   writeJson(themePath, changedThemes);
   if (run('--check').status === 0) throw new Error('stale generated theme artifacts were not detected');
   const generatedThemePath = join(fixture, 'assets/theme-data.js');
-  const previousInode = statSync(generatedThemePath).ino;
+  originalOutput = openSync(generatedThemePath, 'r');
+  const originalContents = readFileSync(generatedThemePath, 'utf8');
   const generated = run();
   if (generated.status !== 0 || !readFileSync(generatedThemePath, 'utf8').includes('Alpine Test')) throw new Error(`theme regeneration failed: ${generated.stderr}`);
   const generatedPages = ['404.html', 'index.html', 'about/index.html', 'work/index.html', ...projects.filter(({ slug }) => slug).map(({ slug }) => `case-studies/${slug}/index.html`)];
@@ -63,11 +65,12 @@ try {
   const generatedWork = readFileSync(join(fixture, 'work/index.html'), 'utf8');
   if ((generatedWork.match(/class="project-updated" aria-hidden="true"/g) ?? []).length !== projects.length) throw new Error('work index must reserve one inaccessible update-date skeleton per project');
   if (!generatedWork.includes('.work-tools,.project-updated{display:none!important}')) throw new Error('work index must hide enhanced controls and skeletons without JavaScript');
-  if (statSync(generatedThemePath).ino === previousInode) throw new Error('generated output was rewritten in place instead of replaced atomically');
+  if (readFileSync(originalOutput, 'utf8') !== originalContents) throw new Error('generated output was rewritten in place instead of replaced atomically');
   const temporaryOutputs = readdirSync(join(fixture, 'assets')).filter((name) => name.endsWith('.tmp'));
   if (temporaryOutputs.length) throw new Error(`temporary generated outputs remained: ${temporaryOutputs.join(', ')}`);
   if (run('--check').status !== 0) throw new Error('generated fixture remained stale after regeneration');
   console.log('Build contract passed validation, loading wiring, stale detection, atomic replacement, cleanup, and deterministic regeneration.');
 } finally {
+  if (originalOutput !== undefined) closeSync(originalOutput);
   rmSync(fixture, { recursive: true, force: true });
 }
