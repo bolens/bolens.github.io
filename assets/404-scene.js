@@ -69,7 +69,21 @@
   let visible = !document.hidden;
   let overlayActive = document.documentElement.classList.contains('ui-overlay-open');
   let parallaxFrame = 0;
+  let marshmallowExposure = 0;
   let atmosphere = profileFor(window.portfolioWeather?.condition);
+  const fireStrength = Object.freeze({ clear:1, cloudy:.9, overcast:.8, rainy:.45, wet:.95, dry:1.08, snowy:.65, drought:0 });
+  const updateMarshmallowCook = () => {
+    if (!visible || overlayActive) return;
+    marshmallowExposure = Math.min(180, marshmallowExposure + (fireStrength[window.portfolioWeather?.condition] ?? 1));
+    const cooked = marshmallowExposure / 180;
+    figure.style.setProperty('--marshmallow-cook-level', (.12 + cooked * .7).toFixed(3));
+    figure.style.setProperty('--marshmallow-mark-level', Math.min(.9, cooked * 1.1).toFixed(3));
+    figure.style.setProperty('--marshmallow-blister-level', Math.max(0, (cooked - .22) * 1.4).toFixed(3));
+    figure.style.setProperty('--marshmallow-char-level', Math.max(0, (cooked - .62) * 1.8).toFixed(3));
+    figure.style.setProperty('--marshmallow-glint-level', Math.max(.18, .72 - cooked * .5).toFixed(3));
+    figure.dataset.marshmallowCookLevel = cooked.toFixed(3);
+  };
+  const marshmallowTimer = window.setInterval(updateMarshmallowCook, 1000);
   const timeProfiles = Object.freeze({
     day: Object.freeze({ stars: 0, fireflies: .08, embers: .78 }),
     night: Object.freeze({ stars: 1, fireflies: 1, embers: 1 }),
@@ -84,19 +98,21 @@
   };
   let timeProfile = profileForTime(window.portfolioSceneTime?.state);
 
+  const stableParallaxPixel = (value) => (Math.round(value * 2) / 2).toFixed(2);
   const setParallax = (x = 0, y = 0) => {
-    figure.style.setProperty('--parallax-back-x', `${(-x * .7).toFixed(2)}px`);
-    figure.style.setProperty('--parallax-back-y', `${(-y * .3).toFixed(2)}px`);
-    figure.style.setProperty('--parallax-far-x', `${(-x * 1.5).toFixed(2)}px`);
-    figure.style.setProperty('--parallax-far-y', `${(-y * .7).toFixed(2)}px`);
-    figure.style.setProperty('--parallax-mid-x', `${(x * 2.6).toFixed(2)}px`);
-    figure.style.setProperty('--parallax-mid-y', `${(y * 1.3).toFixed(2)}px`);
-    figure.style.setProperty('--parallax-near-x', `${(x * 5.2).toFixed(2)}px`);
-    figure.style.setProperty('--parallax-near-y', `${(y * 2.5).toFixed(2)}px`);
+    figure.style.setProperty('--parallax-back-x', `${stableParallaxPixel(-x * .7)}px`);
+    figure.style.setProperty('--parallax-back-y', `${stableParallaxPixel(-y * .3)}px`);
+    figure.style.setProperty('--parallax-far-x', `${stableParallaxPixel(-x * 1.5)}px`);
+    figure.style.setProperty('--parallax-far-y', `${stableParallaxPixel(-y * .7)}px`);
+    figure.style.setProperty('--parallax-mid-x', `${stableParallaxPixel(x * 2.6)}px`);
+    figure.style.setProperty('--parallax-mid-y', `${stableParallaxPixel(y * 1.3)}px`);
+    figure.style.setProperty('--parallax-near-x', `${stableParallaxPixel(x * 5.2)}px`);
+    figure.style.setProperty('--parallax-near-y', `${stableParallaxPixel(y * 2.5)}px`);
   };
 
   figure.addEventListener('pointermove', (event) => {
     if (motionReduced() || overlayActive || event.pointerType === 'touch') return;
+    figure.classList.add('is-parallax-tracking');
     const bounds = figure.getBoundingClientRect();
     const x = (event.clientX - bounds.left) / bounds.width - .5;
     const y = (event.clientY - bounds.top) / bounds.height - .5;
@@ -106,9 +122,12 @@
   const resetParallax = () => {
     cancelAnimationFrame(parallaxFrame);
     parallaxFrame = 0;
+    figure.classList.remove('is-parallax-tracking');
     setParallax();
   };
   figure.addEventListener('pointerleave', resetParallax);
+  figure.addEventListener('pointercancel', resetParallax);
+  window.addEventListener('blur', resetParallax);
 
   const resize = () => {
     const bounds = figure.getBoundingClientRect();
@@ -239,8 +258,10 @@
 
   document.addEventListener('visibilitychange', () => {
     visible = !document.hidden;
+    if (!visible) resetParallax();
     updateMotion();
   });
+  window.addEventListener('pagehide', () => window.clearInterval(marshmallowTimer), { once:true });
   window.addEventListener('ui-overlay-change', (event) => {
     overlayActive = Boolean(event.detail?.active);
     if (overlayActive) resetParallax();
