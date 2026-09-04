@@ -9,8 +9,8 @@ const symbols = Object.fromEntries([...html.matchAll(/<symbol id="([^"]+)"[\s\S]
 test('woody glyphs expose independently addressable detail layers', () => {
   const manifests = {
     'bare-tree': ['branch-scars', 'bark-grain'],
-    'aspen-copse': ['twig-tips', 'leaf-speckles', 'bark-marks'],
-    'willow-clump': ['leaf-veins', 'catkins'],
+    'aspen-copse': ['root-flares', 'tapered-trunks', 'trunk-shadows', 'twig-tips', 'leaf-shadow', 'leaf-speckles', 'leaf-veins', 'bark-eyes', 'bark-marks'],
+    'willow-clump': ['root-crowns', 'stem-highlights', 'arching-limbs', 'hanging-branchlets', 'leaf-shadow', 'leaf-veins', 'catkins', 'bud-tips'],
     'tree-stump': ['growth-rings', 'wood-grain', 'moss-rim', 'insect-holes'],
   };
 
@@ -22,12 +22,24 @@ test('woody glyphs expose independently addressable detail layers', () => {
   }
 });
 
+test('pine glyph exposes layered trunk, branch, and needle anatomy', () => {
+  const pine = symbols['distant-pine'];
+  for (const region of ['root-flare', 'tapered-trunk', 'branch-whorls', 'needle-tiers', 'canopy-shadow', 'branch-lines', 'tip-shoots', 'bark-segments']) {
+    assert.match(pine, new RegExp(`data-regions="[^"]*${region}`));
+  }
+  assert.match(pine, /class="asset-detail-secondary"/);
+  assert.match(pine, /class="asset-detail-fine"/);
+});
+
 test('forest-floor glyphs expose natural surface detail', () => {
   const manifests = {
     'moss-clump': ['sporophyte-stems', 'spore-caps'],
-    'woodland-debris': ['twig-nodes', 'leaf-veins'],
+    'woodland-debris': ['branch-fragments', 'twig-bark', 'twig-nodes', 'snapped-ends', 'curled-leaf-edges', 'leaf-veins', 'dry-needles', 'cone-scales'],
     'ground-sprig': ['side-blades', 'seed-grains'],
-    'fallen-branch': ['bark-plates', 'broken-tips', 'lichen-spots'],
+    'grass-tuft': ['grass-crown', 'bent-blades', 'blade-highlights', 'seed-stalks', 'seed-heads', 'dry-thatch'],
+    'pine-needle-mat': ['needle-bed', 'crossed-needles', 'needle-sheaths', 'broken-needles', 'cone-scales', 'soil-grains'],
+    'gravel-patch': ['exposed-soil', 'soil-cracks', 'gravel-grains', 'pebble-bodies', 'pebble-facets', 'mineral-lines', 'embedded-edges'],
+    'fallen-branch': ['limb-forks', 'bark-plates', 'bark-fissures', 'broken-tips', 'exposed-wood', 'lichen-spots', 'moss-edge'],
     'river-stone': ['stone-facet', 'mineral-vein', 'lichen-specks'],
     'fern-spray': ['fern-pinnae', 'fiddlehead'],
   };
@@ -63,6 +75,7 @@ test('campsite gear exposes construction and wear detail', () => {
     'camp-storage': ['panel-ribs', 'lid-seam', 'corner-guards', 'latches'],
     'sleeping-roll': ['compression-straps', 'buckles', 'zipper-pull', 'fabric-creases'],
     'trail-camera': ['camera-camouflage', 'infrared-array', 'status-light', 'controls'],
+    'tent-camper': ['short-hair', 'long-hair', 'hair-highlights', 'brows', 'nose', 'glasses', 'facial-hair'],
   };
 
   for (const [id, regions] of Object.entries(manifests)) {
@@ -112,6 +125,7 @@ test('river glyphs expose water and erosion detail layers', () => {
     'exposed-root': ['root-forks', 'bark-segments', 'fine-rootlets', 'soil-clumps'],
     'river-pebble-cluster': ['pebble-facets', 'mineral-lines', 'silt-shadow'],
     'water-foam': ['bubble-rims', 'micro-bubbles', 'eddy-lines'],
+    'river-current': ['current-seam', 'surface-ripple', 'reflected-edge', 'micro-ripples', 'foam-beads'],
   };
 
   for (const [id, regions] of Object.entries(manifests)) {

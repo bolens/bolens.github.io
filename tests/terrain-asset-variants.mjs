@@ -17,6 +17,9 @@ const assets = [
   'moss-clump',
   'woodland-debris',
   'ground-sprig',
+  'grass-tuft',
+  'pine-needle-mat',
+  'gravel-patch',
   'fungi-cluster',
   'fly-agaric',
   'shelf-fungi',
@@ -41,6 +44,8 @@ const assets = [
   'camp-lantern',
   'trail-camera',
   'camp-windhound',
+  'tent-camper',
+  'river-current',
   'riverbank-profile',
   'exposed-root',
   'river-pebble-cluster',
@@ -66,7 +71,7 @@ test('lighting and weather modes form an orthogonal variant matrix', () => {
   for (const mode of lightModes) assert.match(css, new RegExp(`data-light="${mode}"`), `missing ${mode} light mode`);
   for (const mode of weatherModes) assert.match(css, new RegExp(`data-weather="${mode}"`), `missing ${mode} weather mode`);
   for (const mode of timeModes) assert.match(css, new RegExp(`data-scene-time="${mode}"[^}]+\\.terrain-asset`), `missing ${mode} scene-time mode`);
-  assert.equal(timeModes.length * lightModes.length * weatherModes.length * assets.length, 8400);
+  assert.equal(timeModes.length * lightModes.length * weatherModes.length * assets.length, 9400);
 });
 
 test('snow supports asset-level selection and scene-wide accumulation', () => {
@@ -83,7 +88,7 @@ test('drought supports asset-level selection and scene-wide stress', () => {
 
 test('every terrain placement opts into valid light and weather modes', () => {
   const placements = [...html.matchAll(/<use class="[^"]*\bterrain-asset\b[^"]*"[^>]+href="#([^"]+)"[^>]*>/g)].map((match) => match[0]);
-  assert.equal(placements.length, 176);
+  assert.equal(placements.length, 196);
   for (const placement of placements) {
     const asset = placement.match(/href="#([^"]+)"/)?.[1];
     const light = placement.match(/data-light="([^"]+)"/)?.[1];

@@ -13,7 +13,7 @@ const symbols = [...html.matchAll(symbolPattern)].map(([, id, attributes, body])
 const regionNamePattern = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/;
 
 test("every reusable landscape symbol publishes stable named regions", () => {
-  assert.equal(symbols.length, 59, "expected the complete reusable 404 asset library");
+  assert.equal(symbols.length, 64, "expected the complete reusable 404 asset library");
 
   for (const { id, attributes } of symbols) {
     const manifest = attributes.match(/\bdata-regions="([^"]+)"/)?.[1];
@@ -43,12 +43,13 @@ test("condition-aware assets name their shared condition region", () => {
   const conditionAwareIds = [
     "alpine-boulder", "river-stone", "fern-spray", "berry-shrub", "evergreen-shrub",
     "fire-ring-stone", "fire-bed", "moss-clump", "woodland-debris", "ground-sprig",
+    "grass-tuft", "pine-needle-mat", "gravel-patch",
     "fungi-cluster", "fly-agaric", "shelf-fungi", "pinecone-sprig", "wildflower-clump",
     "fallen-branch", "reed-clump", "trail-boots", "camp-storage", "river-ripple",
     "water-foam", "firefly-pair", "coal-piece", "ash-scatter", "ember-spark",
     "camp-tent-shell", "camp-stove", "toasted-marshmallow", "camp-snack-plate",
     "scout-ufo", "sleeping-roll", "camp-lantern",
-    "trail-camera", "camp-windhound",
+    "trail-camera", "camp-windhound", "tent-camper", "river-current",
     "riverbank-profile", "exposed-root", "river-pebble-cluster",
     "forest-trail", "bare-tree", "aspen-copse", "willow-clump", "tree-stump",
   ];

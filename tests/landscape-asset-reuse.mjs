@@ -79,6 +79,10 @@ test('fire ring and forest floor use configurable asset families', () => {
   assert.equal([...html.matchAll(/href="#fire-bed"/g)].length, 1);
   assert.equal([...html.matchAll(/href="#woodland-debris"/g)].length, 11);
   assert.equal([...html.matchAll(/href="#ground-sprig"/g)].length, 5);
+  assert.equal([...html.matchAll(/href="#grass-tuft"/g)].length, 4);
+  assert.equal([...html.matchAll(/href="#pine-needle-mat"/g)].length, 3);
+  assert.equal([...html.matchAll(/href="#gravel-patch"/g)].length, 3);
+  assert.match(html, /data-region="grass-and-soil-cover"/);
   assert.equal([...html.matchAll(/href="#moss-clump"/g)].length, 7);
   assert.equal([...html.matchAll(/href="#fungi-cluster"/g)].length, 4);
   assert.equal([...html.matchAll(/href="#shelf-fungi"/g)].length, 2);
@@ -98,10 +102,20 @@ test('riverbank and tent details reuse condition-aware assets', () => {
 });
 
 test('river surface details reuse condition-aware assets', () => {
+  assert.equal([...html.matchAll(/href="#river-current"/g)].length, 8);
+  assert.match(html, /data-region="reusable-river-currents"/);
+  assert.doesNotMatch(html, /class="river-accents"[^>]*fill="none"/);
   assert.equal([...html.matchAll(/href="#river-ripple"/g)].length, 4);
   assert.equal([...html.matchAll(/href="#water-foam"/g)].length, 3);
   assert.doesNotMatch(html, /<g class="river-ripples"[^>]+stroke=/);
   assert.doesNotMatch(html, /<g class="water-foam"/);
+});
+
+test('tent occupants share one configurable detailed camper glyph', () => {
+  assert.equal([...html.matchAll(/href="#tent-camper"/g)].length, 2);
+  assert.match(html, /class="terrain-asset tent-guy"[^>]+--camper-glasses-opacity:1;--camper-facial-hair-opacity:1/);
+  assert.match(html, /class="terrain-asset tent-girl"[^>]+--camper-short-hair-opacity:0;--camper-long-hair-opacity:1/);
+  assert.doesNotMatch(html, /<g class="tent-(?:guy|girl)"/);
 });
 
 test('riverbank profile, roots, and pebbles use configurable assets', () => {
