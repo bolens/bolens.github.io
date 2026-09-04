@@ -64,7 +64,7 @@ test('midground woody growth reuses condition-aware glyphs', () => {
 });
 
 test('clearing deadwood, stones, and stumps use condition-aware glyphs', () => {
-  assert.match(html, /<symbol id="tree-stump"[^>]+data-regions="root-flare,stump-body,cut-face,growth-rings,bark-ridges,conditions"/);
+  assert.match(html, /<symbol id="tree-stump"[^>]+data-regions="root-flare,stump-body,cut-face,growth-rings,wood-grain,bark-ridges,moss-rim,insect-holes,conditions"/);
   assert.equal([...html.matchAll(/href="#tree-stump"/g)].length, 2);
   assert.equal([...html.matchAll(/href="#river-stone"/g)].length, 13);
   assert.equal([...html.matchAll(/href="#fallen-branch"/g)].length, 8);
