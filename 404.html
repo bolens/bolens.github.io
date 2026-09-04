@@ -327,33 +327,47 @@
             <path d="M10 3h12" fill="none" stroke="var(--storage-handle,#9aaaa7)" stroke-width="3" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="32" height="34"/>
           </symbol>
-          <symbol id="river-ripple" viewBox="0 0 84 28" data-regions="primary-ripple,secondary-ripples,conditions">
+          <symbol id="river-ripple" viewBox="0 0 84 28" data-regions="primary-ripple,secondary-ripples,micro-ripples,reflected-glints,conditions">
             <g fill="none" stroke="var(--ripple-color,#a5d1ca)" stroke-linecap="round">
               <path d="M3 9q20 8 40 0t38-1" stroke-width="var(--ripple-width,3)"/>
-              <path d="M20 21q12 5 25 0m10 1q8 3 17-1" stroke-width="1.8" opacity="var(--ripple-detail-opacity,.72)"/>
+              <path class="asset-detail-secondary" d="M20 21q12 5 25 0m10 1q8 3 17-1" stroke-width="1.8"/>
             </g>
+            <path class="asset-detail-fine" d="M9 15q8 3 16 0m24-1q7 3 15 0M34 25q6 2 12 0" fill="none" stroke="var(--ripple-detail,#79aca8)" stroke-width="1" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--ripple-glint,#d8efea)"><ellipse cx="31" cy="8" rx="3" ry=".8"/><ellipse cx="67" cy="8" rx="2.5" ry=".7"/></g>
             <use href="#terrain-condition-marks" width="84" height="28"/>
           </symbol>
-          <symbol id="riverbank-profile" viewBox="0 -4 410 184" data-regions="bank-shadow,soil-edge,bank-highlight,conditions">
+          <symbol id="riverbank-profile" viewBox="0 -4 410 184" data-regions="bank-shadow,soil-edge,soil-strata,erosion-cuts,bank-highlight,embedded-stones,conditions">
             <path d="M4 162q74-16 137-56 69-43 144-55 72-12 119-50" fill="none" stroke="var(--bank-shadow,#111f1b)" stroke-width="15" stroke-linecap="round" opacity=".72"/>
             <path d="M7 158q72-17 132-54 70-44 145-57 70-12 116-49" fill="none" stroke="var(--bank-soil,#755f41)" stroke-width="6" stroke-linecap="round"/>
-            <path d="m48 142 18-12 19 2m51-31 17-13 22 2m54-27 18-10 21 3m57-20 17-11 18 2m26-19 15-12" fill="none" stroke="var(--bank-edge,#aa895b)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" opacity=".62"/>
+            <path class="asset-detail-secondary" d="M35 149q52-17 103-51m20-10q52-31 111-42m19-4q48-11 88-39" fill="none" stroke="var(--bank-strata,#8b704d)" stroke-width="2" stroke-linecap="round"/>
+            <path class="asset-detail-fine" d="m92 121 8 9-3 12m91-73 9 8-5 11m96-49 8 7-4 10m56-28 7 6-3 10" fill="none" stroke="var(--bank-cut,#58462f)" stroke-width="1.5" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" d="m48 142 18-12 19 2m51-31 17-13 22 2m54-27 18-10 21 3m57-20 17-11 18 2m26-19 15-12" fill="none" stroke="var(--bank-edge,#aa895b)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <g class="asset-detail-fine" fill="var(--bank-stone,#687067)" stroke="var(--bank-stone-edge,#39423d)" stroke-width="1"><ellipse cx="121" cy="107" rx="4" ry="2.5"/><ellipse cx="220" cy="60" rx="3.5" ry="2"/><ellipse cx="335" cy="27" rx="3" ry="1.8"/></g>
             <use href="#terrain-condition-marks" x="155" y="32" width="100" height="100"/>
           </symbol>
-          <symbol id="exposed-root" viewBox="0 0 36 46" data-regions="root-body,root-highlights,conditions">
-            <g fill="none" stroke="var(--root-fill,#70573d)" stroke-linecap="round" stroke-linejoin="round"><path d="M17 43q-8-20-2-36m3 22 13-15" stroke-width="3"/><path d="m9 11 10 3 8-7m-12 26-9 7m13-11 8 9" stroke="var(--root-highlight,#9b7950)" stroke-width="1.6"/></g>
+          <symbol id="exposed-root" viewBox="0 0 36 46" data-regions="root-body,root-forks,root-highlights,bark-segments,fine-rootlets,soil-clumps,conditions">
+            <g fill="none" stroke="var(--root-fill,#70573d)" stroke-linecap="round" stroke-linejoin="round"><path d="M17 43q-8-20-2-36m3 22 13-15" stroke-width="3"/><path class="asset-detail-secondary" d="m9 11 10 3 8-7m-12 26-9 7m13-11 8 9" stroke="var(--root-highlight,#9b7950)" stroke-width="1.6"/></g>
+            <path class="asset-detail-secondary" d="m13 17 5 2m-6 7 5 2m-3 7 5 2m5-14 4 3" fill="none" stroke="var(--root-bark,#4d3929)" stroke-width="1.2" stroke-linecap="round"/>
+            <path class="asset-detail-fine" d="m9 31-6 1m19-8 5-5m-15 17-5 7m19-10 7 4" fill="none" stroke="var(--rootlet,#856a4a)" stroke-width="1" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--root-soil,#4b4030)"><circle cx="11" cy="13" r="1.8"/><circle cx="18" cy="31" r="1.5"/><circle cx="27" cy="18" r="1.3"/></g>
             <use href="#terrain-condition-marks" width="36" height="46"/>
           </symbol>
-          <symbol id="river-pebble-cluster" viewBox="0 0 62 20" data-regions="pebble-bodies,pebble-glints,conditions">
+          <symbol id="river-pebble-cluster" viewBox="0 0 62 20" data-regions="pebble-bodies,pebble-facets,pebble-glints,mineral-lines,silt-shadow,conditions">
             <g fill="var(--bank-pebble,#61746a)" stroke="var(--bank-pebble-edge,#223936)" stroke-width="1.4"><ellipse cx="10" cy="12" rx="7" ry="4"/><ellipse cx="35" cy="8" rx="5" ry="3"/><ellipse cx="53" cy="13" rx="4" ry="2.5"/></g>
-            <path d="m6 10 7-1m18-3 6-1" fill="none" stroke="var(--bank-pebble-glint,#a0b3a9)" stroke-width="1" stroke-linecap="round" opacity=".46"/>
+            <g class="asset-detail-secondary" fill="var(--bank-pebble-facet,#71867b)"><path d="m4 11 6-3 4 2-3 5Z"/><path d="m31 7 4-2 3 2-2 3Z"/><path d="m50 12 3-2 3 2-2 3Z"/></g>
+            <path class="asset-detail-secondary" d="m6 10 7-1m18-3 6-1" fill="none" stroke="var(--bank-pebble-glint,#a0b3a9)" stroke-width="1" stroke-linecap="round"/>
+            <path class="asset-detail-fine" d="m9 9 2 5m23-8 1 4m17 1 2 4" fill="none" stroke="var(--bank-pebble-vein,#b4ad94)" stroke-width=".8" stroke-linecap="round"/>
+            <path class="asset-detail-fine" d="M2 17q14 3 28 0t30 1" fill="none" stroke="var(--bank-silt,#403f35)" stroke-width="2" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="62" height="20"/>
           </symbol>
-          <symbol id="water-foam" viewBox="0 0 58 22" data-regions="foam-bubbles,foam-line,conditions">
+          <symbol id="water-foam" viewBox="0 0 58 22" data-regions="foam-bubbles,bubble-rims,foam-line,micro-bubbles,eddy-lines,conditions">
             <g fill="var(--foam-fill,#cce3dc)" opacity="var(--foam-opacity,.52)">
               <circle cx="8" cy="13" r="4"/><circle cx="18" cy="9" r="2.7"/><circle cx="28" cy="14" r="2.2"/><circle cx="40" cy="8" r="3.2"/><circle cx="50" cy="12" r="2"/>
             </g>
-            <path d="M3 18q24-5 51-2" fill="none" stroke="var(--foam-line,#d9eee8)" stroke-width="1.4" stroke-linecap="round" opacity=".34"/>
+            <g class="asset-detail-secondary" fill="none" stroke="var(--foam-rim,#edf8f4)" stroke-width="1"><circle cx="8" cy="13" r="3"/><circle cx="18" cy="9" r="1.8"/><circle cx="40" cy="8" r="2.2"/></g>
+            <path class="asset-detail-secondary" d="M3 18q24-5 51-2" fill="none" stroke="var(--foam-line,#d9eee8)" stroke-width="1.4" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--foam-fill,#cce3dc)"><circle cx="13" cy="18" r="1"/><circle cx="24" cy="8" r=".8"/><circle cx="34" cy="16" r="1.1"/><circle cx="47" cy="17" r=".7"/></g>
+            <path class="asset-detail-fine" d="M7 20q7-4 14 0m17-2q7-5 14-1" fill="none" stroke="var(--foam-eddy,#a9d1ca)" stroke-width="1" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="58" height="22"/>
           </symbol>
           <symbol id="firefly-pair" viewBox="0 0 180 50" data-regions="firefly-bodies,firefly-halos,conditions">
@@ -383,10 +397,15 @@
             <circle cx="7" cy="7" r="5.5" fill="none" stroke="var(--ember-halo,#ff9a45)" opacity="var(--ember-halo-opacity,.32)"/>
             <use href="#terrain-condition-marks" width="14" height="14"/>
           </symbol>
-          <symbol id="camp-tent-shell" viewBox="0 0 242 169" data-regions="tent-fly,door-panel,seams,ground-edge,conditions">
+          <symbol id="camp-tent-shell" viewBox="0 0 242 169" data-regions="tent-fly,fabric-panels,door-panel,seams,guy-lines,stakes,vent-flap,fabric-creases,ground-edge,conditions">
             <path d="M0 169 103 0l139 169Z" fill="var(--tent-shell-fill,url(#tent-cloth))" stroke="var(--tent-shell-edge,#ee9772)" stroke-width="4" stroke-linejoin="round"/>
+            <path class="asset-detail-secondary" d="M103 3 70 165m34-162 35 162m-70 0 35-162 35 162" fill="none" stroke="var(--tent-panel,#9b583f)" stroke-width="1.5"/>
             <path d="M103 0 176 166H30Z" fill="var(--tent-door-fill,#08191d)" stroke="var(--tent-door-edge,#ee9772)" stroke-width="3" stroke-linejoin="round"/>
             <path d="m103 0 73 166M103 0 30 166" fill="none" stroke="var(--tent-seam,#f0aa83)" stroke-width="3" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" d="M33 86 4 157m170-70 62 69" fill="none" stroke="var(--tent-guy,#d7b394)" stroke-width="1.5" stroke-linecap="round"/>
+            <path class="asset-detail-fine" d="m1 157 8 0m222-1 9 0" fill="none" stroke="var(--tent-stake,#807168)" stroke-width="4" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" d="M91 32q12-9 24 0l-4 12H95Z" fill="var(--tent-vent,#744733)" stroke="var(--tent-seam,#f0aa83)" stroke-width="1.5"/>
+            <path class="asset-detail-fine" d="m53 130 18-10m75 6 18 11m-75-72 14 9 14-9" fill="none" stroke="var(--tent-crease,#c87858)" stroke-width="1.5" stroke-linecap="round"/>
             <path d="M8 163q111-13 225 0" fill="none" stroke="var(--tent-ground-edge,#4d3027)" stroke-width="3" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="242" height="169"/>
           </symbol>
@@ -412,18 +431,23 @@
             <g class="stove-steam" fill="none" stroke="var(--stove-steam,#d6e2dd)" stroke-width="3" stroke-linecap="round" opacity=".42"><path d="M72 7q-8-8 1-15t0-13M102 6q8-8-1-15t1-13"/></g>
             <use href="#terrain-condition-marks" width="180" height="110"/>
           </symbol>
-          <symbol id="toasted-marshmallow" viewBox="0 0 24 20" data-regions="marshmallow-body,toast-marks,sugar-glint,conditions">
-            <rect x="1" y="1" width="22" height="18" rx="6" fill="var(--marshmallow-fill,url(#marshmallow-toast))" stroke="var(--marshmallow-edge,#d6bfa4)" stroke-width="2"/>
-            <path d="M5 5h14M6 15q7 3 12-1" fill="none" stroke="var(--marshmallow-toast,#b97945)" stroke-width="2" stroke-linecap="round"/>
-            <circle cx="6" cy="5" r="2" fill="var(--marshmallow-glint,#fff)" opacity=".7"/>
+          <symbol id="toasted-marshmallow" viewBox="0 0 24 20" data-regions="marshmallow-body,toast-wash,toast-marks,heat-blisters,char-spots,sugar-glint,conditions">
+            <rect x="1" y="1" width="22" height="18" rx="6" fill="var(--marshmallow-fill,#fff9e9)" stroke="var(--marshmallow-edge,#d6bfa4)" stroke-width="2"/>
+            <rect x="2" y="2" width="20" height="16" rx="5" fill="var(--marshmallow-toast-wash,#d99a5f)" opacity="var(--marshmallow-cook-level,.18)"/>
+            <path class="asset-detail-secondary" d="M5 5h14M6 15q7 3 12-1" fill="none" stroke="var(--marshmallow-toast,#a86136)" stroke-width="2" stroke-linecap="round" opacity="var(--marshmallow-mark-level,.2)"/>
+            <g class="asset-detail-fine" fill="var(--marshmallow-blister,#efc88f)" opacity="var(--marshmallow-blister-level,0)"><circle cx="8" cy="10" r="1.5"/><circle cx="15" cy="6" r="1.2"/><circle cx="17" cy="14" r="1"/></g>
+            <g class="asset-detail-fine" fill="var(--marshmallow-char,#4d2a20)" opacity="var(--marshmallow-char-level,0)"><circle cx="7" cy="6" r="1.3"/><circle cx="13" cy="13" r="1.5"/><circle cx="18" cy="9" r="1"/></g>
+            <circle cx="6" cy="5" r="2" fill="var(--marshmallow-glint,#fff)" opacity="var(--marshmallow-glint-level,.7)"/>
             <use href="#terrain-condition-marks" width="24" height="20"/>
           </symbol>
-          <symbol id="camp-snack-plate" viewBox="0 0 100 32" data-regions="plate,graham-crackers,chocolate,cracker-scores,conditions">
+          <symbol id="camp-snack-plate" viewBox="0 0 100 32" data-regions="plate,plate-rim,graham-crackers,cracker-crumbs,chocolate,cracker-scores,chocolate-squares,conditions">
             <ellipse cx="50" cy="19" rx="48" ry="13" fill="var(--snack-plate,#273a37)" stroke="var(--snack-plate-edge,#6d7d73)" stroke-width="3"/>
+            <ellipse class="asset-detail-secondary" cx="50" cy="19" rx="39" ry="9" fill="none" stroke="var(--snack-plate-rim,#87958d)" stroke-width="1"/>
             <g fill="var(--cracker-fill,#d9a35f)" stroke="var(--cracker-edge,#b7773f)" stroke-width="2"><rect x="17" y="5" width="25" height="18" rx="2"/><rect x="59" y="7" width="25" height="18" rx="2"/></g>
+            <g class="asset-detail-fine" fill="var(--cracker-crumb,#c58a4b)"><circle cx="13" cy="20" r="1.2"/><circle cx="47" cy="25" r="1"/><circle cx="88" cy="18" r="1.3"/></g>
             <path d="M29 5v18M17 14h25M71 7v18M59 16h25" fill="none" stroke="var(--cracker-score,#b7773f)" stroke-width="2"/>
             <rect x="43" y="10" width="18" height="13" rx="2" fill="var(--chocolate-fill,#4a241d)" stroke="var(--chocolate-edge,#2d1714)" stroke-width="2"/>
-            <path d="M49 11v11m6-11v11" stroke="var(--chocolate-score,#704034)" stroke-width="1.5"/>
+            <path class="asset-detail-secondary" d="M49 11v11m6-11v11M44 16h16" stroke="var(--chocolate-score,#704034)" stroke-width="1.5"/>
             <use href="#terrain-condition-marks" width="100" height="32"/>
           </symbol>
           <symbol id="sky-glint" viewBox="0 0 14 14" data-regions="vertical-ray,horizontal-ray">
@@ -455,12 +479,15 @@
             <path class="asset-detail-fine" d="m18 32 5-3 4 3m-9-14 4-2 4 2" fill="none" stroke="var(--bedroll-crease,#71908b)" stroke-width="1" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="42" height="39"/>
           </symbol>
-          <symbol id="camp-lantern" viewBox="0 0 54 54" data-regions="outer-glow,lantern-frame,carry-handle,light-chamber,inner-glow,conditions">
+          <symbol id="camp-lantern" viewBox="0 0 54 54" data-regions="outer-glow,lantern-frame,frame-rivets,carry-handle,vent-cap,light-chamber,mantle,glass-reflections,inner-glow,conditions">
             <circle class="lantern-halo lantern-halo-outer" cx="27" cy="27" r="27" fill="var(--lantern-light,#ffd76a)" opacity="var(--lantern-outer-opacity,.08)"/>
             <path d="M20 18h14v24H20Z" fill="var(--lantern-frame,#b97939)" stroke="var(--lantern-edge,#4a3024)" stroke-width="3"/>
+            <g class="asset-detail-fine" fill="var(--lantern-rivet,#d3a36a)"><circle cx="22" cy="21" r="1"/><circle cx="32" cy="21" r="1"/><circle cx="22" cy="39" r="1"/><circle cx="32" cy="39" r="1"/></g>
             <path d="M16 18q11-21 22 0Z" fill="none" stroke="var(--lantern-handle,#a8b8aa)" stroke-width="3"/>
+            <path class="asset-detail-secondary" d="M19 16h16l-3 5H22Z" fill="var(--lantern-vent,#6f4a32)" stroke="var(--lantern-edge,#4a3024)" stroke-width="1.5"/>
             <path d="M23 21h8v13h-8Z" fill="var(--lantern-light,#ffd76a)"/>
-            <path d="m24 23 6 9m-6 0 6-9" stroke="var(--lantern-glint,#fff0a4)" stroke-width="1.5"/>
+            <path class="asset-detail-secondary" d="M27 24q4 5 0 10-4-5 0-10Z" fill="var(--lantern-mantle,#fff0a4)"/>
+            <path class="asset-detail-fine" d="m24 23 6 9m-6 0 6-9" stroke="var(--lantern-glint,#fff0a4)" stroke-width="1.5"/>
             <circle class="lantern-halo lantern-halo-inner" cx="27" cy="27" r="9" fill="var(--lantern-light,#ffd76a)" opacity="var(--lantern-inner-opacity,.2)"/>
             <use href="#terrain-condition-marks" width="54" height="54"/>
           </symbol>

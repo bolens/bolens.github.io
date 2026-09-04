@@ -105,6 +105,39 @@ test('shrubs and mushrooms expose growth detail layers', () => {
   }
 });
 
+test('river glyphs expose water and erosion detail layers', () => {
+  const manifests = {
+    'river-ripple': ['micro-ripples', 'reflected-glints'],
+    'riverbank-profile': ['soil-strata', 'erosion-cuts', 'embedded-stones'],
+    'exposed-root': ['root-forks', 'bark-segments', 'fine-rootlets', 'soil-clumps'],
+    'river-pebble-cluster': ['pebble-facets', 'mineral-lines', 'silt-shadow'],
+    'water-foam': ['bubble-rims', 'micro-bubbles', 'eddy-lines'],
+  };
+
+  for (const [id, regions] of Object.entries(manifests)) {
+    assert.ok(symbols[id], `${id} symbol is required`);
+    for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
+    assert.match(symbols[id], /class="asset-detail-secondary"/);
+    assert.match(symbols[id], /class="asset-detail-fine"/);
+  }
+});
+
+test('camp food, light, and shelter expose detail layers', () => {
+  const manifests = {
+    'toasted-marshmallow': ['toast-wash', 'heat-blisters', 'char-spots'],
+    'camp-snack-plate': ['plate-rim', 'cracker-crumbs', 'chocolate-squares'],
+    'camp-lantern': ['frame-rivets', 'vent-cap', 'mantle', 'glass-reflections'],
+    'camp-tent-shell': ['fabric-panels', 'guy-lines', 'stakes', 'vent-flap', 'fabric-creases'],
+  };
+
+  for (const [id, regions] of Object.entries(manifests)) {
+    assert.ok(symbols[id], `${id} symbol is required`);
+    for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
+    assert.match(symbols[id], /class="asset-detail-secondary"/);
+    assert.match(symbols[id], /class="asset-detail-fine"/);
+  }
+});
+
 test('detail density can vary by placement without changing geometry', () => {
   for (const tier of ['simple', 'standard', 'rich']) {
     assert.match(css, new RegExp(`terrain-asset\\[data-detail="${tier}"\\]`));
