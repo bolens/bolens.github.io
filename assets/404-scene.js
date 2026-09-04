@@ -97,6 +97,7 @@
     return { stars: darkness, fireflies: .08 + darkness * .92, embers: .78 + darkness * .22 };
   };
   let timeProfile = profileForTime(window.portfolioSceneTime?.state);
+  const densityForWidth = (viewportWidth) => viewportWidth <= 430 ? 'compact' : viewportWidth <= 760 ? 'reduced' : 'full';
 
   const stableParallaxPixel = (value) => (Math.round(value * 2) / 2).toFixed(2);
   const setParallax = (x = 0, y = 0) => {
@@ -133,6 +134,7 @@
     const bounds = figure.getBoundingClientRect();
     width = Math.max(1, bounds.width);
     height = Math.max(1, bounds.height);
+    figure.dataset.sceneDensity = densityForWidth(width);
     pixelRatio = Math.min(devicePixelRatio || 1, restrained ? 1.25 : 1.5);
     view = sceneTransform();
     canvas.width = Math.round(width * pixelRatio);

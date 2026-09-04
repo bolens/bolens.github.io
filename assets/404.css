@@ -142,6 +142,8 @@
 .terrain-asset[data-detail="rich"] { --asset-detail-secondary-opacity:1;--asset-detail-fine-opacity:.86; }
 .asset-detail-secondary { opacity:var(--asset-detail-secondary-opacity,.72);transition:opacity .55s ease; }
 .asset-detail-fine { opacity:var(--asset-detail-fine-opacity,.42);transition:opacity .55s ease; }
+.cryptid-camp[data-scene-density="reduced"] .depth-back { --asset-detail-fine-opacity:.18; }
+.cryptid-camp[data-scene-density="compact"] :is(.depth-back,.depth-far,.depth-mid) { --asset-detail-secondary-opacity:.56;--asset-detail-fine-opacity:.14; }
 .terrain-asset[data-light="shadow"] { --asset-detail-fine-opacity:.18; }
 :root:is([data-weather="cloudy"],[data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .terrain-asset { --asset-detail-fine-opacity:.24; }
 :root:is([data-weather="wet"],[data-scene-time="day"],[data-scene-time="morning"]) .terrain-asset[data-detail="rich"] { --asset-detail-fine-opacity:1; }
@@ -366,6 +368,7 @@
   :root:not([data-theme]) .terrain-asset[data-light="ambient"] { --asset-light-brightness:1.12;--asset-light-saturation:1.05;--asset-light-sepia:.12;--asset-light-hue:-6deg;--asset-light-shadow:drop-shadow(3px 4px 3px rgba(54,68,45,.2)); }
 }
 @media (max-width: 760px) {
+  .mountain-range-far,.horizon-forest,[data-density-hide="tablet"] { display:none; }
   .lost-copy { top:1rem; left:1rem; width:calc(100vw - 2rem); margin:0; padding:1rem; }
   .lost-copy h1 { font-size: clamp(2.8rem,14vw,4.8rem); }
   .lost-lede { margin-block: .8rem 1rem; }
@@ -390,6 +393,7 @@
   .cryptid-camp figcaption { bottom:.5rem; font-size:.56rem; }
 }
 @media (max-width: 430px) {
+  .mountain-range-middle,.forest-transition,[data-density-hide="phone"] { display:none; }
   .lost-copy .eyebrow { font-size:.65rem; }.lost-copy h1 { line-height:.92; }
   .lost-button { padding:.68rem .9rem; }
   .cryptid-camp svg { left:-34%; width:145%; }
