@@ -25,6 +25,14 @@ test('small reactive lights avoid abrupt high-contrast flashes', () => {
   assert.doesNotMatch(css, /camera-snapshot/);
   assert.doesNotMatch(css, /rain-flame-flicker [^;]*steps\(/);
   assert.match(css, /rain-flame-flicker 1\.1s ease-in-out infinite/);
+  assert.match(css, /camp-twinkle \{ 0%,100% \{ opacity:\.58; scale:\.94; \} 50% \{ opacity:\.82; scale:1\.04; \} \}/);
+  assert.match(css, /firefly-glow \{ 0%,100% \{ opacity:\.12;scale:\.75; \} 48% \{ opacity:\.48;scale:1\.04; \} 72% \{ opacity:\.26;scale:\.88; \} \}/);
+  assert.match(css, /\.forest-fireflies > g > use \{[^}]*animation:firefly-glow 6\.8s ease-in-out infinite/);
+  assert.doesNotMatch(css, /\.forest-fireflies > g \{[^}]*animation:/);
+  assert.match(css, /ufo-lights \{ 0%,100% \{ opacity:\.48; \} 50% \{ opacity:\.68; \} \}/);
+  assert.match(css, /coal-pulse \{ from \{ opacity:\.82; \} to \{ opacity:\.96; \} \}/);
+  assert.match(css, /ember-rise 4\.4s ease-out infinite/);
+  assert.doesNotMatch(css, /@keyframes ember-rise[^}]+opacity:\.78/);
 });
 
 test('large condition layers crossfade instead of toggling display', () => {

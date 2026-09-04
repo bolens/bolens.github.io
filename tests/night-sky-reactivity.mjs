@@ -19,8 +19,8 @@ test('night travelers reuse one configurable detailed symbol', () => {
 });
 
 test('traveler timing stays occasional and condition-aware', () => {
-  assert.match(css, /@keyframes shooting-star-pass \{ 0%,72% \{ opacity:0;/);
-  assert.match(css, /@keyframes meteor-pass \{ 0%,49% \{ opacity:0;/);
+  assert.match(css, /@keyframes shooting-star-pass \{ 0%,70% \{ opacity:0;[^}]+\} 73% \{ opacity:\.12; \} 78% \{ opacity:\.72;/);
+  assert.match(css, /@keyframes meteor-pass \{ 0%,47% \{ opacity:0;[^}]+\} 51% \{ opacity:\.2; \} 55% \{ opacity:\.78;/);
   assert.match(css, /@keyframes comet-pass \{ 0%,18% \{ opacity:0;/);
   assert.match(css, /data-scene-time="twilight"[^\n]+data-scene-time="night"[^\n]+\.night-sky-travelers \{ display:inline; \}/);
   assert.match(css, /data-scene-time="evening"\] \.night-sky-travelers \{ display:inline;--sky-traveler-visibility:\.18; \}/);

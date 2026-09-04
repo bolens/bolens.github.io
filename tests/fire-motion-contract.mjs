@@ -12,8 +12,9 @@ test('coals stay planted while their glow changes gently', () => {
   const pulse = css.match(/@keyframes coal-pulse \{[^}]+\}[^}]+\}/)?.[0];
   assert.ok(pulse, 'coal pulse keyframes are required');
   assert.doesNotMatch(pulse, /(?:scale|translate|rotate):/);
-  assert.match(pulse, /opacity:\.72/);
-  assert.match(css, /animation:coal-pulse 2\.8s ease-in-out infinite alternate/);
+  assert.match(pulse, /opacity:\.82/);
+  assert.match(pulse, /opacity:\.96/);
+  assert.match(css, /animation:coal-pulse 3\.6s ease-in-out infinite alternate/);
 });
 
 test('fallback SVG sparks remain small and close to the flame', () => {
