@@ -215,8 +215,10 @@
       if (!command) return;
       recordRecent(command);
       const returnFocus = commandReturnFocus;
+      commandReturnFocus = null;
       if (dialog.contains(document.activeElement)) document.activeElement.blur();
       dialog.close();
+      if (canRestoreFocus(returnFocus)) returnFocus.focus({ preventScroll: true });
       if (command.run) command.run({ returnFocus });
       else location.href = command.href;
     };
