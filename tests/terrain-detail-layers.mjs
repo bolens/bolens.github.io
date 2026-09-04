@@ -22,6 +22,24 @@ test('woody glyphs expose independently addressable detail layers', () => {
   }
 });
 
+test('forest-floor glyphs expose natural surface detail', () => {
+  const manifests = {
+    'moss-clump': ['sporophyte-stems', 'spore-caps'],
+    'woodland-debris': ['twig-nodes', 'leaf-veins'],
+    'ground-sprig': ['side-blades', 'seed-grains'],
+    'fallen-branch': ['bark-plates', 'broken-tips', 'lichen-spots'],
+    'river-stone': ['stone-facet', 'mineral-vein', 'lichen-specks'],
+    'fern-spray': ['fern-pinnae', 'fiddlehead'],
+  };
+
+  for (const [id, regions] of Object.entries(manifests)) {
+    assert.ok(symbols[id], `${id} symbol is required`);
+    for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
+    assert.match(symbols[id], /class="asset-detail-secondary"/);
+    assert.match(symbols[id], /class="asset-detail-fine"/);
+  }
+});
+
 test('detail density can vary by placement without changing geometry', () => {
   for (const tier of ['simple', 'standard', 'rich']) {
     assert.match(css, new RegExp(`terrain-asset\\[data-detail="${tier}"\\]`));
