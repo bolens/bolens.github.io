@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { hoverElement, waitFor } from './lib/browser-test.mjs';
+import { navigate, hoverElement, waitFor } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -207,7 +207,7 @@ const hover = (selector) => hoverElement(send, selector);
 try {
   await Promise.all(['Page.enable', 'Runtime.enable'].map((method) => send(method)));
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
-  await send('Page.navigate', { url: `${server.origin}/` });
+  await navigate(send, `${server.origin}/`);
   await waitFor(send, `document.readyState==='complete'&&!!window.portfolioAppearancePicker`, 'home glyph fixtures');
 
   const realContexts = [
@@ -249,7 +249,7 @@ try {
   }
   await send('Runtime.evaluate', { expression: `document.querySelector('.command-palette').close()` });
 
-  await send('Page.navigate', { url: `${server.origin}/case-studies/uddns/` });
+  await navigate(send, `${server.origin}/case-studies/uddns/`);
   await waitFor(send, `document.readyState==='complete'&&document.querySelectorAll('.case-facts dt').length===3`, 'case-study glyph fixtures');
   const factGlyphs = await send('Runtime.evaluate', { expression: `(()=>{const terms=[...document.querySelectorAll('.case-facts dt')];return {labels:terms.map((term)=>term.textContent.trim()),glyphs:terms.map((term)=>({hidden:term.querySelector('svg')?.getAttribute('aria-hidden'),focusable:term.querySelector('svg')?.getAttribute('focusable'),href:term.querySelector('use')?.getAttribute('href')}))}})()`, returnByValue: true });
   if (factGlyphs.result.value.labels.join('|') !== 'Role|Interfaces|Project' || factGlyphs.result.value.glyphs.some((glyph) => glyph.hidden !== 'true' || glyph.focusable !== 'false') || factGlyphs.result.value.glyphs.map((glyph) => glyph.href.split('#').pop()).join('|') !== 'glyph-role|glyph-network|glyph-repository') throw new Error(`case fact glyph semantics failed: ${JSON.stringify(factGlyphs.result.value)}`);
@@ -257,12 +257,12 @@ try {
   const factMotion = await send('Runtime.evaluate', { expression: `(()=>{const use=document.querySelector('.case-facts use');return {outer:use.getAnimations()[0]?.animationName,inner:getComputedStyle(use).getPropertyValue('--glyph-role-motion').trim()}})()`, returnByValue: true });
   if ((factMotion.result.value.outer && factMotion.result.value.outer !== 'none') || !factMotion.result.value.inner.startsWith('glyph-role-nod 680ms')) throw new Error(`case fact glyph hover motion failed: ${JSON.stringify(factMotion.result.value)}`);
 
-  await send('Page.navigate', { url: `${server.origin}/about/` });
+  await navigate(send, `${server.origin}/about/`);
   await waitFor(send, `document.readyState==='complete'&&document.querySelectorAll('.about-field-notes dt').length===3`, 'about glyph fixtures');
   const fieldGlyphs = await send('Runtime.evaluate', { expression: `(()=>{const terms=[...document.querySelectorAll('.about-field-notes dt')];return {labels:terms.map((term)=>term.textContent.trim()),intro:document.querySelector('.about-intro .trail-glyph use')?.getAttribute('href'),glyphs:terms.map((term)=>({hidden:term.querySelector('svg')?.getAttribute('aria-hidden'),focusable:term.querySelector('svg')?.getAttribute('focusable'),href:term.querySelector('use')?.getAttribute('href')}))}})()`, returnByValue: true });
   if (fieldGlyphs.result.value.labels.join('|') !== 'Preferred terrain|Working bias|Outside' || !fieldGlyphs.result.value.intro.endsWith('#glyph-backpack') || fieldGlyphs.result.value.glyphs.some((glyph) => glyph.hidden !== 'true' || glyph.focusable !== 'false') || fieldGlyphs.result.value.glyphs.map((glyph) => glyph.href.split('#').pop()).join('|') !== 'glyph-pine|glyph-compass|glyph-fire') throw new Error(`field-note glyph semantics failed: ${JSON.stringify(fieldGlyphs.result.value)}`);
 
-  await send('Page.navigate', { url: `${server.origin}/` });
+  await navigate(send, `${server.origin}/`);
   await waitFor(send, `document.readyState==='complete'&&!!window.portfolioAppearancePicker`, 'home glyph gallery');
 
   await send('Runtime.evaluate', { expression: `(()=>{const gallery=document.createElement('section');gallery.id='glyph-motion-gallery';gallery.setAttribute('aria-label','Glyph motion test gallery');gallery.innerHTML=${JSON.stringify(Object.keys(glyphs).map((name) => `<button class="overlay-close glyph-explorer-item" data-glyph="${name}" aria-label="Animate ${name}"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/trail-glyphs.svg#glyph-${name}"></use></svg><small>${name}</small></button>`).join(''))};gallery.style.cssText='position:fixed;z-index:100;inset:1rem;display:grid;grid-template-columns:repeat(7,1fr);gap:.65rem;padding:1rem;overflow:auto;background:var(--paper)';gallery.querySelectorAll('button').forEach((button)=>button.style.cssText='width:auto;height:5.4rem;border-radius:5px;display:grid;place-items:center;gap:.25rem');gallery.querySelectorAll('svg').forEach((svg)=>svg.style.cssText='width:2rem;height:2rem');gallery.querySelectorAll('small').forEach((label)=>label.style.cssText='font:600 10px var(--mono)');document.body.append(gallery)})()` });

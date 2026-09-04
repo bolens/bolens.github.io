@@ -1,5 +1,5 @@
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { evaluate, finishFiniteAnimations, waitFor } from './lib/browser-test.mjs';
+import { navigate, evaluate, finishFiniteAnimations, waitFor } from './lib/browser-test.mjs';
 
 const browser = await startBrowser();
 const { send } = browser;
@@ -9,10 +9,10 @@ try {
   const fixture = encodeURIComponent(`<!doctype html><style>
     @keyframes finite { to { translate: 10px 0; } }
     @keyframes ambient { to { rotate: 1turn; } }
-    .finite { animation: finite 10s linear both; }
-    .ambient { animation: ambient 10s linear infinite; }
+    .finite { animation: finite 10s linear both paused; }
+    .ambient { animation: ambient 10s linear infinite paused; }
   </style><main class="scope"><i class="inside finite"></i><i class="ambient"></i></main><i class="outside finite"></i>`);
-  await send('Page.navigate', { url: `data:text/html,${fixture}` });
+  await navigate(send, `data:text/html,${fixture}`);
   await waitFor(send, `document.readyState==='complete'&&document.getAnimations().length===3`, 'browser helper animation fixtures');
 
   if (await evaluate(send, '6 * 7') !== 42) throw new Error('page evaluation did not return its serialized value');
@@ -36,7 +36,7 @@ try {
 
   const finished = await finishFiniteAnimations(send, '.scope');
   const states = await evaluate(send, `(()=>Object.fromEntries(['inside','ambient','outside'].map((name)=>[name,document.querySelector('.'+name).getAnimations()[0].playState])))()`);
-  if (finished !== 1 || JSON.stringify(states) !== JSON.stringify({ inside: 'finished', ambient: 'running', outside: 'running' })) {
+  if (finished !== 1 || JSON.stringify(states) !== JSON.stringify({ inside: 'finished', ambient: 'paused', outside: 'paused' })) {
     throw new Error(`finite animation scope leaked: ${JSON.stringify({ finished, states })}`);
   }
 

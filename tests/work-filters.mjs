@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { waitFor, waitForFrames } from './lib/browser-test.mjs';
+import { navigate, waitFor, waitForFrames } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -26,7 +26,7 @@ try {
   await Promise.all(['Page.enable', 'Runtime.enable'].map((method) => send(method)));
   await send('Page.addScriptToEvaluateOnNewDocument', { source: `(()=>{const nativeFetch=window.fetch.bind(window);window.fetch=(url,options)=>String(url).includes('api.github.com/users/bolens/repos')?Promise.reject(new Error('unstubbed GitHub API request')):nativeFetch(url,options)})()` });
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
-  await send('Page.navigate', { url: `${origin}/work/` });
+  await navigate(send, `${origin}/work/`);
   await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.work-tools')`, 'work controls');
   const repositories = [...Array(8)].map((_, index) => ({
     html_url: documentRepositories[index],
@@ -35,7 +35,7 @@ try {
       : { pushed_at: new Date(Date.UTC(2026, index, index + 1)).toISOString() }),
   }));
   await send('Runtime.evaluate', { expression: `localStorage.setItem('portfolio-project-updates-v1',${JSON.stringify(JSON.stringify({ savedAt: Date.now(), repositories }))})` });
-  await send('Page.reload');
+  await navigate(send);
   await waitFor(send, `document.querySelector('.work-tools')?.dataset.updates==='live'`, 'cached live update dates');
 
   const initial = await send('Runtime.evaluate', { expression: `(()=>({items:document.querySelectorAll('.index-list>a').length,languages:[...document.querySelectorAll('[name="project-language"] option')].map((option)=>option.textContent),dates:document.querySelectorAll('.project-updated').length}))()`, returnByValue: true });
@@ -60,14 +60,14 @@ try {
 
   const partialCache = JSON.stringify({ savedAt: Date.now(), repositories: repositories.slice(0, 1) });
   await send('Runtime.evaluate', { expression: `localStorage.setItem('portfolio-project-updates-v1',${JSON.stringify(partialCache)})` });
-  await send('Page.reload');
+  await navigate(send);
   await waitFor(send, `document.querySelector('.work-tools')?.dataset.updates==='live'`, 'partial cached update dates');
   const partialDates = await send('Runtime.evaluate', { expression: `({resolved:document.querySelectorAll('.project-updated.is-resolved').length,unavailable:document.querySelectorAll('.project-updated.is-unavailable').length,enabled:!document.querySelector('[name="project-sort"] [value="updated"]').disabled})`, returnByValue: true });
   if (partialDates.result.value.resolved !== 1 || partialDates.result.value.unavailable !== 7 || !partialDates.result.value.enabled) throw new Error(`partial date state failed: ${JSON.stringify(partialDates.result.value)}`);
 
   await send('Runtime.evaluate', { expression: `localStorage.setItem('portfolio-project-updates-v1',${JSON.stringify(JSON.stringify({ savedAt: 0, repositories: repositories.slice(0, 1) }))})` });
   const staleFetchStub = await send('Page.addScriptToEvaluateOnNewDocument', { source: `window.__updateFetches=0;window.fetch=()=>{window.__updateFetches+=1;return Promise.reject(new Error('offline'))}` });
-  await send('Page.navigate', { url: `${origin}/work/?q=privacy&language=qml&type=case%20study&sort=name-desc#projects` });
+  await navigate(send, `${origin}/work/?q=privacy&language=qml&type=case%20study&sort=name-desc#projects`);
   await waitFor(send, `document.querySelector('.work-tools')?.dataset.updates==='live'&&window.__updateFetches===1`, 'stale cache refresh');
   const restored = await send('Runtime.evaluate', { expression: `(()=>({search:document.querySelector('[name="project-search"]').value,language:document.querySelector('[name="project-language"]').value,kind:document.querySelector('[name="project-kind"]').value,sort:document.querySelector('[name="project-sort"]').value,visible:[...document.querySelectorAll('.index-list>a:not([hidden]) b')].map((item)=>item.textContent),hash:location.hash,fetches:window.__updateFetches,updatedEnabled:!document.querySelector('[name="project-sort"] [value="updated"]').disabled}))()`, returnByValue: true });
   if (restored.result.value.search !== 'privacy' || restored.result.value.language !== 'qml' || restored.result.value.kind !== 'case study' || restored.result.value.sort !== 'name-desc' || restored.result.value.visible.join() !== 'Privacy Devices' || restored.result.value.hash !== '#projects' || restored.result.value.fetches !== 1 || !restored.result.value.updatedEnabled) throw new Error(`URL restoration or stale-cache refresh failed: ${JSON.stringify(restored.result.value)}`);
@@ -75,7 +75,7 @@ try {
 
   await send('Runtime.evaluate', { expression: `localStorage.removeItem('portfolio-project-updates-v1')` });
   const fetchStub = await send('Page.addScriptToEvaluateOnNewDocument', { source: `(()=>{const nativeFetch=window.fetch.bind(window);window.fetch=(url,options)=>String(url).includes('api.github.com/users/bolens/repos')?Promise.resolve({ok:true,json:()=>Promise.resolve(${JSON.stringify(repositories)})}):nativeFetch(url,options)})()` });
-  await send('Page.reload');
+  await navigate(send);
   await waitFor(send, `document.querySelectorAll('.project-updated.is-resolved').length===8`, 'fetched update dates');
   const fetchedDates = await send('Runtime.evaluate', { expression: `(()=>{const cached=JSON.parse(localStorage.getItem('portfolio-project-updates-v1'));return {savedAt:Number.isFinite(cached.savedAt),repositories:cached.repositories.length,updates:document.querySelector('.work-tools').dataset.updates}})()`, returnByValue: true });
   if (!fetchedDates.result.value.savedAt || fetchedDates.result.value.repositories !== 8 || fetchedDates.result.value.updates !== 'live') throw new Error(`fetched date cache failed: ${JSON.stringify(fetchedDates.result.value)}`);
@@ -83,7 +83,7 @@ try {
   await send('Page.removeScriptToEvaluateOnNewDocument', { identifier: fetchStub.identifier });
   await send('Page.addScriptToEvaluateOnNewDocument', { source: `window.fetch=()=>Promise.resolve({ok:false,status:403})` });
   await send('Runtime.evaluate', { expression: `localStorage.setItem('portfolio-project-updates-v1','{malformed')` });
-  await send('Page.navigate', { url: `${origin}/work/?sort=updated` });
+  await navigate(send, `${origin}/work/?sort=updated`);
   await waitFor(send, `document.querySelector('[name="project-sort"] [value="updated"]')?.disabled&&!document.documentElement.classList.contains('is-loading')`, 'settled unavailable update dates');
   const unavailableDates = await send('Runtime.evaluate', { expression: `(()=>({unavailable:document.querySelectorAll('.project-updated.is-unavailable').length,resolved:document.querySelectorAll('.project-updated.is-resolved').length,sort:document.querySelector('[name="project-sort"]').value,url:location.search,label:document.querySelector('[name="project-sort"] [value="updated"]').textContent,loading:document.documentElement.classList.contains('is-loading')}))()`, returnByValue: true });
   if (unavailableDates.result.value.unavailable !== 8 || unavailableDates.result.value.resolved !== 0 || unavailableDates.result.value.sort !== 'featured' || unavailableDates.result.value.url || !unavailableDates.result.value.label.includes('unavailable') || unavailableDates.result.value.loading) throw new Error(`unavailable date fallback failed: ${JSON.stringify(unavailableDates.result.value)}`);

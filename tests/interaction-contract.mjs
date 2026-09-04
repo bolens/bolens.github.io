@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { waitFor } from './lib/browser-test.mjs';
+import { navigate, waitFor } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -18,7 +18,7 @@ try {
   browser = await startBrowser(() => {});
   const { send } = browser;
   await Promise.all(['Page.enable', 'Runtime.enable'].map((method) => send(method)));
-  await send('Page.navigate', { url: `${server.origin}/` });
+  await navigate(send, `${server.origin}/`);
   await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.command-palette')`, 'home interactions');
 
   await send('Runtime.evaluate', { expression: `(()=>{const input=document.createElement('input');input.id='shortcut-guard';document.body.append(input);input.focus()})()` });
@@ -158,7 +158,7 @@ try {
   const glyphs = await send('Runtime.evaluate', { expression: `({eyebrows:document.querySelectorAll('.eyebrow .trail-glyph').length,arrows:document.querySelectorAll('.trail-arrow svg use').length,statusProtected:document.querySelectorAll('.eyebrow .status-dot .trail-glyph').length,principles:document.querySelectorAll('.principles .principle-glyph').length})`, returnByValue: true });
   if (glyphs.result.value.eyebrows < 4 || glyphs.result.value.arrows < 4 || glyphs.result.value.statusProtected !== 0 || glyphs.result.value.principles !== 3) throw new Error(`glyph enhancement failed: ${JSON.stringify(glyphs.result.value)}`);
 
-  await send('Page.navigate', { url: `${server.origin}/case-studies/uddns/#confirm` });
+  await navigate(send, `${server.origin}/case-studies/uddns/#confirm`);
   await waitFor(send, `document.querySelector('.case-story .is-active')?.id==='confirm'&&document.querySelectorAll('.case-route a[data-visited]').length===4&&getComputedStyle(document.querySelector('.case-route')).getPropertyValue('--case-progress').trim()==='1'`, 'case-study hash state');
   await key(send, 'k', 'KeyK', 1);
   const caseCommands = await send('Runtime.evaluate', { expression: `(()=>{const dialog=document.querySelector('.command-palette');return [...dialog.querySelectorAll('[role="option"] b')].map((item)=>item.textContent)})()`, returnByValue: true });

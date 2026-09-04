@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { waitFor } from './lib/browser-test.mjs';
+import { navigate, waitFor } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -29,7 +29,7 @@ try {
   ` });
 
   for (const route of ['/', '/about/', '/work/', '/case-studies/uddns/']) {
-    await send('Page.navigate', { url: `${server.origin}${route}` });
+    await navigate(send, `${server.origin}${route}`);
     await waitFor(send, 'window.__glyphLayoutDone===true', `${route} layout sampling`, 5_000);
     const result = await send('Runtime.evaluate', { expression: `(()=>{const dimensions={};for(const frame of window.__glyphLayoutFrames){for(const [selector,size] of Object.entries(frame))(dimensions[selector]??=[]).push(size)}return {loading:document.documentElement.classList.contains('is-loading'),dimensions:Object.fromEntries(Object.entries(dimensions).map(([selector,sizes])=>{const widths=sizes.map(([width])=>width);const heights=sizes.map(([,height])=>height);return [selector,{widthDelta:Math.max(...widths)-Math.min(...widths),heightDelta:Math.max(...heights)-Math.min(...heights)}]}))}})()`, returnByValue: true });
     if (result.result.value.loading) throw new Error(`${route} retained its loading state after resources completed`);

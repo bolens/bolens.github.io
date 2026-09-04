@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { hoverElement, waitFor } from './lib/browser-test.mjs';
+import { navigate, hoverElement, waitFor } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -69,7 +69,7 @@ try {
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
 
   for (const [path, placements] of pages) {
-    await send('Page.navigate', { url: `${server.origin}${path}` });
+    await navigate(send, `${server.origin}${path}`);
     await waitFor(send, `document.readyState==='complete'&&document.querySelectorAll('.trail-glyph,.fact-glyph').length>0`, `${path} glyph placements`);
 
     for (const [selector, glyph, property, motion] of placements) {
@@ -149,7 +149,7 @@ try {
   }
 
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'reduce' }] });
-  await send('Page.navigate', { url: `${server.origin}/` });
+  await navigate(send, `${server.origin}/`);
   await waitFor(send, `document.readyState==='complete'&&document.querySelector('#currently .trail-glyph')`, 'reduced-motion placement');
   await hover('#currently .eyebrow');
   const reduced = await send('Runtime.evaluate', {

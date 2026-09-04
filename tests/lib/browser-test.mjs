@@ -15,13 +15,34 @@ export async function evaluate(send, expression, options = {}) {
 }
 
 export async function waitFor(send, expression, description = expression, timeout = 10_000) {
-  const deadline = Date.now() + timeout;
-  while (Date.now() < deadline) {
+  const deadline = performance.now() + timeout;
+  while (performance.now() < deadline) {
     const value = await evaluate(send, expression);
     if (value) return value;
     await pause(pollInterval);
   }
   throw new Error(`timed out waiting for ${description} after ${timeout}ms`);
+}
+
+// A ready selector can still belong to the previous document, especially on
+// reload. Require a new document before consulting application readiness.
+export async function navigate(send, url) {
+  const previous = await evaluate(send, 'performance.timeOrigin');
+  const response = await send(url === undefined ? 'Page.reload' : 'Page.navigate', url === undefined ? {} : { url });
+  if (response.errorText) throw new Error(`navigation failed: ${response.errorText}`);
+  const deadline = performance.now() + 10_000;
+  while (performance.now() < deadline) {
+    try {
+      const ready = await evaluate(send, `performance.timeOrigin!==${previous}&&document.readyState==='complete'`);
+      if (ready) return;
+    } catch (error) {
+      // Context replacement is expected during navigation. Page exceptions and
+      // unrelated protocol failures still fail immediately.
+      if (!/Cannot find context|Execution context was destroyed/.test(error.message ?? String(error))) throw error;
+    }
+    await pause(pollInterval);
+  }
+  throw new Error(`timed out waiting for a new document: ${url ?? 'reload'}`);
 }
 
 export async function waitForFrames(send, count = 2) {
@@ -42,9 +63,9 @@ export async function finishFiniteAnimations(send, selector) {
 export async function hoverElement(send, selector, timeout = 10_000) {
   await evaluate(send, `(()=>{document.documentElement.style.scrollBehavior='auto';document.querySelector(${JSON.stringify(selector)}).scrollIntoView({block:'center',behavior:'auto'})})()`);
   await waitFor(send, `(()=>{const box=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return box.bottom>0&&box.top<innerHeight})()`, `${selector} visible after scroll`, timeout);
-  const deadline = Date.now() + timeout;
+  const deadline = performance.now() + timeout;
   let lastHit = null;
-  while (Date.now() < deadline) {
+  while (performance.now() < deadline) {
     await waitForFrames(send);
     const { x, y, hit } = await evaluate(send, `(()=>{const target=document.querySelector(${JSON.stringify(selector)});const box=target.getBoundingClientRect();const x=Math.min(innerWidth-1,Math.max(0,box.left+box.width/2));const y=Math.min(innerHeight-1,Math.max(0,box.top+box.height/2));const hit=document.elementFromPoint(x,y);return {x,y,hit:hit?.tagName.toLowerCase()+(hit?.className?.baseVal||hit?.className?'.'+String(hit.className.baseVal||hit.className).trim().replace(/\\s+/g,'.'):'')}})()`);
     lastHit = hit;

@@ -1,6 +1,6 @@
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { waitFor } from './lib/browser-test.mjs';
+import { navigate, waitFor } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -15,10 +15,10 @@ try {
   await Promise.all(['Page.enable', 'Runtime.enable'].map((method) => send(method)));
 
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'light' }] });
-  await send('Page.navigate', { url: `${origin}/` });
+  await navigate(send, `${origin}/`);
   await waitFor(send, `document.readyState==='complete'`, 'initial page load');
   await send('Runtime.evaluate', { expression: `localStorage.setItem('portfolio-palette','glacier')` });
-  await send('Page.navigate', { url: `${origin}/?palette=alpine` });
+  await navigate(send, `${origin}/?palette=alpine`);
   await waitFor(send, `!!window.portfolioAppearancePicker`);
 
   const preview = await send('Runtime.evaluate', {
@@ -44,7 +44,7 @@ try {
   }
 
   await send('Runtime.evaluate', { expression: `localStorage.removeItem('portfolio-theme')` });
-  await send('Page.navigate', { url: `${origin}/missing-theme-check` });
+  await navigate(send, `${origin}/missing-theme-check`);
   await waitFor(send, `!!window.portfolioAppearancePicker`);
   const autoLight = await send('Runtime.evaluate', {
     expression: `({theme:portfolioAppearance.theme,resolved:portfolioAppearance.resolvedTheme,colors:[...document.querySelectorAll('meta[name="theme-color"]')].map((meta)=>meta.content)})`,
@@ -62,7 +62,7 @@ try {
     throw new Error(`automatic theme resolution failed: ${JSON.stringify({ light, dark })}`);
   }
 
-  await send('Page.navigate', { url: `${origin}/` });
+  await navigate(send, `${origin}/`);
   await waitFor(send, `!!window.portfolioAppearancePicker`);
   const cleared = await send('Runtime.evaluate', {
     expression: `(()=>{dispatchEvent(new StorageEvent('storage',{key:'portfolio-palette',newValue:null}));dispatchEvent(new StorageEvent('storage',{key:'portfolio-theme',newValue:null}));return {palette:portfolioAppearance.palette,theme:portfolioAppearance.theme,checked:document.querySelector('input[name="portfolio-palette"]:checked')?.value}})()`,
@@ -96,7 +96,7 @@ try {
 
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'light' }] });
   await send('Runtime.evaluate', { expression: `localStorage.setItem('portfolio-palette','toString');localStorage.setItem('portfolio-theme','sepia')` });
-  await send('Page.navigate', { url: `${origin}/?palette=__proto__` });
+  await navigate(send, `${origin}/?palette=__proto__`);
   await waitFor(send, `!!window.portfolioAppearancePicker`);
   const invalid = await send('Runtime.evaluate', {
     expression: `({palette:portfolioAppearance.palette,theme:portfolioAppearance.theme,rootPalette:document.documentElement.dataset.palette,rootTheme:document.documentElement.dataset.theme||'auto'})`,
@@ -158,7 +158,7 @@ try {
     Storage.prototype.getItem=()=>{throw new DOMException('blocked','SecurityError')};
     Storage.prototype.setItem=()=>{throw new DOMException('blocked','SecurityError')};
   ` });
-  await send('Page.navigate', { url: `${origin}/` });
+  await navigate(send, `${origin}/`);
   await waitFor(send, `!!window.portfolioAppearancePicker`, 'blocked-storage appearance startup');
   const blockedStorage = await send('Runtime.evaluate', {
     expression: `(()=>{portfolioAppearance.setPalette('coast');portfolioAppearance.setTheme('night');return {palette:portfolioAppearance.palette,theme:portfolioAppearance.theme,rootPalette:document.documentElement.dataset.palette,rootTheme:document.documentElement.dataset.theme}})()`,
@@ -171,7 +171,7 @@ try {
 
   await send('Emulation.setScriptExecutionDisabled', { value: true });
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'dark' }] });
-  await send('Page.navigate', { url: `${origin}/?palette=alpine` });
+  await navigate(send, `${origin}/?palette=alpine`);
   await waitFor(send, `document.readyState==='complete'`, 'no-JavaScript page load');
   const noScript = await send('Runtime.evaluate', {
     expression: `(()=>{const style=getComputedStyle(document.documentElement);return {palette:document.documentElement.dataset.palette||'',theme:document.documentElement.dataset.theme||'',paper:style.getPropertyValue('--paper').trim(),accent:style.getPropertyValue('--copper').trim(),picker:!!document.querySelector('.palette-picker')}})()`,

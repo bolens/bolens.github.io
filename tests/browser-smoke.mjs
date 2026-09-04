@@ -1,7 +1,7 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { finishFiniteAnimations, waitFor, waitForFrames } from './lib/browser-test.mjs';
+import { navigate, finishFiniteAnimations, waitFor, waitForFrames } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -22,7 +22,7 @@ try {
   });
   const { send } = browser;
   const capturePhase = async (width, name, selector, time, path = '/') => {
-    await send('Page.navigate', { url: `${origin}${path}` });
+    await navigate(send, `${origin}${path}`);
     await waitFor(send, `document.readyState==='complete'&&!!document.querySelector(${JSON.stringify(selector)})`, `${name} capture target`);
     await send('Runtime.evaluate', { expression: `
       document.documentElement.style.scrollBehavior='auto';
@@ -41,7 +41,7 @@ try {
     writeFileSync(`/tmp/bolens-${name}-${width}-${time}.png`, Buffer.from(capture.data, 'base64'));
   };
   const captureSequence = async (width, name, selector, times) => {
-    await send('Page.navigate', { url: `${origin}/` });
+    await navigate(send, `${origin}/`);
     await waitFor(send, `document.readyState==='complete'&&!!document.querySelector(${JSON.stringify(selector)})`, `${name} sequence target`);
     await send('Runtime.evaluate', { expression: `
       document.documentElement.style.scrollBehavior='auto';
@@ -81,15 +81,16 @@ try {
   const missing = await fetch(`${origin}/missing-route`);
   if (missing.status !== 404 || !(await missing.text()).includes('This signal')) throw new Error('custom 404 response failed');
 
-  await send('Page.navigate', { url: `${origin}/missing-route` });
+  await navigate(send, `${origin}/missing-route`);
   await waitFor(send, `location.pathname==='/missing-route'&&document.readyState==='complete'&&!!document.querySelector('.command-palette')`, 'custom 404 scripts');
   const hybridHandoff = await send('Runtime.evaluate', { expression: 'window.__hybridReadyState', returnByValue: true });
   if (!hybridHandoff.result.value?.painted || hybridHandoff.result.value.desynchronized) throw new Error(`404 hybrid canvas is not presentation-safe: ${JSON.stringify(hybridHandoff.result.value)}`);
-  const landscapeMotion = await send('Runtime.evaluate', { expression: `new Promise((resolve,reject)=>{const figure=document.querySelector('.cryptid-camp');const box=figure.getBoundingClientRect();figure.dispatchEvent(new PointerEvent('pointermove',{clientX:box.right-1,clientY:box.top+1,pointerType:'mouse'}));requestAnimationFrame(()=>{const style=getComputedStyle(figure);const offsets=['back','far','mid','near'].map((depth)=>Number.parseFloat(style.getPropertyValue('--parallax-'+depth+'-x')));const initial={condition:portfolioWeather.condition,source:portfolioWeather.source};portfolioWeather.setLocationCondition('rainy');const rain=document.querySelector('.weather-rain');const animation=rain.getAnimations().find((item)=>item.animationName==='weather-rain-fall');if(!animation)return reject(new Error('weather-rain-fall animation is missing'));animation.pause();animation.currentTime=0;const rainStart=getComputedStyle(rain).translate;const visible={rain:getComputedStyle(rain).display,clouds:getComputedStyle(document.querySelector('.weather-clouds')).display};animation.currentTime=550;const weather={...visible,rainStart,rainMiddle:getComputedStyle(rain).translate};const fallback=portfolioWeather.useThemeFallback();resolve({offsets,initial,weather,fallback})})})`, awaitPromise: true, returnByValue: true });
+  const landscapeMotion = await send('Runtime.evaluate', { expression: `new Promise((resolve,reject)=>{const figure=document.querySelector('.cryptid-camp');const box=figure.getBoundingClientRect();figure.dispatchEvent(new PointerEvent('pointermove',{clientX:box.right-1,clientY:box.top+1,pointerType:'mouse'}));requestAnimationFrame(()=>{const style=getComputedStyle(figure);const offsets=['back','far','mid','near'].map((depth)=>Number.parseFloat(style.getPropertyValue('--parallax-'+depth+'-x')));const parallaxTransitions=[...figure.querySelectorAll('.depth-back,.depth-far,.depth-mid,.depth-near')].flatMap((node)=>node.getAnimations()).filter((animation)=>animation.constructor.name==='CSSTransition').length;const parallaxAligned=offsets.every((value)=>Number.isInteger(value*2));const initial={condition:portfolioWeather.condition,source:portfolioWeather.source};portfolioWeather.setLocationCondition('rainy');const rain=document.querySelector('.weather-rain');const animation=rain.getAnimations().find((item)=>item.animationName==='weather-rain-fall');if(!animation)return reject(new Error('weather-rain-fall animation is missing'));animation.pause();animation.currentTime=0;const rainStart=getComputedStyle(rain).translate;const visible={rain:getComputedStyle(rain).display,clouds:getComputedStyle(document.querySelector('.weather-clouds')).display};animation.currentTime=550;const weather={...visible,rainStart,rainMiddle:getComputedStyle(rain).translate};const fallback=portfolioWeather.useThemeFallback();resolve({offsets,parallaxTransitions,parallaxAligned,initial,weather,fallback})})})`, awaitPromise: true, returnByValue: true });
   const landscapeValue = landscapeMotion.result.value;
   if (!landscapeValue) throw new Error(`404 landscape probe failed: ${JSON.stringify(landscapeMotion)}`);
   if (landscapeValue.initial.condition !== 'snowy' || landscapeValue.initial.source !== 'theme' || landscapeValue.fallback.condition !== 'snowy' || landscapeValue.fallback.source !== 'theme') throw new Error(`404 weather fallback failed: ${JSON.stringify(landscapeValue)}`);
-  if (!landscapeValue.offsets.every(Number.isFinite) || new Set(landscapeValue.offsets.map(Math.abs)).size !== 4 || landscapeValue.weather.rain === 'none' || landscapeValue.weather.clouds === 'none' || landscapeValue.weather.rainStart === landscapeValue.weather.rainMiddle) throw new Error(`404 landscape motion failed: ${JSON.stringify(landscapeValue)}`);
+  const parallaxMagnitudes = landscapeValue.offsets.map(Math.abs);
+  if (!landscapeValue.offsets.every(Number.isFinite) || parallaxMagnitudes[0] > parallaxMagnitudes[1] || parallaxMagnitudes[1] >= parallaxMagnitudes[2] || parallaxMagnitudes[2] >= parallaxMagnitudes[3] || landscapeValue.parallaxTransitions !== 0 || !landscapeValue.parallaxAligned || landscapeValue.weather.rain === 'none' || landscapeValue.weather.clouds === 'none' || landscapeValue.weather.rainStart === landscapeValue.weather.rainMiddle) throw new Error(`404 landscape motion failed: ${JSON.stringify(landscapeValue)}`);
   const atmosphereWeather = await send('Runtime.evaluate', { expression: `(()=>{const figure=document.querySelector('.cryptid-camp');portfolioWeather.setLocationCondition('rainy');const rainy=figure.dataset.atmosphereCondition;portfolioWeather.useThemeFallback();return {rainy,fallback:figure.dataset.atmosphereCondition}})()`, returnByValue: true });
   if (atmosphereWeather.result.value.rainy !== 'rainy' || atmosphereWeather.result.value.fallback !== 'snowy') throw new Error(`404 canvas weather synchronization failed: ${JSON.stringify(atmosphereWeather.result.value)}`);
   const conditionDetails = await send('Runtime.evaluate', { expression: `(()=>Object.fromEntries(['clear','cloudy','overcast','rainy','wet','dry','snowy','drought'].map((condition)=>{portfolioWeather.setLocationCondition(condition);const details=[...document.querySelectorAll('.condition-detail')];details.flatMap((node)=>node.getAnimations()).forEach((animation)=>animation.finish());const shown=details.filter((node)=>Number.parseFloat(getComputedStyle(node).opacity)>.5).map((node)=>node.dataset.region);return [condition,shown]})))()`, returnByValue: true });
@@ -130,7 +131,7 @@ try {
   for (const width of [390, 1440]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height: width === 390 ? 844 : 1000, deviceScaleFactor: 1, mobile: width === 390 });
     for (const route of ['/', '/work/', '/about/', '/case-studies/uddns/', '/case-studies/aur-response-toolkit/', '/case-studies/privacy-devices/', '/case-studies/launch-layer/', '/case-studies/millennium-helpers/']) {
-      await send('Page.navigate', { url: `${origin}${route}` });
+      await navigate(send, `${origin}${route}`);
       await waitFor(send, `location.pathname===${JSON.stringify(route)}&&document.readyState==='complete'&&!!document.querySelector('main')`, `${route} responsive render`);
       const check = await send('Runtime.evaluate', { expression: `({h1:document.querySelectorAll('h1').length,main:!!document.querySelector('main'),overflow:document.documentElement.scrollWidth>innerWidth,title:document.title,shortcutHint:document.querySelector('.shortcut-hint')?.textContent.trim()})`, returnByValue: true });
       const value = check.result.value;
@@ -148,13 +149,13 @@ try {
     }
   }
 
-  await send('Page.navigate', { url: `${origin}/case-studies/uddns/` });
+  await navigate(send, `${origin}/case-studies/uddns/`);
   await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.case-story > section h2')`, 'case-study scroll treatment');
   const chapterScroll = await send('Runtime.evaluate', { expression: `(()=>{const section=document.querySelector('.case-story > section');const heading=section.querySelector('h2');return {snapType:getComputedStyle(document.documentElement).scrollSnapType,snapAlign:getComputedStyle(section).scrollSnapAlign,timelineSupported:CSS.supports('animation-timeline: view()'),headingTimeline:getComputedStyle(heading).animationTimeline}})()`, returnByValue: true });
   const chapterScrollValue = chapterScroll.result.value;
   if (!chapterScrollValue.snapType.includes('y') || chapterScrollValue.snapAlign !== 'start' || (chapterScrollValue.timelineSupported && chapterScrollValue.headingTimeline === 'auto')) throw new Error(`case chapter scroll treatment failed: ${JSON.stringify(chapterScrollValue)}`);
 
-  await send('Page.navigate', { url: `${origin}/` });
+  await navigate(send, `${origin}/`);
   await waitFor(send, `location.pathname==='/'&&document.readyState==='complete'&&!!document.querySelector('.command-palette')`, 'home scripts');
   const scrollMotion = await send('Runtime.evaluate', { expression: `(()=>{const supported=CSS.supports('animation-timeline: view()');const visual=getComputedStyle(document.querySelector('.project-visual'));const copy=getComputedStyle(document.querySelector('.project-copy'));const detail=getComputedStyle(document.querySelector('.toolbox dl div'));return {supported,visualTimeline:visual.animationTimeline,copyTimeline:copy.animationTimeline,detailTimeline:detail.animationTimeline,visualRange:visual.animationRange}})()`, returnByValue: true });
   const scrollMotionValue = scrollMotion.result.value;
@@ -202,14 +203,14 @@ try {
   const paletteSelection = await send('Runtime.evaluate', { expression: `(()=>{const inputs=[...document.querySelectorAll('.palette-picker input[name="portfolio-palette"]')];const glacier=inputs.find((input)=>input.value==='glacier');glacier.checked=true;glacier.dispatchEvent(new Event('change',{bubbles:true}));const style=getComputedStyle(document.documentElement);return {count:inputs.length,selected:document.documentElement.dataset.palette,accent:style.getPropertyValue('--copper').trim(),summary:document.querySelector('.palette-name').textContent,status:document.querySelector('.palette-status').textContent}})()`, returnByValue: true });
   const paletteValue = paletteSelection.result.value;
   if (paletteValue.count !== 8 || paletteValue.selected !== 'glacier' || !['#28769c','#70bce2'].includes(paletteValue.accent) || !paletteValue.summary.startsWith('Glacier ·') || !paletteValue.status.startsWith('Glacier palette,')) throw new Error(`palette selection failed: ${JSON.stringify(paletteValue)}`);
-  await send('Page.navigate', { url: `${origin}/about/` });
+  await navigate(send, `${origin}/about/`);
   await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.availability')`, 'about appearance controls');
   const persistedPalette = await send('Runtime.evaluate', { expression: `({selected:document.documentElement.dataset.palette,checked:document.querySelector('.palette-picker input:checked')?.value})`, returnByValue: true });
   if (persistedPalette.result.value.selected !== 'glacier' || persistedPalette.result.value.checked !== 'glacier') throw new Error(`palette persistence failed: ${JSON.stringify(persistedPalette.result.value)}`);
   const aboutNightPanel = await send('Runtime.evaluate', { expression: `(()=>{document.querySelector('.theme-options input[value="night"]').click();const panel=document.querySelector('.availability');const button=panel.querySelector('.button');return {page:getComputedStyle(document.body).backgroundColor,panel:getComputedStyle(panel).backgroundColor,panelText:getComputedStyle(panel).color,button:getComputedStyle(button).backgroundColor,buttonText:getComputedStyle(button).color}})()`, returnByValue: true });
   const aboutPanelValue = aboutNightPanel.result.value;
   if (aboutPanelValue.panel === 'rgb(255, 255, 255)' || aboutPanelValue.panel === aboutPanelValue.panelText || aboutPanelValue.button === aboutPanelValue.buttonText || aboutPanelValue.panel === aboutPanelValue.page) throw new Error(`about night panel failed: ${JSON.stringify(aboutPanelValue)}`);
-  await send('Page.navigate', { url: `${origin}/` });
+  await navigate(send, `${origin}/`);
   await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.hike-stars')`, 'home scene themes');
   const sceneThemes = await send('Runtime.evaluate', { expression: `(()=>{const themeInput=(value)=>document.querySelector('.theme-options input[value="'+value+'"]');const inspect=()=>({theme:document.documentElement.dataset.theme||'auto',night:getComputedStyle(document.querySelector('.hike-stars')).visibility,day:getComputedStyle(document.querySelector('.hike-day-sun')).visibility,sky:getComputedStyle(document.documentElement).getPropertyValue('--scene-sky').trim()});const day=themeInput('day');day.checked=true;day.dispatchEvent(new Event('change',{bubbles:true}));const dayState=inspect();const night=themeInput('night');night.checked=true;night.dispatchEvent(new Event('change',{bubbles:true}));const nightState=inspect();return {count:document.querySelectorAll('.theme-options input').length,dayState,nightState}})()`, returnByValue: true });
   const sceneThemeValue = sceneThemes.result.value;
@@ -229,7 +230,7 @@ try {
     if (day.colors.length !== 5 || new Set(day.colors).size !== 5 || !night || new Set(night.colors).size !== 5 || day.colors.join() === night.colors.join()) throw new Error(`palette preview failed for ${day.name}: ${JSON.stringify({ day,night })}`);
   }
   if (matrixValue.overlap !== 0 || matrixValue.panelRight > matrixValue.viewport) throw new Error(`palette layout failed: ${JSON.stringify(matrixValue)}`);
-  await send('Page.navigate', { url: `${origin}/` });
+  await navigate(send, `${origin}/`);
   await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.skip-link')`, 'home skip link');
   await send('Input.dispatchKeyEvent', { type: 'rawKeyDown', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
   await send('Input.dispatchKeyEvent', { type: 'keyUp', key: 'Tab', code: 'Tab', windowsVirtualKeyCode: 9 });
@@ -245,7 +246,7 @@ try {
   }
   await send('Runtime.evaluate', { expression: `localStorage.removeItem('portfolio-palette');localStorage.removeItem('portfolio-theme');document.documentElement.dataset.palette='alpine';delete document.documentElement.dataset.theme` });
 
-  await send('Page.navigate', { url: `${origin}/` });
+  await navigate(send, `${origin}/`);
   await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.visual-ddns svg')&&!!document.querySelector('.hobby-flight-layer')`, 'SVG motion fixtures');
   const motion = await send('Runtime.evaluate', { expression: `(()=>{
     const ddns=document.querySelector('.visual-ddns svg');
@@ -307,7 +308,7 @@ try {
   if(people.manRatio<4.5||people.manRatio>6.5||people.womanRatio<4.5||people.womanRatio>6.5||people.faces!==4||people.necks!==4||people.hands<7||people.shoes!==4||people.clothes!==4||people.hairDetails!==2||people.hair.length!==2||people.hair.some((hair)=>hair.width<8||hair.height<6||hair.fill==='none'||hair.stroke!=='none')||people.maleHeads.length!==2||people.maleHeads.some((stroke)=>stroke!=='none')||people.dogs.length!==2||people.dogs.some((dog)=>dog.ratio<1.4||dog.ratio>2.1||dog.legDrop<6||dog.eye!==1||dog.feathering!==1))throw new Error(`SVG figure detail regression: ${JSON.stringify(people)}`);
 
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'dark' }, { name: 'prefers-reduced-motion', value: 'reduce' }] });
-  await send('Page.navigate', { url: `${origin}/` });
+  await navigate(send, `${origin}/`);
   await waitFor(send, `document.readyState==='complete'&&!!document.querySelector('.ddns-packets')`, 'reduced-motion fixtures');
   const preferences = await send('Runtime.evaluate', { expression: `({dark:matchMedia('(prefers-color-scheme: dark)').matches,reduced:matchMedia('(prefers-reduced-motion: reduce)').matches,ddns:getComputedStyle(document.querySelector('.ddns-packets')).display,flight:getComputedStyle(document.querySelector('.hobby-traveler')).display,landed:getComputedStyle(document.querySelector('.hobby-landed-disc')).display,hobbyState:document.querySelector('.hobbies').dataset.motion,hobbySvg:[...document.querySelectorAll('.hobbies svg')].every((item)=>item.animationsPaused?.()??true),scrollAnimations:[...document.querySelectorAll('.project-visual,.project-copy,.principles li,.toolbox dl div')].map((item)=>getComputedStyle(item).animationName)})`, returnByValue: true });
   if (!preferences.result.value.dark || !preferences.result.value.reduced || preferences.result.value.ddns !== 'none' || preferences.result.value.flight !== 'none' || preferences.result.value.landed === 'none' || preferences.result.value.hobbyState !== 'paused' || !preferences.result.value.hobbySvg || preferences.result.value.scrollAnimations.some((name)=>name !== 'none')) throw new Error(`preference emulation failed: ${JSON.stringify(preferences.result.value)}`);
