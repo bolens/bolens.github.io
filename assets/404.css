@@ -142,10 +142,17 @@
 .terrain-asset[data-detail="rich"] { --asset-detail-secondary-opacity:1;--asset-detail-fine-opacity:.86; }
 .asset-detail-secondary { opacity:var(--asset-detail-secondary-opacity,.72);transition:opacity .55s ease; }
 .asset-detail-fine { opacity:var(--asset-detail-fine-opacity,.42);transition:opacity .55s ease; }
+[data-dynamic-detail] { --inline-density-opacity:1;--inline-weather-opacity:1;opacity:calc(var(--inline-detail-opacity,1) * var(--inline-density-opacity) * var(--inline-weather-opacity));transition:opacity .55s ease; }
+.cryptid-camp[data-scene-density="reduced"] [data-dynamic-detail][data-detail-layer="fine"] { --inline-density-opacity:.72; }
+.cryptid-camp[data-scene-density="compact"] [data-dynamic-detail][data-detail-layer="fine"] { --inline-density-opacity:.42; }
 .cryptid-camp[data-scene-density="reduced"] .depth-back { --asset-detail-fine-opacity:.18; }
 .cryptid-camp[data-scene-density="compact"] :is(.depth-back,.depth-far,.depth-mid) { --asset-detail-secondary-opacity:.56;--asset-detail-fine-opacity:.14; }
 .terrain-asset[data-light="shadow"] { --asset-detail-fine-opacity:.18; }
 :root:is([data-weather="cloudy"],[data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .terrain-asset { --asset-detail-fine-opacity:.24; }
+:root:is([data-weather="cloudy"],[data-weather="overcast"]) [data-dynamic-detail][data-weather-reactive="atmosphere"] { --inline-weather-opacity:.58; }
+:root:is([data-weather="rainy"],[data-weather="snowy"]) [data-dynamic-detail]:is([data-weather-reactive="atmosphere"],[data-weather-reactive="fire"]) { --inline-weather-opacity:.3; }
+:root[data-weather="drought"] [data-dynamic-detail][data-weather-reactive="water"] { --inline-weather-opacity:.4; }
+:root[data-scene-time="day"] [data-dynamic-detail][data-light-reactive="sky"][data-weather-reactive="atmosphere"] { --inline-weather-opacity:0; }
 :root:is([data-weather="wet"],[data-scene-time="day"],[data-scene-time="morning"]) .terrain-asset[data-detail="rich"] { --asset-detail-fine-opacity:1; }
 :root[data-theme="day"] .terrain-asset[data-light="ambient"] { --asset-light-brightness:1.12;--asset-light-saturation:1.05;--asset-light-sepia:.12;--asset-light-hue:-6deg;--asset-light-shadow:drop-shadow(3px 4px 3px rgba(54,68,45,.2)); }
 .terrain-asset[data-light="sun"] { --asset-light-brightness:1.12;--asset-light-saturation:1.05;--asset-light-sepia:.12;--asset-light-hue:-6deg;--asset-light-shadow:drop-shadow(3px 4px 3px rgba(54,68,45,.2)); }
