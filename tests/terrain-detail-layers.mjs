@@ -40,6 +40,39 @@ test('forest-floor glyphs expose natural surface detail', () => {
   }
 });
 
+test('small botanical glyphs expose anatomical detail layers', () => {
+  const manifests = {
+    'fungi-cluster': ['stem-striations', 'cap-mottling', 'mycelium'],
+    'shelf-fungi': ['attachment-scars', 'growth-bands', 'cap-pores'],
+    'pinecone-sprig': ['twig', 'needle-highlights', 'scale-tips', 'resin-drops'],
+    'wildflower-clump': ['stem-leaves', 'petal-veins', 'pollen-dots'],
+    'reed-clump': ['stem-nodes', 'reed-blades', 'seed-heads', 'seed-grains'],
+  };
+
+  for (const [id, regions] of Object.entries(manifests)) {
+    assert.ok(symbols[id], `${id} symbol is required`);
+    for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
+    assert.match(symbols[id], /class="asset-detail-secondary"/);
+    assert.match(symbols[id], /class="asset-detail-fine"/);
+  }
+});
+
+test('campsite gear exposes construction and wear detail', () => {
+  const manifests = {
+    'trail-boots': ['toe-caps', 'eyelets', 'tread-lugs', 'scuff-marks'],
+    'camp-storage': ['panel-ribs', 'lid-seam', 'corner-guards', 'latches'],
+    'sleeping-roll': ['compression-straps', 'buckles', 'zipper-pull', 'fabric-creases'],
+    'trail-camera': ['camera-camouflage', 'infrared-array', 'status-light', 'controls'],
+  };
+
+  for (const [id, regions] of Object.entries(manifests)) {
+    assert.ok(symbols[id], `${id} symbol is required`);
+    for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
+    assert.match(symbols[id], /class="asset-detail-secondary"/);
+    assert.match(symbols[id], /class="asset-detail-fine"/);
+  }
+});
+
 test('detail density can vary by placement without changing geometry', () => {
   for (const tier of ['simple', 'standard', 'rich']) {
     assert.match(css, new RegExp(`terrain-asset\\[data-detail="${tier}"\\]`));

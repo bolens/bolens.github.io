@@ -232,27 +232,40 @@
             <g class="asset-detail-fine" fill="var(--sprig-seed,#9a8a58)"><ellipse cx="29" cy="6" rx="2" ry="4"/><ellipse cx="7" cy="22" rx="2" ry="3.5" transform="rotate(-35 7 22)"/><ellipse cx="42" cy="22" rx="2" ry="3.5" transform="rotate(38 42 22)"/></g>
             <use href="#terrain-condition-marks" width="48" height="54"/>
           </symbol>
-          <symbol id="fungi-cluster" viewBox="0 0 70 52" data-regions="stems,caps,gills,conditions">
+          <symbol id="fungi-cluster" viewBox="0 0 70 52" data-regions="stems,stem-striations,caps,cap-mottling,gills,mycelium,conditions">
             <g fill="var(--fungi-stem,#d8c9a9)" stroke="var(--fungi-outline,#5c3827)" stroke-width="2"><path d="M13 49q1-24 8-24t9 24Z"/><path d="M37 49q1-17 7-17t7 17Z"/><path d="M53 50q1-12 5-12t6 12Z"/></g>
             <g fill="var(--fungi-cap,#d7953f)" stroke="var(--fungi-outline,#5c3827)" stroke-width="2" stroke-linejoin="round"><path d="M4 27Q21 7 38 27 21 38 4 27Z"/><path d="M31 34q13-15 26 0-13 9-26 0Z"/><path d="M49 39q10-11 19 0-10 7-19 0Z"/></g>
-            <path d="M9 27q12 7 24 0m3 7q9 5 17 0" fill="none" stroke="var(--fungi-gill,#f4c46e)" stroke-width="1.5" opacity=".72"/>
+            <path class="asset-detail-secondary" d="m18 29-1 17m7-16 2 16m17-10-1 11m5-10 2 10m8-7-1 8" fill="none" stroke="var(--fungi-striation,#a78f70)" stroke-width="1" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--fungi-mottle,#efbd69)"><circle cx="16" cy="20" r="2"/><circle cx="25" cy="18" r="1.5"/><circle cx="43" cy="29" r="1.4"/><circle cx="59" cy="35" r="1.2"/></g>
+            <path class="asset-detail-secondary" d="M9 27q12 7 24 0m3 7q9 5 17 0m1 5q6 3 11 0" fill="none" stroke="var(--fungi-gill,#f4c46e)" stroke-width="1.5"/>
+            <path class="asset-detail-fine" d="M5 49q12-4 21 1m5 0q11-5 22 0m-42-3-6-4m47 5 8-4" fill="none" stroke="var(--fungi-mycelium,#c9bea5)" stroke-width="1.2" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="70" height="52"/>
           </symbol>
-          <symbol id="shelf-fungi" viewBox="0 0 58 42" data-regions="shelf-caps,shelf-gills,conditions">
+          <symbol id="shelf-fungi" viewBox="0 0 58 42" data-regions="attachment-scars,shelf-caps,growth-bands,shelf-gills,cap-pores,conditions">
+            <path class="asset-detail-secondary" d="M4 38q4-13 13-17m1 3q2-12 11-18" fill="none" stroke="var(--shelf-attachment,#6f4a32)" stroke-width="4" stroke-linecap="round"/>
             <path d="M7 35q17-14 34 1-18 10-34-1Zm15-15q14-12 29 1-15 9-29-1Z" fill="var(--shelf-fill,#c98d57)" stroke="var(--shelf-outline,#5c3827)" stroke-width="2" stroke-linejoin="round"/>
-            <path d="m13 34 21 3m-5-17 17 3" fill="none" stroke="var(--shelf-gill,#f0bd78)" stroke-width="2" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" d="M13 33q10-8 21 1M28 19q8-6 17 1" fill="none" stroke="var(--shelf-band,#a96842)" stroke-width="1.5" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" d="m13 34 21 3m-5-17 17 3" fill="none" stroke="var(--shelf-gill,#f0bd78)" stroke-width="2" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--shelf-pore,#704631)"><circle cx="22" cy="36" r="1"/><circle cx="29" cy="37" r=".8"/><circle cx="36" cy="35" r=".9"/><circle cx="37" cy="21" r=".8"/><circle cx="44" cy="22" r=".7"/></g>
             <use href="#terrain-condition-marks" width="58" height="42"/>
           </symbol>
-          <symbol id="pinecone-sprig" viewBox="0 0 72 48" data-regions="needles,cone-body,cone-scales,conditions">
+          <symbol id="pinecone-sprig" viewBox="0 0 72 48" data-regions="twig,needles,needle-highlights,cone-body,cone-scales,scale-tips,resin-drops,conditions">
+            <path d="M5 39 63 9" fill="none" stroke="var(--cone-twig,#67482f)" stroke-width="4" stroke-linecap="round"/>
             <path d="M5 39 63 9M18 32l-9-13m19 8-3-17m14 11 7-16m2 11 15 7" fill="none" stroke="var(--cone-needle,#526b4d)" stroke-width="3" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" d="m12 34-7-8m18 3-1-11m20 1 5-10m3 5 10 5" fill="none" stroke="var(--cone-needle-highlight,#81906a)" stroke-width="1.2" stroke-linecap="round"/>
             <path d="M38 25q12-13 22 1-2 16-12 18-11-5-10-19Z" fill="var(--cone-fill,#6c4d32)" stroke="var(--cone-outline,#30271e)" stroke-width="2"/>
-            <path d="m42 27 13 9m-15-2 12 7m-5-18 10 7" fill="none" stroke="var(--cone-scale,#b18452)" stroke-width="2"/>
+            <path class="asset-detail-secondary" d="m42 27 13 9m-15-2 12 7m-5-18 10 7" fill="none" stroke="var(--cone-scale,#b18452)" stroke-width="2"/>
+            <path class="asset-detail-fine" d="m42 27 3 1m2-5 3 2m5 5 3 1m-18 3 3 1m7 5 3 1" fill="none" stroke="var(--cone-tip,#d0a168)" stroke-width="1.5" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--cone-resin,#d3a24d)"><circle cx="57" cy="28" r="1.3"/><circle cx="47" cy="38" r="1"/></g>
             <use href="#terrain-condition-marks" width="72" height="48"/>
           </symbol>
-          <symbol id="wildflower-clump" viewBox="0 0 62 58" data-regions="stems,petals,flower-centers,conditions">
+          <symbol id="wildflower-clump" viewBox="0 0 62 58" data-regions="stems,stem-leaves,petals,petal-veins,flower-centers,pollen-dots,conditions">
             <g fill="none" stroke="var(--flower-stem,#52745a)" stroke-width="2.5" stroke-linecap="round"><path d="M30 56 19 17m12 39 3-47m-3 47 19-34M25 39l-12-8m21 5 11-9"/></g>
+            <g class="asset-detail-secondary" fill="var(--flower-leaf,#668266)" stroke="var(--flower-stem,#52745a)" stroke-width="1"><path d="M25 43q-10-9-15-3 7 9 15 3Z"/><path d="M34 39q9-10 15-4-6 9-15 4Z"/><path d="M29 48q-8-6-12-1 6 7 12 1Z"/></g>
             <g fill="var(--flower-petal,#c8b5d8)" stroke="var(--flower-outline,#594b69)" stroke-width="1.5"><path d="m19 17-8-5 7-4 3-7 5 7 8 2-6 6 1 8-8-3-7 4Z"/><path d="m34 9-6-4 6-4 5 4 7 1-5 5 1 7-7-3-6 3Z"/><path d="m50 22-6-4 6-4 5 4 7 1-5 5 1 7-7-3-6 3Z"/></g>
+            <path class="asset-detail-fine" d="m20 12-7 0m7 0 1-8m14 4-4-4m4 4 7-1m9 14-5-3m5 3 6-1" fill="none" stroke="var(--flower-vein,#8e7fa1)" stroke-width="1" stroke-linecap="round"/>
             <g fill="var(--flower-center,#d7a846)"><circle cx="20" cy="12" r="3"/><circle cx="35" cy="8" r="3"/><circle cx="51" cy="21" r="3"/></g>
+            <g class="asset-detail-fine" fill="var(--flower-pollen,#f1d47d)"><circle cx="18" cy="11" r=".7"/><circle cx="22" cy="13" r=".7"/><circle cx="34" cy="6" r=".7"/><circle cx="37" cy="9" r=".7"/><circle cx="50" cy="19" r=".7"/><circle cx="53" cy="22" r=".7"/></g>
             <use href="#terrain-condition-marks" width="62" height="58"/>
           </symbol>
           <symbol id="fallen-branch" viewBox="0 0 120 45" data-regions="branch-body,bark-highlight,bark-plates,broken-tips,lichen-spots,conditions">
@@ -274,21 +287,32 @@
             <g class="asset-detail-fine" fill="var(--stump-hole,#211c18)"><circle cx="39" cy="47" r="2"/><circle cx="68" cy="55" r="1.6"/><circle cx="78" cy="42" r="1.4"/></g>
             <use href="#terrain-condition-marks" width="110" height="92"/>
           </symbol>
-          <symbol id="reed-clump" viewBox="0 0 36 44" data-regions="reed-stems,reed-tips,conditions">
+          <symbol id="reed-clump" viewBox="0 0 36 44" data-regions="reed-stems,stem-nodes,reed-blades,seed-heads,seed-grains,conditions">
             <g fill="none" stroke="var(--reed-stem,#668061)" stroke-linecap="round">
               <path d="M9 42 6 12m7 29 10-35m-4 34 15-22" stroke-width="3"/>
-              <path d="m4 12 6 6M20 7l6 6m3 6 5 5" stroke="var(--reed-tip,#91a06d)" stroke-width="2"/>
+              <path class="asset-detail-secondary" d="m4 12 6 6M20 7l6 6m3 6 5 5" stroke="var(--reed-tip,#91a06d)" stroke-width="2"/>
             </g>
+            <g class="asset-detail-secondary" fill="var(--reed-node,#425d48)"><circle cx="8" cy="28" r="1.8"/><circle cx="17" cy="27" r="1.8"/><circle cx="26" cy="29" r="1.8"/></g>
+            <path class="asset-detail-secondary" d="M9 34q-7-6-8-12m16 11q7-7 9-15m0 17q7-5 9-11" fill="none" stroke="var(--reed-blade,#78936d)" stroke-width="1.7" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--reed-seed,#a49a65)"><ellipse cx="6" cy="10" rx="2.2" ry="4" transform="rotate(-12 6 10)"/><ellipse cx="23" cy="5" rx="2.3" ry="4.5" transform="rotate(13 23 5)"/><ellipse cx="34" cy="17" rx="2" ry="3.8" transform="rotate(28 34 17)"/></g>
+            <path class="asset-detail-fine" d="m5 8 2 1m15-6 2 1m9 11 2 1" fill="none" stroke="var(--reed-seed-glint,#d0c183)" stroke-width="1" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="36" height="44"/>
           </symbol>
-          <symbol id="trail-boots" viewBox="0 0 34 24" data-regions="boot-uppers,boot-soles,boot-laces,conditions">
+          <symbol id="trail-boots" viewBox="0 0 34 24" data-regions="boot-uppers,toe-caps,eyelets,boot-laces,boot-soles,tread-lugs,scuff-marks,conditions">
             <path d="M2 20V9Q6 1 11 9v11Zm18 0V8q5-8 11 0v12Z" fill="var(--boot-fill,#322a25)" stroke="var(--boot-outline,#171b1a)" stroke-width="2" stroke-linejoin="round"/>
-            <path d="m5 10 5 4 4-4m9-1 5 4 4-5M3 20h12m5 0h13" fill="none" stroke="var(--boot-lace,#8b6850)" stroke-width="1.8" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" d="M3 16q6-3 11 0m7-1q6-3 11 0" fill="none" stroke="var(--boot-toe,#4d3a2e)" stroke-width="2"/>
+            <g class="asset-detail-fine" fill="var(--boot-eyelet,#a58b68)"><circle cx="6" cy="10" r="1"/><circle cx="13" cy="10" r="1"/><circle cx="24" cy="9" r="1"/><circle cx="31" cy="9" r="1"/></g>
+            <path class="asset-detail-secondary" d="m5 10 5 4 4-4m9-1 5 4 4-5M3 20h12m5 0h13" fill="none" stroke="var(--boot-lace,#8b6850)" stroke-width="1.8" stroke-linecap="round"/>
+            <path class="asset-detail-fine" d="m4 22 3-2 3 2 3-2m8 2 3-2 3 2 3-2" fill="none" stroke="var(--boot-tread,#121615)" stroke-width="1.4" stroke-linecap="round"/>
+            <path class="asset-detail-fine" d="m5 16 4-1m15 1 4-1" fill="none" stroke="var(--boot-scuff,#78604a)" stroke-width="1" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="34" height="24"/>
           </symbol>
-          <symbol id="camp-storage" viewBox="0 0 32 34" data-regions="storage-body,storage-detail,storage-handle,conditions">
+          <symbol id="camp-storage" viewBox="0 0 32 34" data-regions="storage-body,panel-ribs,lid-seam,corner-guards,latches,storage-handle,conditions">
             <path d="M3 6h26v25H3Z" fill="var(--storage-fill,#17363a)" stroke="var(--storage-outline,#557076)" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M6 8q10 8 20 0m-16 8 5 5 9-8" fill="none" stroke="var(--storage-detail,#758b8d)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="asset-detail-secondary" d="M9 13v15m7-13v13m7-15v15" fill="none" stroke="var(--storage-rib,#285056)" stroke-width="1.5"/>
+            <path class="asset-detail-secondary" d="M4 11h24M6 8q10 8 20 0" fill="none" stroke="var(--storage-detail,#758b8d)" stroke-width="2" stroke-linecap="round"/>
+            <path class="asset-detail-fine" d="M4 9h4v5H4m24-5h-4v5h4M4 27h4v4m20-4h-4v4" fill="none" stroke="var(--storage-guard,#9aaaa7)" stroke-width="1.5" stroke-linejoin="round"/>
+            <g class="asset-detail-fine" fill="var(--storage-latch,#bd965b)"><rect x="9" y="9" width="4" height="5" rx="1"/><rect x="19" y="9" width="4" height="5" rx="1"/></g>
             <path d="M10 3h12" fill="none" stroke="var(--storage-handle,#9aaaa7)" stroke-width="3" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="32" height="34"/>
           </symbol>
@@ -405,11 +429,15 @@
             <g class="ufo-lights" fill="var(--ufo-light,#eab94e)"><circle cx="41" cy="51" r="3.5"/><circle cx="69" cy="56" r="3.5"/><circle cx="99" cy="56" r="3.5"/><circle cx="127" cy="51" r="3.5"/></g>
             <use href="#terrain-condition-marks" width="168" height="84"/>
           </symbol>
-          <symbol id="sleeping-roll" viewBox="0 0 42 39" data-regions="bedroll-body,quilt-lines,zipper,pillow-seam,conditions">
+          <symbol id="sleeping-roll" viewBox="0 0 42 39" data-regions="bedroll-body,quilt-lines,compression-straps,buckles,zipper,zipper-pull,pillow-seam,fabric-creases,conditions">
             <path d="M4 17q19-17 38 1l-3 19H0Z" fill="var(--bedroll-fill,#35545a)" stroke="var(--bedroll-edge,#78968f)" stroke-width="3" stroke-linejoin="round"/>
-            <path d="M8 20h31m-27 6h23m-20 6h17" fill="none" stroke="var(--bedroll-quilt,#94aaa3)" stroke-width="2"/>
+            <path class="asset-detail-secondary" d="M8 20h31m-27 6h23m-20 6h17" fill="none" stroke="var(--bedroll-quilt,#94aaa3)" stroke-width="2"/>
+            <path class="asset-detail-secondary" d="M12 14v23m18-23v23" fill="none" stroke="var(--bedroll-strap,#273a3d)" stroke-width="3"/>
+            <g class="asset-detail-fine" fill="var(--bedroll-buckle,#b6a378)" stroke="var(--bedroll-edge,#78968f)" stroke-width="1"><rect x="9" y="24" width="6" height="5" rx="1"/><rect x="27" y="24" width="6" height="5" rx="1"/></g>
             <path d="M4 17q-6 9-1 19" fill="none" stroke="var(--bedroll-zipper,#d28a55)" stroke-width="5"/>
+            <path class="asset-detail-fine" d="m3 26 5 3" fill="none" stroke="var(--bedroll-zipper-pull,#e0b66e)" stroke-width="2" stroke-linecap="round"/>
             <path d="M14 18q8 6 17 0" fill="none" stroke="var(--bedroll-seam,#213a3e)" stroke-width="2"/>
+            <path class="asset-detail-fine" d="m18 32 5-3 4 3m-9-14 4-2 4 2" fill="none" stroke="var(--bedroll-crease,#71908b)" stroke-width="1" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="42" height="39"/>
           </symbol>
           <symbol id="camp-lantern" viewBox="0 0 54 54" data-regions="outer-glow,lantern-frame,carry-handle,light-chamber,inner-glow,conditions">
@@ -421,12 +449,16 @@
             <circle class="lantern-halo lantern-halo-inner" cx="27" cy="27" r="9" fill="var(--lantern-light,#ffd76a)" opacity="var(--lantern-inner-opacity,.2)"/>
             <use href="#terrain-condition-marks" width="54" height="54"/>
           </symbol>
-          <symbol id="trail-camera" viewBox="0 0 39 32" data-regions="camera-body,viewfinder,lens,lens-glass,lens-glint,conditions">
+          <symbol id="trail-camera" viewBox="0 0 39 32" data-regions="camera-body,camera-camouflage,viewfinder,infrared-array,status-light,lens,lens-glass,lens-glint,controls,conditions">
             <rect y="7" width="39" height="25" rx="4" fill="var(--camera-body,#171d20)" stroke="var(--camera-edge,#4c5b5e)" stroke-width="3"/>
             <path d="m7 7 5-7h13l5 7" fill="var(--camera-top,#252d30)" stroke="var(--camera-edge,#4c5b5e)" stroke-width="2"/>
+            <path class="asset-detail-secondary" d="m3 10 7 4-5 5 7 4-5 6m29-18-7 4 5 5-7 4 5 5" fill="none" stroke="var(--camera-camo,#31413d)" stroke-width="2" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--camera-ir,#552f2f)"><circle cx="7" cy="11" r="1"/><circle cx="11" cy="10" r="1"/><circle cx="28" cy="10" r="1"/><circle cx="32" cy="11" r="1"/></g>
+            <circle class="asset-detail-fine" cx="34" cy="27" r="1.2" fill="var(--camera-status,#7fa66f)"/>
             <circle cx="20" cy="19" r="9" fill="var(--camera-lens,#071117)" stroke="var(--camera-lens-ring,#8ba4a2)" stroke-width="3"/>
             <circle cx="20" cy="19" r="4" fill="var(--camera-glass,#406f75)"/>
             <circle class="camera-glint" cx="17" cy="16" r="1.8" fill="var(--camera-glint,#dffdfa)"/>
+            <path class="asset-detail-fine" d="M33 16h3m-3 4h3" fill="none" stroke="var(--camera-control,#82918e)" stroke-width="1.3" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="39" height="32"/>
           </symbol>
           <symbol id="camp-windhound" viewBox="0 0 64 64" data-regions="body,head,ears,ear-shadows,face-mask,eyes,muzzle,nose,conditions">
