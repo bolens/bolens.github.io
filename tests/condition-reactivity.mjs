@@ -9,7 +9,9 @@ const css = readFileSync(resolve(root, 'assets/404.css'), 'utf8');
 const scene = readFileSync(resolve(root, 'assets/404-scene.js'), 'utf8');
 
 test('rain scales and smoothly flickers only the flame geometry', () => {
-  assert.match(html, /<g class="flame-stack" data-region="open-flame">/);
+  const flameGroup = html.match(/<g class="flame-stack"[^>]*>/)?.[0];
+  assert.ok(flameGroup, 'flame group is required');
+  assert.match(flameGroup, /data-region="open-flame"/);
   assert.match(css, /data-weather="rainy"\] \.flame-stack \{ scale:\.68 \.58;animation:rain-flame-flicker 1\.1s ease-in-out infinite; \}/);
   assert.match(css, /data-weather="rainy"\] :is\(\.flame-inner,\.flame-core\) \{ animation-duration:\.31s; \}/);
   assert.match(scene, /rainy: Object\.freeze\(\{ stars: \.08, fog: 1\.4, fireflies: \.25, embers: \.18 \}\)/);
