@@ -114,10 +114,13 @@
             <g class="asset-detail-fine" fill="var(--willow-catkin,#a9b77a)"><ellipse cx="60" cy="47" rx="2" ry="5" transform="rotate(-18 60 47)"/><ellipse cx="93" cy="30" rx="2" ry="5" transform="rotate(24 93 30)"/><ellipse cx="41" cy="65" rx="2" ry="5" transform="rotate(-22 41 65)"/></g>
             <use href="#terrain-condition-marks" x="18" y="18" width="100" height="100"/>
           </symbol>
-          <symbol id="evergreen-shrub" viewBox="0 0 120 78" data-regions="branches,needle-mass,needle-highlights,conditions">
+          <symbol id="evergreen-shrub" viewBox="0 0 120 78" data-regions="branches,branch-nodes,needle-mass,needle-shoots,needle-highlights,young-cones,conditions">
             <g fill="none" stroke="var(--shrub-stem,#294737)" stroke-width="4" stroke-linecap="round"><path d="M12 74Q34 39 58 12m-21 60Q54 39 76 25m-8 48q16-25 39-37"/><path d="m29 53-15-8m27-8-12-11m39 22-15-9m35 10 15-10" stroke-width="2.5"/></g>
+            <g class="asset-detail-secondary" fill="var(--shrub-node,#1e3d31)"><circle cx="35" cy="48" r="2.5"/><circle cx="59" cy="43" r="2.2"/><circle cx="87" cy="49" r="2.4"/></g>
             <g fill="var(--shrub-fill,#315c45)" stroke="var(--shrub-outline,#17382e)" stroke-width="2" stroke-linejoin="round"><path d="m7 55 20-24 17 25-11-3 13 17H5l14-16Z"/><path d="m32 43 26-36 24 38-13-5 16 30H27l18-27Z"/><path d="m66 54 20-31 27 35-13-4 15 17H61l16-18Z"/></g>
-            <path d="M18 61q21 7 40 0t43 1" fill="none" stroke="var(--shrub-highlight,#78916a)" stroke-width="2.5" stroke-linecap="round" opacity=".65"/>
+            <path class="asset-detail-secondary" d="M18 61q21 7 40 0t43 1" fill="none" stroke="var(--shrub-highlight,#78916a)" stroke-width="2.5" stroke-linecap="round"/>
+            <path class="asset-detail-fine" d="m14 58 8-10m8 14 8-12m7-5 8-14m9 22 8-13m10 20 8-14m10 16 7-9" fill="none" stroke="var(--shrub-shoot,#91a67a)" stroke-width="1.4" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--shrub-cone,#8d6942)" stroke="var(--shrub-outline,#17382e)" stroke-width="1"><ellipse cx="39" cy="58" rx="3" ry="5"/><ellipse cx="91" cy="57" rx="3" ry="5"/></g>
             <use href="#terrain-condition-marks" width="120" height="78"/>
           </symbol>
           <symbol id="cloud-bank" viewBox="0 0 160 52" data-regions="cloud-body,cloud-edge,cloud-shadow">
@@ -501,18 +504,26 @@
             <path class="asset-detail-fine" d="M35 87q-11-12-4-22 8-7 13 0 2 7-5 8-5 0-4-5" fill="none" stroke="var(--fern-fiddlehead,#8ca477)" stroke-width="2" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="72" height="92"/>
           </symbol>
-          <symbol id="berry-shrub" viewBox="0 0 150 105" data-regions="shrub-branches,leaf-mass,leaf-highlights,berries,conditions">
+          <symbol id="berry-shrub" viewBox="0 0 150 105" data-regions="shrub-branches,branch-nodes,leaf-mass,leaf-highlights,leaf-veins,berries,berry-calyxes,buds,conditions">
             <g fill="none" stroke="#355c47" stroke-linecap="round"><path d="M10 100Q38 44 76 21M43 87 29 55m29 20 1-40m18 28 26-45m-10 57 39-31M63 96q35-27 76-24" stroke-width="5"/><path d="m65 86 28 14m-6-22 25-13" stroke="#78916a" stroke-width="2.5" opacity=".7"/></g>
+            <g class="asset-detail-secondary" fill="var(--berry-node,#244937)"><circle cx="44" cy="72" r="3"/><circle cx="76" cy="62" r="2.7"/><circle cx="103" cy="57" r="2.5"/></g>
             <g fill="var(--shrub-fill,#315c45)" stroke="#17382e" stroke-width="2"><path d="M12 58q14-18 29 0-15 15-29 0Z"/><path d="M32 81q17-19 34 1-18 15-34-1Z"/><path d="M48 42q16-20 31-1-15 16-31 1Z"/><path d="M68 67q18-20 36 1-19 16-36-1Z"/><path d="M87 31q15-18 30 0-16 14-30 0Z"/><path d="M109 58q17-18 33 2-18 14-33-2Z"/></g>
-            <g fill="#9aaa75" opacity=".72"><path d="m18 56 9-5 7 7-9 5Z"/><path d="m73 65 10-5 8 8-10 5Z"/><path d="m94 29 9-5 7 7-9 5Z"/></g>
+            <g class="asset-detail-secondary" fill="var(--berry-highlight,#9aaa75)"><path d="m18 56 9-5 7 7-9 5Z"/><path d="m73 65 10-5 8 8-10 5Z"/><path d="m94 29 9-5 7 7-9 5Z"/></g>
+            <path class="asset-detail-fine" d="m16 58 20-1m17 24 10-1m-11-39 24 0m-5 27 28-1m-8-36 23 0m-1 29 26 0" fill="none" stroke="var(--berry-vein,#83a176)" stroke-width="1.4" stroke-linecap="round"/>
             <g fill="#6d4050" stroke="#2a2e28" stroke-width="1"><circle cx="47" cy="76" r="3"/><circle cx="83" cy="64" r="2.5"/><circle cx="119" cy="55" r="2.5"/></g>
+            <path class="asset-detail-fine" d="m44 73 3 3 3-3m30-12 3 3 3-3m30-9 3 3 3-3" fill="none" stroke="var(--berry-calyx,#263d2f)" stroke-width="1" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--berry-bud,#a77b79)"><circle cx="64" cy="32" r="2"/><circle cx="110" cy="39" r="1.8"/><circle cx="132" cy="67" r="1.7"/></g>
             <use href="#terrain-condition-marks" width="150" height="105"/>
           </symbol>
-          <symbol id="fly-agaric" viewBox="0 0 42 50" data-regions="mushroom-stem,mushroom-cap,cap-gills,cap-spots,conditions">
+          <symbol id="fly-agaric" viewBox="0 0 42 50" data-regions="mushroom-stem,stem-striations,veil-ring,mushroom-cap,cap-gradient-band,cap-gills,cap-spots,cap-cracks,conditions">
             <path d="M15 47q1-25 7-25t8 25Z" fill="#e8d8b8" stroke="#512a25" stroke-width="2"/>
+            <path class="asset-detail-fine" d="m19 27-1 16m5-18 1 19m3-15 1 13" fill="none" stroke="var(--agaric-stem-line,#baa98e)" stroke-width="1" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" d="M13 30q9 6 19 0-3 8-10 8-7 0-9-8Z" fill="var(--agaric-veil,#f0dfc2)" stroke="var(--agaric-veil-edge,#9b765f)" stroke-width="1.4"/>
             <path d="M3 23Q22-4 39 23 21 36 3 23Z" fill="var(--mushroom-cap,#bd4b3c)" stroke="#512a25" stroke-width="2" stroke-linejoin="round"/>
-            <path d="M7 24q14 8 28 0m-22 4 3 8m5-9 1 9m6-9-2 8" fill="none" stroke="#f0cda1" stroke-width="1.5" stroke-linecap="round" opacity=".8"/>
+            <path class="asset-detail-secondary" d="M8 20q14-11 27 0" fill="none" stroke="var(--agaric-cap-band,#d96b56)" stroke-width="2" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" d="M7 24q14 8 28 0m-22 4 3 8m5-9 1 9m6-9-2 8" fill="none" stroke="#f0cda1" stroke-width="1.5" stroke-linecap="round"/>
             <g fill="#f4dfc2"><circle cx="13" cy="17" r="2"/><circle cx="23" cy="11" r="2.4"/><circle cx="31" cy="18" r="1.8"/></g>
+            <path class="asset-detail-fine" d="m8 21 4-2m15-7 4-2m2 12 4-1" fill="none" stroke="var(--agaric-crack,#8f342f)" stroke-width="1" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="42" height="50"/>
           </symbol>
           <clipPath id="tent-door"><path d="M933 521 1007 647H861Z"/></clipPath>

@@ -90,6 +90,21 @@ test('rock and fire-bed glyphs expose material detail layers', () => {
   }
 });
 
+test('shrubs and mushrooms expose growth detail layers', () => {
+  const manifests = {
+    'evergreen-shrub': ['branch-nodes', 'needle-shoots', 'young-cones'],
+    'berry-shrub': ['branch-nodes', 'leaf-veins', 'berry-calyxes', 'buds'],
+    'fly-agaric': ['stem-striations', 'veil-ring', 'cap-gradient-band', 'cap-cracks'],
+  };
+
+  for (const [id, regions] of Object.entries(manifests)) {
+    assert.ok(symbols[id], `${id} symbol is required`);
+    for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
+    assert.match(symbols[id], /class="asset-detail-secondary"/);
+    assert.match(symbols[id], /class="asset-detail-fine"/);
+  }
+});
+
 test('detail density can vary by placement without changing geometry', () => {
   for (const tier of ['simple', 'standard', 'rich']) {
     assert.match(css, new RegExp(`terrain-asset\\[data-detail="${tier}"\\]`));
