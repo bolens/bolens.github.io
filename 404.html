@@ -639,9 +639,9 @@
           <rect width="1200" height="410" fill="url(#upper-sky-depth)"/>
         </g>
         <ellipse cx="600" cy="352" rx="700" ry="270" fill="url(#horizon-airglow)"/>
-        <g class="sky-airglow" fill="none" stroke-linecap="round"><path d="M-80 312Q208 268 474 300T1280 284" stroke="#63a69d" stroke-width="38" opacity=".035"/><path d="M-70 337Q244 301 536 327t734-18" stroke="#a2c1b6" stroke-width="3" opacity=".12"/></g>
+        <g class="sky-airglow" data-region="sky-airglow-bands" data-detail-layer="fine" data-dynamic-detail data-weather-reactive="atmosphere" data-light-reactive="sky" fill="none" stroke-linecap="round"><path d="M-80 312Q208 268 474 300T1280 284" stroke="#63a69d" stroke-width="38" opacity=".035"/><path d="M-70 337Q244 301 536 327t734-18" stroke="#a2c1b6" stroke-width="3" opacity=".12"/></g>
         <path class="milky-way" d="M-70 285C190 170 382 214 583 128S966 21 1270 92" fill="none" stroke="#b8d4d4" stroke-width="92" stroke-linecap="round" opacity=".035"/>
-        <g class="camp-stars" fill="#d8eee5">
+        <g class="camp-stars" data-region="fixed-star-field" data-detail-layer="fine" data-dynamic-detail data-weather-reactive="atmosphere" data-light-reactive="sky" fill="#d8eee5">
           <circle cx="66" cy="90" r="2"/><circle cx="140" cy="157" r="1.5"/><circle cx="216" cy="75" r="1.6"/><circle cx="335" cy="134" r="1.7"/><circle cx="433" cy="61" r="1.2"/><circle cx="522" cy="118" r="2"/><circle cx="682" cy="72" r="1.5"/><circle cx="760" cy="151" r="1.2"/><circle cx="906" cy="72" r="1.8"/><circle cx="1095" cy="151" r="1.5"/>
           <circle cx="31" cy="206" r=".8"/><circle cx="99" cy="43" r=".8"/><circle cx="173" cy="114" r=".7"/><circle cx="254" cy="179" r="1"/><circle cx="291" cy="43" r=".7"/><circle cx="379" cy="101" r=".8"/><circle cx="468" cy="180" r=".7"/><circle cx="558" cy="48" r="1"/><circle cx="619" cy="167" r=".7"/><circle cx="716" cy="111" r=".8"/><circle cx="818" cy="39" r=".7"/><circle cx="848" cy="187" r="1"/><circle cx="958" cy="201" r=".8"/><circle cx="1045" cy="46" r=".7"/><circle cx="1157" cy="92" r="1"/>
           <use href="#sky-glint" x="178" y="41" width="12" height="12"/><use href="#sky-glint" x="868" y="100" width="14" height="14"/><use href="#sky-glint" x="1097" y="215" width="11" height="11"/>
@@ -668,7 +668,7 @@
         <rect width="1200" height="760" rx="8" fill="url(#sky-vignette)" pointer-events="none"/>
         <g class="solar-ray-field" fill="url(#day-sunbeam)" aria-hidden="true" data-region="position-reactive-sunbeams"><use href="#solar-ray-fan" width="1200" height="760"/></g>
         <use class="scene-orb sky-orb" href="#sky-orb" x="902" y="18" width="200" height="200"/>
-        <g class="weather-clouds weather-clouds-back" aria-hidden="true">
+        <g class="weather-clouds weather-clouds-back" data-region="rear-cloud-bank" data-detail-layer="secondary" data-weather-reactive="atmosphere" data-light-reactive="sky" aria-hidden="true">
           <use class="weather-cloud weather-cloud-left" href="#cloud-bank" x="54" y="122" width="190" height="62"/>
         </g>
         <g class="weather-overcast scene-layer" data-scene-layer="weather-overcast" data-region="overcast-cloud-deck" aria-hidden="true">
@@ -678,10 +678,10 @@
           <use class="weather-cloud overcast-cloud" href="#cloud-bank" x="550" y="72" width="350" height="114"/>
         </g>
         <use class="terrain-asset day-flight-ufo depth-back scene-layer" data-light="sun" data-weather="clear" data-ufo-state="flying" data-scene-layer="sky-subject" data-scale-band="distant" data-region="daytime-flying-ufo" href="#scout-ufo" x="660" y="100" width="210" height="105" style="--ufo-ground-shadow-opacity:0;--ufo-landing-gear-opacity:0;--ufo-hull:#59777b;--ufo-edge:#a6c5c3;--ufo-dome:#78bbc2;--ufo-dome-edge:#d2eeea;--ufo-rim:#36585c;--ufo-light:#d9903d;--asset-cloud-opacity:0;--asset-rain-opacity:0;--asset-wet-opacity:0;--asset-dry-opacity:0;--asset-snow-opacity:0;--asset-drought-opacity:0"/>
-        <g class="weather-clouds weather-clouds-front" aria-hidden="true">
+        <g class="weather-clouds weather-clouds-front" data-region="front-cloud-bank" data-detail-layer="secondary" data-weather-reactive="atmosphere" data-light-reactive="sky" aria-hidden="true">
           <use class="weather-cloud weather-cloud-right" href="#cloud-bank" x="760" y="150" width="235" height="76"/>
         </g>
-        <g class="weather-overcast weather-overcast-front" aria-hidden="true">
+        <g class="weather-overcast weather-overcast-front" data-region="front-overcast-cloud-bank" data-detail-layer="secondary" data-weather-reactive="atmosphere" data-light-reactive="sky" aria-hidden="true">
           <use class="weather-cloud overcast-cloud" href="#cloud-bank" x="850" y="42" width="400" height="130"/>
         </g>
         <use class="weather-rain" aria-hidden="true" href="#rain-field" width="1200" height="760"/>
@@ -802,7 +802,7 @@
           <path d="M590 349q-18 23-49 39-31 16-55 44" fill="none" stroke="#75aaa6" stroke-width="3" opacity=".38" stroke-linecap="round"/>
           <path d="M474 365c-45 47-15 78-63 113-53 39-135 42-190 78-66 43-94 88-221 119v85h94c38-57 67-88 132-119 68-33 163-41 211-91 43-45 30-88 70-129Z" fill="#1b4f59"/>
           <path d="M481 380c-35 43-12 72-61 108-55 40-134 44-191 79-67 41-104 81-197 111" fill="none" stroke="#7ab1ad" stroke-width="7" opacity=".48" stroke-linecap="round"/>
-          <g class="river-ripples" opacity=".55">
+          <g class="river-ripples" data-region="river-surface-ripples" data-detail-layer="secondary" data-weather-reactive="water" data-light-reactive="ambient" opacity=".55">
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-ripple" x="286" y="537" width="94" height="31" transform="rotate(-4 333 553)"/>
             <use class="terrain-asset" data-light="moon" data-weather="rainy" href="#river-ripple" x="188" y="584" width="88" height="29" transform="rotate(-5 232 599)" style="--ripple-detail-opacity:.58"/>
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-ripple" x="73" y="642" width="82" height="27" transform="rotate(-6 114 656)"/>
@@ -811,12 +811,12 @@
           <path d="M0 674q77-18 151-62m153-64q55-28 105-42" fill="none" stroke="#0c3238" stroke-width="18" opacity=".75"/>
           <path d="M0 665q78-20 146-64 69-45 145-56 73-11 119-48" fill="none" stroke="#315a50" stroke-width="9" opacity=".8"/>
           <path d="M7 684q78-25 139-60 69-40 143-53 75-13 128-58" fill="none" stroke="#6f9180" stroke-width="3" opacity=".5"/>
-          <g class="river-reflections" fill="none" stroke-linecap="round">
+          <g class="river-reflections" data-region="river-light-reflections" data-detail-layer="fine" data-dynamic-detail data-weather-reactive="water" data-light-reactive="sky" fill="none" stroke-linecap="round">
             <path d="M42 691q32-3 61-17m-34 6 17 3m42-26 42-20m-21 8 20 3m49-33 38-18m-17 6 16 2m43-30 35-15" stroke="#d7e0be" stroke-width="4" opacity=".28"/>
             <path d="M28 714q34-7 66-23m62-35 32-16m62-31 30-15m64-38 27-17" stroke="#6ed1b5" stroke-width="6" opacity=".2"/>
             <path d="M15 732q42-9 79-29m77-43 32-18m73-38 25-16" stroke="#9b82d0" stroke-width="3" opacity=".22"/>
           </g>
-          <g class="river-stones">
+          <g class="river-stones" data-region="submerged-river-stones" data-detail-layer="secondary" data-weather-reactive="water" data-light-reactive="ambient">
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="50" y="640" width="32" height="21"/>
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="110" y="612" width="30" height="18" style="--stone-fill:#435a56"/>
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="173" y="575" width="28" height="16" style="--stone-fill:#586c65"/>
@@ -825,18 +825,18 @@
           </g>
           </g>
           <g class="riverbank-structure"><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#riverbank-profile" x="0" y="490" width="410" height="180"/><g><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="27" y="638" width="32" height="20" style="--stone-fill:#4c5e54"/><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="156" y="567" width="30" height="19" style="--stone-fill:#4c5e54"/><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="275" y="525" width="27" height="17" style="--stone-fill:#4c5e54"/><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-stone" x="370" y="490" width="24" height="15" style="--stone-fill:#4c5e54"/></g></g>
-          <g class="riparian-foliage" style="--fern-color:#6f9368">
+          <g class="riparian-foliage" data-region="riparian-fern-line" data-detail-layer="secondary" data-weather-reactive="vegetation" data-light-reactive="ambient" style="--fern-color:#6f9368">
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fern-spray" x="31" y="590" width="48" height="61"/>
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fern-spray" x="119" y="540" width="47" height="59"/>
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fern-spray" x="218" y="503" width="43" height="53"/>
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#fern-spray" x="320" y="476" width="37" height="45"/>
           </g>
-          <g class="bank-reeds">
+          <g class="bank-reeds" data-region="riverbank-reed-line" data-detail-layer="secondary" data-weather-reactive="vegetation" data-light-reactive="ambient">
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#reed-clump" x="72" y="605" width="34" height="43"/>
             <use class="terrain-asset" data-light="ambient" data-weather="rainy" href="#reed-clump" x="176" y="548" width="33" height="41" transform="rotate(5 193 569)" style="--reed-stem:#5f7b5d"/>
             <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#reed-clump" x="284" y="505" width="31" height="39" transform="rotate(-4 300 525)" style="--reed-tip:#82936c"/>
           </g>
-          <g class="water-foam-patches">
+          <g class="water-foam-patches" data-region="river-foam-patches" data-detail-layer="fine" data-dynamic-detail data-weather-reactive="water" data-light-reactive="ambient">
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#water-foam" x="53" y="642" width="54" height="21" transform="rotate(-7 80 653)"/>
             <use class="terrain-asset" data-light="moon" data-weather="rainy" href="#water-foam" x="170" y="565" width="48" height="18" transform="rotate(-8 194 574)" style="--foam-opacity:.44"/>
             <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#water-foam" x="308" y="501" width="45" height="17" transform="rotate(-6 331 510)" style="--foam-fill:#b9d9d2"/>
@@ -891,7 +891,7 @@
           <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#bare-tree" x="831" y="427" width="96" height="146"/>
           <use class="terrain-asset" data-light="shadow" data-weather="dry" href="#bare-tree" x="937" y="418" width="98" height="154" style="--bare-tree-highlight:#657763"/>
         </g>
-        <g class="forest-fireflies">
+        <g class="forest-fireflies" data-region="forest-firefly-field" data-detail-layer="effect" data-weather-reactive="wildlife" data-light-reactive="night">
           <g class="firefly-phase-one"><use class="terrain-asset" data-light="moon" data-weather="clear" href="#firefly-pair" x="160" y="500" width="183" height="50" style="--firefly-size-b:1.5"/><use class="terrain-asset" data-light="fire" data-weather="dry" href="#firefly-pair" x="498" y="473" width="194" height="70" style="--firefly-size-a:2;--firefly-halo-opacity:.2"/><use class="terrain-asset" data-light="moon" data-weather="wet" href="#firefly-pair" x="855" y="464" width="196" height="91" style="--firefly-size-a:1.9;--firefly-size-b:2"/></g>
           <g class="firefly-phase-two"><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#firefly-pair" x="215" y="460" width="186" height="102" style="--firefly-size-a:1.7;--firefly-size-b:2.2"/><use class="terrain-asset" data-light="fire" data-weather="clear" href="#firefly-pair" x="549" y="475" width="208" height="84" style="--firefly-size-a:1.6;--firefly-halo-opacity:.22"/><use class="terrain-asset" data-light="moon" data-weather="cloudy" href="#firefly-pair" x="913" y="487" width="191" height="50" style="--firefly-size-a:2.2;--firefly-size-b:1.7"/></g>
           <g class="firefly-phase-three"><use class="terrain-asset" data-light="moon" data-weather="clear" href="#firefly-pair" x="269" y="479" width="186" height="58" style="--firefly-size-a:2;--firefly-size-b:1.7"/><use class="terrain-asset" data-light="ambient" data-weather="wet" href="#firefly-pair" x="618" y="458" width="199" height="94" style="--firefly-size-a:2.1;--firefly-size-b:1.5"/><use class="terrain-asset" data-light="shadow" data-weather="cloudy" href="#firefly-pair" x="970" y="472" width="182" height="95" style="--firefly-size-a:1.6;--firefly-size-b:2.2;--firefly-halo-opacity:.18"/></g>
@@ -1134,7 +1134,7 @@
           <ellipse cx="858" cy="464" rx="2.8" ry="1.8" fill="#769bb5" stroke="none"/><ellipse cx="882" cy="465" rx="2.4" ry="1.6" fill="#b98a36" stroke="none"/><ellipse cx="869" cy="491" rx="8" ry="5.5" fill="#111" stroke="none"/><path d="m863 499 6 3 7-3m-13 5 6 4 7-4" fill="none" stroke="#0e0d0c" stroke-width="1.5"/>
           <g class="roasting-arm arm-dogman"><path d="m846 519-14 5-18 23-37 21 8 16 41-21 27-26Z" fill="#604d43"/><path d="M785 572 640 528" fill="none" stroke="#72543d" stroke-width="5.5"/><path d="M785 570 640 526" fill="none" stroke="#d2b98c" stroke-width="2.2"/><path d="m736 558-6-7m-32-2-6 2" fill="none" stroke="#4c3528" stroke-width="2"/><path d="m776 568 14-4 9 7-4 12-14 3Z" fill="#74594a"/><path d="M780 570q9-1 14 5m-10-1q6 2 6 9m-1-10q7 3 5 9" fill="none" stroke="#30231e" stroke-width="2"/><path d="M778 578q8 4 16 0" fill="none" stroke="#c29675" stroke-width="1.5" opacity=".55"/><use class="terrain-asset roasting-marshmallow" data-light="fire" data-weather="wet" href="#toasted-marshmallow" x="628" y="517" width="23" height="20"/></g>
         </g>
-        <g class="fire-rim-light" fill="none" stroke="#f2a05c" stroke-width="5" stroke-linecap="round" opacity=".7">
+        <g class="fire-rim-light" data-region="campfire-rim-light" data-detail-layer="effect" data-weather-reactive="fire" data-light-reactive="fire" fill="none" stroke="#f2a05c" stroke-width="5" stroke-linecap="round" opacity=".7">
           <path d="M399 604q15-62-1-105M540 605q8-56-9-91M724 604q-4-55 13-93M826 606q-5-56 10-98"/>
           <path d="M461 574 575 542m95 28-52-30" stroke-width="3" opacity=".85"/>
         </g>
@@ -1142,15 +1142,15 @@
 
         <rect class="scene-grain" width="1200" height="760" fill="#8fa39c" filter="url(#scene-grain)" opacity=".055" style="mix-blend-mode:soft-light" pointer-events="none"/>
 
-        <g class="campfire scene-layer" data-scene-layer="campsite-effects" data-scale-band="subject" transform="translate(134 143) scale(.78)">
+        <g class="campfire scene-layer" data-scene-layer="campsite-effects" data-scale-band="subject" data-region="campfire-assembly" data-detail-layer="base" data-weather-reactive="fire" data-light-reactive="fire" transform="translate(134 143) scale(.78)">
           <g class="coal-bed"><use class="terrain-asset" data-light="fire" data-weather="dry" href="#coal-piece" x="537" y="658" width="44" height="24" transform="rotate(-7 559 670)"/><use class="terrain-asset" data-light="fire" data-weather="clear" href="#coal-piece" x="563" y="667" width="44" height="24" transform="rotate(5 585 679)" style="--coal-fill:#472725;--coal-glow-opacity:.28"/><use class="terrain-asset" data-light="fire" data-weather="dry" href="#coal-piece" x="592" y="667" width="46" height="25" transform="rotate(-4 615 680)" style="--coal-fill:#92392a;--coal-glow:#ff8a43"/><use class="terrain-asset" data-light="shadow" data-weather="wet" href="#coal-piece" x="622" y="657" width="44" height="24" transform="rotate(8 644 669)" style="--coal-fill:#512624;--coal-glow-opacity:.22"/></g>
-          <g class="fire-logs" stroke-linecap="round">
+          <g class="fire-logs" data-region="campfire-log-stack" data-detail-layer="base" data-weather-reactive="fire" data-light-reactive="fire" stroke-linecap="round">
             <use href="#camp-log" x="522" y="642" width="142" height="20" style="--log-bark:#6d3927;--log-outline:#3a211b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
             <use href="#camp-log" x="531" y="642" width="124" height="18" transform="rotate(-24 593 651)" style="--log-bark:#71402b;--log-outline:#3a211b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
             <use href="#camp-log" x="532" y="642" width="122" height="17" transform="rotate(27 593 651)" style="--log-bark:#653522;--log-outline:#34201b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
           </g>
           <g class="fire-ash"><use class="terrain-asset" data-light="fire" data-weather="dry" href="#ash-scatter" x="531" y="675" width="120" height="24"/></g>
-          <g class="flame-stack" data-region="open-flame">
+          <g class="flame-stack" data-region="open-flame" data-detail-layer="effect" data-weather-reactive="fire" data-light-reactive="fire">
           <path class="flame flame-outer" d="M592 646c-45-34-15-68 1-84 5 22 19 18 15-17 50 39 46 85 8 105Z" fill="#ef6a3f"/>
           <path class="flame flame-veil" d="M581 645q-20-30 5-56-2 24 15 28 13-24 10-51 32 36 23 72-20 17-53 7Z" fill="#ff9b45" opacity=".34"/>
           <path class="flame flame-side flame-side-left" d="M588 647q-35-18-17-48 4 18 17 20 10 10 0 28Z" fill="#f28a43"/>
@@ -1166,7 +1166,7 @@
           <use class="terrain-asset" data-light="fire" data-weather="drought" href="#camp-stove" x="535" y="610" width="150" height="92" style="--asset-dry-opacity:0;--asset-drought-opacity:0"/>
         </g>
 
-        <g class="smoke-404 scene-layer" data-scene-layer="air-front" mask="url(#smoke-cutout)" filter="url(#smoke-texture)">
+        <g class="smoke-404 scene-layer" data-scene-layer="air-front" data-region="campfire-number-smoke" data-detail-layer="effect" data-weather-reactive="smoke" data-light-reactive="ambient" mask="url(#smoke-cutout)" filter="url(#smoke-texture)">
           <g class="smoke-character smoke-character-left">
             <path class="forming-tendril" pathLength="1" d="M644 414c-30-19-58-7-54-37 4-27 44-22 36-51-6-24-31-25-17-60"/>
             <text class="smoke-number smoke-number-haze" x="575" y="400">4</text>
