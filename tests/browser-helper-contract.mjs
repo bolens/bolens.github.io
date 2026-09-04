@@ -1,5 +1,5 @@
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { finishFiniteAnimations, waitFor } from './lib/browser-test.mjs';
+import { evaluate, finishFiniteAnimations, waitFor } from './lib/browser-test.mjs';
 
 const browser = await startBrowser();
 const { send } = browser;
@@ -15,13 +15,29 @@ try {
   await send('Page.navigate', { url: `data:text/html,${fixture}` });
   await waitFor(send, `document.readyState==='complete'&&document.getAnimations().length===3`, 'browser helper animation fixtures');
 
+  if (await evaluate(send, '6 * 7') !== 42) throw new Error('page evaluation did not return its serialized value');
+  if (await evaluate(send, `Promise.resolve('ready')`, { awaitPromise: true }) !== 'ready') {
+    throw new Error('page evaluation did not await its promise');
+  }
+
+  await evaluate(send, `(()=>{throw new Error('page seam exploded')})()`).then(
+    () => { throw new Error('page evaluation exception was accepted'); },
+    (error) => {
+      if (!String(error).includes('page seam exploded')) throw error;
+    },
+  );
+
+  await waitFor(send, `(()=>{throw new Error('wait seam exploded')})()`, 'impossible wait', 1_000).then(
+    () => { throw new Error('wait expression exception was accepted'); },
+    (error) => {
+      if (!String(error).includes('wait seam exploded')) throw error;
+    },
+  );
+
   const finished = await finishFiniteAnimations(send, '.scope');
-  const states = await send('Runtime.evaluate', {
-    expression: `(()=>Object.fromEntries(['inside','ambient','outside'].map((name)=>[name,document.querySelector('.'+name).getAnimations()[0].playState])))()`,
-    returnByValue: true,
-  });
-  if (finished !== 1 || JSON.stringify(states.result.value) !== JSON.stringify({ inside: 'finished', ambient: 'running', outside: 'running' })) {
-    throw new Error(`finite animation scope leaked: ${JSON.stringify({ finished, states: states.result.value })}`);
+  const states = await evaluate(send, `(()=>Object.fromEntries(['inside','ambient','outside'].map((name)=>[name,document.querySelector('.'+name).getAnimations()[0].playState])))()`);
+  if (finished !== 1 || JSON.stringify(states) !== JSON.stringify({ inside: 'finished', ambient: 'running', outside: 'running' })) {
+    throw new Error(`finite animation scope leaked: ${JSON.stringify({ finished, states })}`);
   }
 
   await finishFiniteAnimations(send, '.missing').then(
@@ -31,7 +47,7 @@ try {
     },
   );
 
-  console.log('Browser helper contract passed scoped finite, ambient, outside, and missing-target animation behavior.');
+  console.log('Browser helper contract passed evaluation values, promises, exceptions, and scoped animation behavior.');
 } finally {
   await browser.close();
 }
