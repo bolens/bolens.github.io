@@ -73,6 +73,23 @@ test('campsite gear exposes construction and wear detail', () => {
   }
 });
 
+test('rock and fire-bed glyphs expose material detail layers', () => {
+  const manifests = {
+    'alpine-boulder': ['fracture-lines', 'mineral-veins', 'lichen-specks'],
+    'fire-ring-stone': ['mineral-specks', 'soot-band'],
+    'fire-bed': ['scorched-edge', 'coal-fissures', 'char-dust'],
+    'coal-piece': ['char-flakes', 'ash-dust'],
+    'ash-scatter': ['ash-ridges', 'char-flecks'],
+  };
+
+  for (const [id, regions] of Object.entries(manifests)) {
+    assert.ok(symbols[id], `${id} symbol is required`);
+    for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
+    assert.match(symbols[id], /class="asset-detail-secondary"/);
+    assert.match(symbols[id], /class="asset-detail-fine"/);
+  }
+});
+
 test('detail density can vary by placement without changing geometry', () => {
   for (const tier of ['simple', 'standard', 'rich']) {
     assert.match(css, new RegExp(`terrain-asset\\[data-detail="${tier}"\\]`));

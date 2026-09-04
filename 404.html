@@ -191,25 +191,33 @@
             <g class="asset-snow-mark" data-region="snow-cap" opacity="var(--asset-snow-opacity,0)"><path d="M4 19q11-13 24-5 12-12 25-2 15-9 28 3 9-2 15 5v13q-10-7-19 0-12-8-24 1-13-9-25 0-11-8-24 1Z" fill="var(--asset-snow-color,#e7f2f1)" stroke="var(--asset-snow-edge,#b8d0d1)" stroke-width="2" stroke-linejoin="round"/><g fill="var(--asset-snow-glint,#fff)"><circle cx="19" cy="13" r="2"/><circle cx="51" cy="10" r="1.6"/><circle cx="80" cy="17" r="1.8"/></g><path d="m17 70 5-9 5 9-5 9Zm51 4 4-7 4 7-4 7Z" fill="var(--asset-frost-color,#d8e9e8)"/></g>
             <g class="asset-drought-mark" data-region="drought-stress" fill="none" stroke="var(--asset-drought-color,#9b7044)" stroke-linecap="round" stroke-linejoin="round" opacity="var(--asset-drought-opacity,0)"><path d="m13 84 18-12 15 8 18-15 23 11M29 72l-4-13m21 21 3 11m15-26-4-13m4 13 12 6" stroke-width="3"/><path d="M16 47q10-8 18 1-10 7-18-1Zm54-7q9-7 17 2-9 6-17-2Z" fill="var(--asset-drought-leaf,#aa8150)" stroke-width="2"/></g>
           </symbol>
-          <symbol id="alpine-boulder" viewBox="0 0 140 90" data-regions="rock-body,rock-facets,rock-glints,lichen,conditions">
+          <symbol id="alpine-boulder" viewBox="0 0 140 90" data-regions="rock-body,rock-facets,fracture-lines,mineral-veins,rock-glints,lichen,lichen-specks,conditions">
             <path d="M5 84 19 39 48 8l38 7 41 34 8 35Z" fill="var(--boulder-fill,url(#moon-rock))" stroke="#172826" stroke-width="2.5" stroke-linejoin="round"/>
             <path d="M19 39 48 8l12 40L8 84m52-36 26-33 41 34-43 35Z" fill="var(--boulder-facet,#354c49)"/>
-            <path d="m24 41 24-25m15 34 20-27m8 52 27-24" fill="none" stroke="var(--boulder-glint,#91a8a3)" stroke-width="3" stroke-linecap="round" opacity=".46"/>
-            <g fill="#8da06f"><circle cx="31" cy="37" r="4"/><circle cx="42" cy="30" r="2.5"/><circle cx="54" cy="39" r="3"/></g>
+            <path class="asset-detail-secondary" d="m60 48-9 16 8 19m27-68 4 21 16 11m-87-8 12 16-8 19" fill="none" stroke="var(--boulder-fracture,#263b39)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path class="asset-detail-fine" d="m45 10 9 23-7 18m40-34 8 15 19 15m-53 37 13-19 22 4" fill="none" stroke="var(--boulder-vein,#7e8171)" stroke-width="1.5" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" d="m24 41 24-25m15 34 20-27m8 52 27-24" fill="none" stroke="var(--boulder-glint,#91a8a3)" stroke-width="3" stroke-linecap="round"/>
+            <g class="asset-detail-secondary" fill="var(--boulder-lichen,#8da06f)"><circle cx="31" cy="37" r="4"/><circle cx="42" cy="30" r="2.5"/><circle cx="54" cy="39" r="3"/></g>
+            <g class="asset-detail-fine" fill="var(--boulder-lichen-speck,#b0b982)"><circle cx="25" cy="44" r="1.4"/><circle cx="38" cy="36" r="1.2"/><circle cx="49" cy="43" r="1.5"/></g>
             <use href="#terrain-condition-marks" width="140" height="90"/>
           </symbol>
-          <symbol id="fire-ring-stone" viewBox="0 0 44 30" data-regions="stone-body,stone-face,stone-cracks,ember-edge,conditions">
+          <symbol id="fire-ring-stone" viewBox="0 0 44 30" data-regions="stone-body,stone-face,stone-cracks,mineral-specks,soot-band,ember-edge,conditions">
             <path d="M3 17 12 5l20 1 9 11-8 10-21 1Z" fill="var(--ring-stone-fill,#566059)" stroke="var(--ring-stone-outline,#263432)" stroke-width="2.5" stroke-linejoin="round"/>
-            <path d="m12 7 15 1 8 7-18 2Z" fill="var(--ring-stone-face,#84908a)" opacity="var(--ring-stone-face-opacity,.38)"/>
-            <path d="m15 9 5 7-6 7m17-13-6 8 5 6" fill="none" stroke="var(--ring-stone-crack,#242d2b)" stroke-width="1.8" stroke-linecap="round" opacity="var(--ring-stone-crack-opacity,1)"/>
+            <path class="asset-detail-secondary" d="m12 7 15 1 8 7-18 2Z" fill="var(--ring-stone-face,#84908a)"/>
+            <path class="asset-detail-secondary" d="m15 9 5 7-6 7m17-13-6 8 5 6" fill="none" stroke="var(--ring-stone-crack,#242d2b)" stroke-width="1.8" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--ring-stone-mineral,#aeb2a0)"><circle cx="14" cy="11" r="1"/><circle cx="29" cy="12" r=".8"/><circle cx="34" cy="18" r=".9"/></g>
+            <path class="asset-detail-fine" d="M6 18q15-5 32 0" fill="none" stroke="var(--ring-stone-soot,#171b1a)" stroke-width="4" stroke-linecap="round"/>
             <path d="M7 20q14-6 29 0" fill="none" stroke="var(--ring-stone-ember,#d26f3e)" stroke-width="2" stroke-linecap="round" opacity="var(--ring-stone-ember-opacity,.22)"/>
             <use href="#terrain-condition-marks" width="44" height="30"/>
           </symbol>
-          <symbol id="fire-bed" viewBox="0 0 180 65" data-regions="burned-ground,coal-bed,ash-lines,ash-flecks,conditions">
+          <symbol id="fire-bed" viewBox="0 0 180 65" data-regions="burned-ground,scorched-edge,coal-bed,coal-fissures,ash-lines,ash-flecks,char-dust,conditions">
             <path d="M8 34Q14 13 38 12L61 5l27 5 23-6 25 9q28 1 36 21-5 19-31 20l-26 8-29-5-25 5-24-8Q13 54 8 34Z" fill="var(--fire-bed-fill,#191e1d)" stroke="var(--fire-bed-edge,#37403d)" stroke-width="5" stroke-linejoin="round"/>
+            <path class="asset-detail-secondary" d="M16 32q18-12 39-15 21-4 39 1 24-10 48 2 18 3 23 15" fill="none" stroke="var(--fire-bed-scorch,#3f2b23)" stroke-width="3" stroke-linecap="round"/>
             <g fill="var(--fire-bed-coal,#7e3326)" stroke="#2c211d" stroke-width="2" stroke-linejoin="round"><path d="m39 29 8-7 13 2 8 7-6 7-15 1-9-5Z"/><path d="m68 43 8-10 18-1 9 8-7 10-18 1Z"/><path d="m103 38 8-9 17 2 7 9-9 8-17-2Z"/><path d="m129 25 8-6 13 4 5 7-8 6-13-2Z"/></g>
-            <g fill="none" stroke="var(--fire-bed-ash,#b5aaa0)" stroke-linecap="round" opacity=".46"><path d="m24 43 13 5 18-1m55 5 18-5 20 1M72 20l13 4 18-2" stroke-width="3"/><path d="m59 54 7-2 9 3m39-35 8 3 8-1M30 31l7-2m111 10 8-2" stroke-width="1.8"/></g>
-            <g fill="var(--fire-bed-ash,#b5aaa0)"><circle cx="31" cy="39" r="2"/><circle cx="65" cy="17" r="1.5"/><circle cx="105" cy="53" r="2.2"/><circle cx="151" cy="43" r="1.7"/></g>
+            <path class="asset-detail-fine" d="m45 27 8 4 7-4m17 11 8 5 9-7m16-2 8 5 10-4m8-12 7 5 7-3" fill="none" stroke="var(--fire-bed-fissure,#df6538)" stroke-width="1.5" stroke-linecap="round"/>
+            <g class="asset-detail-secondary" fill="none" stroke="var(--fire-bed-ash,#b5aaa0)" stroke-linecap="round"><path d="m24 43 13 5 18-1m55 5 18-5 20 1M72 20l13 4 18-2" stroke-width="3"/><path d="m59 54 7-2 9 3m39-35 8 3 8-1M30 31l7-2m111 10 8-2" stroke-width="1.8"/></g>
+            <g class="asset-detail-secondary" fill="var(--fire-bed-ash,#b5aaa0)"><circle cx="31" cy="39" r="2"/><circle cx="65" cy="17" r="1.5"/><circle cx="105" cy="53" r="2.2"/><circle cx="151" cy="43" r="1.7"/></g>
+            <g class="asset-detail-fine" fill="var(--fire-bed-dust,#55514b)"><circle cx="20" cy="35" r="1.2"/><circle cx="56" cy="47" r="1"/><circle cx="99" cy="20" r="1.3"/><circle cx="139" cy="45" r="1.1"/><circle cx="160" cy="34" r=".9"/></g>
             <use href="#terrain-condition-marks" width="180" height="65"/>
           </symbol>
           <symbol id="moss-clump" viewBox="0 0 80 28" data-regions="moss-body,moss-highlights,sporophyte-stems,spore-caps,conditions">
@@ -352,15 +360,19 @@
             <g fill="none" stroke="var(--firefly-glow,#b9e77a)" opacity="var(--firefly-halo-opacity,.28)"><circle cx="10" cy="14" r="7"/><circle cx="170" cy="36" r="6"/></g>
             <use href="#terrain-condition-marks" width="180" height="50"/>
           </symbol>
-          <symbol id="coal-piece" viewBox="0 0 44 24" data-regions="coal-body,ember-fissures,char-face,conditions">
+          <symbol id="coal-piece" viewBox="0 0 44 24" data-regions="coal-body,ember-fissures,char-face,char-flakes,ash-dust,conditions">
             <path d="M3 14 8 6l11-3 9 3 8-1 6 8-4 7-13 2-16-2Z" fill="var(--coal-fill,#7e3326)" stroke="var(--coal-outline,#2c211d)" stroke-width="3" stroke-linejoin="round"/>
             <path d="m9 9 9 3 7-4 10 4m-17 0 4 8m3-12 3 7" fill="none" stroke="var(--coal-glow,#d85b35)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="var(--coal-glow-opacity,.45)"/>
-            <path d="m7 16 11 3 16-2" fill="none" stroke="var(--coal-char,#171817)" stroke-width="2" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" d="m7 16 11 3 16-2" fill="none" stroke="var(--coal-char,#171817)" stroke-width="2" stroke-linecap="round"/>
+            <path class="asset-detail-fine" d="m11 7 5 3m14-3 4 3m-12 9 6-2" fill="none" stroke="var(--coal-flake,#3e302a)" stroke-width="1.2" stroke-linecap="round"/>
+            <g class="asset-detail-fine" fill="var(--coal-ash,#a49a90)"><circle cx="10" cy="15" r="1"/><circle cx="31" cy="18" r=".8"/><circle cx="36" cy="12" r=".7"/></g>
             <use href="#terrain-condition-marks" width="44" height="24"/>
           </symbol>
-          <symbol id="ash-scatter" viewBox="0 0 120 24" data-regions="ash-deposits,ash-highlights,conditions">
+          <symbol id="ash-scatter" viewBox="0 0 120 24" data-regions="ash-deposits,ash-ridges,ash-highlights,char-flecks,conditions">
             <g fill="var(--ash-fill,#b5aaa0)"><path d="m3 14 9-5 14 2 8 5-12 3-14-1Z"/><path d="m39 19 7-6 12 2 8 5-11 2-10-1Z"/><path d="m82 16 9-6 16 2 10 5-13 4-15-2Z"/><circle cx="35" cy="7" r="2"/><circle cx="73" cy="11" r="1.7"/><circle cx="111" cy="7" r="1.3"/></g>
-            <g fill="none" stroke="var(--ash-highlight,#ded5ca)" stroke-linecap="round" opacity=".34"><path d="m9 14 12 1m25 3 12 1m32-3 17 1"/><path d="m27 20 5 1m38-5 5 1" stroke-width=".8"/></g>
+            <path class="asset-detail-secondary" d="M8 13q8-4 17 1m18 4q9-5 19 1m24-4q12-6 25 1" fill="none" stroke="var(--ash-ridge,#8f857c)" stroke-width="1.5" stroke-linecap="round"/>
+            <g class="asset-detail-secondary" fill="none" stroke="var(--ash-highlight,#ded5ca)" stroke-linecap="round"><path d="m9 14 12 1m25 3 12 1m32-3 17 1"/><path d="m27 20 5 1m38-5 5 1" stroke-width=".8"/></g>
+            <g class="asset-detail-fine" fill="var(--ash-char,#3d3732)"><circle cx="18" cy="12" r="1"/><circle cx="48" cy="18" r=".8"/><circle cx="94" cy="15" r="1.1"/><circle cx="108" cy="17" r=".7"/></g>
             <use href="#terrain-condition-marks" width="120" height="24"/>
           </symbol>
           <symbol id="ember-spark" viewBox="0 0 14 14" data-regions="spark-core,spark-halo,conditions">
