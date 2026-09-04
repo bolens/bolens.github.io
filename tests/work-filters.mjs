@@ -1,5 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
+import { fixedNow } from './lib/browser-environment.mjs';
 import { startBrowser } from './lib/cdp-browser.mjs';
 import { navigate, waitFor, waitForFrames } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
@@ -34,7 +35,7 @@ try {
       ? { updated_at: new Date(Date.UTC(2026, index, index + 1)).toISOString() }
       : { pushed_at: new Date(Date.UTC(2026, index, index + 1)).toISOString() }),
   }));
-  await send('Runtime.evaluate', { expression: `localStorage.setItem('portfolio-project-updates-v1',${JSON.stringify(JSON.stringify({ savedAt: Date.now(), repositories }))})` });
+  await send('Runtime.evaluate', { expression: `localStorage.setItem('portfolio-project-updates-v1',${JSON.stringify(JSON.stringify({ savedAt: fixedNow, repositories }))})` });
   await navigate(send);
   await waitFor(send, `document.querySelector('.work-tools')?.dataset.updates==='live'`, 'cached live update dates');
 
@@ -51,14 +52,14 @@ try {
   if (sorted.result.value.first !== 'Multi-Monitor Workspaces' || sorted.result.value.sort !== 'updated' || !sorted.result.value.status.includes('8 of 8') || sorted.result.value.focus !== 'project-search') throw new Error(`live update sort or reset focus failed: ${JSON.stringify(sorted.result.value)}`);
 
   const ordering = await send('Runtime.evaluate', { expression: `(()=>{const sort=document.querySelector('[name="project-sort"]');const names=()=>[...document.querySelectorAll('.index-list>a b')].map((item)=>item.textContent);const set=(value)=>{sort.value=value;sort.dispatchEvent(new Event('change',{bubbles:true}));return names()};return {ascending:set('name-asc'),descending:set('name-desc'),featured:set('featured'),url:location.search}})()`, returnByValue: true });
-  const alphabetic = [...ordering.result.value.ascending].sort((left, right) => left.localeCompare(right, undefined, { sensitivity: 'base' }));
+  const alphabetic = ['App Drawer', 'AUR Response Toolkit', 'Launch Layer', 'Millennium Helpers', 'Multi-Monitor Workspaces', 'P2P Services', 'Privacy Devices', 'uDDNS'];
   if (ordering.result.value.ascending.join('|') !== alphabetic.join('|') || ordering.result.value.descending.join('|') !== [...alphabetic].reverse().join('|') || ordering.result.value.featured[0] !== 'uDDNS' || ordering.result.value.url) throw new Error(`name or featured ordering failed: ${JSON.stringify(ordering.result.value)}`);
 
   const emptyState = await send('Runtime.evaluate', { expression: `(()=>{const search=document.querySelector('[name="project-search"]');search.value='definitely absent project';search.dispatchEvent(new Event('input',{bubbles:true}));return {visible:document.querySelectorAll('.index-list>a:not([hidden])').length,empty:document.querySelector('.index-list').classList.contains('is-empty'),status:document.querySelector('.work-results').textContent,url:location.search}})()`, returnByValue: true });
   if (emptyState.result.value.visible !== 0 || !emptyState.result.value.empty || emptyState.result.value.status !== 'No projects match those filters.' || !emptyState.result.value.url.includes('q=definitely+absent+project')) throw new Error(`empty work-filter state failed: ${JSON.stringify(emptyState.result.value)}`);
   await send('Runtime.evaluate', { expression: `document.querySelector('.work-reset').click()` });
 
-  const partialCache = JSON.stringify({ savedAt: Date.now(), repositories: repositories.slice(0, 1) });
+  const partialCache = JSON.stringify({ savedAt: fixedNow, repositories: repositories.slice(0, 1) });
   await send('Runtime.evaluate', { expression: `localStorage.setItem('portfolio-project-updates-v1',${JSON.stringify(partialCache)})` });
   await navigate(send);
   await waitFor(send, `document.querySelector('.work-tools')?.dataset.updates==='live'`, 'partial cached update dates');

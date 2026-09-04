@@ -57,7 +57,7 @@ export async function waitForFrames(send, count = 2) {
 
 export async function finishFiniteAnimations(send, selector) {
   await waitForFrames(send);
-  return evaluate(send, `(()=>{const scope=document.querySelector(${JSON.stringify(selector)});if(!scope)throw new Error(${JSON.stringify(`animation scope not found: ${selector}`)});let finished=0;for(const animation of document.getAnimations()){const target=animation.effect?.target;const timing=animation.effect?.getComputedTiming();if(target&&scope.contains(target)&&Number.isFinite(timing?.endTime)){try{animation.finish();finished+=1}catch{}}}return finished})()`);
+  return evaluate(send, `(()=>{const scope=document.querySelector(${JSON.stringify(selector)});if(!scope)throw new Error(${JSON.stringify(`animation scope not found: ${selector}`)});let finished=0;for(const animation of document.getAnimations()){const target=animation.effect?.target;const timing=animation.effect?.getComputedTiming();if(target&&scope.contains(target)&&Number.isFinite(timing?.endTime)){animation.finish();finished+=1}}return finished})()`);
 }
 
 export async function hoverElement(send, selector, timeout = 10_000) {

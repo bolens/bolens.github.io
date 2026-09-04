@@ -7,8 +7,8 @@ import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const server = await startSiteServer(root);
-const browser = await startBrowser(() => {});
-const { send } = browser;
+let browser;
+let send;
 const captureEvidence = process.argv.includes('--capture-evidence');
 const glyphs = {
   trailhead: null, compass: null, map: null, cairn: null,
@@ -205,8 +205,17 @@ if (duplicateKeyframes.length) throw new Error(`sprite keyframes must be unique:
 const hover = (selector) => hoverElement(send, selector);
 
 try {
+  browser = await startBrowser();
+  ({ send } = browser);
   await Promise.all(['Page.enable', 'Runtime.enable'].map((method) => send(method)));
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
+  await send('Page.addScriptToEvaluateOnNewDocument', { source: `
+    addEventListener('DOMContentLoaded', () => {
+      const style = document.createElement('style');
+      style.textContent = 'svg use { animation-play-state: paused !important; }';
+      document.head.append(style);
+    }, { once: true });
+  ` });
   await navigate(send, `${server.origin}/`);
   await waitFor(send, `document.readyState==='complete'&&!!window.portfolioAppearancePicker`, 'home glyph fixtures');
 
@@ -361,6 +370,6 @@ try {
 
   console.log(`Glyph hover motion passed ${Object.keys(glyphs).length} glyphs, keyboard parity, idle-state, phase, and reduced-motion checks.`);
 } finally {
-  await browser.close();
+  await browser?.close();
   await server.close();
 }

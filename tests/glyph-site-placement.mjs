@@ -6,8 +6,8 @@ import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const server = await startSiteServer(root);
-const browser = await startBrowser(() => {});
-const { send } = browser;
+let browser;
+let send;
 const captureEvidence = process.argv.includes('--capture-evidence');
 
 const pages = [
@@ -65,6 +65,8 @@ const workControls = [
 const hover = (selector) => hoverElement(send, selector);
 
 try {
+  browser = await startBrowser();
+  ({ send } = browser);
   await Promise.all(['Page.enable', 'Runtime.enable'].map((method) => send(method)));
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
 
@@ -162,6 +164,6 @@ try {
 
   console.log(`Glyph site placement passed ${pages.reduce((count, [, placements]) => count + placements.length, workControls.length)} semantic placements with idle, hover, keyboard, mobile-layout, and reduced-motion checks.`);
 } finally {
-  await browser.close();
+  await browser?.close();
   await server.close();
 }

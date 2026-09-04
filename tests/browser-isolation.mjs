@@ -1,8 +1,15 @@
+import assert from 'node:assert/strict';
 import { startBrowser } from './lib/cdp-browser.mjs';
 
 let browsers = [];
 try {
-  browsers = await Promise.all([startBrowser(() => {}), startBrowser(() => {})]);
+  const started = await Promise.allSettled([0, 1].map(async () => {
+    const browser = await startBrowser();
+    browsers.push(browser);
+    return browser;
+  }));
+  const failed = started.find((result) => result.status === 'rejected');
+  if (failed) throw failed.reason;
   if (browsers[0].debugPort === browsers[1].debugPort) {
     throw new Error(`concurrent browsers shared debugging port ${browsers[0].debugPort}`);
   }
@@ -35,17 +42,12 @@ try {
   browsers.push(retriedBrowser);
   const retried = await retriedBrowser.send('Runtime.evaluate', { expression: '21*2', returnByValue: true });
   if (targetAttempts < 2 || retried.result.value !== 42) throw new Error(`browser target startup did not recover after a transient endpoint failure (${targetAttempts} attempts)`);
-  const pending = browsers[0].send('Runtime.evaluate', {
+  const pending = assert.rejects(browsers[0].send('Runtime.evaluate', {
     expression: 'new Promise(()=>{})',
     awaitPromise: true,
-  });
+  }), /browser connection closed/);
   const firstClosing = browsers[0].close();
-  await pending.then(
-    () => { throw new Error('closing a browser resolved an in-flight request'); },
-    (error) => {
-      if (!String(error).includes('browser connection closed')) throw error;
-    },
-  );
+  await pending;
   await firstClosing;
   await browsers[0].send('Runtime.enable').then(
     () => { throw new Error('a closed browser accepted a new request'); },
@@ -55,20 +57,15 @@ try {
   );
   await browsers[0].close();
 
-  const disconnected = browsers[1].send('Runtime.evaluate', {
+  const disconnected = assert.rejects(browsers[1].send('Runtime.evaluate', {
     expression: 'new Promise(()=>{})',
     awaitPromise: true,
-  });
+  }), /browser connection closed/);
   await browsers[1].send('Browser.close').catch(() => {});
   let disconnectTimer;
   try {
     await Promise.race([
-      disconnected.then(
-        () => { throw new Error('browser exit resolved an in-flight request'); },
-        (error) => {
-          if (!String(error).includes('browser connection closed')) throw error;
-        },
-      ),
+      disconnected,
       new Promise((_, reject) => { disconnectTimer = setTimeout(() => reject(new Error('browser exit left an in-flight request pending')), 5_000); }),
     ]);
   } finally {
