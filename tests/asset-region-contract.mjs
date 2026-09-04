@@ -13,7 +13,7 @@ const symbols = [...html.matchAll(symbolPattern)].map(([, id, attributes, body])
 const regionNamePattern = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/;
 
 test("every reusable landscape symbol publishes stable named regions", () => {
-  assert.equal(symbols.length, 55, "expected the complete reusable 404 asset library");
+  assert.equal(symbols.length, 59, "expected the complete reusable 404 asset library");
 
   for (const { id, attributes } of symbols) {
     const manifest = attributes.match(/\bdata-regions="([^"]+)"/)?.[1];
@@ -50,7 +50,7 @@ test("condition-aware assets name their shared condition region", () => {
     "scout-ufo", "sleeping-roll", "camp-lantern",
     "trail-camera", "camp-windhound",
     "riverbank-profile", "exposed-root", "river-pebble-cluster",
-    "forest-trail",
+    "forest-trail", "bare-tree", "aspen-copse", "willow-clump", "tree-stump",
   ];
 
   for (const id of conditionAwareIds) {

@@ -52,6 +52,28 @@ test('landscape brush is layered from horizon to clearing edge', () => {
   assert.equal([...html.matchAll(/class="understory-shrubs depth-near scene-layer"/g)].length, 1);
 });
 
+test('midground woody growth reuses condition-aware glyphs', () => {
+  for (const asset of ['bare-tree', 'aspen-copse', 'willow-clump']) {
+    assert.match(html, new RegExp(`<symbol id="${asset}"[^>]+data-regions="[^"]*conditions"`));
+  }
+  assert.equal([...html.matchAll(/href="#bare-tree"/g)].length, 6);
+  assert.equal([...html.matchAll(/href="#aspen-copse"/g)].length, 1);
+  assert.equal([...html.matchAll(/href="#willow-clump"/g)].length, 1);
+  assert.doesNotMatch(html, /<g class="aspen-grove"|<g class="river-willows"/);
+  assert.doesNotMatch(html, /class="midforest-branch-detail"[^>]*>\s*<g/);
+});
+
+test('clearing deadwood, stones, and stumps use condition-aware glyphs', () => {
+  assert.match(html, /<symbol id="tree-stump"[^>]+data-regions="root-flare,stump-body,cut-face,growth-rings,bark-ridges,conditions"/);
+  assert.equal([...html.matchAll(/href="#tree-stump"/g)].length, 2);
+  assert.equal([...html.matchAll(/href="#river-stone"/g)].length, 13);
+  assert.equal([...html.matchAll(/href="#fallen-branch"/g)].length, 8);
+  assert.doesNotMatch(html, /class="clearing-understory"[^>]*>[\s\S]*?<g fill="#43524a"/);
+  assert.match(html, /data-region="clearing-stones"/);
+  assert.match(html, /data-region="clearing-deadwood"/);
+  assert.match(html, /data-region="clearing-stumps"/);
+});
+
 test('fire ring and forest floor use configurable asset families', () => {
   assert.equal([...html.matchAll(/href="#fire-ring-stone"/g)].length, 10);
   assert.equal([...html.matchAll(/href="#fire-bed"/g)].length, 1);
@@ -62,7 +84,7 @@ test('fire ring and forest floor use configurable asset families', () => {
   assert.equal([...html.matchAll(/href="#shelf-fungi"/g)].length, 2);
   assert.equal([...html.matchAll(/href="#pinecone-sprig"/g)].length, 5);
   assert.equal([...html.matchAll(/href="#wildflower-clump"/g)].length, 3);
-  assert.equal([...html.matchAll(/href="#fallen-branch"/g)].length, 6);
+  assert.equal([...html.matchAll(/href="#fallen-branch"/g)].length, 8);
   assert.doesNotMatch(html, /class="forest-litter"|class="forest-duff"|class="forest-floor-texture"/);
   assert.doesNotMatch(html, /class="mushroom-detail"|class="shelf-fungi"/);
 });
