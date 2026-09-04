@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
 import { navigate, waitFor } from './lib/browser-test.mjs';
@@ -5,35 +6,47 @@ import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
 const server = await startSiteServer(root);
-const browser = await startBrowser(() => {});
-const { send } = browser;
+const glyphSource = readFileSync(resolve(root, 'assets/trail-glyphs.js'), 'utf8');
+const sample = `(() => {
+  const selectors=['.hero-actions .button','.nav-cta','.text-link','.project-link h3','.eyebrow','.principles li','.work-tools','.index-list>a','.case-facts a','.case-next a'];
+  return Object.fromEntries(selectors.flatMap((selector) => [...document.querySelectorAll(selector)].map((element, index) => {
+    const box=element.getBoundingClientRect();
+    return [selector + ':' + index, [box.width, box.height]];
+  })));
+})()`;
+// Sample immediately around the actual deferred enhancement script, after the
+// parser and blocking stylesheets finish. Parser chunk sizes are not layout bugs.
+const instrumented = `window.__glyphLayoutBefore=${sample};\n${glyphSource}\nwindow.__glyphLayoutAfter=${sample};`;
+let browser;
+const interceptions = [];
+
 
 try {
+  browser = await startBrowser((message) => {
+    if (message.method === 'Fetch.requestPaused') interceptions.push(browser.send('Fetch.fulfillRequest', {
+      requestId: message.params.requestId, responseCode: 200,
+      responseHeaders: [{ name: 'Content-Type', value: 'text/javascript' }],
+      body: Buffer.from(instrumented).toString('base64'),
+    }));
+  });
+  const { send } = browser;
   await Promise.all(['Page.enable', 'Runtime.enable', 'Network.enable'].map((method) => send(method)));
+  await send('Fetch.enable', { patterns: [{ urlPattern: '*/assets/trail-glyphs.js', requestStage: 'Request' }] });
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 1000, deviceScaleFactor: 1, mobile: false });
-  await send('Page.addScriptToEvaluateOnNewDocument', { source: `
-    window.__glyphLayoutFrames=[];
-    window.__glyphLayoutDone=false;
-    const selectors=['.hero-actions .button','.nav-cta','.text-link','.project-link h3','.eyebrow','.principles li','.work-tools','.index-list>a','.case-facts a','.case-next a'];
-    const sample=()=>{
-      const values={};
-      for(const selector of selectors){const element=document.querySelector(selector);if(!element)continue;const box=element.getBoundingClientRect();values[selector]=[box.width,box.height]}
-      window.__glyphLayoutFrames.push(values);
-    };
-    const observed=new Set();
-    const resizeObserver=new ResizeObserver(sample);
-    const observeTargets=()=>{for(const selector of selectors){const element=document.querySelector(selector);if(element&&!observed.has(element)){observed.add(element);resizeObserver.observe(element)}}};
-    const mutationObserver=new MutationObserver(()=>{observeTargets();sample()});
-    mutationObserver.observe(document,{childList:true,subtree:true});
-    addEventListener('load',()=>document.fonts.ready.then(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>{observeTargets();sample();mutationObserver.disconnect();resizeObserver.disconnect();window.__glyphLayoutDone=true}))));
-  ` });
 
   for (const route of ['/', '/about/', '/work/', '/case-studies/uddns/']) {
     await navigate(send, `${server.origin}${route}`);
-    await waitFor(send, 'window.__glyphLayoutDone===true', `${route} layout sampling`, 5_000);
-    const result = await send('Runtime.evaluate', { expression: `(()=>{const dimensions={};for(const frame of window.__glyphLayoutFrames){for(const [selector,size] of Object.entries(frame))(dimensions[selector]??=[]).push(size)}return {loading:document.documentElement.classList.contains('is-loading'),dimensions:Object.fromEntries(Object.entries(dimensions).map(([selector,sizes])=>{const widths=sizes.map(([width])=>width);const heights=sizes.map(([,height])=>height);return [selector,{widthDelta:Math.max(...widths)-Math.min(...widths),heightDelta:Math.max(...heights)-Math.min(...heights)}]}))}})()`, returnByValue: true });
-    if (result.result.value.loading) throw new Error(`${route} retained its loading state after resources completed`);
-    const unstable = Object.entries(result.result.value.dimensions).filter(([, delta]) => delta.widthDelta > .5 || delta.heightDelta > .5);
+    await waitFor(send, '!!window.__glyphLayoutAfter&&!document.documentElement.classList.contains("is-loading")', `${route} layout sampling`, 5_000);
+    const result = await send('Runtime.evaluate', { expression: `(() => {
+      const before=window.__glyphLayoutBefore;
+      const after=window.__glyphLayoutAfter;
+      if (!Object.keys(before).length || document.querySelectorAll('.trail-glyph,.fact-glyph,.project-glyph').length===0) throw new Error('missing glyph layout fixtures');
+      return Object.fromEntries(Object.entries(before).map(([name, size]) => {
+        if (!after[name]) throw new Error('layout target disappeared: '+name);
+        return [name, { widthDelta: Math.abs(after[name][0]-size[0]), heightDelta: Math.abs(after[name][1]-size[1]) }];
+      }));
+    })()`, returnByValue: true });
+    const unstable = Object.entries(result.result.value).filter(([, delta]) => delta.widthDelta > .5 || delta.heightDelta > .5);
     if (unstable.length) throw new Error(`${route} glyph initialization shifted layout: ${JSON.stringify(Object.fromEntries(unstable))}`);
 
     const alignment = await send('Runtime.evaluate', { expression: `(()=>{
@@ -58,6 +71,7 @@ try {
   }
   console.log('Layout stability passed reserved sizing, optical glyph centering, and skeleton state transitions.');
 } finally {
-  await browser.close();
+  await browser?.close();
+  await Promise.all(interceptions);
   await server.close();
 }
