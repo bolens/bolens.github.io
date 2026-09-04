@@ -67,11 +67,16 @@
   });
 
   const setUpdatedDates = (repositories) => {
-    const byUrl = new Map(repositories.map((repository) => [repository.html_url.toLowerCase(), repository]));
+    if (!Array.isArray(repositories)) throw new TypeError('Repository updates must be an array');
+    const byUrl = new Map();
+    for (const repository of repositories) {
+      if (typeof repository?.html_url !== 'string') continue;
+      const updated = [repository.pushed_at, repository.updated_at].find((value) => typeof value === 'string' && Number.isFinite(Date.parse(value)));
+      if (updated) byUrl.set(repository.html_url.toLowerCase(), updated);
+    }
     let matched = 0;
     items.forEach((item) => {
-      const repository = byUrl.get(item.dataset.projectRepository.toLowerCase());
-      const updated = repository?.pushed_at ?? repository?.updated_at;
+      const updated = byUrl.get(item.dataset.projectRepository.toLowerCase());
       if (!updated) return;
       item.dataset.projectUpdated = Date.parse(updated);
       let time = item.querySelector('.project-updated');
@@ -83,23 +88,27 @@
       time.dateTime = updated;
       time.textContent = `Updated ${new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric', year: 'numeric' }).format(new Date(updated))}`;
       time.classList.add('is-resolved');
+      time.classList.remove('is-unavailable');
       time.removeAttribute('aria-hidden');
       matched += 1;
     });
     items.forEach((item) => item.querySelector('.project-updated:not(.is-resolved)')?.classList.add('is-unavailable'));
-    if (matched) {
-      updatedOption.textContent = 'Recently updated';
-      tools.dataset.updates = 'live';
-      apply();
-    }
+    if (!matched) throw new Error('No usable repository update dates');
+    updatedOption.disabled = false;
+    updatedOption.textContent = 'Recently updated';
+    tools.dataset.updates = 'live';
+    apply();
   };
 
   apply();
   const cacheKey = 'portfolio-project-updates-v1';
   try {
     const cached = JSON.parse(localStorage.getItem(cacheKey) ?? 'null');
-    if (cached?.repositories) setUpdatedDates(cached.repositories);
-    if (cached && Date.now() - cached.savedAt < 10 * 60 * 1000) return;
+    if (Array.isArray(cached?.repositories)) {
+      setUpdatedDates(cached.repositories);
+      const age = Date.now() - cached.savedAt;
+      if (Number.isFinite(cached.savedAt) && age >= 0 && age < 10 * 60 * 1000) return;
+    }
   } catch {}
 
   fetch('https://api.github.com/users/bolens/repos?per_page=100&sort=updated', { headers: { Accept: 'application/vnd.github+json' } })
