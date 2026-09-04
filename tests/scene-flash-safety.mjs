@@ -38,3 +38,17 @@ test('canvas takeover fades matching SVG effects', () => {
   assert.match(html, /\.forest-fireflies,\.embers,\.scene-grain \{ transition:opacity \.28s ease-out; \}/);
   assert.match(html, /\.hybrid-effects-ready \.forest-fireflies,\.hybrid-effects-ready \.embers,\.hybrid-effects-ready \.scene-grain \{ opacity:0; \}/);
 });
+
+test('time and weather palette changes interpolate instead of repainting in one frame', () => {
+  assert.match(css, /\.lost-page \{[^}]*transition:background-color \.55s ease,color \.55s ease/);
+  assert.match(css, /\.cryptid-camp svg :is\(path,rect,circle,ellipse,polygon,polyline,line\) \{ transition:fill \.55s ease,stroke \.55s ease; \}/);
+  assert.match(css, /\.cryptid-camp svg stop \{ transition:stop-color \.55s ease,stop-opacity \.55s ease; \}/);
+  assert.match(css, /\.terrain-asset \{[^}]*transition:filter \.55s ease/);
+});
+
+test('large scene washes crossfade without display toggles', () => {
+  assert.match(css, /\.theme-light-wash \{ display:inline;[^}]*opacity:0;[^}]*transition:opacity \.55s ease/);
+  assert.match(css, /\.scene-time-wash \{ display:inline;opacity:0;transition:opacity \.55s ease; \}/);
+  assert.doesNotMatch(css, /\.theme-light-wash \{ display:none/);
+  assert.doesNotMatch(css, /\.scene-time-wash \{ display:none/);
+});
