@@ -30,7 +30,7 @@ export function createScene({ condition = 'clear', reduced = false, restrained =
     beginPath() {}, arc(x, y, radius) { this.circle = { x, y, radius }; },
     fill() { paints.push({ ...this.circle, fill: this.fillStyle }); },
     fillRect() {}, drawImage() {},
-    createRadialGradient() { return { addColorStop() {} }; },
+    createRadialGradient() { return { stops: [], addColorStop(offset, color) { this.stops.push({ offset, color }); } }; },
   };
   const bounds = { left: 0, top: 0, width: 1200, height: 760 };
   const svg = { getBoundingClientRect: () => bounds };

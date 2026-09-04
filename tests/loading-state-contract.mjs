@@ -50,4 +50,15 @@ const flushFrame = (harness) => harness.animationFrames.shift()?.();
   if (harness.removed.join() !== 'is-loading') throw new Error('complete documents must remove the loading state once');
 }
 
+{
+  const harness = createHarness('loading');
+  harness.timers[0].callback();
+  flushFrame(harness);
+  if (harness.removed.length) throw new Error('fallback must retain the state until its second frame');
+  flushFrame(harness);
+  if (harness.removed.join() !== 'is-loading') throw new Error('fallback must reveal even when load never arrives');
+  harness.listeners.get('load').listener();
+  if (harness.animationFrames.length || harness.removed.length !== 1) throw new Error('late load must not reveal twice');
+}
+
 console.log('Loading-state contract passed load, complete, two-frame reveal, fallback, and idempotence branches.');

@@ -17,11 +17,15 @@ const setup = (resolvedTheme = 'night', selectedAppearance = resolvedTheme) => {
   let appearanceSubscriber;
   const events = [];
   const properties = new Map();
-  const window = { setInterval() {} };
-  const document = { hidden: false, addEventListener() {}, documentElement: { dataset: {}, style: { setProperty: (name, value) => properties.set(name, value) } } };
+  let now = new Date(2026, 8, 3, 12);
+  const timers = [];
+  const listeners = new Map();
+  const window = { setInterval(callback, delay) { timers.push({ callback, delay }); } };
+  const document = { hidden: false, addEventListener(type, callback) { listeners.set(type, callback); }, documentElement: { dataset: {}, style: { setProperty: (name, value) => properties.set(name, value) } } };
   const context = vm.createContext({
     window,
     document,
+    Date: class extends Date { constructor(...args) { super(...(args.length ? args : [now])); } },
     dispatchEvent: (event) => events.push(event),
     CustomEvent: class CustomEvent { constructor(type, init) { this.type = type; this.detail = init.detail; } },
   });
@@ -32,7 +36,7 @@ const setup = (resolvedTheme = 'night', selectedAppearance = resolvedTheme) => {
     subscribe(subscriber) { appearanceSubscriber = subscriber; return () => {}; },
   };
   vm.runInContext(timeSource, context);
-  return { context, document, events, properties, setAppearance(theme, resolved = theme) { appearanceMode = theme; currentTheme = resolved; appearanceSubscriber(); } };
+  return { context, document, events, properties, timers, listeners, setClock(date) { now = date; }, setAppearance(theme, resolved = theme) { appearanceMode = theme; currentTheme = resolved; appearanceSubscriber(); } };
 };
 
 test('scene time follows appearance until an explicit time takes control', () => {
@@ -104,4 +108,77 @@ test('morning evening and twilight restyle every shared scene system', () => {
   assert.match(timeSource, /--scene-cast-shadow/);
   assert.match(html, /class="solar-ray-field"[^>]+data-region="position-reactive-sunbeams"/);
   assert.match(css, /\.solar-ray-field \{[^}]+translate:var\(--scene-orb-x,0\) var\(--scene-orb-y,0\)[^}]+transform-origin:var\(--scene-orb-center-x,1002px\) var\(--scene-orb-center-y,118px\)/);
+});
+
+for (const [hour, minute, second, expected] of [
+  [4, 59, 59, 'night'], [5, 0, 0, 'morning'],
+  [7, 59, 59, 'morning'], [8, 0, 0, 'day'],
+  [16, 59, 59, 'day'], [17, 0, 0, 'evening'],
+  [19, 59, 59, 'evening'], [20, 0, 0, 'twilight'],
+  [21, 59, 59, 'twilight'], [22, 0, 0, 'night'],
+  [23, 59, 59, 'night'], [0, 0, 0, 'night'],
+]) {
+  test(`automatic scene at ${hour}:${minute}:${second} resolves to ${expected}`, () => {
+    const { context, document } = setup('day', 'auto');
+    const state = context.window.portfolioSceneTime.refresh(new Date(2026, 8, 3, hour, minute, second));
+    assert.equal(state.time, expected);
+    assert.equal(state.source, 'clock');
+    assert.equal(state.cycle, 'dynamic');
+    assert.equal(document.documentElement.dataset.sceneTime, expected);
+    for (const value of [state.progress, state.darkness, state.warmth]) assert.ok(value >= 0 && value <= 1);
+    assert.ok(Number.isFinite(state.x) && Number.isFinite(state.y));
+  });
+}
+
+test('minute refresh follows the clock and respects explicit scene and appearance choices', () => {
+  const harness = setup('day', 'auto');
+  const api = harness.context.window.portfolioSceneTime;
+  assert.equal(harness.timers.length, 1);
+  assert.equal(harness.timers[0].delay, 60_000);
+  harness.setClock(new Date(2026, 8, 3, 22));
+  harness.timers[0].callback();
+  assert.equal(api.time, 'night');
+  api.setTime('morning');
+  harness.timers[0].callback();
+  assert.equal(api.time, 'morning');
+  assert.equal(api.useAppearanceFallback().time, 'night');
+  harness.setAppearance('day');
+  harness.timers[0].callback();
+  assert.equal(api.time, 'day');
+  assert.equal(api.cycle, 'fixed');
+});
+
+test('returning to a visible page refreshes automatic time without overriding a selected scene', () => {
+  const harness = setup('day', 'auto');
+  const api = harness.context.window.portfolioSceneTime;
+  harness.setClock(new Date(2026, 8, 3, 21));
+  harness.document.hidden = true;
+  harness.listeners.get('visibilitychange')();
+  assert.equal(api.time, 'day');
+  harness.document.hidden = false;
+  harness.listeners.get('visibilitychange')();
+  assert.equal(api.time, 'twilight');
+  api.setTime('morning');
+  harness.setClock(new Date(2026, 8, 3, 23));
+  harness.listeners.get('visibilitychange')();
+  assert.equal(api.time, 'morning');
+});
+
+test('scene subscribers receive immutable snapshots and can unsubscribe independently', () => {
+  const { context, events } = setup();
+  const api = context.window.portfolioSceneTime;
+  const first = [];
+  const second = [];
+  const unsubscribe = api.subscribe((state) => first.push(state));
+  api.subscribe((state) => second.push(state));
+  const morning = api.setTime('morning');
+  assert.equal(first[0], morning);
+  assert.equal(events.at(-1).detail, morning);
+  assert.ok(Object.isFrozen(morning));
+  unsubscribe();
+  unsubscribe();
+  api.setTime('evening');
+  assert.deepEqual(first.map(({ time }) => time), ['morning']);
+  assert.deepEqual(second.map(({ time }) => time), ['morning', 'evening']);
+  assert.equal(morning.time, 'morning');
 });

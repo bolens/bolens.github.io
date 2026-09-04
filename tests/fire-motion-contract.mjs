@@ -6,7 +6,7 @@ import test from 'node:test';
 const root = resolve(import.meta.dirname, '..');
 const html = readFileSync(resolve(root, '404.html'), 'utf8');
 const css = readFileSync(resolve(root, 'assets/404.css'), 'utf8');
-const scene = readFileSync(resolve(root, 'assets/404-scene.js'), 'utf8');
+
 
 test('coals stay planted while their glow changes gently', () => {
   const pulse = css.match(/@keyframes coal-pulse \{[^}]+\}[^}]+\}/)?.[0];
@@ -29,13 +29,8 @@ test('fallback SVG sparks remain small and close to the flame', () => {
 
   const lifts = [...css.matchAll(/--ember-lift:-([0-9]+)px/g)].map((match) => Number(match[1]));
   const drifts = [...css.matchAll(/--ember-drift-x:-?([0-9]+)px/g)].map((match) => Number(match[1]));
+  assert.ok(lifts.length > 0, 'ember lift properties are required');
+  assert.ok(drifts.length > 0, 'ember drift properties are required');
   assert.ok(Math.max(...lifts) <= 21);
   assert.ok(Math.max(...drifts) <= 3);
-});
-
-test('canvas embers use a restrained physical envelope', () => {
-  assert.match(scene, /length: restrained \? 4 : 7/);
-  assert.match(scene, /x: range\(-15, 15\), lift: range\(14, 38\), sway: range\(-5, 5\), radius: range\(\.55, 1\.15\)/);
-  assert.match(scene, /const progress = \(time \* \.1 \+ ember\.phase\) % 1/);
-  assert.doesNotMatch(scene, /lift: range\(22, 78\)/);
 });

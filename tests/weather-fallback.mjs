@@ -7,7 +7,7 @@ import vm from 'node:vm';
 const root = resolve(import.meta.dirname, '..');
 const themeSource = readFileSync(resolve(root, 'assets/theme-data.js'), 'utf8');
 const weatherSource = readFileSync(resolve(root, 'assets/404-weather.js'), 'utf8');
-const sceneSource = readFileSync(resolve(root, 'assets/404-scene.js'), 'utf8');
+
 
 const setup = () => {
   let palette = 'glacier';
@@ -92,10 +92,49 @@ test('404 weather visibility is controlled only by the resolved condition', () =
   assert.match(css, /data-weather="drought"\] \.weather-drought/);
 });
 
-test('canvas atmosphere profiles follow every resolved weather condition', () => {
-  for (const condition of ['clear', 'cloudy', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought']) {
-    assert.match(sceneSource, new RegExp(`${condition}: Object\\.freeze\\(\\{ stars: [^}]+fog: [^}]+fireflies: [^}]+embers: [^}]+\\}\\)`));
-  }
-  assert.match(sceneSource, /portfolioWeather\?\.subscribe\(\(\{ condition \}\) =>/);
-  assert.match(sceneSource, /figure\.dataset\.atmosphereCondition = condition/);
+for (const invalid of ['hail', '', null, undefined, '__proto__']) {
+  test(`invalid location weather ${String(invalid)} releases the override`, () => {
+    const { context, setPalette } = setup();
+    const api = context.window.portfolioWeather;
+    api.setLocationCondition('rainy');
+    setPalette('desert');
+    const state = api.setLocationCondition(invalid);
+    assert.equal(state.condition, 'drought');
+    assert.equal(state.source, 'theme');
+    assert.equal(context.document.documentElement.dataset.weather, 'drought');
+  });
+}
+
+test('unknown palettes use clear weather without discarding a valid location override', () => {
+  const { context, setPalette } = setup();
+  const api = context.window.portfolioWeather;
+  setPalette('missing-palette');
+  assert.equal(api.condition, 'clear');
+  api.setLocationCondition('snowy');
+  setPalette('__proto__');
+  assert.equal(api.condition, 'snowy');
+  assert.equal(api.useThemeFallback().condition, 'clear');
+});
+
+test('weather subscribers see committed DOM state and stop receiving updates after unsubscribe', () => {
+  const { context, events, setPalette } = setup();
+  const api = context.window.portfolioWeather;
+  const received = [];
+  const unsubscribe = api.subscribe((state) => {
+    assert.equal(context.document.documentElement.dataset.weather, state.condition);
+    assert.equal(context.document.documentElement.dataset.weatherSource, state.source);
+    received.push(state);
+  });
+  const rainy = api.setLocationCondition('rainy');
+  setPalette('desert');
+  assert.equal(received[0], rainy);
+  assert.ok(Object.isFrozen(rainy));
+  assert.equal(rainy.palette, 'glacier');
+  assert.equal(received[1].palette, 'desert');
+  assert.equal(events.at(-1).detail, received[1]);
+  unsubscribe();
+  unsubscribe();
+  api.useThemeFallback();
+  assert.equal(received.length, 2);
+  assert.equal(api.condition, 'drought');
 });
