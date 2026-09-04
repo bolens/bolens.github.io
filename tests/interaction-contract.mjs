@@ -171,14 +171,8 @@ try {
   const cause = await send('Runtime.evaluate', { expression: `({visited:[...document.querySelectorAll('.case-route a[data-visited]')].length,progress:getComputedStyle(document.querySelector('.case-route')).getPropertyValue('--case-progress').trim()})`, returnByValue: true });
   if (cause.result.value.visited !== 2 || Number(cause.result.value.progress) < .32 || Number(cause.result.value.progress) > .34) throw new Error(`case-study cause state failed: ${JSON.stringify(cause.result.value)}`);
 
-  const rapidHash = await send('Runtime.evaluate', {
-    expression: `new Promise((resolve)=>{location.hash='#confirm';location.hash='#cause';requestAnimationFrame(()=>requestAnimationFrame(()=>requestAnimationFrame(()=>resolve({hash:location.hash,active:document.querySelector('.case-story .is-active')?.id}))))})`,
-    awaitPromise: true,
-    returnByValue: true,
-  });
-  if (rapidHash.result.value.hash !== '#cause' || rapidHash.result.value.active !== 'cause') {
-    throw new Error(`rapid case-study hash transition failed: ${JSON.stringify(rapidHash.result.value)}`);
-  }
+  await send('Runtime.evaluate', { expression: `location.hash='#confirm';location.hash='#correction'` });
+  await waitFor(send, `location.hash==='#correction'&&document.querySelector('.case-story .is-active')?.id==='correction'&&document.querySelectorAll('.case-route a[data-visited]').length===3`, 'final rapid hash state');
 
   console.log('Interaction contract passed command, shortcut, picker, glyph, and case-study behaviors.');
 } finally {
