@@ -15,9 +15,47 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
-  lint:
+  validate:
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      tests: ${{ github.event_name != 'pull_request' || steps.changes.outputs.runtime == 'true' }}
     runs-on: ubuntu-24.04
     timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          package-manager-cache: false
+      - uses: dorny/paths-filter@v4
+        if: github.event_name == 'pull_request'
+        id: changes
+        with:
+          predicate-quantifier: every
+          filters: |
+            runtime:
+              - '**'
+              - '!**/*.md'
+      - name: Record runtime versions
+        run: |
+          node --version
+          google-chrome --version
+      - name: Lint
+        run: node scripts/lint.mjs
+
+  tests:
+    needs: validate
+    if: needs.validate.outputs.tests == 'true'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -30,11 +68,12 @@ jobs:
         run: |
           node --version
           google-chrome --version
-      - name: Lint
-        run: node scripts/lint.mjs
       - name: Tests
+        env:
+          SHARD: ${{ matrix.shard }}
         run: >-
           node --test --test-concurrency=2 --test-timeout=60000
+          --test-shard="$SHARD/3"
           --test-reporter=spec --test-reporter=junit
           --test-reporter-destination=stdout
           --test-reporter-destination="$RUNNER_TEMP/test-results.xml"
@@ -43,7 +82,29 @@ jobs:
         if: ${{ always() && !cancelled() }}
         uses: actions/upload-artifact@v7
         with:
-          name: test-results-${{ github.run_id }}-${{ github.run_attempt }}
+          name: test-results-${{ github.run_id }}-${{ github.run_attempt }}-shard-${{ matrix.shard }}
           path: ${{ runner.temp }}/test-results.xml
           if-no-files-found: ignore
           retention-days: 14
+
+  # Branch protection and Pages retain one gate, including docs-only PRs.
+  lint:
+    needs: [validate, tests]
+    if: always()
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
+    permissions: {}
+    steps:
+      - name: Require complete validation
+        env:
+          VALIDATION: ${{ needs.validate.result }}
+          TESTS_REQUIRED: ${{ needs.validate.outputs.tests }}
+          TESTS: ${{ needs.tests.result }}
+        run: |
+          test "$VALIDATION" = success
+          if [ "$TESTS_REQUIRED" = true ]; then
+            test "$TESTS" = success
+          else
+            test "$TESTS_REQUIRED" = false
+            test "$TESTS" = skipped
+          fi
