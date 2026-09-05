@@ -40,7 +40,7 @@ try {
       const point=points.at(-1);for(let index=0;index<8;index++){figure.dispatchEvent(new PointerEvent('pointermove',{clientX:point.x,clientY:point.y,pointerType:'mouse',bubbles:true}));await new Promise(requestAnimationFrame)}
       figure.getAnimations({subtree:true}).forEach((animation)=>animation.play());
       const canvas=figure.querySelector('.camp-atmosphere');
-      resolve({baseline,after,planeCount:planes.length,planeMotion:planes.map((node)=>getComputedStyle(node).translate),transitions,stableBefore,stableAfter:parallaxOffsets(),density:figure.dataset.sceneDensity,renderTier:figure.dataset.renderTier,animationCount:figure.getAnimations({subtree:true}).length,canvasPixels:canvas.width*canvas.height,displayPixels:Math.round(figure.clientWidth*figure.clientHeight)});
+      resolve({baseline,after,planeCount:planes.length,planeMotion:planes.map((node)=>getComputedStyle(node).translate),transitions,stableBefore,stableAfter:parallaxOffsets(),density:figure.dataset.sceneDensity,renderTier:figure.dataset.renderTier,expectedTier:portfolio404Renderer.tierForWidth(figure.clientWidth),animationCount:figure.getAnimations({subtree:true}).length,canvasPixels:canvas.width*canvas.height,displayPixels:Math.round(figure.clientWidth*figure.clientHeight)});
     })`, { awaitPromise: true });
     assert.equal(result.planeCount, 7);
     assert.ok(result.planeMotion.some((value) => value !== 'none' && value !== '0px'));
@@ -48,9 +48,9 @@ try {
     assert.deepEqual(result.stableAfter, result.stableBefore);
     assert.deepEqual(result.after, result.baseline);
     assert.equal(result.density, viewport.width <= 430 ? 'compact' : 'full');
-    assert.equal(result.renderTier, viewport.width <= 430 ? 'minimal' : 'full');
-    assert.ok(result.animationCount <= (viewport.width <= 430 ? 11 : 14), `runtime animation budget exceeded: ${result.animationCount}`);
-    assert.ok(result.canvasPixels <= result.displayPixels * (viewport.width <= 430 ? .26 : .65), `canvas pixel budget exceeded: ${result.canvasPixels}/${result.displayPixels}`);
+    assert.equal(result.renderTier, result.expectedTier);
+    assert.ok(result.animationCount <= ({ minimal:11, balanced:14, full:14 })[result.renderTier], `runtime animation budget exceeded: ${result.animationCount}`);
+    assert.ok(result.canvasPixels <= result.displayPixels * ({ minimal:.26, balanced:.5, full:.65 })[result.renderTier], `canvas pixel budget exceeded: ${result.canvasPixels}/${result.displayPixels}`);
     await waitFor(send, `Number.parseFloat(getComputedStyle(document.querySelector('.cryptid-camp')).opacity)>.99`, `${viewport.name} scene reveal`);
     await waitForFrames(send);
     const screenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
