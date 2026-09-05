@@ -20,7 +20,8 @@ test('trail keeps its original scale and extends beyond the scene, without symbo
 test('route entrance cover paints after both routes and survives density reduction', () => {
   const cover = html.match(/<g class="route-entrance-screen[\s\S]*?<\/g>/)[0];
   assert.doesNotMatch(cover, /data-density-hide|data-dynamic-detail|opacity=/);
-  assert.match(cover, /class="terrain-asset" data-light="ambient" data-weather="clear" href="#distant-pine"/);
+  assert.match(cover, /data-light="ambient" data-weather="clear" href="#distant-pine"/);
+  assert.doesNotMatch(cover, /class="terrain-asset"/, 'pine uses the existing forest lighting and weather path');
   assert.ok(html.indexOf(cover) > html.indexOf('data-region="winding-forest-trail"'));
   assert.ok(html.indexOf(cover) > html.indexOf('data-region="river-water-level"'));
 });
