@@ -19,7 +19,7 @@ test('rain snow and wind share the front weather plane without sharing geometry'
 
 test('each airborne condition has its own bounded motion and crossfade selector', () => {
   assert.match(css, /\.weather-rain \{[^}]+animation:weather-rain-fall 1\.1s linear infinite/);
-  assert.match(css, /\.weather-snow \{[^}]+animation:weather-snow-drift 7\.5s ease-in-out infinite alternate/);
+  assert.match(css, /\.weather-snow \{[^}]+animation:weather-snow-drift 8s linear infinite/);
   assert.match(css, /\.weather-mist \{[^}]+animation:weather-mist-drift 16s ease-in-out infinite alternate/);
   assert.match(css, /\.weather-wind \{[^}]+animation:weather-wind-pass 3\.8s ease-in-out infinite/);
   for (const condition of ['misty', 'rainy', 'snowy', 'windy']) assert.match(css, new RegExp(`data-weather="${condition}"[^}]+\\.weather-`));
