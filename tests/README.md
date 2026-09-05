@@ -56,3 +56,15 @@ runs for the same PR; main and manual validation runs retain their results. A
 
 `project-evidence-layout.mjs` checks selected-work text clearance from dividers
 and cell boundaries at six widths, including fixed hover and focus phases.
+
+The Lint workflow uses `dorny/paths-filter` to skip test shards only for
+Markdown-only PRs. Lint itself always runs. Every other PR change, main push,
+and manual run executes all tests in three native Node shards, each with two
+workers and its own JUnit artifact. Shards do not cancel siblings on failure.
+The required `lint` aggregate fails if validation or any required shard fails,
+is cancelled, or is unexpectedly skipped. Pages still waits for the complete
+successful main workflow.
+
+Run a single shard locally with `node --test --test-concurrency=2
+--test-timeout=60000 --test-shard=1/3 tests/*.mjs` (replace `1` with `2` or `3`).
+Node partitions the complete file list; new test files join automatically.

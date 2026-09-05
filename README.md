@@ -39,7 +39,8 @@ git config core.hooksPath .githooks
 
 The hook runs `node scripts/lint.mjs`, which checks JavaScript syntax, parses JSON,
 verifies generated files, and validates the site contract. CI runs the same command
-for pull requests and pushes to `main`, followed by the complete test suite.
+for pull requests and pushes to `main`. Tests run across three shards; only
+Markdown-only PRs skip them. Main and manual runs always run the complete suite.
 
 Project listings, command-palette entries, shared page chrome, `sitemap.xml`, and `llms.txt` are generated from `data/projects.json` and `scripts/build-site.mjs`. Palette tokens, picker previews, browser theme colors, and 404 scene accents are generated from `data/themes.json`. Run `node scripts/build-site.mjs` after changing either data source or shared navigation.
 
