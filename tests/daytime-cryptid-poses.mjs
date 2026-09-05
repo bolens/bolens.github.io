@@ -34,6 +34,7 @@ try {
               perchReference:document.querySelector('.daytime-perched').getAttribute('href'),
               perchHasStick:!!document.querySelector('#mothman-body-art .roasting-arm'),
               arm:visible('.arm-bigfoot'), flying:visible('.day-flight-ufo'),
+              rim:visible('.fire-rim-light'),
               references:peeks.map(el => el.querySelector('[data-region="peeking-face"]').getAttribute('href')),
               sharedPlane:peeks.every(el => el.parentElement.matches('.camp-pines')),
               pilots:document.querySelectorAll('#scout-ufo [href="#alien-face-art"]').length,
@@ -50,6 +51,7 @@ try {
           assert.equal(state.perchReference, '#mothman-body-art');
           assert.equal(state.perchHasStick, false);
           assert.equal(state.arm, !day);
+          assert.equal(state.rim, !day);
           assert.equal(state.flying, day);
           assert.deepEqual(state.references, ['#bigfoot-face-art','#dogman-face-art']);
           assert.equal(state.sharedPlane, true);

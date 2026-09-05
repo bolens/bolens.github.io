@@ -41,6 +41,7 @@
 .ufo-pilot { display:none; }
 [data-ufo-state="flying"] { --ufo-pilot-display:inline; }
 .ufo-pilot { display:var(--ufo-pilot-display,none); }
+:root:is([data-scene-time="day"],[data-scene-time="morning"],[data-scene-time="evening"]) .fire-rim-light { display:none; }
 :root[data-theme="day"] .daytime-cryptid > :not([data-region="cover-tree"]) { display:inline; }
 :root[data-theme="day"] :is(.camper.bigfoot,.camper.alien,.camper.dogman,.camper.mothman,.arm-bigfoot) { display:none; }
 :root:is([data-scene-time="day"],[data-scene-time="morning"],[data-scene-time="evening"]) .daytime-cryptid > :not([data-region="cover-tree"]) { display:inline; }
