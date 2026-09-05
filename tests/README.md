@@ -47,3 +47,9 @@ Browser layout and input integration still depend on Chromium and machine
 resources. VM tests cover scheduling and state transitions without those
 variables. Determinism checks should include a different host locale/timezone and
 higher test concurrency, rather than repeated retries until a run passes.
+
+CI keeps the required check named `lint`, records Node/Chrome versions, and saves
+JUnit results as a 14-day artifact even when tests fail. New commits cancel older
+runs for the same PR; main and manual validation runs retain their results. A
+15-minute job limit bounds setup and process hangs in addition to the per-test
+60-second deadline. The suite still runs without retries.
