@@ -1,7 +1,9 @@
 name: Deploy GitHub Pages
 
 on:
-  workflow_run:
+  # Only successful same-repository main pushes/manual runs reach prepare.
+  # The exact validated SHA is checked against main before staging and deployment.
+  workflow_run: # zizmor: ignore[dangerous-triggers]
     workflows: [Lint]
     types: [completed]
     branches: [main]
@@ -40,7 +42,7 @@ jobs:
           else
             echo 'Skipping superseded validation run.' >> "$GITHUB_STEP_SUMMARY"
           fi
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         if: steps.revision.outputs.current == 'true'
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
@@ -51,7 +53,7 @@ jobs:
           mkdir -p "$RUNNER_TEMP/site"
           cp -R index.html 404.html .nojekyll robots.txt sitemap.xml llms.txt \
             assets about work case-studies "$RUNNER_TEMP/site/"
-      - uses: actions/upload-pages-artifact@v5
+      - uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         if: steps.revision.outputs.current == 'true'
         with:
           path: ${{ runner.temp }}/site
@@ -83,9 +85,9 @@ jobs:
           else
             echo 'Skipping superseded deployment.' >> "$GITHUB_STEP_SUMMARY"
           fi
-      - uses: actions/configure-pages@v6
+      - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6
         if: steps.revision.outputs.current == 'true'
       - name: Deploy
         if: steps.revision.outputs.current == 'true'
         id: deployment
-        uses: actions/deploy-pages@v5
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5
