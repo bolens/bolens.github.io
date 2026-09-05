@@ -16,14 +16,14 @@
     clear: Object.freeze({ stars: 1, fog: 1, fireflies: 1, embers: 1 }),
     cloudy: Object.freeze({ stars: .25, fog: 1.25, fireflies: .7, embers: .9 }),
     misty: Object.freeze({ stars: .18, fog: 1.8, fireflies: .45, embers: .7 }),
-    overcast: Object.freeze({ stars: .1, fog: 1.45, fireflies: .35, embers: .72 }),
-    rainy: Object.freeze({ stars: .08, fog: 1.4, fireflies: .25, embers: .18 }),
+    overcast: Object.freeze({ stars: 0, fog: 1.45, fireflies: .7, embers: .72 }),
+    rainy: Object.freeze({ stars: 0, fog: 1.4, fireflies: 0, embers: .18 }),
     thunderstorm: Object.freeze({ stars: 0, fog: 1.65, fireflies: 0, embers: .06 }),
     wet: Object.freeze({ stars: .7, fog: 1.2, fireflies: .8, embers: .85 }),
-    dry: Object.freeze({ stars: .9, fog: .45, fireflies: 1.1, embers: 1 }),
-    snowy: Object.freeze({ stars: .35, fog: 1.55, fireflies: .18, embers: .25 }),
-    drought: Object.freeze({ stars: .7, fog: .08, fireflies: .55, embers: 0 }),
-    windy: Object.freeze({ stars: .82, fog: .48, fireflies: .35, embers: .72 }),
+    dry: Object.freeze({ stars: .9, fog: .45, fireflies: .35, embers: 1 }),
+    snowy: Object.freeze({ stars: 0, fog: 1.55, fireflies: 0, embers: .25 }),
+    drought: Object.freeze({ stars: .7, fog: .08, fireflies: 0, embers: 0 }),
+    windy: Object.freeze({ stars: .82, fog: .48, fireflies: 0, embers: .72 }),
   });
   const profileFor = (condition) => atmosphereProfiles[condition] || atmosphereProfiles.clear;
   const random = (() => {
@@ -96,16 +96,17 @@
   };
   const marshmallowTimer = window.setInterval(updateMarshmallowCook, 1000);
   const timeProfiles = Object.freeze({
-    day: Object.freeze({ stars: 0, fireflies: .08, embers: .78 }),
+    day: Object.freeze({ stars: 0, fireflies: 0, embers: .78 }),
     night: Object.freeze({ stars: 1, fireflies: 1, embers: 1 }),
-    morning: Object.freeze({ stars: .08, fireflies: .18, embers: .82 }),
+    morning: Object.freeze({ stars: .08, fireflies: 0, embers: .82 }),
     evening: Object.freeze({ stars: .18, fireflies: .65, embers: 1 }),
     twilight: Object.freeze({ stars: .58, fireflies: .88, embers: 1 }),
   });
   const profileForTime = (state = {}) => {
     if (state.cycle !== 'dynamic') return timeProfiles[state.time] || timeProfiles.night;
     const darkness = Math.min(1, Math.max(0, state.darkness ?? 1));
-    return { stars: darkness, fireflies: .08 + darkness * .92, embers: .78 + darkness * .22 };
+    const fireflyTime = !['day', 'morning'].includes(state.time);
+    return { stars: darkness, fireflies: fireflyTime ? Math.max(0, (darkness - .2) / .8) : 0, embers: .78 + darkness * .22 };
   };
   let timeProfile = profileForTime(window.portfolioSceneTime?.state);
   const densityForWidth = (viewportWidth) => viewportWidth <= 430 ? 'compact' : viewportWidth <= 760 ? 'reduced' : 'full';
@@ -262,6 +263,8 @@
     if (fireActive()) paintGlow(fireX, fireY, 150 * view.scale * firePulse * (.9 + motionProfile.glow * .1), [[0, `rgba(255,170,70,${.105 * motionProfile.glow})`], [.38, `rgba(242,103,48,${.052 * motionProfile.glow})`], [1, 'rgba(242,90,40,0)']]);
 
     fireflies.forEach((fly) => {
+      const activity = atmosphere.fireflies * timeProfile.fireflies;
+      if (activity <= 0) return;
       const wave = .5 + .5 * Math.sin(time * fly.speed / motionProfile.tempo + fly.phase);
       const alpha = (.045 + .3 * wave * wave) * atmosphere.fireflies * timeProfile.fireflies * motionProfile.activity;
       const [x, y] = point(fly.x + Math.sin(time * .13 / motionProfile.tempo + fly.phase) * fly.drift * motionProfile.play, fly.y + Math.cos(time * .1 / motionProfile.tempo + fly.phase) * 2.5 * motionProfile.play);
@@ -269,7 +272,7 @@
       context.globalAlpha = alpha;
       context.drawImage(fireflyGlow, x - glowSize / 2, y - glowSize / 2, glowSize, glowSize);
       context.globalAlpha = 1;
-      context.fillStyle = `rgba(234,255,159,${Math.min(.52, alpha + .12)})`;
+      context.fillStyle = `rgba(234,255,159,${Math.min(.52, alpha + .12 * activity)})`;
       context.beginPath();
       context.arc(x, y, Math.max(.7, fly.radius * view.scale), 0, Math.PI * 2);
       context.fill();

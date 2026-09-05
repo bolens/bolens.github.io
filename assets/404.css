@@ -335,16 +335,18 @@
 :root:is([data-scene-time="twilight"],[data-scene-time="night"]) .night-sky-travelers { display:inline; }
 :root[data-scene-time="evening"] .night-sky-travelers { display:inline;--sky-traveler-visibility:.18; }
 :root[data-scene-time="twilight"] .night-sky-travelers { --sky-traveler-visibility:.48; }
-.sky-traveler { transform-box:fill-box;transform-origin:center;will-change:transform,opacity; }
+.sky-traveler { transform-box:fill-box;transform-origin:center;will-change:transform,opacity;opacity:0; }
 .shooting-star { --traveler-ion-width:1.8;--traveler-dust-width:2.5;--traveler-dust-opacity:.12;--traveler-head-rx:3;--traveler-head-ry:2;animation:shooting-star-pass 19s linear infinite; }
 .shooting-star-two { --traveler-ion:#d9d0f5;animation-duration:31s;animation-delay:-14s; }
 .meteor { --traveler-ion:#ffd0a0;--traveler-dust:#e88c59;--traveler-head:#fff0bf;--traveler-ion-width:3.4;--traveler-dust-width:7;--traveler-dust-opacity:.42;--traveler-head-rx:7;--traveler-head-ry:4.5;--traveler-fragment-opacity:.72;animation:meteor-pass 37s -21s linear infinite; }
-.comet { --traveler-ion:#bce8ec;--traveler-dust:#ddd8c3;--traveler-head:#eefbf1;--traveler-ion-width:2.8;--traveler-dust-width:9;--traveler-dust-opacity:.3;--traveler-head-rx:6;--traveler-head-ry:5;animation:comet-pass 53s -8s ease-in-out infinite; }
+.comet { --traveler-ion:#bce8ec;--traveler-dust:#ddd8c3;--traveler-head:#eefbf1;--traveler-ion-width:2.8;--traveler-dust-width:9;--traveler-dust-opacity:.3;--traveler-head-rx:6;--traveler-head-ry:5;display:none;opacity:.45;will-change:auto; }
+/* Comets remain nearly fixed over a visit. An event provider may opt one in. */
+:root[data-scene-comet="visible"] .comet { display:inline; }
 :root[data-weather="cloudy"] .night-sky-travelers { --sky-traveler-visibility:.28; }
 :root:is([data-weather="overcast"],[data-weather="thunderstorm"],[data-weather="snowy"]) .night-sky-travelers ,
 :root:is([data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .night-sky-travelers { display:none; }
 :root[data-weather="wet"] .night-sky-travelers { --sky-traveler-visibility:.72; }
-:root:is([data-weather="dry"],[data-weather="drought"]) .meteor { --traveler-dust-opacity:.58;--traveler-fragment-opacity:.88; }
+/* Ground dryness does not change an atmospheric meteor's fragmentation. */
 .stellar-color circle { transform-box:fill-box;transform-origin:center;animation:stellar-breathe 9s ease-in-out infinite alternate; }.stellar-color circle:nth-child(2n) { animation-delay:-4s;animation-duration:12s; }
 .scene-orb { --orb-glow:url(#moon-glow);--orb-glow-opacity:.42;--orb-fill:url(#moon-surface);--orb-highlight-opacity:0;--orb-crater-opacity:.34;--orb-rays-opacity:0;translate:var(--scene-orb-x,0) var(--scene-orb-y,0);transform-box:fill-box;transform-origin:center;animation:moon-breathe 8s ease-in-out infinite;transition:translate 1.2s ease; }
 .weather-clouds,.weather-rain-clouds,.weather-mist,.weather-overcast,.weather-rain,.weather-snow,.weather-drought,.weather-wind { display:inline;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .38s ease,visibility 0s linear .38s; }
@@ -391,7 +393,12 @@
 :root[data-theme="day"][data-weather="overcast"] .overcast-cloud { --cloud-fill:#aab9ba;--cloud-edge:#879da0;--cloud-shadow:#718b90;--cloud-shadow-opacity:.38; }
 :root[data-weather="overcast"] :is(.scene-orb,.camp-aurora) { opacity:.2; }
 :root[data-weather="overcast"] .scene-orb { --orb-weather-opacity:.2; }
-:root[data-weather="overcast"] :is(.camp-stars,.star-dust,.deep-stars,.stellar-color) { opacity:.08; }
+:root:is([data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"],[data-weather="thunderstorm"]) :is(.camp-stars,.star-dust,.deep-stars,.stellar-color,.milky-way,.sky-airglow,.aurora-curtains,.aurora-ray-filaments,.camp-aurora,.night-sky-travelers) { display:none; }
+:root:is([data-scene-time="day"],[data-scene-time="morning"]) .forest-fireflies,
+:root:is([data-weather="rainy"],[data-weather="thunderstorm"],[data-weather="snowy"],[data-weather="windy"],[data-weather="drought"]) .forest-fireflies { display:none; }
+:root:is([data-scene-time="day"],[data-scene-time="morning"],[data-scene-time="evening"]) :is(.milky-way,.sky-airglow,.aurora-curtains,.aurora-ray-filaments,.camp-aurora) { display:none; }
+/* Geomagnetic activity and location must opt in, rather than every clear night. */
+:root:not([data-scene-aurora="visible"]) :is(.aurora-curtains,.aurora-ray-filaments,.camp-aurora) { display:none; }
 :root[data-weather="overcast"] .forest-mist { opacity:.13; }
 :root[data-weather="misty"] .forest-mist { opacity:.22; }
 :root[data-weather="cloudy"] .solar-ray-field { opacity:calc(var(--scene-ray-opacity,.5) * .42); }
@@ -579,7 +586,6 @@
 @keyframes stellar-breathe { from { opacity:.62;scale:.97; } to { opacity:.78;scale:1.03; } }
 @keyframes shooting-star-pass { 0%,70% { opacity:0;translate:-46px -22px; } 73% { opacity:.12; } 78% { opacity:.72; } 83% { opacity:.42; } 88%,100% { opacity:0;translate:118px 64px; } }
 @keyframes meteor-pass { 0%,47% { opacity:0;translate:-72px -38px;scale:.82; } 51% { opacity:.2; } 55% { opacity:.78;scale:1.03; } 62%,100% { opacity:0;translate:154px 112px;scale:.68; } }
-@keyframes comet-pass { 0%,18% { opacity:0;translate:-34px -8px; } 22% { opacity:.22; } 29%,38% { opacity:.72; } 46%,100% { opacity:0;translate:72px 28px; } }
 @keyframes firefly-glow { 0%,100% { opacity:.12;scale:.75; } 48% { opacity:.48;scale:1.04; } 72% { opacity:.26;scale:.88; } }
 @keyframes moon-breathe { 0%,100% { opacity:calc(.92 * var(--orb-weather-opacity,1)); } 50% { opacity:var(--orb-weather-opacity,1); } }
 /* A complete texture period: the reset paints the same field, without a jump. */

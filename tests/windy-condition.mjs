@@ -19,7 +19,7 @@ test('one gust cadence drives trees, flexible plants, tent, flame, smoke, and em
   }
   assert.match(css, /data-weather="windy"[^}]+\.flame-stack[^}]+scale:1\.08 1\.02/);
   assert.match(css, /data-weather="windy"[^}]+\.embers > \*[^}]+--ember-drift-x:18px/);
-  assert.match(scene, /windy: Object\.freeze\(\{ stars: \.82, fog: \.48, fireflies: \.35, embers: \.72 \}\)/);
+  assert.match(scene, /windy: Object\.freeze\(\{ stars: \.82, fog: \.48, fireflies: 0, embers: \.72 \}\)/);
   assert.match(scene, /windy:1\.06/);
 });
 
