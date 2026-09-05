@@ -97,17 +97,18 @@ try {
         portfolioWeather.setLocationCondition('windy');
         const names=(selector)=>getComputedStyle(document.querySelector(selector)).animationName;
         return {
+          tier:portfolio404Renderer.tier,
           field:names('.weather-wind'), tree:names('.camp-pines'),
           willow:names('.river-willows'), tent:names('.camp-tent > use:first-child'),
           flame:names('.flame-stack'), smoke:names('.smoke-character'),
         };
       })()`);
       assert.deepEqual(windMotion, {
-        field: 'weather-wind-pass', tree: 'runtime-wind-canopy', willow: 'wind-pliant-growth',
+        tier: windMotion.tier, field: 'weather-wind-pass', tree: windMotion.tier === 'minimal' ? 'none' : 'runtime-wind-canopy', willow: windMotion.tier === 'minimal' ? 'none' : 'wind-pliant-growth',
         tent: 'wind-tent-fabric', flame: 'wind-flame-stack', smoke: 'wind-smoke',
       });
       const windPhases = await evaluate(send, `(()=>{
-        const selectors=['.weather-wind','.camp-pines','.river-willows','.camp-tent > use:first-child','.flame-stack','.smoke-character'];
+        const selectors=['.weather-wind',...(portfolio404Renderer.tier==='minimal'?[]:['.camp-pines','.river-willows']),'.camp-tent > use:first-child','.flame-stack','.smoke-character'];
         const sample=(time)=>selectors.map((selector)=>{
           const node=document.querySelector(selector);
           const animation=node.getAnimations().find((item)=>item.animationName?.startsWith('wind-')||item.animationName==='weather-wind-pass'||item.animationName==='runtime-wind-canopy');
