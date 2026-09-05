@@ -26,7 +26,7 @@ test('celestial and weather geometry is reusable', () => {
     assert.match(html, new RegExp(`<symbol id="${symbol}"`), `missing ${symbol}`);
   }
   assert.equal([...html.matchAll(/href="#sky-orb"/g)].length, 2);
-  assert.equal([...html.matchAll(/href="#cloud-bank"/g)].length, 8);
+  assert.equal([...html.matchAll(/href="#cloud-bank"/g)].length, 16);
   assert.equal([...html.matchAll(/href="#aurora-strand"/g)].length, 5);
   assert.match(css, /data-weather="cloudy"/);
   assert.match(css, /data-weather="overcast"/);
