@@ -304,7 +304,7 @@
 :root[data-weather="drought"] .forest-mist { opacity:.025; }
 .horizon-forest { filter:saturate(.72); }
 .deep-forest { fill:#0b2828; stroke:#31554c; stroke-width:2.5; }
-:root[data-weather="windy"] :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) > use { transform-box:fill-box;transform-origin:center bottom;animation:wind-tree-gust 3.8s cubic-bezier(.45,0,.32,1) infinite; }
+:root[data-weather="windy"] :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) > use { transform-box:fill-box;transform-origin:center bottom;animation:wind-tree-gust calc(var(--tree-wind-duration,3.8s) * var(--motion-tempo)) cubic-bezier(.45,0,.32,1) infinite;animation-delay:var(--tree-motion-delay,0s); }
 :root[data-weather="windy"] :is(.horizon-forest,.deep-forest) > use:nth-child(3n+2) { animation-delay:-1.25s;animation-duration:4.4s; }
 :root[data-weather="windy"] :is(.forest-transition,.camp-pines) > use:nth-child(3n) { animation-delay:-2.4s;animation-duration:3.35s; }
 :root[data-weather="windy"] :is(.aspen-grove,.river-willows,.midforest-branch-detail use,.midstory-brush > use,.understory-shrubs > use,.river-ferns) { transform-box:fill-box;transform-origin:center bottom;animation:wind-pliant-growth 3.8s cubic-bezier(.45,0,.32,1) infinite; }
@@ -315,7 +315,10 @@
 .forest-fireflies > g > use:nth-child(2) { animation-delay:-2.2s; }
 .forest-fireflies > g > use:nth-child(3) { animation-delay:-4.4s; }
 .forest-fireflies .firefly-phase-one { animation-duration:6.8s;animation-delay:-2.4s; }.forest-fireflies .firefly-phase-two { animation-duration:4.7s;animation-delay:-3.6s; }.forest-fireflies .firefly-phase-three { animation-duration:7.6s;animation-delay:-5.1s; }
-.cryptid-camp :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) > use { transform-box:fill-box;transform-origin:center bottom;animation:ambient-tree-sway calc(8.6s * var(--motion-tempo)) cubic-bezier(.45,0,.35,1) infinite alternate; }
+.cryptid-camp :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) > use { --tree-sway-out:.42;--tree-sway-back:.58;transform-box:fill-box;transform-origin:center bottom;animation:ambient-tree-sway calc(var(--tree-motion-duration,8.6s) * var(--motion-tempo)) cubic-bezier(.45,0,.35,1) infinite alternate;animation-delay:var(--tree-motion-delay,0s); }
+.cryptid-camp :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) > use:nth-child(4n+2) { --tree-motion-duration:10.8s;--tree-wind-duration:4.35s;--tree-motion-delay:-3.1s;--tree-sway-out:.3;--tree-sway-back:.48; }
+.cryptid-camp :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) > use:nth-child(4n+3) { --tree-motion-duration:7.4s;--tree-wind-duration:3.45s;--tree-motion-delay:-5.2s;--tree-sway-out:.56;--tree-sway-back:.74; }
+.cryptid-camp :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) > use:nth-child(5n) { --tree-motion-duration:12.2s;--tree-wind-duration:4.8s;--tree-motion-delay:-7.4s;--tree-sway-out:.24;--tree-sway-back:.39; }
 .cryptid-camp :is(.aspen-grove,.river-willows,.midstory-brush > use,.understory-shrubs > use) { transform-box:fill-box;transform-origin:center bottom;animation:ambient-growth-sway calc(7.4s * var(--motion-tempo)) cubic-bezier(.45,0,.35,1) infinite alternate; }
 .cryptid-camp :is(.forest-fireflies > g > use,.ufo-lights) { animation-duration:calc(6.8s * var(--motion-tempo)); }
 .cryptid-camp :is(.river-ripples,.river-reflections,.water-foam) { animation-duration:calc(5.2s * var(--motion-tempo) / var(--motion-water)); }
@@ -401,7 +404,7 @@
 :root:is([data-weather="cloudy"],[data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .tent-lantern { --lantern-outer-opacity:.14;--lantern-inner-opacity:.32; }
 :root[data-weather="drought"] .tent-lantern { --lantern-outer-opacity:.06;--lantern-inner-opacity:.15;--lantern-light:#efb95c; }
 @keyframes camp-aurora { 0% { opacity:.22; translate:-.7% 2px; } 50% { opacity:.38; } 100% { opacity:.28; translate:.8% -3px; } }
-@keyframes ambient-tree-sway { from { rotate:calc(var(--motion-sway-negative) * .42); } to { rotate:calc(var(--motion-sway) * .58); } }
+@keyframes ambient-tree-sway { from { rotate:calc(var(--motion-sway-negative) * var(--tree-sway-out,.42)); } to { rotate:calc(var(--motion-sway) * var(--tree-sway-back,.58)); } }
 @keyframes ambient-growth-sway { from { rotate:calc(var(--motion-sway-negative) * .72);translate:calc(var(--motion-drift-negative) * .16) 0; } to { rotate:var(--motion-sway);translate:calc(var(--motion-drift) * .22) -1px; } }
 @keyframes leaf-litter-breathe { 0%,78%,100% { translate:0 0;rotate:0deg; } 84% { translate:-.6px -.2px;rotate:-1.2deg; } 91% { translate:.5px 0;rotate:.8deg; } }
 @keyframes leaf-litter-skitter { 0%,28%,100% { translate:0 0;rotate:0deg; } 43% { translate:calc(var(--motion-drift) * .35) -1px;rotate:calc(var(--motion-sway) * .8); } 58% { translate:calc(var(--motion-drift) * .7) .3px;rotate:calc(var(--motion-sway) * 1.5); } 70% { translate:calc(var(--motion-drift) * .45) 0;rotate:calc(var(--motion-sway) * .55); } }
