@@ -198,9 +198,13 @@
 :root:is([data-weather="rainy"],[data-weather="wet"]) .aspen-grove { --aspen-bark:#c8d1c4;--aspen-edge:#53695f;--aspen-leaf:#365f4b;--aspen-leaf-shadow:#244839;--aspen-highlight:#86a875; }
 :root:is([data-weather="dry"],[data-weather="drought"]) .aspen-grove { --aspen-bark:#d2c7ad;--aspen-leaf:#77734f;--aspen-leaf-shadow:#58553e;--aspen-highlight:#b39761;--aspen-leaf-opacity:.74; }
 :root[data-weather="snowy"] .aspen-grove { --aspen-bark:#e0e4da;--aspen-edge:#76837c;--aspen-leaf:#657467;--aspen-highlight:#c4d1bc;--aspen-leaf-opacity:.48; }
-:root:is([data-weather="rainy"],[data-weather="wet"]) .midforest-branch-detail { --bare-tree-bark:#344a3d;--bare-tree-highlight:#637b68;--bare-tree-lichen:#66866d; }
-:root:is([data-weather="dry"],[data-weather="drought"]) .midforest-branch-detail { --bare-tree-bark:#63513b;--bare-tree-branch:#594631;--bare-tree-highlight:#9a7954;--bare-tree-lichen:#77735b; }
-:root[data-weather="snowy"] .midforest-branch-detail { --bare-tree-bark:#46554a;--bare-tree-highlight:#93a096;--bare-tree-lichen:#829184; }
+.terrain-asset[data-species="aspen"] { --snag-pine-display:none;--snag-aspen-display:inline; }
+.terrain-asset[data-species="willow"] { --snag-pine-display:none;--snag-willow-display:inline; }
+:root:is([data-weather="thunderstorm"],[data-weather="wet"]) .midforest-branch-detail ,
+:root:is([data-weather="rainy"],[data-weather="wet"]) .midforest-branch-detail { --snag-aspen-bark:#9ca99a;--bare-tree-bark:#344a3d;--bare-tree-highlight:#637b68;--bare-tree-lichen:#66866d; }
+:root:is([data-weather="dry"],[data-weather="drought"]) .midforest-branch-detail { --snag-aspen-bark:#c2b89c;--bare-tree-bark:#63513b;--bare-tree-branch:#594631;--bare-tree-highlight:#9a7954;--bare-tree-lichen:#77735b; }
+:root[data-weather="snowy"] .midforest-branch-detail { --snag-aspen-bark:#cbd4c8;--bare-tree-bark:#46554a;--bare-tree-highlight:#93a096;--bare-tree-lichen:#829184; }
+:root:is([data-weather="thunderstorm"],[data-weather="wet"]) :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) ,
 :root:is([data-weather="rainy"],[data-weather="wet"]) :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) { --pine-fill:#1f493b;--pine-shadow:#123029;--pine-needle-highlight:#668d72;--pine-tip:#86aa82; }
 :root:is([data-weather="dry"],[data-weather="drought"]) :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) { --pine-fill:#465640;--pine-shadow:#2e3d31;--pine-needle-highlight:#747558;--pine-tip:#9a895d; }
 :root[data-weather="snowy"] :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) { --pine-fill:#2f4c43;--pine-shadow:#1c3833;--pine-needle-highlight:#82958c;--pine-tip:#c1d0ca; }

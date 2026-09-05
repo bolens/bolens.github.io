@@ -63,6 +63,18 @@ test('midground woody growth reuses condition-aware glyphs', () => {
   assert.doesNotMatch(html, /class="midforest-branch-detail"[^>]*>\s*<g/);
 });
 
+test('dead-tree species share one glyph without increasing placement density', () => {
+  const snags = [...html.matchAll(/<use\b[^>]*href="#bare-tree"[^>]*>/g)].map(match => match[0]);
+  assert.equal(snags.length, 6);
+  assert.deepEqual([...new Set(snags.map(node => node.match(/data-species="([^"]+)"/)?.[1]))].sort(), ['aspen', 'pine', 'willow']);
+  const glyph = html.match(/<symbol id="bare-tree"[\s\S]*?<\/symbol>/)?.[0];
+  for (const species of ['pine', 'aspen', 'willow']) {
+    assert.ok(glyph.includes(`data-region="${species}-snag"`));
+    assert.ok(glyph.includes(`--snag-${species}-display`));
+  }
+  assert.equal([...glyph.matchAll(/href="#terrain-condition-marks"/g)].length, 1, 'species share one weather overlay');
+});
+
 test('clearing deadwood, stones, and stumps use condition-aware glyphs', () => {
   assert.match(html, /<symbol id="tree-stump"[^>]+data-regions="root-flare,root-spurs,stump-body,cut-face,growth-rings,heartwood-rot,wood-grain,bark-ridges,branch-scar,moss-rim,insect-holes,wet-cut-face,rain-pooling,cut-face-snow,conditions"/);
   assert.equal([...html.matchAll(/href="#tree-stump"/g)].length, 4);
