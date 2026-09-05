@@ -40,7 +40,7 @@ test("shared terrain conditions expose addressable weather regions", () => {
 });
 
 test("named editing regions resolve to unique elements in migrated glyphs", () => {
-  for (const id of ["evergreen-shrub", "berry-shrub", "fern-spray", "wildflower-clump", "reed-clump", "camp-tent-shell", "alpine-boulder", "trail-camera"]) {
+  for (const id of ["evergreen-shrub", "berry-shrub", "fern-spray", "wildflower-clump", "reed-clump", "camp-tent-shell", "alpine-boulder", "trail-camera", "toasted-marshmallow", "camp-snack-plate"]) {
     const symbol = symbols.find(candidate => candidate.id === id);
     const declared = symbol.attributes.match(/data-regions="([^"]+)"/)[1].split(",");
     const targets = [...symbol.body.matchAll(/\bdata-region="([^"]+)"/g)].map(match => match[1]);
