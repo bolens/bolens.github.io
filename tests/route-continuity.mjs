@@ -31,3 +31,12 @@ test('river channel and highlight start within the upstream reach', () => {
   assert.match(html, /M490 416c-20 20-21 36-70 72/);
   assert.doesNotMatch(html, /M474 365c-45 47|M481 380c-35 43/);
 });
+
+test('the distant river bends across the ground instead of rising into the canopy', () => {
+  const bend = html.match(/data-region="distant-river-bend" d="([^"]+)"/)[1];
+  const glint = html.match(/data-region="distant-river-glint" d="([^"]+)"/)[1];
+  assert.match(bend, /^M554 429/);
+  assert.match(glint, /^M550 426/);
+  assert.doesNotMatch(html, /M596 344q|M590 349q/);
+  assert.ok(html.indexOf('data-region="distant-river-bend"') < html.indexOf('data-region="river-trail-head-cover"'));
+});

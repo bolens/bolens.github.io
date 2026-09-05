@@ -10,8 +10,18 @@ const indexOf = (fragment) => {
   assert.notEqual(index, -1, `missing ${fragment}`);
   return index;
 };
-const groupBody = (className) => html.match(new RegExp(`<g class="[^"]*\\b${className}\\b[^"]*"[^>]*>([\\s\\S]*?)</g>`))?.[1] || '';
-const widths = (className, asset) => [...groupBody(className).matchAll(new RegExp(`href="#${asset}"[^>]+width="([\\d.]+)"`, 'g'))].map((match) => Number(match[1]));
+const groupBody = (className) => {
+  const opening = new RegExp(`<g class="[^"]*\\b${className}\\b[^"]*"[^>]*>`).exec(html);
+  if (!opening) return '';
+  const start = opening.index + opening[0].length;
+  let depth = 1;
+  for (const tag of html.slice(start).matchAll(/<g\b[^>]*>|<\/g>/g)) {
+    depth += tag[0] === '</g>' ? -1 : 1;
+    if (!depth) return html.slice(start, start + tag.index);
+  }
+  throw new Error(`Unclosed group: ${className}`);
+};
+const widths = (className, asset) => [...groupBody(className).matchAll(new RegExp(`href="#${asset}"[^>]+\\swidth="([\\d.]+)"`, 'g'))].map((match) => Number(match[1]));
 
 test('major scene bands publish an explicit paint-order vocabulary', () => {
   const layers = [...html.matchAll(/data-scene-layer="([^"]+)"/g)].map((match) => match[1]);

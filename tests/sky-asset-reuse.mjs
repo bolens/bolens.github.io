@@ -54,6 +54,8 @@ test('day and night keep one active scene composition', () => {
   assert.match(html, /<use class="scene-orb sky-orb"/);
   assert.match(css, /\.day-scene \{ display:none!important; \}/);
   assert.match(css, /data-theme="day"\] \.scene-orb/);
-  assert.doesNotMatch(css, /data-theme="day"\][^{]+\.camper[^}]+display:none/);
+  // Character poses may swap, but the camp and terrain remain one composition.
+  assert.match(html, /data-region="bigfoot-tree-hideout"/);
+  assert.match(html, /href="#mothman-body-art"/);
   assert.doesNotMatch(css, /data-theme="day"\][^{]+\.campfire[^}]+display:none/);
 });
