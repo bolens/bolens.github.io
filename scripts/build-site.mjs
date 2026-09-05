@@ -111,6 +111,8 @@ const pages = [
   ...caseStudies.map(({ slug }) => [`case-studies/${slug}/index.html`, '../../', 'work', '../../work/', '../../about/', '../../work/', 'All work', '→']),
 ];
 const mark = '<svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true"><path class="brand-mark-frame" d="M7 6h27l8 8v28H15l-8-8Z"/><path class="brand-mark-route" d="M14 33h10V15h11M24 33h11v-9"/><circle class="brand-mark-node" cx="24" cy="33" r="3.2"/></svg>';
+// A quiet ridgeline closes every route; decorative paths never enter the link.
+const ridge = '<svg class="field-ridge" viewBox="0 0 240 48" aria-hidden="true" focusable="false"><path class="field-ridge-land" d="M2 40h28l22-18 15 10L98 6l33 29 20-16 30 21h57M79 22l19-16 17 15-10-3-7 5-7-7M142 27l9-8 12 9"/><path class="field-ridge-trail" d="M93 46c18-8 45-5 40-11s-28-3-22-9"/><circle class="field-ridge-end" cx="111" cy="26" r="2"/></svg>';
 for (const [relativePath, prefix, current, workHref, aboutHref, footerHref, footerLabel, footerArrow] of pages) {
   let pageSource = outputs.get(relativePath) ?? readFileSync(resolve(root, relativePath), 'utf8');
   if (relativePath === 'index.html') {
@@ -127,7 +129,7 @@ for (const [relativePath, prefix, current, workHref, aboutHref, footerHref, foot
   ];
   const routeLinks = routeStyles.map((href) => `<link rel="stylesheet" href="${href}">`).join('');
   const header = `<header class="site-header wrap"><a class="wordmark" href="${prefix || './'}" aria-label="Michael Bolens, home">${mark}<span class="wordmark-copy"><b>Michael Bolens</b><small>Systems builder</small></span></a><nav aria-label="Primary navigation"><a${current === 'work' ? ' aria-current="page"' : ''} href="${workHref}">Work</a><a${current === 'about' ? ' aria-current="page"' : ''} href="${aboutHref}">About</a><a class="nav-cta" rel="me" href="https://github.com/bolens">GitHub <span aria-hidden="true">↗</span></a></nav></header>`;
-  const footer = `<footer class="site-footer wrap"><p>Michael Bolens</p><a href="${footerHref}">${footerLabel} <span aria-hidden="true">${footerArrow}</span></a></footer>`;
+  const footer = `<footer class="site-footer wrap"><p>Michael Bolens</p>${ridge}<a href="${footerHref}">${footerLabel} <span aria-hidden="true">${footerArrow}</span></a></footer>`;
   outputs.set(relativePath, source
     .replace(new RegExp(`<link rel="stylesheet" href="${prefix}assets/theme-tokens\\.css">`, 'g'), '')
     .replace(`<link rel="stylesheet" href="${prefix}assets/site.css">`, `<link rel="stylesheet" href="${prefix}assets/theme-tokens.css">${routeLinks}<link rel="stylesheet" href="${prefix}assets/site.css">`)

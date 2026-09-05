@@ -67,6 +67,9 @@
     root.style.setProperty('--scene-cloud-brightness', mix(.78, 1, 1 - state.darkness).toFixed(3));
     root.style.setProperty('--scene-ufo-glint-opacity', mix(.3, .78, 1 - state.darkness).toFixed(3));
     const orbCenter = 1002 + state.x;
+    // Surface lighting shares the celestial clock, never a per-frame item loop.
+    root.style.setProperty('--surface-light-strength', mix(.34, .095, state.darkness).toFixed(3));
+    root.style.setProperty('--surface-light-color', state.darkness > .6 ? '#b8d1f2' : state.warmth > .45 ? '#ffd09a' : '#fff0c4');
     const shadowX = clamp((600 - orbCenter) / 58, -8, 8);
     const shadowY = mix(2.5, 6.5, clamp(state.y / 104));
     const shadowBlur = mix(3, 5.5, state.darkness);

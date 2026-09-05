@@ -36,6 +36,29 @@ try {
       }
     }
   });
+  await test('theme changes animate only the visible celestial artwork', async () => {
+    await load();
+    for (const theme of ['night','day','night','day']) {
+      await evaluate(send, `portfolioAppearance.setTheme('${theme}')`);
+      const state = await evaluate(send, `(()=>{const names=selector=>[...document.querySelectorAll(selector)].map(n=>getComputedStyle(n).animationName);return {night:names('.hike-aurora,.hike-stars,.camp-star'),day:names('.hike-day-sun,.camp-day-sun'),crater:names('.moon-crater')}})()`);
+      assert.ok(state.night.every(n=>theme==='night'?n!=='none':n==='none'), `${theme}: night effects`);
+      assert.ok(state.day.every(n=>theme==='day'?n!=='none':n==='none'), `${theme}: day effects`);
+      assert.deepEqual(state.crater, ['none']);
+    }
+  });
+  await test('the campfire flickers above fixed logs without moving its base', async () => {
+    for (const width of [390,1440]) {
+      await load(width);
+      const read = () => evaluate(send, `(()=>{const flame=document.querySelector('.camp-flame'),logs=document.querySelector('.camp-logs');const p=new DOMPoint(27,42).matrixTransform(flame.getScreenCTM());const r=logs.getBoundingClientRect();return {base:[p.x,p.y],logs:[r.x,r.y,r.width,r.height],height:flame.getBoundingClientRect().height}})()`);
+      await seek(0); const first=await read();
+      await seek(840); const flicker=await read();
+      assert.deepEqual(flicker.logs, first.logs, 'logs must remain still');
+      first.base.forEach((value,i)=>assert.ok(Math.abs(value-flicker.base[i])<.01, 'flame base detached'));
+      assert.ok(flicker.height>first.height*1.1, 'flame should stretch visibly');
+      await seek(2400); const loop=await read();
+      assert.ok(Math.abs(loop.height-first.height)<.01, 'flicker loop should meet its first frame');
+    }
+  });
   await test('hobby choreography uses at most 85 CSS effects without losing its five stages', async () => {
     await load();
     const state = await evaluate(send, `({effects:document.querySelector('.hobbies').getAnimations({subtree:true}).length,labels:[...document.querySelectorAll('.hobby-route li>span')].map(n=>n.textContent)})`);

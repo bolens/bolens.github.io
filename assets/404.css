@@ -162,6 +162,19 @@
 .cryptid-camp[data-scene-density="reduced"] .depth-back { --asset-detail-fine-opacity:.18; }
 .cryptid-camp[data-scene-density="compact"] :is(.depth-back,.depth-far,.depth-mid) { --asset-detail-secondary-opacity:.56;--asset-detail-fine-opacity:.14; }
 .terrain-asset[data-light="shadow"] { --asset-detail-fine-opacity:.18; }
+/* Shape-bound direct light: keep solid bodies opaque and interiors unlit. */
+.cryptid-camp { --surface-cloud:1;--surface-exposure:1;--surface-material:1; }
+.surface-light { fill:var(--surface-gradient,url(#surface-light-right));opacity:calc(var(--surface-light-strength,.095) * var(--surface-cloud) * var(--surface-exposure) * var(--surface-material));pointer-events:none; }
+.terrain-asset[data-light-facing="left"] { --surface-gradient:url(#surface-light-left); }
+.terrain-asset[data-light="shadow"] { --surface-exposure:.12; }
+.forest-floor,.woodland-plants { --surface-exposure:.38; }
+.terrain-asset[data-light="fire"] { --surface-exposure:.3; }
+[data-weather-exposure="sheltered"],[data-weather-exposure="sheltered"] .terrain-asset { --surface-exposure:0; }
+:root[data-weather="cloudy"] .cryptid-camp { --surface-cloud:.38; }
+:root:is([data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .cryptid-camp { --surface-cloud:.08; }
+:root[data-weather="thunderstorm"] .cryptid-camp { --surface-cloud:.025; }
+:root[data-weather="misty"] .cryptid-camp { --surface-cloud:.2; }
+:root[data-weather="wet"] .cryptid-camp { --surface-material:1.15; }
 :root:is([data-weather="cloudy"],[data-weather="overcast"],[data-weather="thunderstorm"],[data-weather="snowy"]) .terrain-asset ,
 :root:is([data-weather="cloudy"],[data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .terrain-asset { --asset-detail-fine-opacity:.24; }
 :root:is([data-weather="cloudy"],[data-weather="overcast"]) [data-dynamic-detail][data-weather-reactive="atmosphere"] { --inline-weather-opacity:.58; }
