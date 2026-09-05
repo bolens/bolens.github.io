@@ -63,7 +63,8 @@ Paths below are relative to the repository root. Test names are relative to `tes
 `404.html` owns the shared symbols, named regions, placements, static fallback, and
 return link. `assets/404.css` owns material styling, layer visibility, and authored
 motion. The controllers below consume the existing appearance and overlay owners.
-Only the season/moon additions are part of the active feature contract.
+Packages 001 and 010 cover the season/moon and daytime-activity additions.
+Packages 006 through 008 retain the earlier retrospective scene baselines.
 
 | Owner or concern | Existing contract evidence |
 | --- | --- |
