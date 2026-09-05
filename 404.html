@@ -86,7 +86,7 @@
               <circle cx="621" cy="381" r="6"/><circle cx="684" cy="310" r="5"/><circle cx="786" cy="361" r="6"/><circle cx="845" cy="294" r="5"/>
             </g>
           </mask>
-          <symbol id="distant-pine" viewBox="-28 0 56 120" data-regions="root-flare,tapered-trunk,branch-whorls,needle-tiers,canopy-shadow,branch-lines,tip-shoots,bark-segments">
+          <symbol id="distant-pine" viewBox="-28 0 56 120" data-regions="root-flare,tapered-trunk,branch-whorls,needle-tiers,canopy-shadow,branch-lines,tip-shoots,bark-segments,branch-snow">
             <path data-region="root-flare" d="m-10 119 7-12h6l9 12q-11-3-22 0Z" fill="var(--pine-root,#243b35)" stroke="var(--pine-bark,#1d312c)" stroke-width="1"/>
             <path data-region="tapered-trunk" d="M-4 116-2 17 1 7l3 11 3 98Z" fill="var(--pine-trunk,#52614e)" stroke="var(--pine-bark,#1d312c)" stroke-width="1.2" stroke-linejoin="round"/>
             <path class="asset-detail-fine" data-region="bark-segments" d="m-2 104 6 3m-6-12 6 3m-6-13 6 3m-5-14 5 2m-5-14 5 2" fill="none" stroke="var(--pine-bark-mark,#293b31)" stroke-width="1" stroke-linecap="round"/>
@@ -95,6 +95,7 @@
             <path class="asset-detail-secondary" data-region="branch-whorls" d="M0 18v92M-7 29Q0 25 8 29M-14 43Q0 35 15 42M-20 58Q0 47 20 57M-24 75Q0 61 24 73M-27 94Q0 76 27 91" fill="none" stroke="var(--pine-branch,#49675c)" stroke-width="1.7" stroke-linecap="round"/>
             <path class="asset-detail-fine" data-region="branch-lines" d="m-8 29-10 1m25-2 10 2m-31 14-10 3m38-4 11 3m-44 13-8 4m46-6 9 4m-50 15-8 5m53-8 9 5m-56 17-7 5m57-8 8 5" fill="none" stroke="var(--pine-needle-highlight,#789078)" stroke-width="1" stroke-linecap="round"/>
             <path class="asset-detail-fine" data-region="tip-shoots" d="m-9 25-5-5m22 6 5-5m-29 20-6-4m36 4 6-4m-42 21-5-4m47 3 6-4m-50 24-5-3m51 0 5-4m-51 24-5-2m51-2 6-4" fill="none" stroke="var(--pine-tip,#91a17f)" stroke-width="1" stroke-linecap="round"/>
+            <path data-region="branch-snow" d="m-7 25 6-11 5 10-5-3Zm-8 17 10-12-3 8 6-1-4 4Zm17 10 8 2 5 6-12-4Zm-24 20 9-10 7-2-4 6-8 4Zm25 12 9 3 7 6-15-5Zm-22 16 10-13 5-1-5 8-7 3Z" fill="var(--asset-snow-color,#e7f2f1)" opacity="var(--pine-snow-load,0)"/>
           </symbol>
           <symbol id="bare-tree" viewBox="0 0 100 160" data-regions="pine-snag,aspen-snag,willow-snag,root-flare,trunk,broken-crown,primary-branches,secondary-branches,bark-highlights,bark-plates,branch-scars,bark-grain,lichen-spots,conditions">
             <g data-region="pine-snag" style="display:var(--snag-pine-display,inline)">
@@ -265,7 +266,7 @@
             <g class="asset-drought-mark" data-region="drought-stress" fill="none" stroke="var(--asset-drought-color,#9b7044)" stroke-linecap="round" stroke-linejoin="round" opacity="var(--asset-drought-opacity,0)"><path d="m13 84 18-12 15 8 18-15 23 11M29 72l-4-13m21 21 3 11m15-26-4-13m4 13 12 6" stroke-width="3"/><path d="M16 47q10-8 18 1-10 7-18-1Zm54-7q9-7 17 2-9 6-17-2Z" fill="var(--asset-drought-leaf,#aa8150)" stroke-width="2"/></g>
             <g class="asset-wind-mark" data-region="wind-sweep" fill="none" stroke="var(--asset-wind-color,#c4d5cc)" stroke-linecap="round" opacity="var(--asset-wind-opacity,0)"><path d="M4 24q24-10 48 0t43-2M14 39q18-7 36 0t32-2" stroke-width="2.5"/><path d="m77 16 12 6-10 7" stroke-width="1.6"/></g>
           </symbol>
-          <symbol id="alpine-boulder" viewBox="0 0 140 90" data-regions="rock-body,rock-facets,fracture-lines,mineral-veins,rock-glints,lichen,lichen-specks,conditions">
+          <symbol id="alpine-boulder" viewBox="0 0 140 90" data-regions="rock-body,rock-facets,fracture-lines,mineral-veins,rock-glints,lichen,lichen-specks,surface-wetness,ledge-snow,conditions">
             <path d="M5 84 19 39 48 8l38 7 41 34 8 35Z" fill="var(--boulder-fill,url(#moon-rock))" stroke="#172826" stroke-width="2.5" stroke-linejoin="round"/>
             <path d="M19 39 48 8l12 40L8 84m52-36 26-33 41 34-43 35Z" fill="var(--boulder-facet,#354c49)"/>
             <path class="asset-detail-secondary" d="m60 48-9 16 8 19m27-68 4 21 16 11m-87-8 12 16-8 19" fill="none" stroke="var(--boulder-fracture,#263b39)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -273,15 +274,25 @@
             <path class="asset-detail-secondary" d="m24 41 24-25m15 34 20-27m8 52 27-24" fill="none" stroke="var(--boulder-glint,#91a8a3)" stroke-width="3" stroke-linecap="round"/>
             <g class="asset-detail-secondary" fill="var(--boulder-lichen,#8da06f)"><circle cx="31" cy="37" r="4"/><circle cx="42" cy="30" r="2.5"/><circle cx="54" cy="39" r="3"/></g>
             <g class="asset-detail-fine" fill="var(--boulder-lichen-speck,#b0b982)"><circle cx="25" cy="44" r="1.4"/><circle cx="38" cy="36" r="1.2"/><circle cx="49" cy="43" r="1.5"/></g>
+            <g data-region="surface-wetness" opacity="var(--asset-wet-opacity,0)">
+              <path d="m20 42 37 9-4 29H10Zm44 10 23-29 35 29-39 29Z" fill="#122d2c"/>
+              <path d="m25 37 21-22m18 34 19-26m11 45 20-17" fill="none" stroke="var(--asset-wet-color,#c2d8d1)" stroke-width="1.5" stroke-linecap="round"/>
+            </g>
+            <g data-region="ledge-snow" opacity="var(--asset-snow-opacity,0)">
+              <path d="m21 38 26-29q3-3 9-1l29 6 22 21-18-6-10-7-16 2-10-7-13 13Z" fill="var(--asset-snow-color,#e7f2f1)"/>
+              <path d="m25 38 15-8 13-13 10 7 16-2 10 7 12 4" fill="none" stroke="var(--asset-snow-edge,#b8d0d1)" stroke-width="2"/>
+            </g>
             <use href="#terrain-condition-marks" width="140" height="90"/>
           </symbol>
-          <symbol id="fire-ring-stone" viewBox="0 0 44 30" data-regions="stone-body,stone-face,stone-cracks,mineral-specks,soot-band,ember-edge,conditions">
+          <symbol id="fire-ring-stone" viewBox="0 0 44 30" data-regions="stone-body,stone-face,stone-cracks,mineral-specks,soot-band,ember-edge,surface-wetness,ledge-snow,conditions">
             <path d="M3 17 12 5l20 1 9 11-8 10-21 1Z" fill="var(--ring-stone-fill,#566059)" stroke="var(--ring-stone-outline,#263432)" stroke-width="2.5" stroke-linejoin="round"/>
             <path class="asset-detail-secondary" d="m12 7 15 1 8 7-18 2Z" fill="var(--ring-stone-face,#84908a)"/>
             <path class="asset-detail-secondary" d="m15 9 5 7-6 7m17-13-6 8 5 6" fill="none" stroke="var(--ring-stone-crack,#242d2b)" stroke-width="1.8" stroke-linecap="round"/>
             <g class="asset-detail-fine" fill="var(--ring-stone-mineral,#aeb2a0)"><circle cx="14" cy="11" r="1"/><circle cx="29" cy="12" r=".8"/><circle cx="34" cy="18" r=".9"/></g>
             <path class="asset-detail-fine" d="M6 18q15-5 32 0" fill="none" stroke="var(--ring-stone-soot,#171b1a)" stroke-width="4" stroke-linecap="round"/>
             <path d="M7 20q14-6 29 0" fill="none" stroke="var(--ring-stone-ember,#d26f3e)" stroke-width="2" stroke-linecap="round" opacity="var(--ring-stone-ember-opacity,.22)"/>
+            <g data-region="surface-wetness" opacity="var(--asset-wet-opacity,0)"><path d="m6 18 12 1 18-2-5 8-17 1Z" fill="#182d2b"/><path d="m13 8 16 1" stroke="var(--asset-wet-color,#c2d8d1)" stroke-width="1"/></g>
+            <path data-region="ledge-snow" d="m7 13 5-8 20 1 6 8-9-3-8 1-7-2Z" fill="var(--asset-snow-color,#e7f2f1)" opacity="var(--asset-snow-opacity,0)"/>
             <use href="#terrain-condition-marks" width="44" height="30"/>
           </symbol>
           <symbol id="fire-bed" viewBox="0 0 180 65" data-regions="burned-ground,scorched-edge,coal-bed,coal-fissures,ash-lines,ash-flecks,char-dust,conditions">
@@ -380,12 +391,14 @@
             <use href="#terrain-condition-marks" width="72" height="48"/>
           </symbol>
           <symbol id="wildflower-clump" viewBox="0 0 62 58" data-regions="stems,stem-leaves,petals,petal-veins,flower-centers,pollen-dots,conditions">
-            <g fill="none" stroke="var(--flower-stem,#52745a)" stroke-width="2.5" stroke-linecap="round"><path d="M30 56 19 17m12 39 3-47m-3 47 19-34M25 39l-12-8m21 5 11-9"/></g>
+            <g class="flower-posture" data-region="stems">
+            <g fill="none" stroke="var(--flower-condition-stem,var(--flower-stem,#52745a))" stroke-width="1.8" stroke-linecap="round"><path d="M30 56Q29 31 20 12m11 44Q30 27 35 8m-4 48Q43 37 51 21M25 39l-12-8m21 5 11-9"/></g>
             <g class="asset-detail-secondary" fill="var(--flower-leaf,#668266)" stroke="var(--flower-stem,#52745a)" stroke-width="1"><path d="M25 43q-10-9-15-3 7 9 15 3Z"/><path d="M34 39q9-10 15-4-6 9-15 4Z"/><path d="M29 48q-8-6-12-1 6 7 12 1Z"/></g>
-            <g fill="var(--flower-petal,#c8b5d8)" stroke="var(--flower-outline,#594b69)" stroke-width="1.5"><path d="m19 17-8-5 7-4 3-7 5 7 8 2-6 6 1 8-8-3-7 4Z"/><path d="m34 9-6-4 6-4 5 4 7 1-5 5 1 7-7-3-6 3Z"/><path d="m50 22-6-4 6-4 5 4 7 1-5 5 1 7-7-3-6 3Z"/></g>
+            <g data-region="petals" fill="var(--flower-condition-petal,var(--flower-petal,#c8b5d8))" stroke="var(--flower-outline,#594b69)" stroke-width=".8"><path d="M20 10C11-3 7 7 16 12 3 10 7 21 17 15 11 26 24 29 21 16 29 26 36 16 24 13 37 9 28 1 22 10Z"/><path d="M35 6C29-4 24 3 31 8 22 8 27 17 33 11 30 21 40 19 37 11 47 16 48 6 39 8 46 1 36-3 35 6Z"/><path d="M51 19C45 9 41 16 47 21 38 21 43 29 49 24 46 34 56 32 53 24 62 30 65 21 55 21 63 15 54 10 51 19Z"/></g>
             <path class="asset-detail-fine" d="m20 12-7 0m7 0 1-8m14 4-4-4m4 4 7-1m9 14-5-3m5 3 6-1" fill="none" stroke="var(--flower-vein,#8e7fa1)" stroke-width="1" stroke-linecap="round"/>
             <g fill="var(--flower-center,#d7a846)"><circle cx="20" cy="12" r="3"/><circle cx="35" cy="8" r="3"/><circle cx="51" cy="21" r="3"/></g>
             <g class="asset-detail-fine" fill="var(--flower-pollen,#f1d47d)"><circle cx="18" cy="11" r=".7"/><circle cx="22" cy="13" r=".7"/><circle cx="34" cy="6" r=".7"/><circle cx="37" cy="9" r=".7"/><circle cx="50" cy="19" r=".7"/><circle cx="53" cy="22" r=".7"/></g>
+            </g>
             <use href="#terrain-condition-marks" width="62" height="58"/>
           </symbol>
           <symbol id="fallen-branch" viewBox="0 0 120 45" data-regions="branch-body,limb-forks,bark-highlight,bark-plates,bark-fissures,broken-tips,exposed-wood,lichen-spots,moss-edge,conditions">
@@ -419,15 +432,18 @@
               <use href="#terrain-condition-marks" width="110" height="92" style="--asset-snow-opacity:0;--asset-wet-opacity:0"/>
             </g>
           </symbol>
-          <symbol id="reed-clump" viewBox="0 0 36 44" data-regions="reed-stems,stem-nodes,reed-blades,seed-heads,seed-grains,conditions">
-            <g fill="none" stroke="var(--reed-stem,#668061)" stroke-linecap="round">
-              <path d="M9 42 6 12m7 29 10-35m-4 34 15-22" stroke-width="3"/>
+          <symbol id="reed-clump" viewBox="0 0 36 44" data-regions="reed-stems,stem-nodes,reed-blades,blade-veins,seed-heads,seed-grains,conditions">
+            <g class="reed-posture" data-region="reed-stems">
+            <g fill="none" stroke="var(--reed-condition-stem,var(--reed-stem,#668061))" stroke-linecap="round">
+              <path d="M9 42Q11 25 6 12m7 29Q21 24 23 6m-4 34Q29 29 34 18" stroke-width="1.6"/>
               <path class="asset-detail-secondary" d="m4 12 6 6M20 7l6 6m3 6 5 5" stroke="var(--reed-tip,#91a06d)" stroke-width="2"/>
             </g>
             <g class="asset-detail-secondary" fill="var(--reed-node,#425d48)"><circle cx="8" cy="28" r="1.8"/><circle cx="17" cy="27" r="1.8"/><circle cx="26" cy="29" r="1.8"/></g>
-            <path class="asset-detail-secondary" d="M9 34q-7-6-8-12m16 11q7-7 9-15m0 17q7-5 9-11" fill="none" stroke="var(--reed-blade,#78936d)" stroke-width="1.7" stroke-linecap="round"/>
-            <g class="asset-detail-fine" fill="var(--reed-seed,#a49a65)"><ellipse cx="6" cy="10" rx="2.2" ry="4" transform="rotate(-12 6 10)"/><ellipse cx="23" cy="5" rx="2.3" ry="4.5" transform="rotate(13 23 5)"/><ellipse cx="34" cy="17" rx="2" ry="3.8" transform="rotate(28 34 17)"/></g>
+            <path data-region="reed-blades" d="M10 42Q1 31 1 20q8 7 9 22Zm4 0Q10 22 14 13q2 14 0 29Zm2-1Q21 23 29 19q-3 10-13 22Zm4 0Q31 28 35 29q-5 9-15 12Z" fill="var(--reed-condition-blade,var(--reed-blade,#78936d))"/>
+            <path class="asset-detail-secondary" data-region="blade-veins" d="m9 39-6-15m13 14 10-15m-6 17 12-9" fill="none" stroke="var(--reed-tip,#91a06d)" stroke-width=".7"/>
+            <g data-region="seed-heads" fill="var(--reed-seed,#a49a65)"><ellipse cx="6" cy="10" rx="2" ry="4" transform="rotate(-12 6 10)"/><ellipse cx="23" cy="5" rx="2" ry="4.5" transform="rotate(13 23 5)"/><ellipse cx="34" cy="17" rx="1.5" ry="3.8" transform="rotate(28 34 17)"/></g>
             <path class="asset-detail-fine" d="m5 8 2 1m15-6 2 1m9 11 2 1" fill="none" stroke="var(--reed-seed-glint,#d0c183)" stroke-width="1" stroke-linecap="round"/>
+            </g>
             <use href="#terrain-condition-marks" width="36" height="44"/>
           </symbol>
           <symbol id="trail-boots" viewBox="0 0 34 24" data-regions="boot-uppers,toe-caps,eyelets,boot-laces,boot-soles,tread-lugs,scuff-marks,conditions">
@@ -518,7 +534,7 @@
             <path d="m7 1 5 6-5 6-5-6Z" fill="var(--ember-fill,#ffd05c)"/>
             <use href="#terrain-condition-marks" width="14" height="14"/>
           </symbol>
-          <symbol id="camp-tent-shell" viewBox="0 0 242 169" data-regions="tent-fly,fabric-panels,door-panel,seams,guy-lines,stakes,vent-flap,fabric-creases,ground-edge,conditions">
+          <symbol id="camp-tent-shell" viewBox="0 0 242 169" data-regions="tent-fly,fabric-panels,door-panel,seams,guy-lines,stakes,vent-flap,fabric-creases,ground-edge,wet-fabric,seam-beads,shed-snow,conditions">
             <path d="M0 169 103 0l139 169Z" fill="var(--tent-shell-fill,url(#tent-cloth))" stroke="var(--tent-shell-edge,#ee9772)" stroke-width="4" stroke-linejoin="round"/>
             <path class="asset-detail-secondary" d="M103 3 70 165m34-162 35 162m-70 0 35-162 35 162" fill="none" stroke="var(--tent-panel,#9b583f)" stroke-width="1.5"/>
             <path d="M103 0 176 166H30Z" fill="var(--tent-door-fill,#08191d)" stroke="var(--tent-door-edge,#ee9772)" stroke-width="3" stroke-linejoin="round"/>
@@ -528,6 +544,9 @@
             <path class="asset-detail-secondary" d="M91 32q12-9 24 0l-4 12H95Z" fill="var(--tent-vent,#744733)" stroke="var(--tent-seam,#f0aa83)" stroke-width="1.5"/>
             <path class="asset-detail-fine" d="m53 130 18-10m75 6 18 11m-75-72 14 9 14-9" fill="none" stroke="var(--tent-crease,#c87858)" stroke-width="1.5" stroke-linecap="round"/>
             <path d="M8 163q111-13 225 0" fill="none" stroke="var(--tent-ground-edge,#4d3027)" stroke-width="3" stroke-linecap="round"/>
+            <g data-region="wet-fabric" opacity="var(--asset-wet-opacity,0)" fill="#472f2d"><path d="m45 100 48-77-29 95-29 37H15Z"/><path d="m124 31 97 124-35-5-40-79Z"/></g>
+            <g data-region="seam-beads" opacity="var(--asset-rain-opacity,0)" fill="var(--asset-wet-color,#c2d8d1)"><ellipse cx="57" cy="120" rx=".9" ry="1.7"/><ellipse cx="163" cy="136" rx="1" ry="2"/><ellipse cx="39" cy="158" rx="1.2" ry="1.8"/></g>
+            <g data-region="shed-snow" opacity="var(--asset-snow-opacity,0)" fill="var(--asset-snow-color,#e7f2f1)"><path d="m95 12 8-12 13 15-10-4-5-2Z"/><path d="m8 162 14-5 7 5 3 6H3Zm175-2 15-3 9 5 13-2 17 8h-53Z"/><path d="m50 98 9-15-5 18-7 8Z"/></g>
             <use href="#terrain-condition-marks" width="242" height="169"/>
           </symbol>
           <symbol id="smoke-wisp" viewBox="0 0 60 132" data-regions="main-wisp,fine-thread">
@@ -878,8 +897,8 @@
           <use class="terrain-asset" data-light="fire" data-weather="clear" href="#pinecone-sprig" x="407" y="704" width="55" height="37" transform="rotate(12 435 723)" style="--cone-scale:#d09455"/>
           <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#pinecone-sprig" x="886" y="708" width="60" height="40"/>
           <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#wildflower-clump" x="150" y="675" width="44" height="42" style="--flower-petal:#b9cfa4"/>
-          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#wildflower-clump" x="748" y="690" width="39" height="37" style="--flower-petal:#c9a879;--flower-center:#efb24e"/>
-          <use class="terrain-asset" data-light="moon" data-weather="rainy" href="#wildflower-clump" x="1090" y="685" width="42" height="40" style="--flower-petal:#9d91bd"/>
+          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#wildflower-clump" x="748" y="698" width="29" height="28" transform="rotate(9 762 725)" style="--flower-petal:#c9a879;--flower-center:#efb24e"/>
+          <use class="terrain-asset" data-light="moon" data-weather="rainy" href="#wildflower-clump" x="1090" y="671" width="36" height="47" transform="rotate(-7 1108 716)" style="--flower-petal:#9d91bd"/>
           <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fallen-branch" x="23" y="650" width="115" height="43" transform="rotate(-6 81 672)"/>
           <use class="terrain-asset" data-light="ambient" data-weather="dry" href="#fallen-branch" x="1034" y="625" width="103" height="39" transform="rotate(7 1086 645)" style="--branch-fill:#68462e"/>
           <path d="M20 746q91-22 178-9m82-5q92-18 176-2m342 5q91-20 179-4m70 5q67-14 131-2" fill="none" stroke="#172823" stroke-width="3" opacity=".6"/>
@@ -928,8 +947,8 @@
           </g>
           <g class="bank-reeds" data-region="riverbank-reed-line" data-detail-layer="secondary" data-weather-reactive="vegetation" data-light-reactive="ambient">
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#reed-clump" x="72" y="605" width="34" height="43"/>
-            <use class="terrain-asset" data-light="ambient" data-weather="rainy" href="#reed-clump" x="176" y="548" width="33" height="41" transform="rotate(5 193 569)" style="--reed-stem:#5f7b5d"/>
-            <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#reed-clump" x="284" y="505" width="31" height="39" transform="rotate(-4 300 525)" style="--reed-tip:#82936c"/>
+            <use class="terrain-asset" data-light="ambient" data-weather="rainy" href="#reed-clump" x="176" y="558" width="25" height="31" transform="rotate(5 188 588)" style="--reed-stem:#5f7b5d"/>
+            <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#reed-clump" x="284" y="505" width="29" height="39" transform="rotate(-4 298 543)" style="--reed-tip:#82936c;--reed-seed:#8e8257"/>
           </g>
           <g class="water-foam-patches" data-region="river-foam-patches" data-detail-layer="fine" data-dynamic-detail data-weather-reactive="water" data-light-reactive="ambient">
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#water-foam" x="53" y="642" width="54" height="21" transform="rotate(-7 80 653)"/>

@@ -192,7 +192,11 @@
 .terrain-asset[data-weather="overcast"],:root[data-weather="overcast"] .terrain-asset { --asset-weather-brightness:.8;--asset-weather-saturation:.54;--asset-cloud-opacity:.32;--asset-overcast-opacity:.28; }
 .terrain-asset[data-weather="thunderstorm"],:root[data-weather="thunderstorm"] .terrain-asset ,
 .terrain-asset[data-weather="rainy"],:root[data-weather="rainy"] .terrain-asset { --asset-weather-brightness:.82;--asset-weather-saturation:.8;--asset-cloud-opacity:.22;--asset-rain-opacity:.52;--asset-wet-opacity:.3; }
-.terrain-asset[data-weather="wet"],:root[data-weather="wet"] .terrain-asset { --asset-weather-brightness:1.04;--asset-weather-saturation:1.12;--asset-wet-opacity:.4; }
+.terrain-asset[data-weather="wet"],:root[data-weather="wet"] .terrain-asset { --asset-weather-brightness:.88;--asset-weather-saturation:1.08;--asset-wet-opacity:.4; }
+/* Atmospheric effects belong to scene layers, not repeated object stamps.
+   Deposits and reflections are authored against each material's geometry. */
+.asset-rain-mark,.asset-cloud-mark,.asset-mist-mark,.asset-overcast-mark,.asset-wind-mark,.asset-wet-mark,.asset-snow-mark { display:none; }
+:root[data-weather="snowy"] .cryptid-camp { --pine-snow-load:.72; }
 .terrain-asset[data-weather="dry"],:root[data-weather="dry"] .terrain-asset { --asset-weather-brightness:1.08;--asset-weather-saturation:.72;--asset-weather-sepia:.2;--asset-dry-opacity:.36; }
 .terrain-asset[data-weather="snowy"],:root[data-weather="snowy"] .terrain-asset { --asset-weather-brightness:1.05;--asset-weather-saturation:.68;--asset-cloud-opacity:.16;--asset-wet-opacity:.12;--asset-snow-opacity:.82; }
 :root[data-weather="snowy"] .terrain-asset[data-light="fire"] { --asset-weather-brightness:1.08;--asset-weather-saturation:.92;--asset-wet-opacity:.28;--asset-snow-opacity:.14; }
@@ -240,6 +244,19 @@
 :root:is([data-weather="dry"],[data-weather="drought"],[data-weather="snowy"]) .fly-agarics { display:none; }
 /* Keep roots fixed while fronds settle under rain, snow, or water stress. */
 .fern-posture { transform-box:view-box;transform-origin:35px 89px;transform:scaleY(var(--fern-upright,1)); }
+/* Deform rooted growth, not the placement or its ground/weather accents. */
+.flower-posture { transform-box:view-box;transform-origin:30px 56px;transform:skewX(var(--plant-lean,0deg)) scaleY(var(--flower-upright,1)); }
+.reed-posture { transform-box:view-box;transform-origin:14px 42px;transform:skewX(var(--plant-lean,0deg)) scaleY(var(--reed-upright,1)); }
+:root:is([data-weather="rainy"],[data-weather="thunderstorm"]) .terrain-asset[href="#wildflower-clump"] { --flower-upright:.82;--flower-condition-stem:#466b4e; }
+:root:is([data-weather="rainy"],[data-weather="wet"],[data-weather="misty"]) .terrain-asset[href="#reed-clump"] { --reed-condition-stem:#496b4e;--reed-condition-blade:#62835d; }
+:root:is([data-weather="dry"],[data-weather="drought"]) .terrain-asset[href="#wildflower-clump"] { --flower-upright:.7;--flower-condition-stem:#897349;--flower-condition-petal:#b49a79;--flower-leaf:#8e8156; }
+:root[data-weather="drought"] .terrain-asset[href="#wildflower-clump"] { --flower-upright:.48;--flower-condition-petal:#96836a; }
+:root:is([data-weather="dry"],[data-weather="drought"]) .terrain-asset[href="#reed-clump"] { --reed-upright:.88;--reed-condition-stem:#8a7950;--reed-condition-blade:#a19362; }
+:root[data-weather="drought"] .bank-reeds .terrain-asset { --reed-upright:.94;--reed-condition-blade:#859065; }
+:root[data-weather="snowy"] .terrain-asset[href="#wildflower-clump"] { --flower-upright:.36;--flower-condition-petal:#938d7a;--flower-condition-stem:#797c65; }
+:root[data-weather="snowy"] .terrain-asset[href="#reed-clump"] { --reed-upright:.68;--reed-condition-blade:#92977c; }
+:root[data-weather="windy"] .terrain-asset:is([href="#wildflower-clump"],[href="#reed-clump"]) { --plant-lean:-9deg; }
+:root[data-weather="thunderstorm"] .terrain-asset:is([href="#wildflower-clump"],[href="#reed-clump"]) { --plant-lean:-14deg;--reed-upright:.8; }
 :root:is([data-weather="thunderstorm"],[data-weather="wet"],[data-weather="misty"]) .terrain-asset[href="#fern-spray"] ,
 :root:is([data-weather="rainy"],[data-weather="wet"],[data-weather="misty"]) .terrain-asset[href="#fern-spray"] { --fern-upright:.9;--fern-color:#507b51;--fern-highlight:#91a96b;--fern-pinna:#72925c; }
 :root:is([data-weather="dry"],[data-weather="drought"]) :is(.river-ferns,.dry-ferns) { --fern-upright:.68;--fern-color:#88734d;--fern-highlight:#b49b64;--fern-pinna:#9b8154;--fern-fiddlehead:#7d714d; }

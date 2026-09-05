@@ -69,6 +69,27 @@ test('small botanical glyphs expose anatomical detail layers', () => {
   }
 });
 
+test('flower and reed condition postures keep shared ground accents outside the rooted growth', () => {
+  for (const [id, posture] of [['wildflower-clump', 'flower-posture'], ['reed-clump', 'reed-posture']]) {
+    assert.match(symbols[id], new RegExp(`class="${posture}"`));
+    assert.match(symbols[id], /<\/g>\s*<use href="#terrain-condition-marks"/);
+  }
+  assert.match(symbols['reed-clump'], /<g data-region="seed-heads"/);
+  assert.match(symbols['reed-clump'], /<path data-region="reed-blades"/);
+  assert.match(symbols['reed-clump'], /data-region="blade-veins"/);
+  assert.match(symbols['wildflower-clump'], /data-region="petals"[^>]*--flower-condition-petal/);
+});
+
+test('solid surfaces author their own wetness and snow deposits', () => {
+  for (const id of ['alpine-boulder', 'fire-ring-stone']) {
+    assert.match(symbols[id], /data-region="surface-wetness"[^>]*--asset-wet-opacity/);
+    assert.match(symbols[id], /data-region="ledge-snow"[^>]*--asset-snow-opacity/);
+  }
+  for (const region of ['wet-fabric', 'seam-beads', 'shed-snow']) {
+    assert.match(symbols['camp-tent-shell'], new RegExp(`data-region="${region}"`));
+  }
+});
+
 test('campsite gear exposes construction and wear detail', () => {
   const manifests = {
     'trail-boots': ['toe-caps', 'eyelets', 'tread-lugs', 'scuff-marks'],

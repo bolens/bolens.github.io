@@ -61,6 +61,9 @@ try {
     const screenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
     writeFileSync(`/tmp/404-parallax-${viewport.name}.png`, Buffer.from(screenshot.data, 'base64'));
     if (viewport.name === 'desktop') {
+      const camperClip = await evaluate(send, `(()=>{const boxes=['.tent-guy','.tent-girl'].map(selector=>document.querySelector(selector).getBoundingClientRect());const x=Math.min(...boxes.map(box=>box.left)),y=Math.min(...boxes.map(box=>box.top));return {x,y,width:Math.max(...boxes.map(box=>box.right))-x,height:Math.max(...boxes.map(box=>box.bottom))-y,scale:4}})()`);
+      const campers = await send('Page.captureScreenshot', { format:'png', fromSurface:true, clip:camperClip });
+      writeFileSync('/tmp/404-campers-detail.png', Buffer.from(campers.data, 'base64'));
       const motionMatrix = await evaluate(send, `(()=>{const result={};for(const time of ['day','night','morning','evening','twilight'])for(const condition of portfolioWeather.conditions){portfolioSceneTime.setTime(time);portfolioWeather.setLocationCondition(condition);result[time+'-'+condition]=document.querySelector('.cryptid-camp').getAnimations({subtree:true}).filter((animation)=>animation.effect?.target?.dataset.runtimeMotion==='live').length}return result})()`);
       assert.ok(Math.max(...Object.entries(motionMatrix).filter(([name])=>!/(windy|thunderstorm)$/.test(name)).map(([,count])=>count)) <= 15, `standard motion budget exceeded: ${JSON.stringify(motionMatrix)}`);
       assert.ok(Math.max(...Object.entries(motionMatrix).filter(([name])=>/(windy|thunderstorm)$/.test(name)).map(([,count])=>count)) <= 21, `wind motion budget exceeded: ${JSON.stringify(motionMatrix)}`);
@@ -116,6 +119,24 @@ try {
       assert.ok(plantStates.drought.dormant, 'dry moss retains a dormant material');
       assert.equal(plantStates.clear.bank, 1, 'fronds recover on return to clear conditions');
       assert.equal(plantStates.clear.dormant, '', 'moss restores its placement palette');
+      const meadowStates = await evaluate(send, `(()=>{
+        const states={};
+        for(const condition of ['clear','rainy','dry','drought','snowy','windy','thunderstorm','clear']){
+          portfolioWeather.setLocationCondition(condition);
+          const flower=getComputedStyle(document.querySelector('use[href="#wildflower-clump"]'));
+          const reed=getComputedStyle(document.querySelector('.bank-reeds use'));
+          states[condition]={flower:Number(flower.getPropertyValue('--flower-upright')||1),reed:Number(reed.getPropertyValue('--reed-upright')||1),lean:flower.getPropertyValue('--plant-lean').trim(),petal:flower.getPropertyValue('--flower-condition-petal').trim()};
+        }
+        return states;
+      })()`);
+      assert.ok(meadowStates.rainy.flower < meadowStates.clear.flower);
+      assert.ok(meadowStates.drought.flower < meadowStates.dry.flower);
+      assert.ok(meadowStates.drought.reed > meadowStates.drought.flower, 'bank vegetation retains more upright growth');
+      assert.ok(meadowStates.snowy.reed < meadowStates.rainy.reed);
+      assert.equal(meadowStates.windy.lean, '-9deg');
+      assert.equal(meadowStates.thunderstorm.lean, '-14deg');
+      assert.equal(meadowStates.clear.petal, '', 'clear restores placement-specific flower colors');
+      assert.equal(meadowStates.clear.lean, '');
       await evaluate(send, `portfolioWeather.setLocationCondition('thunderstorm')`);
       await finishFiniteAnimations(send, '.cryptid-camp');
       const storm = await evaluate(send, `(()=>{
@@ -139,7 +160,10 @@ try {
       })()`);
       assert.equal(rainLayering.rainAfterTerrain, true);
       assert.ok(rainLayering.mountainOpacity.every((value) => value === '1'));
+      const stamps = await evaluate(send, `['.asset-rain-mark','.asset-wet-mark','.asset-snow-mark','.asset-cloud-mark','.asset-mist-mark','.asset-overcast-mark','.asset-wind-mark'].map(selector=>getComputedStyle(document.querySelector(selector)).display)`);
+      assert.ok(stamps.every(value=>value==='none'), 'weather must not stamp floating lines or snow bands on every glyph');
       await waitForFrames(send);
+      await finishFiniteAnimations(send, '.cryptid-camp');
       const rainyScreenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
       writeFileSync('/tmp/404-rain-desktop.png', Buffer.from(rainyScreenshot.data, 'base64'));
       const snowLayering = await evaluate(send, `(()=>{
@@ -160,6 +184,9 @@ try {
       assert.ok(snowLayering.rainStrokes >= 2);
       assert.equal(snowLayering.front, true);
       await waitForFrames(send);
+      await finishFiniteAnimations(send, '.cryptid-camp');
+      assert.equal(await evaluate(send, `getComputedStyle(document.querySelector('.weather-rain')).visibility`), 'hidden');
+      assert.equal(await evaluate(send, `getComputedStyle(document.querySelector('.cryptid-camp')).getPropertyValue('--pine-snow-load').trim()`), '.72');
       const snowyScreenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
       writeFileSync('/tmp/404-snow-desktop.png', Buffer.from(snowyScreenshot.data, 'base64'));
       const windMotion = await evaluate(send, `(()=>{
