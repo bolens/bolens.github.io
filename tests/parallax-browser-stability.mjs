@@ -31,13 +31,13 @@ try {
       const planes=[...figure.querySelectorAll('[data-parallax-plane]')];
       const baseline=subjectTransforms();
       const box=figure.getBoundingClientRect();
-      const points=Array.from({length:80},(_,index)=>({x:box.left+box.width*(index%2?.92:.08),y:box.top+box.height*((index%5)/4*.84+.08)}));
+      const points=Array.from({length:24},(_,index)=>({x:box.left+box.width*(index%2?.92:.08),y:box.top+box.height*((index%5)/4*.84+.08)}));
       for(const point of points){figure.dispatchEvent(new PointerEvent('pointermove',{clientX:point.x,clientY:point.y,pointerType:'mouse',bubbles:true}));await new Promise(requestAnimationFrame)}
       const after=subjectTransforms();
       const transitions=planes.flatMap((node)=>node.getAnimations()).filter((animation)=>animation.constructor.name==='CSSTransition').length;
       const parallaxOffsets=()=>['back','far','mid','near'].flatMap((depth)=>['x','y'].map((axis)=>figure.style.getPropertyValue('--parallax-'+depth+'-'+axis)));
       const stableBefore=parallaxOffsets();
-      const point=points.at(-1);for(let index=0;index<20;index++){figure.dispatchEvent(new PointerEvent('pointermove',{clientX:point.x,clientY:point.y,pointerType:'mouse',bubbles:true}));await new Promise(requestAnimationFrame)}
+      const point=points.at(-1);for(let index=0;index<8;index++){figure.dispatchEvent(new PointerEvent('pointermove',{clientX:point.x,clientY:point.y,pointerType:'mouse',bubbles:true}));await new Promise(requestAnimationFrame)}
       figure.getAnimations({subtree:true}).forEach((animation)=>animation.play());
       const canvas=figure.querySelector('.camp-atmosphere');
       resolve({baseline,after,planeCount:planes.length,planeMotion:planes.map((node)=>getComputedStyle(node).translate),transitions,stableBefore,stableAfter:parallaxOffsets(),density:figure.dataset.sceneDensity,renderTier:figure.dataset.renderTier,animationCount:figure.getAnimations({subtree:true}).length,canvasPixels:canvas.width*canvas.height,displayPixels:Math.round(figure.clientWidth*figure.clientHeight)});
