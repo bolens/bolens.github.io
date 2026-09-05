@@ -228,11 +228,12 @@
             <g data-region="gust-streamers" fill="none" stroke="var(--wind-line,#d2e2dc)" stroke-linecap="round" opacity="var(--wind-line-opacity,.28)"><path d="M-45 176q112-34 218-4t218-2" stroke-width="3"/><path d="M186 286q128-35 248-3t251-4" stroke-width="2"/><path d="M694 205q132-32 257 0t275-8" stroke-width="3"/><path d="M-18 492q102-29 199-2t205-5" stroke-width="2"/><path d="M784 530q117-31 227-1t222-6" stroke-width="2.5"/></g>
             <g data-region="leaf-debris" fill="var(--wind-leaf,#877955)" opacity="var(--wind-leaf-opacity,.52)"><path d="m116 350 9-4 7 5-8 5Z"/><path d="m342 442 8-6 9 4-7 7Z"/><path d="m568 328 10-4 6 6-9 4Z"/><path d="m814 390 8-5 8 5-8 6Z"/><path d="m1058 306 9-5 7 6-8 5Z"/><path d="m978 604 8-4 7 5-7 5Z"/></g>
           </symbol>
-          <symbol id="camp-log" viewBox="0 0 320 44" data-regions="bark-body,bark-highlights,char-marks,cut-ends,growth-rings,sky-facing-surface">
+          <symbol id="camp-log" viewBox="0 0 320 44" data-regions="bark-body,bark-highlights,char-marks,burned-bark-plates,cut-ends,growth-rings,sky-facing-surface">
             <rect x="17" y="4" width="286" height="36" rx="18" fill="var(--log-bark,url(#bark-grain))" stroke="var(--log-outline,#281a16)" stroke-width="5"/>
             <path class="surface-light" data-region="sky-facing-surface" d="M35 6h250q12 0 15 10H23q3-10 12-10Z"/>
             <path d="M38 13q52 8 104 0t103 1q25 4 47-2M55 30q35-7 69 0m49-1q31-8 62 0" fill="none" stroke="var(--log-highlight,#c17849)" stroke-width="3" stroke-linecap="round" opacity=".72"/>
             <g fill="none" stroke="var(--log-char,#251814)" stroke-width="2.5" stroke-linecap="round"><path d="m81 14 18 6m40-3 21 5m49-6 19 6m-126 11q12-11 24 0m69-5q12-10 25 0"/><path d="m261 15 13 4m-7 8 16-5"/></g>
+            <g class="asset-detail-secondary" data-region="burned-bark-plates" opacity="var(--log-burning-char-opacity,0)" fill="#232622" stroke="#777567" stroke-width="1.4"><path d="m103 7 21 3-4 10-20-2Zm25 5 24-3 8 12-28 2Zm36-4 25 4-4 18-24-6Zm27 7 27-4 7 17-32 6Z"/></g>
             <g fill="var(--log-end,#70452d)" stroke="var(--log-outline,#281a16)" stroke-width="4"><ellipse cx="18" cy="22" rx="15" ry="18"/><ellipse cx="302" cy="22" rx="15" ry="18"/></g>
             <g fill="none" stroke="var(--log-ring,#a86940)" stroke-width="2.5"><ellipse cx="18" cy="22" rx="8" ry="11"/><ellipse cx="302" cy="22" rx="8" ry="11"/><path d="m13 16 11 13m-12 0 12-14m273 1 11 13m-12 0 12-14"/></g>
           </symbol>
@@ -297,9 +298,10 @@
             </g>
             <use href="#terrain-condition-marks" width="140" height="90" data-region="conditions"/>
           </symbol>
-          <symbol id="fire-ring-stone" viewBox="0 0 44 30" data-regions="stone-body,stone-face,stone-cracks,mineral-specks,soot-band,ember-edge,surface-wetness,ledge-snow,conditions">
-            <path d="M3 17 12 5l20 1 9 11-8 10-21 1Z" fill="var(--ring-stone-fill,#566059)" stroke="var(--ring-stone-outline,#263432)" stroke-width="2.5" stroke-linejoin="round"/>
-            <path class="asset-detail-secondary" d="m12 7 15 1 8 7-18 2Z" fill="var(--ring-stone-face,#84908a)"/>
+          <symbol id="fire-ring-stone" viewBox="0 0 44 30" data-regions="stone-body,stone-face,buried-contact-face,stone-cracks,mineral-specks,soot-band,ember-edge,surface-wetness,ledge-snow,conditions">
+            <path data-region="stone-body" d="M3 18q0-6 5-9l7-5 13 1 8 5q6 3 5 9l-7 7-13 2-11-2Z" fill="var(--ring-stone-fill,#566059)" stroke="var(--ring-stone-outline,#263432)" stroke-width="2.5" stroke-linejoin="round"/>
+            <path class="asset-detail-secondary" data-region="stone-face" d="m9 11 7-5 12 1 7 6-12 3-12-1Z" fill="var(--ring-stone-face,#84908a)"/>
+            <path class="asset-detail-secondary" data-region="buried-contact-face" d="m5 19 10 3 11-1 12-3-5 7-13 2-10-2Z" fill="var(--ring-stone-shadow,#303b36)"/>
             <path class="asset-detail-secondary" d="m15 9 5 7-6 7m17-13-6 8 5 6" fill="none" stroke="var(--ring-stone-crack,#242d2b)" stroke-width="1.8" stroke-linecap="round"/>
             <g class="asset-detail-fine" fill="var(--ring-stone-mineral,#aeb2a0)"><circle cx="14" cy="11" r="1"/><circle cx="29" cy="12" r=".8"/><circle cx="34" cy="18" r=".9"/></g>
             <path class="asset-detail-fine" d="M6 18q15-5 32 0" fill="none" stroke="var(--ring-stone-soot,#171b1a)" stroke-width="4" stroke-linecap="round"/>
@@ -528,9 +530,10 @@
             </g>
             <use href="#terrain-condition-marks" width="180" height="50"/>
           </symbol>
-          <symbol id="coal-piece" viewBox="0 0 44 24" data-regions="coal-body,ember-fissures,char-face,char-flakes,ash-dust,conditions">
-            <path d="M3 14 8 6l11-3 9 3 8-1 6 8-4 7-13 2-16-2Z" fill="var(--coal-fill,#7e3326)" stroke="var(--coal-outline,#2c211d)" stroke-width="3" stroke-linejoin="round"/>
-            <path d="m9 9 9 3 7-4 10 4m-17 0 4 8m3-12 3 7" fill="none" stroke="var(--coal-glow,#d85b35)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity="var(--coal-glow-opacity,.45)"/>
+          <symbol id="coal-piece" viewBox="0 0 44 24" data-regions="coal-body,ember-fissures,char-face,fractured-char-face,char-flakes,ash-dust,conditions">
+            <path data-region="coal-body" d="m3 15 4-6 6-2 3-4 10 2 5 4 6-1 5 6-4 6-8 1-5 2-14-2Z" fill="var(--coal-fill,#382b26)" stroke="var(--coal-outline,#2c211d)" stroke-width="3" stroke-linejoin="round"/>
+            <path class="asset-detail-secondary" data-region="fractured-char-face" d="m8 10 8-5 9 2-5 6-10 2Zm15 4 8-3 7 3-3 4-11 2Z" fill="var(--coal-char,#171817)"/>
+            <g class="coal-heat" data-region="ember-fissures"><path d="m9 9 9 3 7-4 10 4m-17 0 4 8m3-12 3 7" fill="none" stroke="var(--coal-glow,#d85b35)" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" opacity="var(--coal-glow-opacity,.45)"/></g>
             <path class="asset-detail-secondary" d="m7 16 11 3 16-2" fill="none" stroke="var(--coal-char,#171817)" stroke-width="2" stroke-linecap="round"/>
             <path class="asset-detail-fine" d="m11 7 5 3m14-3 4 3m-12 9 6-2" fill="none" stroke="var(--coal-flake,#3e302a)" stroke-width="1.2" stroke-linecap="round"/>
             <g class="asset-detail-fine" fill="var(--coal-ash,#a49a90)"><circle cx="10" cy="15" r="1"/><circle cx="31" cy="18" r=".8"/><circle cx="36" cy="12" r=".7"/></g>
@@ -579,7 +582,7 @@
             <ellipse cx="90" cy="59" rx="39" ry="11" fill="var(--stove-burner,#414c49)" stroke="var(--stove-outline,#2b2623)" stroke-width="4"/>
             <g fill="none" stroke="var(--stove-grate,#79847d)" stroke-width="5" stroke-linecap="round"><path d="M49 54h82M61 43l58 22m0-22L61 65"/></g>
             <path d="M126 73h25" fill="none" stroke="var(--stove-valve,#b5a47e)" stroke-width="5" stroke-linecap="round"/><circle cx="154" cy="73" r="7" fill="var(--stove-knob,#724638)" stroke="var(--stove-outline,#2b2623)" stroke-width="3"/>
-            <path d="M69 52q5-13 11-1 5-18 11 0 7-15 13 1-7 9-17 8-11 1-18-8Z" fill="var(--stove-flame,#6cc7df)" stroke="var(--stove-flame-edge,#d7f5ef)" stroke-width="2"/>
+            <path class="stove-flame" d="M69 52q5-13 11-1 5-18 11 0 7-15 13 1-7 9-17 8-11 1-18-8Z" fill="var(--stove-flame,#6cc7df)" stroke="var(--stove-flame-edge,#d7f5ef)" stroke-width="2"/>
             <path d="M52 16h76l-7 37H59Z" fill="var(--pot-fill,#4f5d59)" stroke="var(--pot-outline,#202a29)" stroke-width="4" stroke-linejoin="round"/>
             <path d="M59 25h62M48 26H34m98 0h14" fill="none" stroke="var(--pot-highlight,#9ba9a2)" stroke-width="4" stroke-linecap="round"/>
             <path d="M58 16q32-15 64 0Z" fill="var(--pot-lid,#74817b)" stroke="var(--pot-outline,#202a29)" stroke-width="4"/><path d="M84 4h13" fill="none" stroke="var(--pot-handle,#b4b7a6)" stroke-width="5" stroke-linecap="round"/>
@@ -1171,11 +1174,6 @@
           <use class="terrain-asset" data-light="fire" data-weather="wet" href="#fire-ring-stone" x="589" y="628" width="53" height="36" style="--ring-stone-fill:#566059"/>
           <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="632" y="636" width="52" height="35" transform="rotate(6 658 654)" style="--ring-stone-fill:#49534e;--ring-stone-crack-opacity:.55"/>
           <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="673" y="650" width="50" height="34" transform="rotate(12 698 667)" style="--ring-stone-fill:#59615a;--ring-stone-face-opacity:.25"/>
-          <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fire-ring-stone" x="503" y="670" width="50" height="34" transform="rotate(-10 528 687)" style="--ring-stone-fill:#48534f"/>
-          <use class="terrain-asset" data-light="shadow" data-weather="clear" href="#fire-ring-stone" x="535" y="686" width="54" height="37" style="--ring-stone-fill:#424d49"/>
-          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="577" y="697" width="57" height="39" transform="rotate(-4 606 717)" style="--ring-stone-fill:#56605a;--ring-stone-face-opacity:.46"/>
-          <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fire-ring-stone" x="624" y="694" width="55" height="38" transform="rotate(5 652 713)" style="--ring-stone-fill:#3f4a47;--ring-stone-crack-opacity:.65"/>
-          <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="665" y="680" width="53" height="36" transform="rotate(9 692 698)" style="--ring-stone-fill:#58605a"/>
         </g>
         <use class="bench bench-left scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" href="#camp-bench" x="212" y="606" width="340" height="64"/>
         <use class="bench bench-right scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" href="#camp-bench" x="692" y="610" width="260" height="49" style="--log-end:#684029;--log-ring:#a2643d"/>
@@ -1329,24 +1327,32 @@
 
         <rect class="scene-grain" width="1200" height="760" fill="#8fa39c" filter="url(#scene-grain)" opacity=".055" style="mix-blend-mode:soft-light" pointer-events="none"/>
 
-        <g class="campfire scene-layer" data-scene-layer="campsite-effects" data-scale-band="subject" data-region="campfire-assembly" data-detail-layer="base" data-weather-reactive="fire" data-light-reactive="fire" transform="translate(134 143) scale(.78)">
-          <g class="coal-bed"><use class="terrain-asset" data-light="fire" data-weather="dry" href="#coal-piece" x="537" y="658" width="44" height="24" transform="rotate(-7 559 670)"/><use class="terrain-asset" data-light="fire" data-weather="clear" href="#coal-piece" x="563" y="667" width="44" height="24" transform="rotate(5 585 679)" style="--coal-fill:#472725;--coal-glow-opacity:.28"/><use class="terrain-asset" data-light="fire" data-weather="dry" href="#coal-piece" x="592" y="667" width="46" height="25" transform="rotate(-4 615 680)" style="--coal-fill:#92392a;--coal-glow:#ff8a43"/><use class="terrain-asset" data-light="shadow" data-weather="wet" href="#coal-piece" x="622" y="657" width="44" height="24" transform="rotate(8 644 669)" style="--coal-fill:#512624;--coal-glow-opacity:.22"/></g>
+        <g class="campfire scene-layer" data-scene-layer="campsite-effects" data-scale-band="subject" data-region="campfire-assembly" data-detail-layer="base" data-weather-reactive="fire" data-light-reactive="fire" transform="translate(134 164) scale(.78)">
+          <g class="coal-bed"><use class="terrain-asset" data-light="fire" data-weather="dry" href="#coal-piece" x="537" y="658" width="28" height="16" transform="rotate(-7 559 670)"/><use class="terrain-asset" data-light="fire" data-weather="clear" href="#coal-piece" x="570" y="669" width="25" height="14" transform="rotate(5 585 679)" style="--coal-fill:#472725;--coal-glow-opacity:.28"/><use class="terrain-asset" data-light="fire" data-weather="dry" href="#coal-piece" x="605" y="666" width="32" height="17" transform="rotate(-4 615 680)" style="--coal-fill:#46322a;--coal-glow:#ff8a43"/><use class="terrain-asset" data-light="shadow" data-weather="wet" href="#coal-piece" x="642" y="657" width="23" height="13" transform="rotate(8 644 669)" style="--coal-fill:#512624;--coal-glow-opacity:.22"/></g>
           <g class="fire-logs" data-region="campfire-log-stack" data-detail-layer="base" data-weather-reactive="fire" data-light-reactive="fire" stroke-linecap="round">
-            <use href="#camp-log" x="522" y="642" width="142" height="20" style="--log-bark:#6d3927;--log-outline:#3a211b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
-            <use href="#camp-log" x="531" y="642" width="124" height="18" transform="rotate(-24 593 651)" style="--log-bark:#71402b;--log-outline:#3a211b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
-            <use href="#camp-log" x="532" y="642" width="122" height="17" transform="rotate(27 593 651)" style="--log-bark:#653522;--log-outline:#34201b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
+            <use href="#camp-log" x="544" y="650" width="132" height="22" style="--log-bark:#6d3927;--log-outline:#3a211b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
+            <use href="#camp-log" x="550" y="645" width="124" height="20" transform="rotate(-18 612 655)" style="--log-bark:#71402b;--log-outline:#3a211b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
+            <use href="#camp-log" x="563" y="640" width="106" height="18" transform="rotate(22 616 649)" style="--log-bark:#653522;--log-outline:#34201b;--log-highlight:#b66a3e;--log-end:#241817;--log-ring:#8a432b"/>
           </g>
           <g class="fire-ash"><use class="terrain-asset" data-light="fire" data-weather="dry" href="#ash-scatter" x="531" y="675" width="120" height="24"/></g>
           <g class="flame-stack" data-region="open-flame" data-detail-layer="effect" data-weather-reactive="fire" data-light-reactive="fire">
-          <path class="flame flame-outer" d="M592 646c-45-34-15-68 1-84 5 22 19 18 15-17 50 39 46 85 8 105Z" fill="#ef6a3f"/>
+          <path class="flame flame-outer" d="M581 648c-18-18-19-32-6-53 0 17 10 20 14 22-8-25 8-36 9-61 18 18 6 38 17 46 4-9 6-17 4-27 25 26 32 50 4 74Z" fill="#ef7938"/>
           <path class="flame flame-veil" d="M581 645q-20-30 5-56-2 24 15 28 13-24 10-51 32 36 23 72-20 17-53 7Z" fill="#ff9b45" opacity=".34"/>
           <path class="flame flame-side flame-side-left" d="M588 647q-35-18-17-48 4 18 17 20 10 10 0 28Z" fill="#f28a43"/>
           <path class="flame flame-side flame-side-right" d="M626 649q32-24 11-51-1 18-14 24-8 12 3 27Z" fill="#f08a3f"/>
-          <path class="flame flame-inner" d="M599 647c-20-20 0-39 8-53 20 20 25 42 8 57Z" fill="#ffd05c"/>
+          <path class="flame flame-inner" d="M590 647q-11-17 1-31 0 12 9 14-4-20 9-34-3 19 9 31 7 13-3 24Z" fill="#ffd576"/>
           <path class="flame flame-core" d="M608 646q-9-17 6-33 15 21 2 37Z" fill="#fff1ad"/>
           <g class="heat-shimmer" fill="none" stroke="#ffd98a" stroke-width="4" stroke-linecap="round" opacity=".18"><path d="M585 588q-12-15 2-29t-1-27"/><path d="M627 587q13-16-1-29t2-29"/></g>
           </g>
           <g class="embers"><use class="terrain-asset" data-light="fire" data-weather="clear" href="#ember-spark" x="581" y="620" width="8" height="8"/><use class="terrain-asset" data-light="fire" data-weather="dry" href="#ember-spark" x="625" y="617" width="7" height="7" style="--ember-fill:#ffb247"/><use class="terrain-asset" data-light="fire" data-weather="clear" href="#ember-spark" x="610" y="608" width="6" height="6"/><use class="terrain-asset" data-light="fire" data-weather="dry" href="#ember-spark" x="594" y="625" width="6" height="6" style="--ember-halo-opacity:.22"/><use class="terrain-asset" data-light="shadow" data-weather="wet" href="#ember-spark" x="636" y="628" width="5" height="5" style="--ember-fill:#ff9a45"/><use class="terrain-asset" data-light="fire" data-weather="clear" href="#ember-spark" x="603" y="618" width="7" height="7" style="--ember-halo-opacity:.42"/></g>
+        </g>
+
+        <g class="fire-ring-stones fire-ring-front scene-layer" data-scene-layer="campsite-effects" data-scale-band="subject" data-region="front-firepit-rim" data-detail-layer="base" data-weather-reactive="surface" data-light-reactive="fire">
+          <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fire-ring-stone" x="503" y="670" width="50" height="34" transform="rotate(-10 528 687)" style="--ring-stone-fill:#48534f"/>
+          <use class="terrain-asset" data-light="shadow" data-weather="clear" href="#fire-ring-stone" x="535" y="686" width="54" height="37" style="--ring-stone-fill:#424d49"/>
+          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="577" y="697" width="57" height="39" transform="rotate(-4 606 717)" style="--ring-stone-fill:#56605a;--ring-stone-face-opacity:.46"/>
+          <use class="terrain-asset" data-light="shadow" data-weather="wet" href="#fire-ring-stone" x="624" y="694" width="55" height="38" transform="rotate(5 652 713)" style="--ring-stone-fill:#3f4a47;--ring-stone-crack-opacity:.65"/>
+          <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="665" y="680" width="53" height="36" transform="rotate(9 692 698)" style="--ring-stone-fill:#58605a"/>
         </g>
 
         <g class="condition-detail condition-drought drought-camp-stove depth-near" data-region="drought-cooking-station">

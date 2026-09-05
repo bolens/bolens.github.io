@@ -57,10 +57,24 @@ for (const restrained of [false, true]) {
       assert.ok(sparks.length >= 1 && sparks.length <= (restrained ? 4 : 7));
       for (const spark of sparks) {
         assert.ok(spark.x >= 588.5 && spark.x <= 631.5, `ember escaped horizontally: ${spark.x}`);
-        assert.ok(spark.y >= 610 && spark.y <= 648, `ember escaped vertically: ${spark.y}`);
+        assert.ok(spark.y >= 624 && spark.y <= 662, `ember escaped vertically: ${spark.y}`);
         assert.ok(spark.radius >= .6 && spark.radius <= 1.15);
         assert.ok(alpha(spark.fill) >= 0 && alpha(spark.fill) <= .36);
       }
     }
   });
 }
+
+test('cold fire emits no canvas sparks or heat and stops marshmallow exposure', () => {
+  const scene = createScene();
+  scene.time({time:'day', cycle:'fixed', fireActive:false});
+  scene.advance(3000);
+  scene.frame(4000);
+  assert.equal(brightness(scene, embers), 0);
+  const heat = scene.paints.flatMap(paint => paint.fill?.stops ?? []).filter(stop => stop.color.startsWith('rgba(255,170,70,'));
+  assert.equal(heat.length, 0);
+  assert.equal(scene.figure.dataset.marshmallowCookLevel, '0.000');
+  scene.time({time:'morning', cycle:'fixed', fireActive:true});
+  scene.advance(3000);
+  assert.ok(Number(scene.figure.dataset.marshmallowCookLevel)>0);
+});

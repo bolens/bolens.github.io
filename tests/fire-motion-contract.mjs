@@ -15,6 +15,8 @@ test('coals stay planted while their glow changes gently', () => {
   assert.match(pulse, /opacity:\.82/);
   assert.match(pulse, /opacity:\.96/);
   assert.match(css, /animation:coal-pulse 3\.6s ease-in-out infinite alternate/);
+  assert.match(css, /\.coal-heat \{ animation:coal-pulse/);
+  assert.doesNotMatch(css, /\.coal-bed > \* \{ animation:coal-pulse/);
 });
 
 test('fallback SVG sparks remain small and close to the flame', () => {

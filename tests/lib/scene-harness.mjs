@@ -94,6 +94,6 @@ export function createScene({ condition = 'clear', reduced = false, restrained =
     reduce(matches) { media.matches = matches; media.emit('change'); },
     appearance() { appearanceSubscriber(); },
     weather(next) { window.portfolioWeather.condition = next; weatherSubscriber({ condition: next }); },
-    time(state) { timeSubscriber(state); },
+    time(state) { window.portfolioSceneTime.state = state; window.portfolioSceneTime.time = state.time; timeSubscriber(state); },
   };
 }

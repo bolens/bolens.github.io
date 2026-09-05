@@ -16,6 +16,10 @@
   const subscribers = new Set();
   const clamp = (value, low = 0, high = 1) => Math.min(high, Math.max(low, value));
   const mix = (start, end, amount) => start + (end - start) * amount;
+  // Local scene-clock windows; fixed daytime is deliberately between meals.
+  const mealWindows = Object.freeze([[7, 9], [12, 14], [18, 20]].map(Object.freeze));
+  const fireAt = (time, hour) => ['night', 'twilight'].includes(time)
+    || (hour === undefined ? ['morning', 'evening'].includes(time) : mealWindows.some(([start, end]) => hour >= start && hour < end));
 
   const cycleAt = (date) => {
     const hour = date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 3600;
@@ -36,14 +40,14 @@
     const darkness = hour < 5 ? 1 : hour < 8 ? mix(.72, 0, (hour - 5) / 3) : hour < 17 ? 0 : hour < 20 ? mix(0, .36, (hour - 17) / 3) : hour < 22 ? mix(.36, 1, (hour - 20) / 2) : 1;
     const sunriseWarmth = 1 - clamp(Math.abs(hour - 6.5) / 2.5);
     const sunsetWarmth = 1 - clamp(Math.abs(hour - 18.5) / 2.5);
-    return Object.freeze({ time, ...celestial, darkness, warmth: Math.max(sunriseWarmth, sunsetWarmth) });
+    return Object.freeze({ time, hour, fireActive:fireAt(time, hour), ...celestial, darkness, warmth: Math.max(sunriseWarmth, sunsetWarmth) });
   };
 
   const snapshot = () => {
-    if (selectedTime) return Object.freeze({ time: selectedTime, source: 'scene', cycle: 'fixed', progress: .5, ...fixedPositions[selectedTime] });
+    if (selectedTime) return Object.freeze({ time: selectedTime, fireActive:fireAt(selectedTime), source: 'scene', cycle: 'fixed', progress: .5, ...fixedPositions[selectedTime] });
     if (appearance.theme !== 'auto') {
       const time = appearance.resolvedTheme === 'night' ? 'night' : 'day';
-      return Object.freeze({ time, source: 'appearance', cycle: 'fixed', progress: .5, ...fixedPositions[time] });
+      return Object.freeze({ time, fireActive:fireAt(time), source: 'appearance', cycle: 'fixed', progress: .5, ...fixedPositions[time] });
     }
     return Object.freeze({ ...cycleAt(clock), source: 'clock', cycle: 'dynamic' });
   };
@@ -54,6 +58,7 @@
     root.dataset.sceneTime = state.time;
     root.dataset.sceneTimeSource = state.source;
     root.dataset.sceneCycle = state.cycle;
+    root.dataset.sceneFire = state.fireActive ? 'burning' : 'cold';
     root.style.setProperty('--scene-orb-x', `${state.x.toFixed(2)}px`);
     root.style.setProperty('--scene-orb-y', `${state.y.toFixed(2)}px`);
     root.style.setProperty('--scene-orb-center-x', `${(1002 + state.x).toFixed(2)}px`);
@@ -103,6 +108,7 @@
   sync();
   window.portfolioSceneTime = Object.freeze({
     times: Object.freeze([...timeModes]),
+    mealWindows,
     setTime,
     useAppearanceFallback,
     refresh: sync,

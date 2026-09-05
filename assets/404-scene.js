@@ -81,9 +81,11 @@
   let atmosphere = profileFor(window.portfolioWeather?.condition);
   let motionProfile = window.portfolioSceneMotion?.profile || Object.freeze({ tempo:1, drift:.7, lift:1, glow:1, activity:1, play:1, water:1, smoke:1 });
   const fireStrength = Object.freeze({ clear:1, cloudy:.9, misty:.8, overcast:.8, rainy:.45, wet:.95, dry:1.08, snowy:.65, drought:0, windy:1.06, thunderstorm:.2 });
+  let fireEnabled = window.portfolioSceneTime?.state?.fireActive !== false;
+  const fireActive = () => fireEnabled && window.portfolioWeather?.condition !== 'drought';
   const updateMarshmallowCook = () => {
     if (!visible || overlayActive) return;
-    marshmallowExposure = Math.min(180, marshmallowExposure + (fireStrength[window.portfolioWeather?.condition] ?? 1));
+    marshmallowExposure = Math.min(180, marshmallowExposure + (fireActive() ? (fireStrength[window.portfolioWeather?.condition] ?? 1) : 0));
     const cooked = marshmallowExposure / 180;
     figure.style.setProperty('--marshmallow-cook-level', (.12 + cooked * .7).toFixed(3));
     figure.style.setProperty('--marshmallow-mark-level', Math.min(.9, cooked * 1.1).toFixed(3));
@@ -255,9 +257,9 @@
       context.restore();
     });
 
-    const [fireX, fireY] = point(610, 656);
+    const [fireX, fireY] = point(610, 670);
     const firePulse = motionReduced() ? 1 : .975 + .025 * motionProfile.activity * Math.sin(time * 2.4 / motionProfile.tempo) + .012 * motionProfile.play * Math.sin(time * 4.1 / motionProfile.tempo + 1.2);
-    paintGlow(fireX, fireY, 176 * view.scale * firePulse * (.9 + motionProfile.glow * .1), [[0, `rgba(255,170,70,${.105 * motionProfile.glow})`], [.38, `rgba(242,103,48,${.052 * motionProfile.glow})`], [1, 'rgba(242,90,40,0)']]);
+    if (fireActive()) paintGlow(fireX, fireY, 150 * view.scale * firePulse * (.9 + motionProfile.glow * .1), [[0, `rgba(255,170,70,${.105 * motionProfile.glow})`], [.38, `rgba(242,103,48,${.052 * motionProfile.glow})`], [1, 'rgba(242,90,40,0)']]);
 
     fireflies.forEach((fly) => {
       const wave = .5 + .5 * Math.sin(time * fly.speed / motionProfile.tempo + fly.phase);
@@ -275,7 +277,7 @@
 
     embers.forEach((ember) => {
       const progress = (time * .1 / motionProfile.tempo + ember.phase) % 1;
-      const alpha = Math.sin(progress * Math.PI) * .36 * atmosphere.embers * timeProfile.embers;
+      const alpha = Math.sin(progress * Math.PI) * .36 * atmosphere.embers * timeProfile.embers * Number(fireActive());
       const x = fireX + (ember.x + ember.sway * progress * motionProfile.play + Math.sin(time * .7 / motionProfile.tempo + ember.phase * 9) * 1.5 * motionProfile.drift) * view.scale;
       const y = fireY - (8 + ember.lift * progress * motionProfile.lift) * view.scale;
       context.fillStyle = `rgba(255,196,91,${alpha})`;
@@ -332,6 +334,7 @@
     draw(motionReduced() ? 7.25 : performance.now() / 1000);
   });
   window.portfolioSceneTime?.subscribe((state) => {
+    fireEnabled = state.fireActive !== false;
     timeProfile = profileForTime(state);
     figure.dataset.atmosphereTime = state.time;
     figure.dataset.atmosphereCycle = state.cycle;

@@ -56,7 +56,11 @@
     if (weatherSelector) selectors.push(weatherSelector);
     if (['windy', 'thunderstorm'].includes(window.portfolioWeather?.condition) && currentTier !== 'minimal') selectors.push('.camp-pines,.river-willows,.camp-tent > use:first-child,.smoke-character');
     for (const selector of selectors) {
-      for (const target of figure.querySelectorAll(selector)) target.dataset.runtimeMotion = 'live';
+      for (const target of figure.querySelectorAll(selector)) {
+        const coldFire = window.portfolioSceneTime?.state?.fireActive === false || window.portfolioWeather?.condition === 'drought';
+        if (coldFire && target.closest('.campfire,.smoke-404')) continue;
+        target.dataset.runtimeMotion = 'live';
+      }
     }
     syncAnimationPlayback();
   };
@@ -74,7 +78,7 @@
   observer.observe(figure);
   applyTier(figure.getBoundingClientRect().width);
   window.portfolioWeather?.subscribe(applyMotionTargets);
-  window.portfolioSceneTime?.subscribe(syncAnimationPlayback);
+  window.portfolioSceneTime?.subscribe(applyMotionTargets);
   window.addEventListener('ui-overlay-change', ({ detail }) => {
     overlayActive = Boolean(detail?.active);
     syncAnimationPlayback();

@@ -504,6 +504,16 @@
 .arm-bigfoot { transform-origin: 381px 523px; }.arm-alien { transform-origin: 520px 526px; animation-delay: -1.2s; }.arm-moth { transform-origin: 728px 526px; animation-delay: -2.4s; }.arm-dogman { transform-origin: 846px 527px; animation-delay: -3.6s; }
 .flame { transform-box: view-box; transform-origin: 608px 648px; }.flame-outer { animation: fire-dance .92s ease-in-out infinite alternate; }.flame-inner { animation: fire-dance .64s -.3s ease-in-out infinite alternate-reverse; }.flame-core { animation: fire-dance .48s -.16s ease-in-out infinite alternate; }
 .flame-stack { transform-box:view-box;transform-origin:608px 648px;transition:scale .8s ease,opacity .8s ease; }
+.fire-logs { --log-burning-char-opacity:.85; }
+/* Cold fuel remains opaque; only heat, emission and combustion disappear. */
+:root[data-scene-fire="cold"] :is(.flame-stack,.embers,.campfire-glow,.firelight-rings,.fire-rim-light,.smoke-404,.smoke-thread,.stove-steam,.stove-flame) { visibility:hidden!important;opacity:0!important; }
+:root[data-scene-fire="cold"] :is(.fire-ring-stones,.campfire) {
+  --fire-bed-coal:#343532;--fire-bed-fissure:#72716a;--fire-bed-scorch:#3e403a;
+  --coal-fill:#30322f!important;--coal-glow:#777970!important;--coal-glow-opacity:0!important;
+  --ring-stone-ember-opacity:0;--log-highlight:#766e5e;--log-ring:#5b5549;
+}
+:root[data-scene-fire="cold"] .coal-bed > use { --coal-fill:#30322f!important;--coal-glow-opacity:0!important;animation:none; }
+:root[data-scene-fire="cold"] .fire-logs > use { --log-highlight:#766e5e!important;--log-ring:#5b5549!important;--log-bark:#383831!important; }
 :root[data-weather="cloudy"] .flame-stack { scale:.9 .88; }
 :root[data-weather="overcast"] .flame-stack { scale:.86 .8; }
 :root[data-weather="thunderstorm"] .flame-stack ,
@@ -521,7 +531,7 @@
 .flame-side-left { transform-origin:588px 647px;animation:fire-side-left .73s -.2s ease-in-out infinite alternate; }.flame-side-right { transform-origin:626px 649px;animation:fire-side-right .81s -.55s ease-in-out infinite alternate; }
 .campfire-glow { transform-box:fill-box;transform-origin:center;animation:campfire-glow 2.3s ease-in-out infinite alternate; }
 .firelight-rings { transform-box:fill-box;transform-origin:center;animation:firelight-breathe 3.1s -.8s ease-in-out infinite alternate; }
-.coal-bed > * { animation:coal-pulse 3.6s ease-in-out infinite alternate; }.coal-bed > :nth-child(2),.coal-bed > :nth-child(4) { animation-delay:-1.8s; }
+.coal-heat { animation:coal-pulse 3.6s ease-in-out infinite alternate; }
 .embers > * { --ember-drift-x:2px;--ember-lift:-18px;transform-box:fill-box;transform-origin:center;animation:ember-rise 4.4s ease-out infinite; }.embers > :nth-child(2) { --ember-drift-x:-2px;--ember-lift:-15px;animation-delay:-1.4s; }.embers > :nth-child(3) { --ember-drift-x:1px;--ember-lift:-21px;animation-delay:-3s; }.embers > :nth-child(4) { --ember-drift-x:-1px;--ember-lift:-13px;animation-delay:-.8s; }.embers > :nth-child(5) { --ember-drift-x:3px;--ember-lift:-17px;animation-delay:-2.2s; }.embers > :nth-child(6) { --ember-drift-x:-3px;--ember-lift:-19px;animation-delay:-3.6s; }
 :root[data-weather="windy"] .embers > * { --ember-drift-x:18px;--ember-lift:-14px;animation-duration:2.9s; }
 .heat-shimmer { animation:heat-shimmer 2.8s ease-in-out infinite alternate; }
