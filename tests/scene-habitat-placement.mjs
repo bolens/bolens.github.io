@@ -21,6 +21,14 @@ try {
       const failures = await evaluate(send, `(()=>{
         const water=document.querySelector('.river-water > path:nth-child(3)');
         const errors=[];
+        const channels=[...document.querySelectorAll('.river-water > path')].filter(path=>path.getAttribute('fill')!=='none');
+        const woody=[...document.querySelectorAll('use')].filter(node=>!node.closest('symbol')&&['#distant-pine','#aspen-copse','#willow-clump','#bare-tree','#evergreen-shrub','#berry-shrub','#fern-spray'].includes(node.getAttribute('href')));
+        for(const node of woody){
+          const x=+node.getAttribute('x'),y=+node.getAttribute('y'),w=+node.getAttribute('width'),h=+node.getAttribute('height');
+          // Tree crowns can overhang water; permanent trunks/root crowns cannot.
+          const roots=[.45,.5,.55].map(fraction=>new DOMPoint(x+w*fraction,y+h*.98).matrixTransform(node.getScreenCTM()));
+          if(roots.some(root=>channels.some(channel=>channel.isPointInFill(root.matrixTransform(channel.getScreenCTM().inverse())))))errors.push(node.getAttribute('href')+' at '+x+','+y+' has roots in river');
+        }
         const targets=document.querySelectorAll('.woodland-plants use, .forest-floor use, .camp-boulders use, .riparian-foliage use, [data-region="wet-growth"] use, [data-region="snow-covered-ground-detail"] use, [data-region="dry-ground-litter"] use, [data-region="drought-ground-debris"] use');
         for(const node of targets){
           const x=+node.getAttribute('x'),y=+node.getAttribute('y'),w=+node.getAttribute('width'),h=+node.getAttribute('height');
