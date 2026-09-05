@@ -16,7 +16,7 @@
 .case-facts div { padding: 1.25rem 1rem 1.25rem 0; }
 .case-facts dt, .case-next > span { margin-bottom: .45rem; color: var(--muted); font: 700 .75rem/1.4 var(--mono); text-transform: uppercase; letter-spacing: .08em; }
 .case-facts dd { margin: 0; font-size: .95rem; }.case-facts a { text-underline-offset: .25rem; }
-.case-route { --case-progress: 0; position: sticky; z-index: 5; top: 0; margin: 0; padding-block: .35rem .75rem; border-bottom: 1px solid var(--line); background: color-mix(in srgb,var(--paper) 94%,transparent); box-shadow: 0 10px 24px color-mix(in srgb,var(--ink) 7%,transparent); backdrop-filter: blur(10px); }
+.case-route { --case-progress: 0; position: sticky; z-index: 5; top: 0; margin: 0; padding-block: .35rem .75rem; border-bottom: 1px solid var(--line); background: color-mix(in srgb,var(--paper) 94%,transparent); box-shadow:0 6px 14px -10px var(--shadow-contact); backdrop-filter: blur(10px); }
 .case-route { view-transition-name: case-route; }
 .case-route svg { width: 100%; height: clamp(7rem,14vw,10rem); overflow: visible; }
 .case-route-line,.case-route-progress { fill: none; stroke-linecap: round; }
