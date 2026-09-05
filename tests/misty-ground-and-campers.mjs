@@ -34,9 +34,18 @@ test('weather changes the ground itself through layered condition detail', () =>
   }
 });
 
-test('the woman has no facial hair and the man has a restrained goatee', () => {
+test('campers have layered long hair and a groomed full beard', () => {
   assert.match(html, /class="terrain-asset tent-girl"[^>]*--camper-facial-hair-opacity:0/);
+  const camper = html.match(/<symbol id="tent-camper"[^>]*>([\s\S]*?)<\/symbol>/)[1];
   assert.match(html, /data-region="mustache"/);
-  assert.match(html, /data-region="goatee"/);
+  assert.match(camper, /data-region="full-beard"/);
+  assert.match(camper, /class="asset-detail-fine" data-region="beard-texture"/);
+  assert.match(camper, /<g data-region="facial-hair"/, 'beard silhouette survives lower detail tiers');
+  assert.ok(camper.indexOf('data-region="long-hair-back"') < camper.indexOf('data-region="face"'));
+  assert.ok(camper.indexOf('data-region="face"') < camper.indexOf('data-region="long-hair"'));
+  for (const region of ['long-hair-back', 'long-hair', 'hair-strands', 'eyelashes']) {
+    assert.match(camper, new RegExp(`data-region="${region}"[^>]*opacity="var\\(--camper-long-hair-opacity,0\\)"`));
+  }
+  assert.doesNotMatch(camper, /data-region="goatee"/);
   assert.doesNotMatch(html, /M17 43q10 14 20 0v9/);
 });
