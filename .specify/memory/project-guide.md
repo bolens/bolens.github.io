@@ -36,8 +36,10 @@ node --test --test-concurrency=2 --test-timeout=60000 tests/*.mjs
 ```
 
 Run node scripts/build-site.mjs after changing generator inputs. Tests require Node.js
-24 and Chrome or Chromium. Merging main deploys Pages, so publication review must
-include every file in the uploaded repository artifact.
+24 and Chrome or Chromium. Merging main deploys Pages. Publication review must
+include every file in the allowlisted public artifact staged by
+`.github/workflows/deploy-pages.yml`. Repository instructions and specs are not
+part of that artifact.
 
 ## Working through Spec Kit
 
@@ -50,7 +52,11 @@ and constitution checks in `plan.md`, and evidence-bearing work in `tasks.md` un
 feature directory created by Spec Kit. Resolve material unknowns before implementation.
 Mark tasks complete only after their stated verification, and distinguish completed,
 skipped, blocked, and manual checks. Retain completed feature documents as decision
-history; do not backfill feature specifications for already finished code.
+history. Backfill finished code only when explicitly requested. Such documents
+must say they are retrospective baselines, identify the inspected revision, map
+acceptance criteria to existing evidence, and distinguish observed behavior from
+proposed improvements. Do not invent pre-implementation decisions or completed
+test runs. The coverage register is `specs/README.md`.
 
 Keep `.specify/templates/`, `.specify/scripts/`, and generated Codex skills under their
 integration manifests. Use this guide and the constitution for local customization.

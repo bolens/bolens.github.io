@@ -27,6 +27,11 @@ try {
         if(bend.y<400||bend.height>36||bend.width<60)errors.push('distant river climbs above its ground-level bend');
         if(glint.y<bend.y||glint.y+glint.height>bend.y+bend.height)errors.push('distant glint escapes the river bend');
         const channels=[...document.querySelectorAll('.river-water > path')].filter(path=>path.getAttribute('fill')!=='none');
+        const earth=document.querySelector('[data-region="route-head-earth"]');
+        for(const channel of channels){
+          const head=channel.getPointAtLength(0).matrixTransform(channel.getScreenCTM()).matrixTransform(earth.getScreenCTM().inverse());
+          if(!earth.isPointInFill(head))errors.push('river source is exposed above its opaque low bank at '+head.x+','+head.y);
+        }
         const woody=[...document.querySelectorAll('use')].filter(node=>!node.closest('symbol')&&['#distant-pine','#aspen-copse','#willow-clump','#bare-tree','#evergreen-shrub','#berry-shrub','#fern-spray'].includes(node.getAttribute('href')));
         for(const node of woody){
           const x=+node.getAttribute('x'),y=+node.getAttribute('y'),w=+node.getAttribute('width'),h=+node.getAttribute('height');

@@ -25,9 +25,9 @@ test('scene mushroom placements vary composition scale baseline and rotation', (
   const fungi = [...html.matchAll(/<use class="terrain-asset"[^>]+href="#fungi-cluster"[^>]+>/g)].map(([source]) => source);
   const shelves = [...html.matchAll(/<use class="terrain-asset"[^>]+href="#shelf-fungi"[^>]+>/g)].map(([source]) => source);
   const agarics = [...html.matchAll(/<use class="terrain-asset"[^>]+href="#fly-agaric"[^>]+>/g)].map(([source]) => source);
-  assert.equal(fungi.length, 4);
+  assert.equal(fungi.length, 5);
   assert.ok(fungi.every((source) => source.includes('--fungi-') && source.includes('transform="rotate(')));
-  assert.equal(new Set(fungi.map((source) => source.match(/ y="(\d+)"/)?.[1])).size, 4);
+  assert.equal(new Set(fungi.map((source) => source.match(/ y="(\d+)"/)?.[1])).size, 5);
   assert.equal(shelves.length, 2);
   assert.ok(shelves.every((source) => source.includes('--shelf-') && source.includes('transform="rotate(')));
   assert.equal(agarics.length, 2);

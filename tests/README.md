@@ -2,6 +2,17 @@ The suite uses Node's test runner and Chrome/Chromium through CDP. Run all tests
 with the command in the repository README. The tests below cover site behavior
 outside the 404 scene.
 
+The [specification register](../specs/README.md) maps all existing test files to
+subsystems, including the 404 scene. Retrospective packages separate requirements,
+automated evidence, and manual checks. The [backfill audit](../specs/audit.md)
+records documentation validation and any remaining verification gaps.
+
+The active [daytime activities contract](../specs/010-daytime-activities/spec.md)
+adds `daytime-camp-activities.mjs` for occupancy, depth-relative scale, dry-bank and
+rod contacts, and script-disabled fallbacks. `daytime-saucer-route.mjs` checks fixed
+flight phases and both reduced-motion preferences. `scene-habitat-placement.mjs`
+also checks opaque upstream cover across seasonal water levels.
+
 | Code | Behavioral coverage |
 | --- | --- |
 | `assets/appearance-controller.js` | `appearance-controller.mjs` checks restored and invalid preferences, preview precedence, persistence failure, metadata, atomic notifications, system changes, toggles, reset, and cross-tab events. `theme-smoke.mjs` verifies integration with actual theme data and CSS. |

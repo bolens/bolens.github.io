@@ -12,6 +12,7 @@
     twilight: Object.freeze({ x: 0, y: 38, darkness: .58, warmth: .42 }),
   });
   let selectedTime = null;
+  let selectedMoonPhase = null;
   let clock = new Date();
   const subscribers = new Set();
   const clamp = (value, low = 0, high = 1) => Math.min(high, Math.max(low, value));
@@ -20,6 +21,31 @@
   const mealWindows = Object.freeze([[7, 9], [12, 14], [18, 20]].map(Object.freeze));
   const fireAt = (time, hour) => ['night', 'twilight'].includes(time)
     || (hour === undefined ? ['morning', 'evening'].includes(time) : mealWindows.some(([start, end]) => hour >= start && hour < end));
+  // Mean lunar month, not an ephemeris. NASA's Jan 2000 new moon: Jan 6 ~18:15 UT.
+  const lunarEpoch = Date.UTC(2000, 0, 6, 18, 15);
+  const lunarPeriod = 29.530588 * 86400000;
+  const moonAt = (fixed) => {
+    const cycles = (clock.getTime() - lunarEpoch) / lunarPeriod;
+    const moonPhase = selectedMoonPhase ?? (fixed ? .5 : ((cycles % 1) + 1) % 1);
+    return { moonPhase, moonIllumination:(1 - Math.cos(moonPhase * Math.PI * 2)) / 2,
+      moonSource:selectedMoonPhase !== null ? 'override' : fixed ? 'fixed' : 'clock' };
+  };
+  const moonShadowPath = (phase) => {
+    const side = phase <= .5 ? -1 : 1;
+    const terminator = Math.cos(phase * Math.PI * 2);
+    // Cover the bright disk's antialiased edge, including at new moon.
+    const radius = 48.2;
+    const points = [];
+    for (let i = 0; i <= 32; i++) {
+      const angle = i * Math.PI / 32;
+      points.push([100 + side * radius * Math.sin(angle), 100 - radius * Math.cos(angle)]);
+    }
+    for (let i = 32; i >= 0; i--) {
+      const angle = i * Math.PI / 32;
+      points.push([100 - side * terminator * radius * Math.sin(angle), 100 - radius * Math.cos(angle)]);
+    }
+    return 'M' + points.map(([x,y]) => `${x.toFixed(3)} ${y.toFixed(3)}`).join('L') + 'Z';
+  };
 
   const cycleAt = (date) => {
     const hour = date.getHours() + date.getMinutes() / 60 + date.getSeconds() / 3600;
@@ -44,12 +70,12 @@
   };
 
   const snapshot = () => {
-    if (selectedTime) return Object.freeze({ time: selectedTime, fireActive:fireAt(selectedTime), source: 'scene', cycle: 'fixed', progress: .5, ...fixedPositions[selectedTime] });
+    if (selectedTime) return Object.freeze({ time: selectedTime, fireActive:fireAt(selectedTime), source: 'scene', cycle: 'fixed', progress: .5, ...fixedPositions[selectedTime], ...moonAt(true) });
     if (appearance.theme !== 'auto') {
       const time = appearance.resolvedTheme === 'night' ? 'night' : 'day';
-      return Object.freeze({ time, fireActive:fireAt(time), source: 'appearance', cycle: 'fixed', progress: .5, ...fixedPositions[time] });
+      return Object.freeze({ time, fireActive:fireAt(time), source: 'appearance', cycle: 'fixed', progress: .5, ...fixedPositions[time], ...moonAt(true) });
     }
-    return Object.freeze({ ...cycleAt(clock), source: 'clock', cycle: 'dynamic' });
+    return Object.freeze({ ...cycleAt(clock), source: 'clock', cycle: 'dynamic', ...moonAt(false) });
   };
   const sync = (date = new Date()) => {
     clock = date;
@@ -59,6 +85,9 @@
     root.dataset.sceneTimeSource = state.source;
     root.dataset.sceneCycle = state.cycle;
     root.dataset.sceneFire = state.fireActive ? 'burning' : 'cold';
+    root.dataset.sceneMoonSource = state.moonSource;
+    root.style.setProperty('--scene-moon-light', state.moonIllumination.toFixed(3));
+    root.style.setProperty('--scene-moon-shadow-path', `path("${moonShadowPath(state.moonPhase)}")`);
     root.style.setProperty('--scene-orb-x', `${state.x.toFixed(2)}px`);
     root.style.setProperty('--scene-orb-y', `${state.y.toFixed(2)}px`);
     root.style.setProperty('--scene-orb-center-x', `${(1002 + state.x).toFixed(2)}px`);
@@ -73,12 +102,13 @@
     root.style.setProperty('--scene-ufo-glint-opacity', mix(.3, .78, 1 - state.darkness).toFixed(3));
     const orbCenter = 1002 + state.x;
     // Surface lighting shares the celestial clock, never a per-frame item loop.
-    root.style.setProperty('--surface-light-strength', mix(.34, .095, state.darkness).toFixed(3));
+    const moonLight = ['night', 'twilight'].includes(state.time) ? state.moonIllumination : 1;
+    root.style.setProperty('--surface-light-strength', (mix(.34, .095, state.darkness) * moonLight).toFixed(3));
     root.style.setProperty('--surface-light-color', state.darkness > .6 ? '#b8d1f2' : state.warmth > .45 ? '#ffd09a' : '#fff0c4');
     const shadowX = clamp((600 - orbCenter) / 58, -8, 8);
     const shadowY = mix(2.5, 6.5, clamp(state.y / 104));
     const shadowBlur = mix(3, 5.5, state.darkness);
-    const shadowAlpha = mix(.24, .12, state.darkness);
+    const shadowAlpha = mix(.24, .12, state.darkness) * moonLight;
     const shadowColor = state.warmth > .45 ? `rgba(74,42,34,${shadowAlpha.toFixed(3)})` : `rgba(8,20,26,${shadowAlpha.toFixed(3)})`;
     root.style.setProperty('--scene-shadow-x', `${shadowX.toFixed(2)}px`);
     root.style.setProperty('--scene-shadow-y', `${shadowY.toFixed(2)}px`);
@@ -97,6 +127,10 @@
     selectedTime = null;
     return sync();
   };
+  const setMoonPhase = (phase) => {
+    selectedMoonPhase = Number.isFinite(phase) && phase >= 0 && phase <= 1 ? phase % 1 : null;
+    return sync();
+  };
   const subscribe = (subscriber) => {
     subscribers.add(subscriber);
     return () => subscribers.delete(subscriber);
@@ -110,6 +144,7 @@
     times: Object.freeze([...timeModes]),
     mealWindows,
     setTime,
+    setMoonPhase,
     useAppearanceFallback,
     refresh: sync,
     subscribe,
