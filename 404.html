@@ -36,6 +36,12 @@
         <title id="camp-title">A cryptid campfire beneath the northern lights</title>
         <desc id="camp-desc">At night, Bigfoot, a gray alien, Mothman, and Dogman roast marshmallows around a fire whose smoke forms 404. In daylight, the cryptids explore the campsite while two campers and their small windhound enjoy the mountain woods.</desc>
         <defs>
+          <linearGradient id="surface-light-right" x1="1" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
+            <stop stop-color="var(--surface-light-color,#b8d1f2)"/>
+            <stop offset=".48" stop-color="var(--surface-light-color,#b8d1f2)" stop-opacity=".45"/>
+            <stop offset="1" stop-color="var(--surface-light-color,#b8d1f2)" stop-opacity="0"/>
+          </linearGradient>
+          <linearGradient id="surface-light-left" href="#surface-light-right" x1="0" y1="0" x2="1" y2="1"/>
           <linearGradient id="night-sky" x1="0" y1="0" x2="0" y2="1"><stop stop-color="var(--scene-sky-top,#020914)"/><stop offset=".28" stop-color="var(--scene-sky-upper,#071927)"/><stop offset=".62" stop-color="var(--scene-sky-mid,#12313e)"/><stop offset="1" stop-color="var(--scene-sky-haze,#28504b)"/></linearGradient>
           <radialGradient id="sky-vignette" cx="52%" cy="26%" r="76%"><stop offset=".2" stop-color="#184050" stop-opacity=".2"/><stop offset=".7" stop-color="#061521" stop-opacity=".08"/><stop offset="1" stop-color="#01070e" stop-opacity=".62"/></radialGradient>
           <radialGradient id="horizon-airglow" cx="50%" cy="100%" r="72%"><stop stop-color="#6c9a91" stop-opacity=".22"/><stop offset=".48" stop-color="#315967" stop-opacity=".09"/><stop offset="1" stop-color="#0a1926" stop-opacity="0"/></radialGradient>
@@ -161,11 +167,12 @@
             <g class="asset-detail-fine" data-region="bud-tips" fill="var(--willow-bud,#b4a66f)"><circle cx="27" cy="113" r="1.4"/><circle cx="42" cy="116" r="1.4"/><circle cx="64" cy="110" r="1.4"/><circle cx="86" cy="115" r="1.4"/><circle cx="108" cy="114" r="1.4"/><circle cx="117" cy="115" r="1.3"/></g>
             <use href="#terrain-condition-marks" x="18" y="18" width="100" height="100"/>
           </symbol>
-          <symbol id="evergreen-shrub" viewBox="0 0 120 78" data-regions="rooted-growth,branches,branch-nodes,needle-mass,needle-shoots,needle-highlights,young-cones,wet-tips,snow-pockets,conditions">
+          <symbol id="evergreen-shrub" viewBox="0 0 120 78" data-regions="rooted-growth,branches,branch-nodes,needle-mass,needle-shoots,needle-highlights,young-cones,wet-tips,snow-pockets,conditions,sky-facing-surface">
             <g class="evergreen-shrub-posture" data-region="rooted-growth">
             <g fill="none" stroke="var(--shrub-stem,#294737)" stroke-width="4" stroke-linecap="round" data-region="branches"><path d="M12 74Q34 39 58 12m-21 60Q54 39 76 25m-8 48q16-25 39-37"/><path d="m29 53-15-8m27-8-12-11m39 22-15-9m35 10 15-10" stroke-width="2.5"/></g>
             <g class="asset-detail-secondary" fill="var(--shrub-node,#1e3d31)" data-region="branch-nodes"><circle cx="35" cy="48" r="2.5"/><circle cx="59" cy="43" r="2.2"/><circle cx="87" cy="49" r="2.4"/></g>
             <g data-region="needle-mass" fill="var(--shrub-condition-fill,var(--shrub-fill,#315c45))" stroke="var(--shrub-outline,#17382e)" stroke-width="1.5" stroke-linejoin="round"><path d="M5 67 10 57 7 53 18 49 15 42 25 43 27 33 34 38 40 33 42 47 51 44 48 57 56 64l-15 5-13-4-8 6Z"/><path d="M34 39 39 28 45 30 49 19 55 22 60 11 64 20 73 18 71 31 82 30 77 42 86 45 77 52 68 47 63 56 52 48 42 52Z"/><path d="M63 65 70 55 66 48 79 46 83 34 91 39 99 32 102 44 112 44 107 54 115 60 110 68 96 65 88 72 77 67Z"/></g>
+            <path class="surface-light" data-region="sky-facing-surface" d="m49 19 6 3 5-11 4 9 9-2-2 13 11-1-5 12-14-8-7 4ZM83 34l8 5 8-7 3 12 10 0-5 10-16-7-8 3ZM27 33l7 5 6-5 2 14-10 4-7-8Z"/>
             <path class="asset-detail-secondary" d="M18 61q21 7 40 0t43 1" fill="none" stroke="var(--shrub-highlight,#78916a)" stroke-width="2.5" stroke-linecap="round" data-region="needle-highlights"/>
             <path class="asset-detail-fine" d="m14 58 8-10m8 14 8-12m7-5 8-14m9 22 8-13m10 20 8-14m10 16 7-9" fill="none" stroke="var(--shrub-shoot,#91a67a)" stroke-width="1.4" stroke-linecap="round" data-region="needle-shoots"/>
             <g class="asset-detail-fine" fill="var(--shrub-cone,#8d6942)" stroke="var(--shrub-outline,#17382e)" stroke-width="1" data-region="young-cones"><ellipse cx="39" cy="58" rx="3" ry="5"/><ellipse cx="91" cy="57" rx="3" ry="5"/></g>
@@ -221,8 +228,9 @@
             <g data-region="gust-streamers" fill="none" stroke="var(--wind-line,#d2e2dc)" stroke-linecap="round" opacity="var(--wind-line-opacity,.28)"><path d="M-45 176q112-34 218-4t218-2" stroke-width="3"/><path d="M186 286q128-35 248-3t251-4" stroke-width="2"/><path d="M694 205q132-32 257 0t275-8" stroke-width="3"/><path d="M-18 492q102-29 199-2t205-5" stroke-width="2"/><path d="M784 530q117-31 227-1t222-6" stroke-width="2.5"/></g>
             <g data-region="leaf-debris" fill="var(--wind-leaf,#877955)" opacity="var(--wind-leaf-opacity,.52)"><path d="m116 350 9-4 7 5-8 5Z"/><path d="m342 442 8-6 9 4-7 7Z"/><path d="m568 328 10-4 6 6-9 4Z"/><path d="m814 390 8-5 8 5-8 6Z"/><path d="m1058 306 9-5 7 6-8 5Z"/><path d="m978 604 8-4 7 5-7 5Z"/></g>
           </symbol>
-          <symbol id="camp-log" viewBox="0 0 320 44" data-regions="bark-body,bark-highlights,char-marks,cut-ends,growth-rings">
+          <symbol id="camp-log" viewBox="0 0 320 44" data-regions="bark-body,bark-highlights,char-marks,cut-ends,growth-rings,sky-facing-surface">
             <rect x="17" y="4" width="286" height="36" rx="18" fill="var(--log-bark,url(#bark-grain))" stroke="var(--log-outline,#281a16)" stroke-width="5"/>
+            <path class="surface-light" data-region="sky-facing-surface" d="M35 6h250q12 0 15 10H23q3-10 12-10Z"/>
             <path d="M38 13q52 8 104 0t103 1q25 4 47-2M55 30q35-7 69 0m49-1q31-8 62 0" fill="none" stroke="var(--log-highlight,#c17849)" stroke-width="3" stroke-linecap="round" opacity=".72"/>
             <g fill="none" stroke="var(--log-char,#251814)" stroke-width="2.5" stroke-linecap="round"><path d="m81 14 18 6m40-3 21 5m49-6 19 6m-126 11q12-11 24 0m69-5q12-10 25 0"/><path d="m261 15 13 4m-7 8 16-5"/></g>
             <g fill="var(--log-end,#70452d)" stroke="var(--log-outline,#281a16)" stroke-width="4"><ellipse cx="18" cy="22" rx="15" ry="18"/><ellipse cx="302" cy="22" rx="15" ry="18"/></g>
@@ -270,9 +278,10 @@
             <g class="asset-drought-mark" data-region="drought-stress" fill="none" stroke="var(--asset-drought-color,#9b7044)" stroke-linecap="round" stroke-linejoin="round" opacity="var(--asset-drought-opacity,0)"><path d="m13 84 18-12 15 8 18-15 23 11M29 72l-4-13m21 21 3 11m15-26-4-13m4 13 12 6" stroke-width="3"/><path d="M16 47q10-8 18 1-10 7-18-1Zm54-7q9-7 17 2-9 6-17-2Z" fill="var(--asset-drought-leaf,#aa8150)" stroke-width="2"/></g>
             <g class="asset-wind-mark" data-region="wind-sweep" fill="none" stroke="var(--asset-wind-color,#c4d5cc)" stroke-linecap="round" opacity="var(--asset-wind-opacity,0)"><path d="M4 24q24-10 48 0t43-2M14 39q18-7 36 0t32-2" stroke-width="2.5"/><path d="m77 16 12 6-10 7" stroke-width="1.6"/></g>
           </symbol>
-          <symbol id="alpine-boulder" viewBox="0 0 140 90" data-regions="rock-body,rock-facets,fracture-lines,mineral-veins,rock-glints,lichen,lichen-specks,surface-wetness,ledge-snow,conditions,wet-faces,wet-edge-reflections,snow-deposit,snow-undercut">
+          <symbol id="alpine-boulder" viewBox="0 0 140 90" data-regions="rock-body,rock-facets,fracture-lines,mineral-veins,rock-glints,lichen,lichen-specks,surface-wetness,ledge-snow,conditions,wet-faces,wet-edge-reflections,snow-deposit,snow-undercut,sky-facing-surface">
             <path d="M5 84 19 39 48 8l38 7 41 34 8 35Z" fill="var(--boulder-fill,url(#moon-rock))" stroke="#172826" stroke-width="2.5" stroke-linejoin="round" data-region="rock-body"/>
             <path d="M19 39 48 8l12 40L8 84m52-36 26-33 41 34-43 35Z" fill="var(--boulder-facet,#354c49)" data-region="rock-facets"/>
+            <path class="surface-light" data-region="sky-facing-surface" d="m48 9 38 7 39 33-41 34-24-35Z"/>
             <path class="asset-detail-secondary" d="m60 48-9 16 8 19m27-68 4 21 16 11m-87-8 12 16-8 19" fill="none" stroke="var(--boulder-fracture,#263b39)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" data-region="fracture-lines"/>
             <path class="asset-detail-fine" d="m45 10 9 23-7 18m40-34 8 15 19 15m-53 37 13-19 22 4" fill="none" stroke="var(--boulder-vein,#7e8171)" stroke-width="1.5" stroke-linecap="round" data-region="mineral-veins"/>
             <path class="asset-detail-secondary" d="m24 41 24-25m15 34 20-27m8 52 27-24" fill="none" stroke="var(--boulder-glint,#91a8a3)" stroke-width="3" stroke-linecap="round" data-region="rock-glints"/>
@@ -417,11 +426,12 @@
             <path class="asset-detail-fine" data-region="moss-edge" d="M45 32q5-4 10 0t9-2q4-3 8 0" fill="none" stroke="var(--branch-moss,#526c4f)" stroke-width="2.4" stroke-linecap="round"/>
             <use href="#terrain-condition-marks" width="120" height="45"/>
           </symbol>
-          <symbol id="tree-stump" viewBox="0 0 110 92" data-regions="root-flare,root-spurs,stump-body,cut-face,growth-rings,heartwood-rot,wood-grain,bark-ridges,branch-scar,moss-rim,insect-holes,wet-cut-face,rain-pooling,cut-face-snow,conditions">
+          <symbol id="tree-stump" viewBox="0 0 110 92" data-regions="root-flare,root-spurs,stump-body,cut-face,growth-rings,heartwood-rot,wood-grain,bark-ridges,branch-scar,moss-rim,insect-holes,wet-cut-face,rain-pooling,cut-face-snow,conditions,sky-facing-surface">
             <path d="M5 86q8-15 23-18l6-13h43l7 14q16 3 21 17-25-6-45 0-29-7-55 0Z" fill="var(--stump-root,#4b3426)" stroke="var(--stump-outline,#241d19)" stroke-width="3" stroke-linejoin="round"/>
             <path class="asset-detail-secondary" d="m30 68-20 16m72-15 20 14M42 73 30 89m40-15 13 15" fill="none" stroke="var(--stump-root-highlight,#725039)" stroke-width="4" stroke-linecap="round" opacity="var(--stump-root-spur-opacity,.72)"/>
             <path d="M25 70 30 22q24-15 52 0l3 49q-29 17-60-1Z" fill="var(--stump-bark,#67452e)" stroke="var(--stump-outline,#241d19)" stroke-width="3"/>
             <ellipse cx="56" cy="22" rx="27" ry="13" fill="var(--stump-cut,#a8794d)" stroke="var(--stump-outline,#241d19)" stroke-width="3"/>
+            <ellipse class="surface-light" data-region="sky-facing-surface" cx="56" cy="22" rx="25" ry="11"/>
             <g class="asset-detail-secondary" fill="none" stroke="var(--stump-ring,#5b3d2b)" stroke-width="2"><ellipse cx="56" cy="22" rx="18" ry="8"/><ellipse cx="56" cy="22" rx="9" ry="4"/><path d="m55 21 18-5"/></g>
             <path class="asset-detail-secondary" d="M47 20q8-8 18-2-1 8-10 10-8-1-8-8Z" fill="var(--stump-rot,#3b2b22)" opacity="var(--stump-rot-opacity,0)"/>
             <path class="asset-detail-fine" d="m39 19 10 3m16-5-7 5m13 2 7 2" fill="none" stroke="var(--stump-grain,#c29461)" stroke-width="1.4" stroke-linecap="round"/>
@@ -538,8 +548,9 @@
             <path d="m7 1 5 6-5 6-5-6Z" fill="var(--ember-fill,#ffd05c)"/>
             <use href="#terrain-condition-marks" width="14" height="14"/>
           </symbol>
-          <symbol id="camp-tent-shell" viewBox="0 0 242 169" data-regions="tent-fly,fabric-panels,door-panel,seams,guy-lines,stakes,vent-flap,fabric-creases,ground-edge,wet-fabric,seam-beads,shed-snow,conditions">
+          <symbol id="camp-tent-shell" viewBox="0 0 242 169" data-regions="tent-fly,fabric-panels,door-panel,seams,guy-lines,stakes,vent-flap,fabric-creases,ground-edge,wet-fabric,seam-beads,shed-snow,conditions,sky-facing-surface">
             <path d="M0 169 103 0l139 169Z" fill="var(--tent-shell-fill,url(#tent-cloth))" stroke="var(--tent-shell-edge,#ee9772)" stroke-width="4" stroke-linejoin="round" data-region="tent-fly"/>
+            <path class="surface-light" data-region="sky-facing-surface" d="m104 5 132 159-56-1Z"/>
             <path class="asset-detail-secondary" d="M103 3 70 165m34-162 35 162m-70 0 35-162 35 162" fill="none" stroke="var(--tent-panel,#9b583f)" stroke-width="1.5" data-region="fabric-panels"/>
             <path d="M103 0 176 166H30Z" fill="var(--tent-door-fill,#08191d)" stroke="var(--tent-door-edge,#ee9772)" stroke-width="3" stroke-linejoin="round" data-region="door-panel"/>
             <path d="m103 0 73 166M103 0 30 166" fill="none" stroke="var(--tent-seam,#f0aa83)" stroke-width="3" stroke-linecap="round" data-region="seams"/>
@@ -1037,7 +1048,7 @@
 
         <g class="camp-boulders depth-near scene-layer" data-scene-layer="clearing-back" data-scale-band="near" data-region="clearing-boulders">
           <use class="terrain-asset" data-light="ambient" data-weather="clear" href="#alpine-boulder" x="58" y="499" width="136" height="87"/>
-          <use class="terrain-asset" data-density-hide="phone" data-light="ambient" data-weather="cloudy" href="#alpine-boulder" x="1100" y="527" width="96" height="61" style="--boulder-facet:#3a504e"/>
+          <use class="terrain-asset" data-light-facing="left" data-density-hide="phone" data-light="ambient" data-weather="cloudy" href="#alpine-boulder" x="1100" y="527" width="96" height="61" style="--boulder-facet:#3a504e"/>
           <use class="terrain-asset" data-stone-form="slab" data-density-hide="tablet" data-light="ambient" data-weather="dry" href="#river-stone" x="310" y="697" width="106" height="48" style="--stone-fill:#4b5148"/>
         </g>
         <g class="forest-floor depth-near scene-layer" data-scene-layer="clearing-ground" data-scale-band="near" data-region="clearing-understory" stroke-linecap="round" stroke-linejoin="round">
@@ -1046,7 +1057,7 @@
             <use class="terrain-asset" data-light="shadow" data-weather="clear" href="#evergreen-shrub" x="164" y="460" width="112" height="73" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
             <use class="terrain-asset" data-shrub-form="low" data-light="fire" data-weather="dry" href="#evergreen-shrub" x="436" y="626" width="86" height="56" style="--shrub-fill:#294a39;--shrub-highlight:#9a744d"/>
             <use class="terrain-asset" data-light="fire" data-weather="clear" href="#evergreen-shrub" x="689" y="622" width="92" height="60" style="--shrub-fill:#294a39;--shrub-highlight:#9a744d"/>
-            <use class="terrain-asset" data-light="moon" data-weather="cloudy" href="#evergreen-shrub" x="1102" y="584" width="84" height="55" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
+            <use class="terrain-asset" data-light-facing="left" data-light="moon" data-weather="cloudy" href="#evergreen-shrub" x="1102" y="584" width="84" height="55" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
             <use class="terrain-asset" data-light="shadow" data-weather="dry" href="#evergreen-shrub" x="1085" y="651" width="101" height="66" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
           </g>
           <g class="clearing-stones" data-region="clearing-stones">
@@ -1061,7 +1072,7 @@
           <g class="clearing-stumps" data-placement-pattern="mixed-age-scatter" data-region="clearing-stumps">
             <use class="terrain-asset" data-detail="rich" data-light="moon" data-weather="wet" href="#tree-stump" x="272" y="619" width="76" height="64" transform="rotate(-4 310 683)" style="--stump-root-spur-opacity:.9;--stump-moss-opacity:1"/>
             <use class="terrain-asset" data-detail="simple" data-light="shadow" data-weather="dry" href="#tree-stump" x="886" y="672" width="58" height="48" transform="rotate(3 915 720)" style="--stump-bark:#563b2b;--stump-cut:#866344;--stump-moss-opacity:.18;--stump-scar-opacity:1"/>
-            <use class="terrain-asset" data-density-hide="tablet" data-detail="rich" data-light="ambient" data-weather="wet" href="#tree-stump" x="1115" y="475" width="48" height="40" transform="rotate(-7 1139 515)" style="--stump-bark:#4d3c2d;--stump-cut:#71563e;--stump-rot-opacity:.9;--stump-moss-opacity:.82;--stump-root-spur-opacity:.45"/>
+            <use class="terrain-asset" data-light-facing="left" data-density-hide="tablet" data-detail="rich" data-light="ambient" data-weather="wet" href="#tree-stump" x="1115" y="475" width="48" height="40" transform="rotate(-7 1139 515)" style="--stump-bark:#4d3c2d;--stump-cut:#71563e;--stump-rot-opacity:.9;--stump-moss-opacity:.82;--stump-root-spur-opacity:.45"/>
             <use class="terrain-asset" data-density-hide="phone" data-detail="standard" data-light="fire" data-weather="dry" href="#tree-stump" x="423" y="690" width="42" height="35" transform="rotate(5 444 725)" style="--stump-bark:#73503a;--stump-cut:#b17b4d;--stump-moss-opacity:0;--stump-scar-opacity:.7;--stump-root-spur-opacity:1"/>
           </g>
         </g>
