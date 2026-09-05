@@ -18,6 +18,8 @@
   };
 
   const animatedTargets = new Set(figure.getAnimations({ subtree:true }).map(({ effect }) => effect?.target).filter(Boolean));
+  // Hidden daytime travelers have no animation object yet, but still need an owner.
+  for (const target of figure.querySelectorAll('.sky-traveler:not(.comet)')) animatedTargets.add(target);
   const liveByTier = Object.freeze({
     minimal: Object.freeze([
       '.scene-orb', '.flame-stack', '.flame-outer', '.flame-inner', '.flame-core',
@@ -51,12 +53,23 @@
   const applyMotionTargets = () => {
     for (const target of figure.querySelectorAll('[data-runtime-motion="live"]')) target.dataset.runtimeMotion = 'off';
     for (const target of animatedTargets) target.dataset.runtimeMotion = 'off';
-    const selectors = [...liveByTier[currentTier]];
+    const nightSky = ['evening', 'twilight', 'night'].includes(window.portfolioSceneTime?.state?.time)
+      && !['overcast', 'rainy', 'snowy', 'thunderstorm'].includes(window.portfolioWeather?.condition);
+    // Reuse daytime-only slots, preserving the tier's animation allocation.
+    const selectors = liveByTier[currentTier].map(selector => {
+      if (nightSky && selector === '.day-flight-ufo') return '.meteor';
+      if (nightSky && selector === '.solar-ray-field') return '.shooting-star-one';
+      return selector;
+    });
     const weatherSelector = weatherMotion[window.portfolioWeather?.condition];
     if (weatherSelector) selectors.push(weatherSelector);
     if (['windy', 'thunderstorm'].includes(window.portfolioWeather?.condition) && currentTier !== 'minimal') selectors.push('.camp-pines,.river-willows,.camp-tent > use:first-child,.smoke-character');
     for (const selector of selectors) {
-      for (const target of figure.querySelectorAll(selector)) target.dataset.runtimeMotion = 'live';
+      for (const target of figure.querySelectorAll(selector)) {
+        const coldFire = window.portfolioSceneTime?.state?.fireActive === false || window.portfolioWeather?.condition === 'drought';
+        if (coldFire && target.closest('.campfire,.smoke-404')) continue;
+        target.dataset.runtimeMotion = 'live';
+      }
     }
     syncAnimationPlayback();
   };
@@ -74,7 +87,7 @@
   observer.observe(figure);
   applyTier(figure.getBoundingClientRect().width);
   window.portfolioWeather?.subscribe(applyMotionTargets);
-  window.portfolioSceneTime?.subscribe(syncAnimationPlayback);
+  window.portfolioSceneTime?.subscribe(applyMotionTargets);
   window.addEventListener('ui-overlay-change', ({ detail }) => {
     overlayActive = Boolean(detail?.active);
     syncAnimationPlayback();

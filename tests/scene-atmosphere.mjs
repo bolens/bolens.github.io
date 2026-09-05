@@ -10,10 +10,34 @@ const embers = 'rgba(255,196,91,';
 const fog = (scene) => scene.paints.flatMap((paint) => paint.fill?.stops ?? []).filter(({ color }) => color.startsWith('rgba(184,207,199,')).reduce((sum, { color }) => sum + alpha(color), 0);
 const near = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-10, `${actual} != ${expected}`);
 
+test('firefly cores disappear with their glow, then return in suitable conditions', () => {
+  const scene = createScene();
+  const fireflies = 'rgba(234,255,159,';
+  assert.ok(brightness(scene, fireflies) > 0);
+  for (const condition of ['rainy', 'snowy', 'thunderstorm', 'windy', 'drought']) {
+    scene.weather(condition);
+    assert.equal(particles(scene, fireflies).length, 0, condition);
+  }
+  scene.weather('wet');
+  assert.ok(brightness(scene, fireflies) > 0);
+  for (const time of ['day', 'morning']) {
+    scene.time({time, cycle:'fixed'});
+    assert.equal(particles(scene, fireflies).length, 0, time);
+    scene.time({time, cycle:'dynamic', darkness:.48});
+    assert.equal(particles(scene, fireflies).length, 0, `automatic ${time}`);
+  }
+  for (const darkness of [0, .1, .2]) {
+    scene.time({time:'evening', cycle:'dynamic', darkness});
+    assert.equal(particles(scene, fireflies).length, 0);
+  }
+  scene.time({time:'twilight', cycle:'dynamic', darkness:.6});
+  assert.ok(brightness(scene, fireflies) > 0);
+});
+
 for (const [condition, starRatio, fogRatio, emberRatio] of [
-  ['clear', 1, 1, 1], ['cloudy', .25, 1.25, .9], ['misty', .18, 1.8, .7], ['overcast', .1, 1.45, .72],
-  ['rainy', .08, 1.4, .18], ['wet', .7, 1.2, .85], ['dry', .9, .45, 1],
-  ['snowy', .35, 1.55, .25], ['drought', .7, .08, 0], ['windy', .82, .48, .72],
+  ['clear', 1, 1, 1], ['cloudy', .25, 1.25, .9], ['misty', .18, 1.8, .7], ['overcast', 0, 1.45, .72],
+  ['rainy', 0, 1.4, .18], ['wet', .7, 1.2, .85], ['dry', .9, .45, 1],
+  ['snowy', 0, 1.55, .25], ['drought', .7, .08, 0], ['windy', .82, .48, .72],
 ]) {
   test(`${condition} changes rendered stars, fog, and embers`, () => {
     const scene = createScene();
@@ -57,10 +81,24 @@ for (const restrained of [false, true]) {
       assert.ok(sparks.length >= 1 && sparks.length <= (restrained ? 4 : 7));
       for (const spark of sparks) {
         assert.ok(spark.x >= 588.5 && spark.x <= 631.5, `ember escaped horizontally: ${spark.x}`);
-        assert.ok(spark.y >= 610 && spark.y <= 648, `ember escaped vertically: ${spark.y}`);
+        assert.ok(spark.y >= 624 && spark.y <= 662, `ember escaped vertically: ${spark.y}`);
         assert.ok(spark.radius >= .6 && spark.radius <= 1.15);
         assert.ok(alpha(spark.fill) >= 0 && alpha(spark.fill) <= .36);
       }
     }
   });
 }
+
+test('cold fire emits no canvas sparks or heat and stops marshmallow exposure', () => {
+  const scene = createScene();
+  scene.time({time:'day', cycle:'fixed', fireActive:false});
+  scene.advance(3000);
+  scene.frame(4000);
+  assert.equal(brightness(scene, embers), 0);
+  const heat = scene.paints.flatMap(paint => paint.fill?.stops ?? []).filter(stop => stop.color.startsWith('rgba(255,170,70,'));
+  assert.equal(heat.length, 0);
+  assert.equal(scene.figure.dataset.marshmallowCookLevel, '0.000');
+  scene.time({time:'morning', cycle:'fixed', fireActive:true});
+  scene.advance(3000);
+  assert.ok(Number(scene.figure.dataset.marshmallowCookLevel)>0);
+});

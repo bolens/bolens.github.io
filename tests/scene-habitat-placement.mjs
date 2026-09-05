@@ -21,6 +21,11 @@ try {
       const failures = await evaluate(send, `(()=>{
         const water=document.querySelector('.river-water > path:nth-child(3)');
         const errors=[];
+        const bend=document.querySelector('[data-region="distant-river-bend"]').getBBox();
+        const glint=document.querySelector('[data-region="distant-river-glint"]').getBBox();
+        // The upstream reach follows the forest floor, not the tall tree canopy.
+        if(bend.y<400||bend.height>36||bend.width<60)errors.push('distant river climbs above its ground-level bend');
+        if(glint.y<bend.y||glint.y+glint.height>bend.y+bend.height)errors.push('distant glint escapes the river bend');
         const channels=[...document.querySelectorAll('.river-water > path')].filter(path=>path.getAttribute('fill')!=='none');
         const woody=[...document.querySelectorAll('use')].filter(node=>!node.closest('symbol')&&['#distant-pine','#aspen-copse','#willow-clump','#bare-tree','#evergreen-shrub','#berry-shrub','#fern-spray'].includes(node.getAttribute('href')));
         for(const node of woody){

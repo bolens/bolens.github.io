@@ -14,13 +14,13 @@ test('rain scales and smoothly flickers only the flame geometry', () => {
   assert.match(flameGroup, /data-region="open-flame"/);
   assert.match(css, /data-weather="rainy"\] \.flame-stack \{ scale:\.68 \.58;animation:rain-flame-flicker 1\.1s ease-in-out infinite; \}/);
   assert.match(css, /data-weather="rainy"\] :is\(\.flame-inner,\.flame-core\) \{ animation-duration:\.31s; \}/);
-  assert.match(scene, /rainy: Object\.freeze\(\{ stars: \.08, fog: 1\.4, fireflies: \.25, embers: \.18 \}\)/);
+  assert.match(scene, /rainy: Object\.freeze\(\{ stars: 0, fog: 1\.4, fireflies: 0, embers: \.18 \}\)/);
 });
 
 test('drought swaps the open fire for the stove', () => {
   assert.match(css, /data-weather="drought"\] :is\(\.campfire,\.campfire-glow,\.fire-ring-stones,\.firelight-rings,\.fire-rim-light,\.smoke-404,\.roasting-marshmallow,\.smores-kit\) \{ opacity:0;visibility:hidden;transition-delay:0s; \}/);
   assert.match(html, /data-region="drought-cooking-station"/);
-  assert.match(scene, /drought: Object\.freeze\(\{ stars: \.7, fog: \.08, fireflies: \.55, embers: 0 \}\)/);
+  assert.match(scene, /drought: Object\.freeze\(\{ stars: \.7, fog: \.08, fireflies: 0, embers: 0 \}\)/);
 });
 
 test('drought lowers the river and exposes its bed', () => {

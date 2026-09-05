@@ -39,6 +39,32 @@ const setup = (resolvedTheme = 'night', selectedAppearance = resolvedTheme) => {
   return { context, document, events, properties, timers, listeners, setClock(date) { now = date; }, setAppearance(theme, resolved = theme) { appearanceMode = theme; currentTheme = resolved; appearanceSubscriber(); } };
 };
 
+test('automatic fire uses local meal windows with exact inclusive/exclusive boundaries', () => {
+  const { context, document } = setup('day', 'auto');
+  const api = context.window.portfolioSceneTime;
+  for (const [hour, minute, burning] of [[5,0,false],[6,59,false],[7,0,true],[8,59,true],[9,0,false],[11,59,false],[12,0,true],[13,59,true],[14,0,false],[17,59,false],[18,0,true],[19,59,true],[20,0,true],[23,0,true],[0,0,true]]) {
+    const state = api.refresh(new Date(2026,8,3,hour,minute));
+    assert.equal(state.fireActive, burning, `${hour}:${minute}`);
+    assert.equal(document.documentElement.dataset.sceneFire, burning ? 'burning' : 'cold');
+  }
+  assert.equal(Object.isFrozen(api.mealWindows), true);
+  assert.ok(api.mealWindows.every(Object.isFrozen));
+});
+
+test('fixed fire states do not depend on wall clock or opposite appearance', () => {
+  const { context, setAppearance } = setup('day');
+  const api = context.window.portfolioSceneTime;
+  for (const time of ['day','morning','evening','twilight','night']) {
+    api.setTime(time);
+    for (const hour of [0,8,12,15,19,23]) {
+      setAppearance(hour % 2 ? 'day' : 'night');
+      assert.equal(api.refresh(new Date(2026,8,3,hour)).fireActive, time !== 'day');
+    }
+  }
+  setAppearance('day');
+  assert.equal(api.useAppearanceFallback().fireActive, false);
+});
+
 test('scene time follows appearance until an explicit time takes control', () => {
   const { context, document, events, setAppearance } = setup('night');
   const { portfolioSceneTime } = context.window;
