@@ -1,5 +1,8 @@
 # bolens.github.io
 
+See [the delivery playbook](RELEASING.md) for push, merge, Pages deployment,
+verification, and recovery.
+
 Michael Bolens' portfolio, built with semantic HTML, CSS, and inline SVG. It has no client-side JavaScript dependency.
 
 ## Preview
