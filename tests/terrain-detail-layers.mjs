@@ -9,7 +9,7 @@ const symbols = Object.fromEntries([...html.matchAll(/<symbol id="([^"]+)"[\s\S]
 test('woody glyphs expose independently addressable detail layers', () => {
   const manifests = {
     'bare-tree': ['branch-scars', 'bark-grain'],
-    'aspen-copse': ['root-flares', 'tapered-trunks', 'trunk-shadows', 'twig-tips', 'leaf-shadow', 'leaf-speckles', 'leaf-veins', 'bark-eyes', 'bark-marks'],
+    'aspen-copse': ['root-flares', 'tapered-trunks', 'trunk-shadows', 'twig-tips', 'leaf-petioles', 'leaf-blades', 'serrated-margins', 'leaf-shadow', 'leaf-speckles', 'leaf-veins', 'bark-eyes', 'bark-marks'],
     'willow-clump': ['root-crowns', 'stem-highlights', 'arching-limbs', 'hanging-branchlets', 'leaf-shadow', 'leaf-veins', 'catkins', 'bud-tips'],
     'tree-stump': ['growth-rings', 'wood-grain', 'moss-rim', 'insect-holes'],
   };
@@ -34,7 +34,7 @@ test('pine glyph exposes layered trunk, branch, and needle anatomy', () => {
 test('forest-floor glyphs expose natural surface detail', () => {
   const manifests = {
     'moss-clump': ['sporophyte-stems', 'spore-caps'],
-    'woodland-debris': ['branch-fragments', 'twig-bark', 'twig-nodes', 'snapped-ends', 'curled-leaf-edges', 'leaf-veins', 'dry-needles', 'cone-scales'],
+    'woodland-debris': ['branch-fragments', 'twig-bark', 'twig-nodes', 'snapped-ends', 'leaf-blades', 'curled-leaf-edges', 'leaf-veins', 'dry-needles', 'cone-scales'],
     'ground-sprig': ['side-blades', 'seed-grains'],
     'grass-tuft': ['grass-crown', 'bent-blades', 'blade-highlights', 'seed-stalks', 'seed-heads', 'dry-thatch'],
     'pine-needle-mat': ['needle-bed', 'crossed-needles', 'needle-sheaths', 'broken-needles', 'cone-scales', 'soil-grains'],
@@ -54,8 +54,8 @@ test('forest-floor glyphs expose natural surface detail', () => {
 
 test('small botanical glyphs expose anatomical detail layers', () => {
   const manifests = {
-    'fungi-cluster': ['stem-striations', 'cap-mottling', 'mycelium'],
-    'shelf-fungi': ['attachment-scars', 'growth-bands', 'cap-pores'],
+    'fungi-cluster': ['fruiting-bodies', 'stem-striations', 'cap-mottling', 'mycelium'],
+    'shelf-fungi': ['shelf-tiers', 'attachment-scars', 'growth-bands', 'cap-pores'],
     'pinecone-sprig': ['twig', 'needle-highlights', 'scale-tips', 'resin-drops'],
     'wildflower-clump': ['stem-leaves', 'petal-veins', 'pollen-dots'],
     'reed-clump': ['stem-nodes', 'reed-blades', 'seed-heads', 'seed-grains'],

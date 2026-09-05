@@ -15,9 +15,9 @@ test('scene state is resolved before styles can paint default conditions', () =>
   assert.doesNotMatch(html, /404-(?:weather|time)\.js" defer/);
 });
 
-test('the scene reveals without a full-frame loading shimmer', () => {
-  assert.match(css, /\.cryptid-camp \{[^}]*transition:opacity \.24s ease-out/);
-  assert.match(css, /\.is-loading \.cryptid-camp \{ opacity:0; \}/);
+test('the parsed scene remains visible instead of flashing in after load', () => {
+  assert.doesNotMatch(css, /\.cryptid-camp \{[^}]*transition:opacity/);
+  assert.doesNotMatch(css, /\.is-loading \.cryptid-camp \{ opacity:0; \}/);
   assert.match(css, /\.is-loading \.cryptid-camp::after \{ display:none; \}/);
 });
 
@@ -36,22 +36,24 @@ test('small reactive lights avoid abrupt high-contrast flashes', () => {
 });
 
 test('large condition layers crossfade instead of toggling display', () => {
-  assert.match(css, /\.weather-clouds,\.weather-overcast,\.weather-rain,\.weather-snow,\.weather-drought,\.weather-wind \{ display:inline;opacity:0;visibility:hidden;[^}]*transition:opacity \.38s ease/);
+  assert.match(css, /\.weather-clouds,\.weather-rain-clouds,\.weather-mist,\.weather-overcast,\.weather-rain,\.weather-snow,\.weather-drought,\.weather-wind \{ display:inline;opacity:0;visibility:hidden;[^}]*transition:opacity \.38s ease/);
   assert.doesNotMatch(css, /\.weather-clouds,\.weather-overcast,\.weather-rain,\.weather-snow,\.weather-drought,\.weather-wind \{ display:none/);
   assert.match(css, /\.condition-detail \{ display:inline;opacity:0;visibility:hidden;[^}]*transition:opacity \.38s ease/);
   assert.doesNotMatch(css, /data-weather="drought"\] :is\(\.campfire[^}]*display:none/);
 });
 
-test('canvas takeover fades matching SVG effects', () => {
-  assert.match(html, /\.forest-fireflies,\.embers,\.scene-grain \{ transition:opacity \.28s ease-out; \}/);
+test('canvas takeover swaps matching SVG effects in one painted frame', () => {
+  assert.match(html, /\.forest-fireflies,\.embers,\.scene-grain \{ transition:none; \}/);
   assert.match(html, /\.hybrid-effects-ready \.forest-fireflies,\.hybrid-effects-ready \.embers,\.hybrid-effects-ready \.scene-grain \{ opacity:0; \}/);
 });
 
-test('time and weather palette changes interpolate instead of repainting in one frame', () => {
+test('the runtime prevents primitive and filter transition storms', () => {
   assert.match(css, /\.lost-page \{[^}]*transition:background-color \.55s ease,color \.55s ease/);
   assert.match(css, /\.cryptid-camp svg :is\(path,rect,circle,ellipse,polygon,polyline,line\) \{ transition:fill \.55s ease,stroke \.55s ease; \}/);
   assert.match(css, /\.cryptid-camp svg stop \{ transition:stop-color \.55s ease,stop-opacity \.55s ease; \}/);
   assert.match(css, /\.terrain-asset \{[^}]*transition:filter \.55s ease/);
+  assert.match(css, /\.cryptid-camp\[data-render-runtime\] svg :is\(path,rect,circle,ellipse,polygon,polyline,line,stop\) \{ transition:none; \}/);
+  assert.match(css, /\.cryptid-camp\[data-render-runtime\] \.terrain-asset \{[^}]*transition:none; \}/);
 });
 
 test('large scene washes crossfade without display toggles', () => {

@@ -98,6 +98,9 @@ test('morning evening and twilight restyle every shared scene system', () => {
     assert.match(scene, new RegExp(`${time}: Object\\.freeze\\(\\{ stars: [^}]+fireflies: [^}]+embers: [^}]+\\}\\)`));
   }
   assert.match(css, /data-scene-time="morning"\] \.scene-orb/);
+  assert.match(css, /data-scene-time="morning"\] \.scene-time-wash \{ fill:#e9a85f;opacity:\.14;mix-blend-mode:soft-light; \}/);
+  assert.match(css, /data-scene-time="morning"\] \.theme-light-wash \{ opacity:\.1; \}/);
+  assert.match(css, /data-scene-time="morning"\] \.terrain-asset \{ --asset-time-brightness:1;--asset-time-saturation:1\.04;/);
   assert.match(css, /data-scene-time="evening"\] \.scene-orb/);
   assert.match(css, /data-scene-time="twilight"\] \.scene-orb/);
   assert.match(css, /data-scene-time="twilight"\][^\n]+\.background-ufo \{ display:inline; \}/);

@@ -54,7 +54,7 @@ try {
     await ui.load('/404.html');
     await evaluate(send, `portfolioAppearancePicker.open()`);
     assert.deepEqual(await evaluate(send, `({weather:[...document.querySelectorAll('.weather-options input')].map((input)=>input.value),time:[...document.querySelectorAll('.scene-time-options input')].map((input)=>input.value)})`), {
-      weather: ['theme', 'clear', 'cloudy', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought', 'windy'],
+      weather: ['theme', 'clear', 'cloudy', 'misty', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought', 'windy'],
       time: ['automatic', 'day', 'night', 'morning', 'evening', 'twilight'],
     });
     const desktopBounds = await evaluate(send, `(()=>{const panel=document.querySelector('.palette-panels').getBoundingClientRect();return {left:panel.left,right:panel.right,top:panel.top,bottom:panel.bottom,width:innerWidth,height:innerHeight}})()`);

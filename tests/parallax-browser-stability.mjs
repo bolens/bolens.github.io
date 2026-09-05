@@ -39,7 +39,8 @@ try {
       const stableBefore=parallaxOffsets();
       const point=points.at(-1);for(let index=0;index<20;index++){figure.dispatchEvent(new PointerEvent('pointermove',{clientX:point.x,clientY:point.y,pointerType:'mouse',bubbles:true}));await new Promise(requestAnimationFrame)}
       figure.getAnimations({subtree:true}).forEach((animation)=>animation.play());
-      resolve({baseline,after,planeCount:planes.length,planeMotion:planes.map((node)=>getComputedStyle(node).translate),transitions,stableBefore,stableAfter:parallaxOffsets(),density:figure.dataset.sceneDensity});
+      const canvas=figure.querySelector('.camp-atmosphere');
+      resolve({baseline,after,planeCount:planes.length,planeMotion:planes.map((node)=>getComputedStyle(node).translate),transitions,stableBefore,stableAfter:parallaxOffsets(),density:figure.dataset.sceneDensity,renderTier:figure.dataset.renderTier,animationCount:figure.getAnimations({subtree:true}).length,canvasPixels:canvas.width*canvas.height,displayPixels:Math.round(figure.clientWidth*figure.clientHeight)});
     })`, { awaitPromise: true });
     assert.equal(result.planeCount, 7);
     assert.ok(result.planeMotion.some((value) => value !== 'none' && value !== '0px'));
@@ -47,11 +48,17 @@ try {
     assert.deepEqual(result.stableAfter, result.stableBefore);
     assert.deepEqual(result.after, result.baseline);
     assert.equal(result.density, viewport.width <= 430 ? 'compact' : 'full');
+    assert.equal(result.renderTier, viewport.width <= 430 ? 'minimal' : 'full');
+    assert.ok(result.animationCount <= (viewport.width <= 430 ? 11 : 14), `runtime animation budget exceeded: ${result.animationCount}`);
+    assert.ok(result.canvasPixels <= result.displayPixels * (viewport.width <= 430 ? .26 : .65), `canvas pixel budget exceeded: ${result.canvasPixels}/${result.displayPixels}`);
     await waitFor(send, `Number.parseFloat(getComputedStyle(document.querySelector('.cryptid-camp')).opacity)>.99`, `${viewport.name} scene reveal`);
     await waitForFrames(send);
     const screenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
     writeFileSync(`/tmp/404-parallax-${viewport.name}.png`, Buffer.from(screenshot.data, 'base64'));
     if (viewport.name === 'desktop') {
+      const motionMatrix = await evaluate(send, `(async()=>{const result={};for(const time of ['day','night','morning','evening','twilight'])for(const condition of ['clear','cloudy','misty','overcast','rainy','wet','dry','snowy','drought','windy']){portfolioSceneTime.setTime(time);portfolioWeather.setLocationCondition(condition);await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);result[time+'-'+condition]=document.querySelector('.cryptid-camp').getAnimations({subtree:true}).filter((animation)=>animation.playState==='running').length}return result})()`, { awaitPromise:true });
+      assert.ok(Math.max(...Object.entries(motionMatrix).filter(([name])=>!name.endsWith('-windy')).map(([,count])=>count)) <= 15, `standard motion budget exceeded: ${JSON.stringify(motionMatrix)}`);
+      assert.ok(Math.max(...Object.entries(motionMatrix).filter(([name])=>name.endsWith('-windy')).map(([,count])=>count)) <= 20, `wind motion budget exceeded: ${JSON.stringify(motionMatrix)}`);
       const rainLayering = await evaluate(send, `(()=>{
         portfolioWeather.setLocationCondition('rainy');
         const rain=document.querySelector('.weather-rain');
@@ -90,20 +97,20 @@ try {
         portfolioWeather.setLocationCondition('windy');
         const names=(selector)=>getComputedStyle(document.querySelector(selector)).animationName;
         return {
-          field:names('.weather-wind'), tree:names('.camp-pines > use'),
+          field:names('.weather-wind'), tree:names('.camp-pines'),
           willow:names('.river-willows'), tent:names('.camp-tent > use:first-child'),
           flame:names('.flame-stack'), smoke:names('.smoke-character'),
         };
       })()`);
       assert.deepEqual(windMotion, {
-        field: 'weather-wind-pass', tree: 'wind-tree-gust', willow: 'wind-pliant-growth',
+        field: 'weather-wind-pass', tree: 'runtime-wind-canopy', willow: 'wind-pliant-growth',
         tent: 'wind-tent-fabric', flame: 'wind-flame-stack', smoke: 'wind-smoke',
       });
       const windPhases = await evaluate(send, `(()=>{
-        const selectors=['.weather-wind','.camp-pines > use','.river-willows','.camp-tent > use:first-child','.flame-stack','.smoke-character'];
+        const selectors=['.weather-wind','.camp-pines','.river-willows','.camp-tent > use:first-child','.flame-stack','.smoke-character'];
         const sample=(time)=>selectors.map((selector)=>{
           const node=document.querySelector(selector);
-          const animation=node.getAnimations().find((item)=>item.animationName?.startsWith('wind-')||item.animationName==='weather-wind-pass');
+          const animation=node.getAnimations().find((item)=>item.animationName?.startsWith('wind-')||item.animationName==='weather-wind-pass'||item.animationName==='runtime-wind-canopy');
           animation.pause();animation.currentTime=time;
           const style=getComputedStyle(node);return [style.transform,style.rotate,style.translate,style.opacity];
         });
