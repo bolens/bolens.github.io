@@ -35,6 +35,7 @@
 .project-copy > p:last-child { max-width: 62ch; margin: 1rem 0 0; color: var(--muted); line-height: 1.62; }
 .project-evidence { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:1px; margin:1.25rem 0 0; border-top:1px solid var(--line); background:var(--line); }
 .project-evidence div { min-width:0; padding:.85rem .75rem 0 0; background:var(--snow); }
+.project-evidence div + div { padding-inline: .75rem 0; }
 .project-evidence dt { color:var(--muted); font:700 .64rem/1.4 var(--mono); letter-spacing:.1em; text-transform:uppercase; }
 .project-evidence dd { margin:.22rem 0 0; font:700 .78rem/1.45 var(--sans); }
 .all-work { margin: 2.2rem 0 0; text-align: center; }.button-secondary { background: transparent; color: var(--ink); }.button-secondary:is(:hover,:focus-visible) { color: var(--snow); }
