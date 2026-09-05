@@ -9,7 +9,10 @@ export async function startUI() {
   let browser;
   try {
     browser = await startBrowser((message) => {
-      if (message.method === 'Runtime.exceptionThrown') errors.push(message.params.exceptionDetails.text);
+      if (message.method !== 'Runtime.exceptionThrown') return;
+      const details = message.params.exceptionDetails;
+      const urls = [details.url, ...(details.stackTrace?.callFrames ?? []).map((frame) => frame.url)].filter(Boolean);
+      if (urls.some((url) => url.startsWith(server.origin))) errors.push(details.exception?.description ?? details.text);
     });
     await browser.send('Runtime.enable');
   } catch (error) { await server.close(); throw error; }
