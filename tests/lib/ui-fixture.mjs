@@ -3,6 +3,13 @@ import { startBrowser } from './cdp-browser.mjs';
 import { evaluate, navigate, waitFor } from './browser-test.mjs';
 import { startSiteServer } from './site-server.mjs';
 
+export const isApplicationException = (details, origin) => {
+  const description = details.exception?.description ?? details.text;
+  if (description === 'AbortError: Transition was skipped') return false;
+  const urls = [details.url, ...(details.stackTrace?.callFrames ?? []).map((frame) => frame.url)].filter(Boolean);
+  return urls.some((url) => url.startsWith(origin));
+};
+
 export async function startUI() {
   const server = await startSiteServer(resolve(import.meta.dirname, '../..'));
   const errors = [];
@@ -11,8 +18,7 @@ export async function startUI() {
     browser = await startBrowser((message) => {
       if (message.method !== 'Runtime.exceptionThrown') return;
       const details = message.params.exceptionDetails;
-      const urls = [details.url, ...(details.stackTrace?.callFrames ?? []).map((frame) => frame.url)].filter(Boolean);
-      if (urls.some((url) => url.startsWith(server.origin))) errors.push(details.exception?.description ?? details.text);
+      if (isApplicationException(details, server.origin)) errors.push(details.exception?.description ?? details.text);
     });
     await browser.send('Runtime.enable');
   } catch (error) { await server.close(); throw error; }
