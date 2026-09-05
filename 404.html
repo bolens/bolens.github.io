@@ -34,7 +34,7 @@
       <canvas class="camp-atmosphere" aria-hidden="true"></canvas>
       <svg viewBox="0 0 1200 760" preserveAspectRatio="xMidYMax slice" role="img" aria-labelledby="camp-title camp-desc">
         <title id="camp-title">A woodland campsite shared with cryptids</title>
-        <desc id="camp-desc">At night, Bigfoot, a gray alien, Mothman, and Dogman roast marshmallows around a fire whose smoke forms 404. In daylight, Bigfoot and Dogman peek from behind separate trees, Mothman perches in a treetop, and the alien pilots a flying saucer. Two campers and their small windhound shelter in a tent.</desc>
+        <desc id="camp-desc">At night, Bigfoot, a gray alien, Mothman, and Dogman gather at the campfire while two campers and their windhound shelter in a tent. In daylight, the cryptids peek from behind trees and the alien's saucer emerges from clouds and mountain cover. The man fishes beside the river with the seated dog while the woman picks mushrooms in the clearing. Snow and thunderstorms bring the campers back to shelter.</desc>
         <defs>
           <linearGradient id="surface-light-right" x1="1" y1="0" x2="0" y2="1" gradientUnits="objectBoundingBox">
             <stop stop-color="var(--surface-light-color,#b8d1f2)"/>
@@ -204,12 +204,13 @@
               <path d="m9 38 19-7 14 4 11-4-8 9-16-1-13 6Zm54 7 17-11 21 3 12-5-7 11-21-2-13 7Zm56-10 13-8 19 1-7 7-17-1-10 6Z"/>
             </g>
           </symbol>
-          <symbol id="sky-orb" viewBox="0 0 200 200" data-regions="orb-glow,orb-rays,orb-body,orb-highlight,orb-craters">
+          <symbol id="sky-orb" viewBox="0 0 200 200" data-regions="orb-glow,orb-rays,orb-body,orb-highlight,orb-craters,moon-terminator">
             <circle cx="100" cy="100" r="92" fill="var(--orb-glow,#fffbdc)" opacity="var(--orb-glow-opacity,.13)"/>
             <g class="orb-rays" fill="none" stroke="var(--orb-fill,#ffe08a)" stroke-width="6" stroke-linecap="round" opacity="var(--orb-rays-opacity,0)"><path d="M100 31V9m0 182v-22m69-69h22M9 100h22m118-49 16-16M35 165l16-16m98 16 16 16M35 35l16 16"/></g>
             <circle cx="100" cy="100" r="48" fill="var(--orb-fill,url(#moon-surface))"/>
             <circle cx="87" cy="86" r="8" fill="var(--orb-highlight,#fff7c9)" opacity="var(--orb-highlight-opacity,.34)"/>
             <g class="orb-craters" fill="var(--orb-crater,#b9b699)" opacity="var(--orb-crater-opacity,.34)"><ellipse cx="80" cy="80" rx="10" ry="7" transform="rotate(-18 80 80)"/><ellipse cx="120" cy="119" rx="12" ry="8" transform="rotate(13 120 119)"/><ellipse cx="109" cy="73" rx="6" ry="5"/><ellipse cx="77" cy="109" rx="7" ry="11" transform="rotate(24 77 109)"/><ellipse cx="128" cy="90" rx="5" ry="7"/></g>
+            <path class="moon-terminator" data-region="moon-terminator" d="M100 52Z" fill="var(--orb-night-face,#101c2a)"/>
           </symbol>
           <symbol id="aurora-strand" viewBox="0 0 1200 180" data-regions="ribbon-body,ribbon-edge">
             <path d="M-35 130C145 12 282 175 458 74S770 22 930 91s225 8 307-54" fill="none" stroke="var(--aurora-color,url(#aurora-green))" stroke-width="var(--aurora-width,30)" stroke-linecap="round" opacity="var(--aurora-opacity,.3)"/>
@@ -282,9 +283,9 @@
             <path d="m81 118 18-15 13 4m42 18 12-5 11 9" fill="none" stroke="var(--peak-glint,#6f898b)" stroke-width="2.5" stroke-linecap="round" opacity=".42"/>
           </symbol>
           <symbol id="forest-trail" viewBox="0 0 700 430" data-regions="trail-bed,trail-edge,trail-wear,embedded-stones,root-crossings,conditions">
-            <path d="M62 14q69 19 105 54 31 31-9 64-34 28 34 63 55 28 88 61 29 29 85 38 60 9 126 45L700 410l-38 30-222-80q-54-25-112-26-68-2-108-39-32-30-79-51-71-32-45-79 16-28 43-45 21-14-6-35-32-24-84-34Z" fill="var(--trail-bed,#66543a)" stroke="var(--trail-edge,#27352e)" stroke-width="5" stroke-linejoin="round"/>
-            <path d="M69 25q60 19 94 51 27 26-9 56-37 31 31 69 50 28 81 59 34 34 94 44 51 8 103 35L684 423" fill="none" stroke="var(--trail-wear,#ad8a5a)" stroke-width="9" stroke-linecap="round" opacity="var(--trail-wear-opacity,.4)"/>
-            <path d="M88 38q28 12 47 27m12 82q-17 16 18 35m45 27q21 13 36 27m43 39q23 13 49 17m48 10q28 7 51 19" fill="none" stroke="var(--trail-rut,#3c382b)" stroke-width="5" stroke-linecap="round" opacity=".5"/>
+            <path d="M62 54q69-8 105 14 31 31-9 64-34 28 34 63 55 28 88 61 29 29 85 38 60 9 126 45L700 410l-38 30-222-80q-54-25-112-26-68-2-108-39-32-30-79-51-71-32-45-79 16-28 43-45 21-14-6-35-32-24-84-34Z" fill="var(--trail-bed,#66543a)" stroke="var(--trail-edge,#27352e)" stroke-width="5" stroke-linejoin="round"/>
+            <path d="M69 58q60-4 94 18 27 26-9 56-37 31 31 69 50 28 81 59 34 34 94 44 51 8 103 35L684 423" fill="none" stroke="var(--trail-wear,#ad8a5a)" stroke-width="9" stroke-linecap="round" opacity="var(--trail-wear-opacity,.4)"/>
+            <path d="M88 65q28-2 47 0m12 82q-17 16 18 35m45 27q21 13 36 27m43 39q23 13 49 17m48 10q28 7 51 19" fill="none" stroke="var(--trail-rut,#3c382b)" stroke-width="5" stroke-linecap="round" opacity=".5"/>
             <g fill="var(--trail-stone,#8b7656)" stroke="var(--trail-stone-edge,#384039)" stroke-width="2"><path d="m129 91 8-5 10 3 1 7-9 4-9-3Z"/><path d="m126 157 7-4 10 3 1 7-9 4-8-3Z"/><path d="m226 229 9-5 11 4-1 8-10 3-9-4Z"/><path d="m326 282 9-4 11 5-2 7-10 2-8-4Z"/><path d="m415 303 8-4 10 4-1 7-10 2-7-4Z"/></g>
             <g fill="none" stroke="var(--trail-root,#58432f)" stroke-width="4" stroke-linecap="round"><path d="m100 117 57 13m-16-7 11-12m-3 15 15 12M248 250l57 15m-17-10 13-11m-6 15 17 12"/></g>
             <use href="#terrain-condition-marks" x="54" y="7" width="100" height="100"/>
@@ -726,14 +727,60 @@
             <use href="#terrain-condition-marks" width="54" height="76"/>
           </symbol>
           <symbol id="camp-windhound" viewBox="0 0 64 64" data-regions="body,head,ears,ear-shadows,face-mask,eyes,muzzle,nose,conditions">
-            <path d="M0 64q2-39 31-43 31 4 33 43Z" fill="var(--hound-coat,#e8e5dc)"/>
+            <path data-region="body" d="M0 64q2-39 31-43 31 4 33 43Z" fill="var(--hound-coat,#e8e5dc)" style="display:var(--hound-portrait-body-display,inline)"/>
             <path d="M17 30q0-25 14-27 15 2 15 27l-5 17-10 8-10-8Z" fill="var(--hound-face,#f3f0e8)"/>
-            <path d="M20 17Q11-1 2 0 0 15 10 26q4 5 9 8l3-9Zm22 0Q51-1 60 0q2 15-8 26-4 5-9 8l-3-9Z" fill="var(--hound-ears,#20292d)"/>
-            <path d="M4 1q8 2 13 11l3 7-6 5Q4 16 4 1Zm54 0q-8 2-13 11l-3 7 6 5Q58 16 58 1Z" fill="var(--hound-ear-shadow,#394348)" opacity=".8"/>
+            <path data-region="ears" d="M21 14Q9 9 8 17l5 15 7-9 3-3Zm20 0q12-5 13 3l-5 15-7-9-3-3Z" fill="var(--hound-ears,#20292d)"/>
+            <path data-region="ear-shadows" d="m11 17 8 3-5 8Zm40 0-8 3 5 8Z" fill="var(--hound-ear-shadow,#394348)"/>
             <path d="M19 23q2-18 12-20 11 2 13 20l-4 17-9 7-9-7Z" fill="var(--hound-mask,#273034)"/>
             <g fill="var(--hound-eye,#f5edc4)"><circle cx="26" cy="25" r="2"/><circle cx="37" cy="25" r="2"/></g>
             <path d="M27 30q4-3 8 0l2 9-6 6-6-6Z" fill="var(--hound-muzzle,#f3f0e8)"/><ellipse cx="31" cy="38" rx="3.5" ry="2.5" fill="var(--hound-nose,#090d0e)"/>
             <use href="#terrain-condition-marks" width="64" height="64"/>
+          </symbol>
+          <symbol id="outdoor-camper" viewBox="0 0 100 170" data-regions="standing-body,kneeling-body,standing-portrait,kneeling-portrait,trouser-seams,sleeves,hands,conditions">
+            <g data-region="standing-body" style="display:var(--camper-standing-display,inline)">
+              <path d="M34 35q16-6 32 0l4 26-2 37-15 9-23-9 1-38Z" fill="var(--camper-shirt,#44675f)" stroke="var(--camper-outline,#263b3b)" stroke-width="2"/>
+              <path d="m34 96 32 1-3 32 5 33H54l-5-47-6 47H29l5-35Z" fill="var(--camper-trousers,#414b42)" stroke="#29362f" stroke-width="2"/>
+              <path d="M29 158h15v9H22q-2-5 7-9Zm25 0h14l8 6v3H54Z" fill="var(--camper-boots,#44382f)"/>
+              <path data-region="trouser-seams" class="asset-detail-secondary" d="m39 107-4 40m23-40 4 40" fill="none" stroke="#788073" stroke-width="1.3"/>
+              <path data-region="sleeves" d="m37 46-9 28-16-7M60 47l-22 18-30 3" fill="none" stroke="var(--camper-shirt,#44675f)" stroke-width="12" stroke-linecap="round"/>
+              <path data-region="hands" d="m12 67-8-5M8 68l-7 0" fill="none" stroke="var(--camper-skin,#e6b791)" stroke-width="7" stroke-linecap="round"/>
+              <use data-region="standing-portrait" href="#tent-camper" x="36" y="0" width="28" height="40"/>
+            </g>
+            <g data-region="kneeling-body" style="display:var(--camper-kneeling-display,none)">
+              <path d="m49 92 24 10-13 34-28 12 27 7 4 11H21q-11-7-2-18l28-25Z" fill="var(--camper-trousers,#655648)" stroke="#393b32" stroke-width="2"/>
+              <path d="m68 124 16 19-3 19H66l3-13-20-14Z" fill="var(--camper-trousers,#655648)" stroke="#393b32" stroke-width="2"/>
+              <path d="M21 158h26l-2 9H15Zm45 1h16l8 6-1 3H66Z" fill="var(--camper-boots,#44382f)"/>
+              <path d="m49 66 22 6 4 42-18 15-23-13Z" fill="var(--camper-shirt,#895b46)" stroke="var(--camper-outline,#263b3b)" stroke-width="2"/>
+              <path d="m66 80 10 27 14 33m-39-53-9 29 17 14" fill="none" stroke="var(--camper-shirt,#895b46)" stroke-width="10" stroke-linecap="round"/>
+              <path d="m90 140 3 7m-34-17 5 3" fill="none" stroke="var(--camper-skin,#dca986)" stroke-width="6" stroke-linecap="round"/>
+              <use data-region="kneeling-portrait" href="#tent-camper" x="46" y="33" width="28" height="40" transform="rotate(18 60 67)"/>
+            </g>
+            <use data-region="conditions" href="#terrain-condition-marks" width="100" height="170"/>
+          </symbol>
+          <symbol id="sitting-windhound" viewBox="0 0 64 92" data-regions="seated-haunch,chest,portrait,forelegs,paws,tail,coat-feathering,conditions">
+            <path data-region="tail" d="M35 62q30 15 24 24-10 6-21-1" fill="none" stroke="var(--hound-coat,#e8e5dc)" stroke-width="6" stroke-linecap="round"/>
+            <path data-region="seated-haunch" d="M27 39q10 1 13 19 12 13 8 24l-8 4H21l-5-8 9-17Z" fill="var(--hound-coat,#e8e5dc)" stroke="#52605b" stroke-width="1.3"/>
+            <path data-region="chest" d="M24 31q6-3 12 1l-2 23-5 12-6-7Z" fill="var(--hound-face,#f3f0e8)"/>
+            <use data-region="portrait" href="#camp-windhound" x="12" y="0" width="36" height="36" style="--hound-portrait-body-display:none"/>
+            <path data-region="forelegs" d="m23 58-3 29m13-29 2 29" fill="none" stroke="var(--hound-face,#f3f0e8)" stroke-width="5" stroke-linecap="round"/>
+            <path data-region="paws" d="M14 86h11m4 0h12" stroke="#d6d6ca" stroke-width="5" stroke-linecap="round"/>
+            <path class="asset-detail-secondary" data-region="coat-feathering" d="m23 40-2 9 3-2-3 11m13-17 3 10-3-2 2 10m7 9 4 8-4-2 2 7m7-4 4 5-5-1" fill="none" stroke="var(--hound-feather,#c1c8bb)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+            <use data-region="conditions" href="#terrain-condition-marks" width="64" height="92"/>
+          </symbol>
+          <symbol id="fishing-kit" viewBox="0 0 120 190" data-regions="rod-blank,rod-guides,reel,fishing-line,float,conditions">
+            <path data-region="rod-blank" d="M88 76Q53 36 13 10" fill="none" stroke="var(--fishing-rod,#604635)" stroke-width="2.4" stroke-linecap="round"/>
+            <path data-region="rod-guides" class="asset-detail-secondary" d="m72 58-3 3m-17-23-3 3m-17-20-2 3" fill="none" stroke="#b8c3ba" stroke-width="1.2"/>
+            <circle data-region="reel" cx="86" cy="80" r="5" fill="#354d4c" stroke="#a2b4a7" stroke-width="1.5"/>
+            <path class="fishing-line" data-region="fishing-line" d="M13 10Q23 71 20 124" fill="none" stroke="var(--fishing-line,#bbc9b7)" stroke-width=".7"/>
+            <g class="fishing-float" data-region="float"><ellipse cx="20" cy="124" rx="2" ry="3.5" fill="#c7754b"/><path d="M18 124h4" stroke="#f4e8bf" stroke-width="2"/></g>
+            <use data-region="conditions" href="#terrain-condition-marks" width="120" height="150"/>
+          </symbol>
+          <symbol id="foraging-basket" viewBox="0 0 50 40" data-regions="handle,basket-body,woven-ribs,rim,conditions">
+            <path data-region="handle" d="M10 19Q8-5 25 3q15-8 15 16" fill="none" stroke="var(--basket-rim,#8f6c43)" stroke-width="3"/>
+            <path data-region="basket-body" d="m3 17 44 0-5 20H9Z" fill="var(--basket-body,#b18e59)" stroke="#604b34" stroke-width="2"/>
+            <path data-region="woven-ribs" class="asset-detail-secondary" d="m13 19 2 15m9-15v16m11-16-2 16M7 24h36M8 30h34" fill="none" stroke="#705736" stroke-width="1.2"/>
+            <path data-region="rim" d="M3 17h44" stroke="var(--basket-rim,#d0b07b)" stroke-width="4" stroke-linecap="round"/>
+            <use data-region="conditions" href="#terrain-condition-marks" width="50" height="40"/>
           </symbol>
           <symbol id="river-current" viewBox="0 0 72 24" data-regions="current-seam,surface-ripple,reflected-edge,micro-ripples,foam-beads,conditions">
             <path data-region="current-seam" d="M3 17q18-9 34-3 15 6 32-4" fill="none" stroke="var(--current-deep,#345f5d)" stroke-width="4" stroke-linecap="round"/>
@@ -991,10 +1038,10 @@
             <use class="terrain-asset" data-light="shadow" data-weather="drought" href="#river-pebble-cluster" x="235" y="520" width="136" height="28" style="--bank-pebble:#746c58"/>
           </g>
           <g class="river-water" data-region="river-water-level">
-          <path data-region="distant-river-bend" d="M554 429q-31-5-48 4l-20 12-12-18q22-15 47-15l33 8Z" fill="#173f49"/>
-          <path data-region="distant-river-glint" d="M550 426q-27-4-46 3l-18 10" fill="none" stroke="#75aaa6" stroke-width="2" opacity=".28" stroke-linecap="round"/>
-          <path d="M486 419c-28 20-27 24-75 59-53 39-135 42-190 78-66 43-94 88-221 119v85h94c38-57 67-88 132-119 68-33 163-41 211-91 43-45 30-88 70-129l-13-11Z" fill="#1b4f59"/>
-          <path d="M490 416c-20 20-21 36-70 72-55 40-134 44-191 79-67 41-104 81-197 111" fill="none" stroke="#7ab1ad" stroke-width="7" opacity=".48" stroke-linecap="round"/>
+          <path data-region="distant-river-bend" d="M554 465q-31-5-48 4l-20 12-12-18q22-15 47-15l33 8Z" fill="#173f49"/>
+          <path data-region="distant-river-glint" d="M550 462q-27-4-46 3l-18 10" fill="none" stroke="#75aaa6" stroke-width="2" opacity=".28" stroke-linecap="round"/>
+          <path d="M486 453c-28-14-27-10-75 25-53 39-135 42-190 78-66 43-94 88-221 119v85h94c38-57 67-88 132-119 68-33 163-41 211-91 43-45 30-54 70-95l-13-11Z" fill="#1b4f59"/>
+          <path d="M490 450c-20-14-21 2-70 38-55 40-134 44-191 79-67 41-104 81-197 111" fill="none" stroke="#7ab1ad" stroke-width="7" opacity=".48" stroke-linecap="round"/>
           <g class="river-ripples" data-region="river-surface-ripples" data-detail-layer="secondary" data-weather-reactive="water" data-light-reactive="ambient" opacity=".55">
             <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#river-ripple" x="286" y="537" width="94" height="31" transform="rotate(-4 333 553)"/>
             <use class="terrain-asset" data-light="moon" data-weather="rainy" href="#river-ripple" x="188" y="584" width="88" height="29" transform="rotate(-5 232 599)" style="--ripple-detail-opacity:.58"/>
@@ -1048,9 +1095,13 @@
           </g>
         </g>
         <use class="terrain-asset background-trail depth-mid scene-layer" data-light="moon" data-weather="dry" data-scene-layer="forest-path" data-scale-band="mid-to-near" data-region="winding-forest-trail" href="#forest-trail" x="510" y="401" width="700" height="430" style="--trail-bed:#5f513a;--trail-edge:#20352e;--trail-wear:#aa895a;--trail-root:#59432f"/>
-        <!-- Always retained: opaque foliage hides both distant route entrances. -->
+        <!-- Retained low earth cover hides route heads at ground level, not in a crown. -->
         <g class="route-entrance-screen depth-mid" data-region="river-trail-head-cover">
-          <use data-light="ambient" data-weather="clear" href="#distant-pine" x="531" y="278" width="112" height="204"/>
+          <path data-region="route-head-earth" d="M452 454q45-48 83 13 62-78 121 2l10 36q-58-14-114 12-55-8-110 12Z" fill="var(--scene-ground-mid,#163630)"/>
+          <path data-region="route-head-duff" d="m454 486 13-3m55-6 9 2m82 8 17 3" fill="none" stroke="var(--scene-ground-lit,#294b43)" stroke-width="2" stroke-linecap="round"/>
+          <path class="route-head-snow" data-region="route-head-snow" d="M452 454q45-48 83 13 62-78 121 2l3 7q-61-76-125 0-47-59-84-11Z" fill="var(--asset-snow-color,#e7f2f1)"/>
+          <use class="terrain-asset" data-region="river-head-underbrush" data-light="shadow" data-weather="wet" href="#evergreen-shrub" x="477" y="400" width="128" height="96"/>
+          <use class="terrain-asset" data-region="trail-head-underbrush" data-light="shadow" data-weather="wet" href="#berry-shrub" x="555" y="411" width="137" height="98"/>
         </g>
         <g class="deep-forest depth-mid scene-layer" data-parallax-plane="mid" data-scene-layer="forest-mid" data-scale-band="mid" data-placement-pattern="trail-pocket" data-region="midground-tree-line">
           <use href="#distant-pine" x="218" y="345" width="52" height="116"/><use href="#distant-pine" x="249" y="307" width="76" height="158"/>
@@ -1068,19 +1119,19 @@
         <g class="camp-pines depth-mid scene-layer" data-parallax-plane="mid" data-scene-layer="forest-frame" data-scale-band="near" data-placement-pattern="asymmetric-frame" data-region="camp-tree-frame" fill="url(#pine-lit)" stroke="#335e51" stroke-width="3" stroke-linejoin="round">
           <!-- Peek poses share their cover trees' parallax plane and wind owner. -->
           <g class="daytime-cryptid" data-pose="peeking" data-region="bigfoot-tree-hideout" data-light="shadow" data-weather-exposure="canopy" stroke="#3d261c" stroke-width="1.7">
-            <use data-region="hidden-shoulder" href="#bigfoot-torso-art" transform="translate(72 190) scale(.45)"/>
-            <use data-region="peeking-face" href="#bigfoot-face-art" transform="translate(-40 0) scale(.8)"/>
+            <use data-region="hidden-shoulder" href="#bigfoot-torso-art" transform="translate(118 307) scale(.3)"/>
+            <use data-region="peeking-face" href="#bigfoot-face-art" transform="translate(118 307) scale(.3)"/>
             <use data-region="cover-tree" href="#distant-pine" x="132" y="291" width="104" height="241" fill="url(#pine-lit)" stroke="#335e51" stroke-width="3"/>
           </g>
           <g class="daytime-cryptid" data-pose="peeking" data-region="dogman-tree-hideout" data-light="shadow" data-weather-exposure="canopy" stroke="#30231e" stroke-width="1.7">
-            <use data-region="hidden-shoulder" href="#dogman-torso-art" transform="translate(642 223) scale(.4)"/>
-            <use data-region="peeking-face" href="#dogman-face-art" transform="translate(391 68) scale(.7)"/>
+            <use data-region="hidden-shoulder" href="#dogman-torso-art" transform="translate(765 315) scale(.28)"/>
+            <use data-region="peeking-face" href="#dogman-face-art" transform="translate(765 315) scale(.28)"/>
             <use data-region="cover-tree" href="#distant-pine" x="995" y="238" width="139" height="282" fill="url(#pine-lit)" stroke="#335e51" stroke-width="3"/>
           </g>
           <use href="#distant-pine" x="12" y="188" width="162" height="342"/>
           <use href="#distant-pine" x="1104" y="322" width="88" height="204"/>
           <g class="mothman-perch" data-region="mothman-treetop-hideout" data-weather-exposure="canopy">
-            <use class="daytime-perched" data-pose="perched" data-region="perched-mothman" href="#mothman-body-art" transform="translate(612 152) scale(.28)" stroke="#291d2a" stroke-width="1.6"/>
+            <use class="daytime-perched" data-pose="peeking" data-region="perched-mothman" href="#mothman-body-art" transform="translate(635 236) scale(.25)" stroke="#291d2a" stroke-width="1.6"/>
             <use data-region="perch-tree" href="#distant-pine" x="782" y="344" width="82" height="176"/>
           </g>
         </g>
@@ -1415,6 +1466,21 @@
           <g class="smoke-puffs"><use href="#smoke-puff" x="591" y="265" width="24" height="24"/><use href="#smoke-puff" x="665" y="319" width="20" height="20" style="--smoke-puff-size:6"/><use href="#smoke-puff" x="747" y="256" width="22" height="22" style="--smoke-puff-size:6.5"/><use href="#smoke-puff" x="832" y="293" width="20" height="20" style="--smoke-puff-size:6"/><use href="#smoke-puff" x="881" y="340" width="24" height="24"/></g>
         </g>
         <path class="smoke-thread" d="M612 555c-24-29 23-38-4-69s18-42 0-78" fill="none" stroke="#d4dedb" stroke-width="8" stroke-linecap="round" opacity=".58"/>
+        <g class="daytime-activities scene-layer" data-region="daytime-camp-activities" data-scene-layer="campsite-subjects" data-scale-band="subject" data-weather-exposure="open" data-light-reactive="ambient">
+          <g class="riverbank-angler" data-region="riverbank-fishing-activity" data-ground-anchor="right-riverbank">
+            <use class="seat-shadows" data-region="angler-contact-shadow" href="#ground-shadow" x="395" y="547" width="62" height="12"/>
+            <use class="terrain-asset" data-region="fishing-camper" data-detail="rich" data-light="ambient" data-weather="clear" href="#outdoor-camper" x="390" y="443" width="66" height="112" style="--camper-skin:#e6b791;--camper-hair:#c97a48;--camper-shirt:#44675f;--camper-glasses-opacity:1;--camper-facial-hair-opacity:1"/>
+            <use class="terrain-asset" data-region="fishing-tackle" data-detail="rich" data-light="ambient" data-weather="clear" href="#fishing-kit" x="305" y="408" width="120" height="190"/>
+            <use class="seat-shadows" data-region="companion-contact-shadow" href="#ground-shadow" x="460" y="553" width="39" height="8"/>
+            <use class="terrain-asset" data-region="fishing-companion" data-detail="rich" data-light="ambient" data-weather="clear" href="#sitting-windhound" x="460" y="510" width="34" height="49"/>
+          </g>
+          <g data-region="woodland-foraging-activity" data-ground-anchor="clearing-east">
+            <use class="seat-shadows" data-region="picker-contact-shadow" href="#ground-shadow" x="760" y="711" width="90" height="13"/>
+            <use class="terrain-asset" data-region="mushroom-picker" data-detail="rich" data-light="ambient" data-weather="wet" href="#outdoor-camper" x="748" y="580" width="95" height="145" style="--camper-standing-display:none;--camper-kneeling-display:inline;--camper-skin:#dca986;--camper-hair:#4d2f2a;--camper-shirt:#895b46;--camper-short-hair-opacity:0;--camper-long-hair-opacity:1;--camper-facial-hair-opacity:0"/>
+            <use class="terrain-asset" data-region="foraging-patch" data-detail="rich" data-light="ambient" data-weather="wet" href="#fungi-cluster" x="828" y="695" width="34" height="25" transform="rotate(-4 845 715)" style="--fungi-cap:#a88a59;--fungi-b-scale:.72"/>
+            <use class="terrain-asset" data-region="picking-basket" data-detail="rich" data-light="ambient" data-weather="wet" href="#foraging-basket" x="742" y="693" width="37" height="30"/>
+          </g>
+        </g>
         <use class="weather-rain" data-scene-layer="precipitation-front" aria-hidden="true" href="#rain-field" width="1200" height="760"/>
         <use class="weather-snow" data-scene-layer="precipitation-front" aria-hidden="true" href="#snow-field" width="1200" height="760"/>
         <use class="weather-wind" data-scene-layer="precipitation-front" aria-hidden="true" href="#wind-field" width="1200" height="760"/>

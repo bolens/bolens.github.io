@@ -35,6 +35,28 @@ const setup = () => {
   };
 };
 
+test('optional environment validates, resets, and gates flying firefly habitat', () => {
+  const {context}=setup(), api=context.window.portfolioWeather;
+  assert.equal(api.fireflyEligibility,1);
+  for(const input of [{temperatureC:11.9},{temperatureC:32.1},{season:'winter'},{fireflyHabitat:false}]) {
+    const state=api.setEnvironment(input);
+    assert.equal(state.fireflyEligibility,0);
+    assert.equal(context.document.documentElement.dataset.sceneFireflyEligibility,'0');
+    assert.ok(Object.isFrozen(state.environment));
+  }
+  for(const temperatureC of [12,20,32]) assert.equal(api.setEnvironment({temperatureC,season:'summer',fireflyHabitat:true}).fireflyEligibility,1);
+  for(const input of [null,[],{temperatureC:NaN,season:'__proto__',fireflyHabitat:'false'},{temperatureC:'20'},{temperatureC:Infinity}]) {
+    const state=api.setEnvironment(input);
+    assert.deepEqual({...state.environment},{temperatureC:null,season:null,fireflyHabitat:null});
+    assert.equal(state.fireflyEligibility,1);
+  }
+  api.setEnvironment({season:'winter'});
+  api.setLocationCondition('clear');
+  assert.equal(api.fireflyEligibility,0,'changing weather must not discard environment');
+  api.setEnvironment(null);
+  assert.equal(api.fireflyEligibility,1);
+});
+
 test('every named palette defines a valid fallback condition', () => {
   const { context } = setup();
   const { palettes, weatherModes } = context.window.portfolioThemeData;

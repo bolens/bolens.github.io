@@ -263,10 +263,10 @@
     if (fireActive()) paintGlow(fireX, fireY, 150 * view.scale * firePulse * (.9 + motionProfile.glow * .1), [[0, `rgba(255,170,70,${.105 * motionProfile.glow})`], [.38, `rgba(242,103,48,${.052 * motionProfile.glow})`], [1, 'rgba(242,90,40,0)']]);
 
     fireflies.forEach((fly) => {
-      const activity = atmosphere.fireflies * timeProfile.fireflies;
+      const activity = atmosphere.fireflies * timeProfile.fireflies * (window.portfolioWeather?.fireflyEligibility ?? 1);
       if (activity <= 0) return;
       const wave = .5 + .5 * Math.sin(time * fly.speed / motionProfile.tempo + fly.phase);
-      const alpha = (.045 + .3 * wave * wave) * atmosphere.fireflies * timeProfile.fireflies * motionProfile.activity;
+      const alpha = (.045 + .3 * wave * wave) * activity * motionProfile.activity;
       const [x, y] = point(fly.x + Math.sin(time * .13 / motionProfile.tempo + fly.phase) * fly.drift * motionProfile.play, fly.y + Math.cos(time * .1 / motionProfile.tempo + fly.phase) * 2.5 * motionProfile.play);
       const glowSize = 16 * view.scale;
       context.globalAlpha = alpha;

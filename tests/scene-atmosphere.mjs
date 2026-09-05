@@ -32,6 +32,12 @@ test('firefly cores disappear with their glow, then return in suitable condition
   }
   scene.time({time:'twilight', cycle:'dynamic', darkness:.6});
   assert.ok(brightness(scene, fireflies) > 0);
+  scene.window.portfolioWeather.fireflyEligibility=0;
+  scene.weather('clear');
+  assert.equal(particles(scene, fireflies).length,0,'environment exclusion reaches the canvas');
+  scene.window.portfolioWeather.fireflyEligibility=1;
+  scene.weather('clear');
+  assert.ok(brightness(scene, fireflies)>0);
 });
 
 for (const [condition, starRatio, fogRatio, emberRatio] of [
