@@ -9,8 +9,8 @@
 .about-principles { position: relative; }
 .about-principles::before { content: ''; position: absolute; top: 0; bottom: 0; left: 7px; width: 1px; background: var(--line); }
 .about-principles .eyebrow:not(:has(.status-dot)):not([data-no-glyph])::before { width:1.15rem; height:1.15rem; }
-.about-principles article { position: relative; padding: 2.7rem 0 2.7rem 3rem; border-bottom: 1px solid var(--line); transition:padding var(--motion-medium) var(--ease-route),background var(--motion-fast); }
-.about-principles article:hover { padding-left:3.55rem; background:linear-gradient(90deg,color-mix(in srgb,var(--copper) 7%,transparent),transparent 72%); }
+.about-principles article { position: relative; padding: 2.7rem 0 2.7rem 3rem; border-bottom: 1px solid var(--line); transition:background var(--motion-fast); }
+.about-principles article:hover { background:linear-gradient(90deg,color-mix(in srgb,var(--copper) 7%,transparent),transparent 72%); }
 .about-principles article::before { content: ''; position: absolute; z-index: 1; top: 3rem; left: 0; width: 15px; aspect-ratio: 1; border: 3px solid var(--paper); border-radius: 50%; background: var(--copper); box-shadow: 0 0 0 1px var(--copper); transition:scale var(--motion-medium) var(--ease-pop),box-shadow var(--motion-medium) var(--ease-route); }
 .about-principles article:hover::before { scale:1.28; box-shadow:0 0 0 5px color-mix(in srgb,var(--copper) 14%,transparent); }
 .about-principles .eyebrow { margin-bottom: .55rem; color: var(--copper); }
@@ -19,8 +19,8 @@
 .about-field-notes { display: grid; grid-template-columns: .8fr 1.4fr; gap: clamp(3rem,8vw,8rem); padding-block: clamp(5rem,9vw,8rem); border-bottom: 1px solid var(--line); }
 .about-field-notes h2 { max-width: 10ch; margin: 0; font: 400 clamp(2.2rem,4.2vw,4rem)/1.02 var(--serif); letter-spacing: -.04em; }
 .about-field-notes dl { margin: 0; }
-.about-field-notes dl div { display: grid; grid-template-columns: minmax(8rem,.55fr) 1fr; gap: 1.5rem; padding: 1.35rem 0; border-bottom: 1px solid var(--line); transition:padding var(--motion-medium) var(--ease-route),background var(--motion-fast),box-shadow var(--motion-fast); }
-.about-field-notes dl div:hover { padding-inline:.8rem; background:var(--snow); box-shadow:inset 3px 0 var(--copper); }
+.about-field-notes dl div { display: grid; grid-template-columns: minmax(8rem,.55fr) 1fr; gap: 1.5rem; padding: 1.35rem 0; border-bottom: 1px solid var(--line); transition:background var(--motion-fast),box-shadow var(--motion-fast); }
+.about-field-notes dl div:hover { background:var(--snow); box-shadow:inset 3px 0 var(--copper); }
 .about-field-notes dt { color: var(--copper); font: 700 .72rem/1.4 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
 .about-field-notes dd { margin: 0; color: var(--muted); line-height: 1.6; }
 .availability { margin-top: 5rem; padding: clamp(2rem, 6vw, 5rem); background: var(--ink); color: var(--snow); }

@@ -4,19 +4,21 @@ import test from 'node:test';
 import vm from 'node:vm';
 
 const source = readFileSync(new URL('../assets/hobby-motion.js', import.meta.url), 'utf8');
-function setup() {
+function setup({ count = 1 } = {}) {
   const listeners = new Map();
   const media = { matches: false, addEventListener: (_, callback) => listeners.set('media', callback) };
-  const timelines = Array.from({ length: 3 }, () => ({
-    paused: false,
-    pauseAnimations() { this.paused = true; },
-    unpauseAnimations() { this.paused = false; },
-  }));
-  const section = { dataset: {}, querySelectorAll: () => timelines };
+  const sceneTimelines = Array.from({ length: count }, () => Array.from({ length: 3 }, () => ({
+    paused: false, calls: [],
+    pauseAnimations() { this.paused = true; this.calls.push('pause'); },
+    unpauseAnimations() { this.paused = false; this.calls.push('play'); },
+  })));
+  const sections = sceneTimelines.map(timelines => ({ dataset: {}, querySelectorAll: () => timelines }));
+  const observed = [];
+  const section = sections[0];
   const document = {
     hidden: false,
     documentElement: { dataset: {}, classList: { contains: () => false } },
-    querySelector: () => section,
+    querySelectorAll: () => sections,
     addEventListener: (type, callback) => listeners.set(type, callback),
   };
   let intersect;
@@ -24,11 +26,12 @@ function setup() {
     document, matchMedia: () => media,
     window: { portfolioAppearance: { subscribe: (callback) => listeners.set('appearance', callback) } },
     addEventListener: (type, callback) => listeners.set(type, callback),
-    IntersectionObserver: class { constructor(callback) { intersect = callback; } observe() {} },
+    IntersectionObserver: class { constructor(callback) { intersect = callback; } observe(element) { observed.push(element); } },
   });
   return {
-    section, timelines,
-    intersect: (isIntersecting) => intersect([{ isIntersecting }]),
+    observed, listeners, section, sections, timelines: sceneTimelines[0], sceneTimelines,
+    intersect: (isIntersecting) => intersect([{ target: section, isIntersecting }]),
+    entries: (entries) => intersect(entries.map(([index, isIntersecting]) => ({ target: sections[index], isIntersecting }))),
     overlay: (active) => listeners.get('ui-overlay-change')({ detail: { active } }),
     hide(hidden) { document.hidden = hidden; listeners.get('visibilitychange')(); },
     reduce(matches) { media.matches = matches; listeners.get('media')(); },
@@ -81,4 +84,33 @@ test('clearing one pause reason does not clear the others', () => {
   expectMotion(harness, false);
   harness.reduce(false);
   expectMotion(harness, true);
+});
+
+
+test('batched observer entries pause and resume each illustration independently', () => {
+  const h = setup({ count: 3 });
+  h.entries([[0, true], [1, false], [2, true]]);
+  assert.deepEqual(h.sections.map(s => s.dataset.motion), ['running', 'paused', 'running']);
+  assert.deepEqual(h.sceneTimelines.map(t => t.every(s => s.paused)), [false, true, false]);
+  h.entries([[0, false], [1, true]]);
+  assert.deepEqual(h.sections.map(s => s.dataset.motion), ['paused', 'running', 'running']);
+  h.overlay(true);
+  assert.ok(h.sceneTimelines.flat().every(s => s.paused));
+  h.entries([[2, false]]);
+  h.overlay(false);
+  assert.deepEqual(h.sections.map(s => s.dataset.motion), ['paused', 'running', 'paused']);
+});
+
+test('redundant notifications do not restart SVG timelines', () => {
+  const h = setup();
+  h.intersect(true); h.intersect(true); h.preference('auto'); h.hide(false); h.overlay(false);
+  assert.deepEqual(h.timelines[0].calls, ['pause', 'play']);
+  h.intersect(false); h.intersect(false); h.reduce(true);
+  assert.deepEqual(h.timelines[0].calls, ['pause', 'play', 'pause']);
+});
+
+test('pages without illustrations register no observers or listeners', () => {
+  const h = setup({ count: 0 });
+  assert.deepEqual(h.observed, []);
+  assert.equal(h.listeners.size, 0);
 });

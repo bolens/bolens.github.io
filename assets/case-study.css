@@ -26,11 +26,11 @@
 .case-route text { fill: var(--ink); font: 700 12px var(--mono); letter-spacing: 1.5px; }
 .case-route circle,.case-route text { transform-box: fill-box; transform-origin: center; }
 .case-route a { cursor: pointer; outline: none; }
-.case-route a circle,.case-route a text { opacity: 0; animation: case-route-node .42s cubic-bezier(.2,.8,.2,1) forwards; transition: fill .2s, stroke .2s, scale .2s; }
-.case-route a:nth-of-type(1) circle,.case-route a:nth-of-type(1) text { animation-delay: .5s; }
-.case-route a:nth-of-type(2) circle,.case-route a:nth-of-type(2) text { animation-delay: .72s; }
-.case-route a:nth-of-type(3) circle,.case-route a:nth-of-type(3) text { animation-delay: .94s; }
-.case-route a:nth-of-type(4) circle,.case-route a:nth-of-type(4) text { animation-delay: 1.16s; }
+.case-route a circle,.case-route a text { opacity: 1; animation: case-route-node .32s var(--ease-route) backwards; transition: fill .2s, stroke .2s, scale .2s; }
+.case-route a:nth-of-type(1) circle,.case-route a:nth-of-type(1) text { animation-delay: .08s; }
+.case-route a:nth-of-type(2) circle,.case-route a:nth-of-type(2) text { animation-delay: .14s; }
+.case-route a:nth-of-type(3) circle,.case-route a:nth-of-type(3) text { animation-delay: .2s; }
+.case-route a:nth-of-type(4) circle,.case-route a:nth-of-type(4) text { animation-delay: .26s; }
 .case-route a:hover circle,.case-route a:focus circle,.case-route a[aria-current] circle { fill: var(--copper); stroke: var(--copper); scale: 1.16; }
 .case-route a:hover text,.case-route a:focus text,.case-route a[aria-current] text { fill: var(--copper); }
 .case-route a[data-visited] circle { stroke: var(--copper); }
@@ -42,10 +42,14 @@
 .case-story section.is-active > .eyebrow { color: var(--copper); }
 .case-story > section { counter-increment: case-chapter; }
 .case-story > section > .eyebrow::before { content: "0" counter(case-chapter) " / 04"; display: block; margin-bottom: .55rem; color: var(--muted); letter-spacing: .08em; }
-@keyframes case-route-node { from { opacity: 0; scale: .72; } to { opacity: 1; scale: 1; } }
+@keyframes case-route-node { from { opacity: .5; } }
 .case-story > section { display: grid; grid-template-columns: .55fr 1.25fr 1.2fr; gap: clamp(2rem, 5vw, 5rem); padding-block: clamp(4rem, 8vw, 7rem); border-bottom: 1px solid var(--line); }
 .case-story h2 { margin: 0; font: 400 clamp(2rem,4vw,3.7rem)/1.06 var(--serif); letter-spacing: -.034em; }
 .case-story .prose p { margin-bottom: 1.5rem; }.case-story code { font-family: var(--mono); font-size: .88em; }
 .case-next { display: grid; grid-template-columns: .55fr 1fr; justify-content: initial; align-items: baseline; gap: 2rem; padding-top: clamp(4rem, 8vw, 7rem); }
 .case-next { view-transition-name: case-next; }
 .case-next a { display:flex; align-items:center; font: 400 clamp(2rem,5vw,4.4rem)/1.04 var(--serif); text-decoration: none; letter-spacing: -.035em; transition:color var(--motion-fast),translate var(--motion-medium) var(--ease-route); }.case-next a:is(:hover,:focus-visible) { color: var(--copper); translate:.35rem 0; }
+
+@media (prefers-reduced-motion:reduce) {
+  .case-route a circle,.case-route a text { animation:none; }
+}
