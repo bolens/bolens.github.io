@@ -36,8 +36,8 @@ test('small reactive lights avoid abrupt high-contrast flashes', () => {
 });
 
 test('large condition layers crossfade instead of toggling display', () => {
-  assert.match(css, /\.weather-clouds,\.weather-overcast,\.weather-rain,\.weather-snow,\.weather-drought \{ display:inline;opacity:0;visibility:hidden;[^}]*transition:opacity \.38s ease/);
-  assert.doesNotMatch(css, /\.weather-clouds,\.weather-overcast,\.weather-rain,\.weather-snow,\.weather-drought \{ display:none/);
+  assert.match(css, /\.weather-clouds,\.weather-overcast,\.weather-rain,\.weather-snow,\.weather-drought,\.weather-wind \{ display:inline;opacity:0;visibility:hidden;[^}]*transition:opacity \.38s ease/);
+  assert.doesNotMatch(css, /\.weather-clouds,\.weather-overcast,\.weather-rain,\.weather-snow,\.weather-drought,\.weather-wind \{ display:none/);
   assert.match(css, /\.condition-detail \{ display:inline;opacity:0;visibility:hidden;[^}]*transition:opacity \.38s ease/);
   assert.doesNotMatch(css, /data-weather="drought"\] :is\(\.campfire[^}]*display:none/);
 });

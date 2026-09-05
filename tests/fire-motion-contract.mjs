@@ -27,10 +27,14 @@ test('fallback SVG sparks remain small and close to the flame', () => {
     assert.ok(Number(spark.match(/ width="([^"]+)"/)?.[1]) <= 8, `spark is too large: ${spark}`);
   }
 
-  const lifts = [...css.matchAll(/--ember-lift:-([0-9]+)px/g)].map((match) => Number(match[1]));
-  const drifts = [...css.matchAll(/--ember-drift-x:-?([0-9]+)px/g)].map((match) => Number(match[1]));
+  const calmRules = css.match(/\.embers > \* \{[^}]+\}(?:[^\n]+\.embers > :nth-child[^\n]+)+/)?.[0] || '';
+  const windyRule = css.match(/data-weather="windy"\] \.embers > \* \{[^}]+\}/)?.[0] || '';
+  const lifts = [...calmRules.matchAll(/--ember-lift:-([0-9]+)px/g)].map((match) => Number(match[1]));
+  const drifts = [...calmRules.matchAll(/--ember-drift-x:-?([0-9]+)px/g)].map((match) => Number(match[1]));
   assert.ok(lifts.length > 0, 'ember lift properties are required');
   assert.ok(drifts.length > 0, 'ember drift properties are required');
   assert.ok(Math.max(...lifts) <= 21);
   assert.ok(Math.max(...drifts) <= 3);
+  assert.match(windyRule, /--ember-drift-x:18px/);
+  assert.match(windyRule, /--ember-lift:-14px/);
 });

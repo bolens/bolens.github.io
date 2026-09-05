@@ -13,7 +13,7 @@ const near = (actual, expected) => assert.ok(Math.abs(actual - expected) < 1e-10
 for (const [condition, starRatio, fogRatio, emberRatio] of [
   ['clear', 1, 1, 1], ['cloudy', .25, 1.25, .9], ['overcast', .1, 1.45, .72],
   ['rainy', .08, 1.4, .18], ['wet', .7, 1.2, .85], ['dry', .9, .45, 1],
-  ['snowy', .35, 1.55, .25], ['drought', .7, .08, 0],
+  ['snowy', .35, 1.55, .25], ['drought', .7, .08, 0], ['windy', .82, .48, .72],
 ]) {
   test(`${condition} changes rendered stars, fog, and embers`, () => {
     const scene = createScene();

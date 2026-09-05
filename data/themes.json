@@ -13,7 +13,8 @@
     "wet",
     "dry",
     "snowy",
-    "drought"
+    "drought",
+    "windy"
   ],
   "timeModes": [
     "day",

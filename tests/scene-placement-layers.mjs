@@ -36,9 +36,21 @@ test('major scene bands publish an explicit paint-order vocabulary', () => {
     'data-scene-layer="campsite-subjects"',
     'data-scene-layer="campsite-effects"',
     'data-scene-layer="air-front"',
+    'data-scene-layer="precipitation-front"',
     'data-scene-layer="foreground-edge"',
   ].map(indexOf);
   assert.deepEqual([...anchors].sort((a, b) => a - b), anchors);
+});
+
+test('solid terrain blocks rear layers while precipitation paints in front', () => {
+  for (const className of ['mountain-range-far', 'mountain-range-middle', 'forest-transition', 'horizon-brush']) {
+    const openingTag = html.match(new RegExp(`<g class="[^"]*\\b${className}\\b[^"]*"[^>]*>`))?.[0] || '';
+    assert.ok(openingTag, `missing ${className}`);
+    assert.doesNotMatch(openingTag, /\sopacity=/, `${className} must not make solid terrain translucent`);
+  }
+
+  assert.ok(indexOf('data-scene-layer="precipitation-front"') > indexOf('data-scene-layer="air-front"'));
+  assert.ok(indexOf('data-scene-layer="precipitation-front"') < indexOf('data-scene-layer="foreground-edge"'));
 });
 
 test('tree scale increases from distant rows to the camp frame', () => {

@@ -36,6 +36,8 @@ test('celestial and weather geometry is reusable', () => {
   assert.match(html, /class="weather-snow"[^>]+href="#snow-field"/);
   assert.match(css, /data-weather="drought"/);
   assert.match(html, /class="weather-drought"[^>]+href="#drought-field"/);
+  assert.match(html, /<symbol id="wind-field"[^>]+data-regions="gust-streamers,leaf-debris"/);
+  assert.match(html, /class="weather-wind"[^>]+href="#wind-field"/);
 });
 
 test('day and night keep one active scene composition', () => {

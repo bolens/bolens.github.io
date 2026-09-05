@@ -90,6 +90,7 @@ test('404 weather visibility is controlled only by the resolved condition', () =
   assert.match(css, /data-weather="rainy"\] \.weather-rain/);
   assert.match(css, /data-weather="snowy"\] \.weather-snow/);
   assert.match(css, /data-weather="drought"\] \.weather-drought/);
+  assert.match(css, /data-weather="windy"\] \.weather-wind/);
 });
 
 for (const invalid of ['hail', '', null, undefined, '__proto__']) {

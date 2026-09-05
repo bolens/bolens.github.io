@@ -13,7 +13,7 @@ const symbols = [...html.matchAll(symbolPattern)].map(([, id, attributes, body])
 const regionNamePattern = /^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$/;
 
 test("every reusable landscape symbol publishes stable named regions", () => {
-  assert.equal(symbols.length, 64, "expected the complete reusable 404 asset library");
+  assert.equal(symbols.length, 65, "expected the complete reusable 404 asset library");
 
   for (const { id, attributes } of symbols) {
     const manifest = attributes.match(/\bdata-regions="([^"]+)"/)?.[1];

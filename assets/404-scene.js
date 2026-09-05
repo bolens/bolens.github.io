@@ -20,6 +20,7 @@
     dry: Object.freeze({ stars: .9, fog: .45, fireflies: 1.1, embers: 1 }),
     snowy: Object.freeze({ stars: .35, fog: 1.55, fireflies: .18, embers: .25 }),
     drought: Object.freeze({ stars: .7, fog: .08, fireflies: .55, embers: 0 }),
+    windy: Object.freeze({ stars: .82, fog: .48, fireflies: .35, embers: .72 }),
   });
   const profileFor = (condition) => atmosphereProfiles[condition] || atmosphereProfiles.clear;
   const random = (() => {
@@ -72,7 +73,7 @@
   const parallaxValues = new Map();
   let marshmallowExposure = 0;
   let atmosphere = profileFor(window.portfolioWeather?.condition);
-  const fireStrength = Object.freeze({ clear:1, cloudy:.9, overcast:.8, rainy:.45, wet:.95, dry:1.08, snowy:.65, drought:0 });
+  const fireStrength = Object.freeze({ clear:1, cloudy:.9, overcast:.8, rainy:.45, wet:.95, dry:1.08, snowy:.65, drought:0, windy:1.06 });
   const updateMarshmallowCook = () => {
     if (!visible || overlayActive) return;
     marshmallowExposure = Math.min(180, marshmallowExposure + (fireStrength[window.portfolioWeather?.condition] ?? 1));

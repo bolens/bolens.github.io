@@ -20,7 +20,7 @@ test('cooking progresses from warming to blistering to charring and caps its exp
   assert.deepEqual(levels(scene), { cook: .82, mark: .9, blister: 1.092, char: .684, glint: .22 });
 });
 
-for (const [condition, expected] of Object.entries({ clear: '.500', cloudy: '.450', overcast: '.400', rainy: '.225', wet: '.475', dry: '.540', snowy: '.325', drought: '.000' })) {
+for (const [condition, expected] of Object.entries({ clear: '.500', cloudy: '.450', overcast: '.400', rainy: '.225', wet: '.475', dry: '.540', snowy: '.325', drought: '.000', windy: '.530' })) {
   test(`${condition} supplies the expected heat over 90 seconds`, () => {
     const scene = createScene({ condition });
     scene.advance(90_000);

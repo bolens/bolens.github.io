@@ -51,13 +51,77 @@ try {
     await waitForFrames(send);
     const screenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
     writeFileSync(`/tmp/404-parallax-${viewport.name}.png`, Buffer.from(screenshot.data, 'base64'));
+    if (viewport.name === 'desktop') {
+      const rainLayering = await evaluate(send, `(()=>{
+        portfolioWeather.setLocationCondition('rainy');
+        const rain=document.querySelector('.weather-rain');
+        const mountains=[...document.querySelectorAll('.mountain-range')];
+        return {
+          rainAfterTerrain:[...rain.ownerSVGElement.children].indexOf(rain)>Math.max(...mountains.map((node)=>[...node.ownerSVGElement.children].indexOf(node))),
+          mountainOpacity:mountains.map((node)=>getComputedStyle(node).opacity),
+        };
+      })()`);
+      assert.equal(rainLayering.rainAfterTerrain, true);
+      assert.ok(rainLayering.mountainOpacity.every((value) => value === '1'));
+      await waitForFrames(send);
+      const rainyScreenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+      writeFileSync('/tmp/404-rain-desktop.png', Buffer.from(rainyScreenshot.data, 'base64'));
+      const snowLayering = await evaluate(send, `(()=>{
+        portfolioWeather.setLocationCondition('snowy');
+        const snow=document.querySelector('.weather-snow');
+        const animation=snow.getAnimations().find((item)=>item.animationName==='weather-snow-drift');
+        animation.pause();animation.currentTime=0;const start=getComputedStyle(snow).translate;
+        animation.currentTime=3750;const middle=getComputedStyle(snow).translate;
+        return {
+          start,middle,
+          flakes:document.querySelector('#snow-field').querySelectorAll('circle').length,
+          rainStrokes:document.querySelector('#rain-field').querySelectorAll('path').length,
+          front:[...snow.ownerSVGElement.children].indexOf(snow)>Math.max(...[...document.querySelectorAll('.mountain-range')].map((node)=>[...node.ownerSVGElement.children].indexOf(node))),
+        };
+      })()`);
+      assert.notEqual(snowLayering.start, snowLayering.middle);
+      assert.ok(snowLayering.flakes >= 30);
+      assert.ok(snowLayering.rainStrokes >= 2);
+      assert.equal(snowLayering.front, true);
+      await waitForFrames(send);
+      const snowyScreenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+      writeFileSync('/tmp/404-snow-desktop.png', Buffer.from(snowyScreenshot.data, 'base64'));
+      const windMotion = await evaluate(send, `(()=>{
+        portfolioWeather.setLocationCondition('windy');
+        const names=(selector)=>getComputedStyle(document.querySelector(selector)).animationName;
+        return {
+          field:names('.weather-wind'), tree:names('.camp-pines > use'),
+          willow:names('.river-willows'), tent:names('.camp-tent > use:first-child'),
+          flame:names('.flame-stack'), smoke:names('.smoke-character'),
+        };
+      })()`);
+      assert.deepEqual(windMotion, {
+        field: 'weather-wind-pass', tree: 'wind-tree-gust', willow: 'wind-pliant-growth',
+        tent: 'wind-tent-fabric', flame: 'wind-flame-stack', smoke: 'wind-smoke',
+      });
+      const windPhases = await evaluate(send, `(()=>{
+        const selectors=['.weather-wind','.camp-pines > use','.river-willows','.camp-tent > use:first-child','.flame-stack','.smoke-character'];
+        const sample=(time)=>selectors.map((selector)=>{
+          const node=document.querySelector(selector);
+          const animation=node.getAnimations().find((item)=>item.animationName?.startsWith('wind-')||item.animationName==='weather-wind-pass');
+          animation.pause();animation.currentTime=time;
+          const style=getComputedStyle(node);return [style.transform,style.rotate,style.translate,style.opacity];
+        });
+        return {start:sample(0),gust:sample(1900)};
+      })()`);
+      assert.ok(windPhases.start.every((value, index) => JSON.stringify(value) !== JSON.stringify(windPhases.gust[index])));
+      await waitForFrames(send);
+      const windyScreenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+      writeFileSync('/tmp/404-windy-desktop.png', Buffer.from(windyScreenshot.data, 'base64'));
+    }
   }
 
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-color-scheme', value: 'light' }, { name: 'prefers-reduced-motion', value: 'reduce' }] });
   await waitForFrames(send);
-  const reduced = await evaluate(send, `(()=>{const figure=document.querySelector('.cryptid-camp');figure.dispatchEvent(new PointerEvent('pointerleave'));document.documentElement.dataset.motion='reduced';const box=figure.getBoundingClientRect();figure.dispatchEvent(new PointerEvent('pointermove',{clientX:box.right-1,clientY:box.bottom-1,pointerType:'mouse',bubbles:true}));const style=getComputedStyle(figure);return {tracking:figure.classList.contains('is-parallax-tracking'),offsets:['back','far','mid','near'].flatMap((depth)=>['x','y'].map((axis)=>Number.parseFloat(style.getPropertyValue('--parallax-'+depth+'-'+axis))))}})()`);
+  const reduced = await evaluate(send, `(()=>{const figure=document.querySelector('.cryptid-camp');figure.dispatchEvent(new PointerEvent('pointerleave'));document.documentElement.dataset.motion='reduced';portfolioWeather.setLocationCondition('windy');const box=figure.getBoundingClientRect();figure.dispatchEvent(new PointerEvent('pointermove',{clientX:box.right-1,clientY:box.bottom-1,pointerType:'mouse',bubbles:true}));const style=getComputedStyle(figure);return {tracking:figure.classList.contains('is-parallax-tracking'),offsets:['back','far','mid','near'].flatMap((depth)=>['x','y'].map((axis)=>Number.parseFloat(style.getPropertyValue('--parallax-'+depth+'-'+axis)))),windAnimations:['.weather-wind','.camp-pines > use','.river-willows','.camp-tent > use:first-child','.flame-stack','.smoke-character'].map((selector)=>getComputedStyle(document.querySelector(selector)).animationName)}})()`);
   assert.equal(reduced.tracking, false);
   assert.ok(reduced.offsets.every((value) => value === 0));
+  assert.ok(reduced.windAnimations.every((value) => value === 'none'));
   assert.deepEqual(errors, []);
   console.log('Parallax browser stability passed repeated pointer sweeps, bounded paint planes, stationary subjects, responsive layouts, and reduced motion.');
 } finally {
