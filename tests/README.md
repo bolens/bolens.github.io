@@ -47,3 +47,6 @@ Browser layout and input integration still depend on Chromium and machine
 resources. VM tests cover scheduling and state transitions without those
 variables. Determinism checks should include a different host locale/timezone and
 higher test concurrency, rather than repeated retries until a run passes.
+
+`project-evidence-layout.mjs` checks selected-work text clearance from dividers
+and cell boundaries at six widths, including fixed hover and focus phases.
