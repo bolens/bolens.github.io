@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { writeFileSync } from 'node:fs';
 import test from 'node:test';
 import { evaluate, waitFor } from './lib/browser-test.mjs';
 import { startUI } from './lib/ui-fixture.mjs';
@@ -44,6 +45,39 @@ try {
     assert.equal(await evaluate(send, 'portfolioAppearancePicker.visible'), true);
     await ui.key('Escape', 'Escape');
     assert.equal(await evaluate(send, 'portfolioAppearancePicker.visible'), false);
+  });
+
+  await test('404 picker alone exposes deterministic weather and scene-time overrides', async () => {
+    await ui.load('/');
+    assert.deepEqual(await evaluate(send, `({weather:!!document.querySelector('.weather-options'),time:!!document.querySelector('.scene-time-options')})`), { weather: false, time: false });
+
+    await ui.load('/404.html');
+    await evaluate(send, `portfolioAppearancePicker.open()`);
+    assert.deepEqual(await evaluate(send, `({weather:[...document.querySelectorAll('.weather-options input')].map((input)=>input.value),time:[...document.querySelectorAll('.scene-time-options input')].map((input)=>input.value)})`), {
+      weather: ['theme', 'clear', 'cloudy', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought', 'windy'],
+      time: ['automatic', 'day', 'night', 'morning', 'evening', 'twilight'],
+    });
+    const desktopBounds = await evaluate(send, `(()=>{const panel=document.querySelector('.palette-panels').getBoundingClientRect();return {left:panel.left,right:panel.right,top:panel.top,bottom:panel.bottom,width:innerWidth,height:innerHeight}})()`);
+    assert.ok(desktopBounds.left >= 0 && desktopBounds.right <= desktopBounds.width && desktopBounds.top >= 0 && desktopBounds.bottom <= desktopBounds.height);
+    const desktopCapture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+    writeFileSync('/tmp/404-scene-controls-desktop.png', Buffer.from(desktopCapture.data, 'base64'));
+    await evaluate(send, `document.querySelector('.weather-options input[value="windy"]').click();document.querySelector('.scene-time-options input[value="twilight"]').click()`);
+    assert.deepEqual(await evaluate(send, `({weather:portfolioWeather.condition,weatherSource:portfolioWeather.source,time:portfolioSceneTime.time,timeSource:portfolioSceneTime.source,storedWeather:localStorage.getItem('portfolio-weather'),storedTime:localStorage.getItem('portfolio-scene-time')})`), {
+      weather: 'windy', weatherSource: 'location', time: 'twilight', timeSource: 'scene', storedWeather: null, storedTime: null,
+    });
+    await evaluate(send, `document.querySelector('.weather-options input[value="theme"]').click();document.querySelector('.scene-time-options input[value="automatic"]').click()`);
+    assert.deepEqual(await evaluate(send, `({weatherSource:portfolioWeather.source,timeSource:portfolioSceneTime.source})`), { weatherSource: 'theme', timeSource: 'clock' });
+    await send('Emulation.setDeviceMetricsOverride', { width: 390, height: 844, deviceScaleFactor: 1, mobile: false });
+    await ui.load('/404.html');
+    await waitFor(send, `!!document.querySelector('.palette-picker.has-scene-controls .palette-panels')`, 'mobile scene controls mounted');
+    await evaluate(send, `portfolioAppearancePicker.open()`);
+    const mobileBounds = await evaluate(send, `(()=>{const element=document.querySelector('.palette-panels');const panel=element.getBoundingClientRect();return {left:panel.left,right:panel.right,top:panel.top,bottom:panel.bottom,width:innerWidth,height:innerHeight,overflow:getComputedStyle(element).overflowY}})()`);
+    assert.ok(mobileBounds.left >= 0 && mobileBounds.right <= mobileBounds.width && mobileBounds.top >= 0 && mobileBounds.bottom <= mobileBounds.height);
+    assert.equal(mobileBounds.overflow, 'auto');
+    const mobileCapture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
+    writeFileSync('/tmp/404-scene-controls-mobile.png', Buffer.from(mobileCapture.data, 'base64'));
+    await send('Emulation.setDeviceMetricsOverride', { width: 1280, height: 800, deviceScaleFactor: 1, mobile: false });
+    await ui.load('/');
   });
 
   for (const [key, code, selector] of [['k', 'KeyK', '.command-palette'], ['/', 'Slash', '.shortcut-overlay'], ['g', 'KeyG', '.glyph-explorer']]) {

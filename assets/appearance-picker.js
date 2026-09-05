@@ -5,6 +5,10 @@
   const { palettes } = appearance;
   let selected = appearance.palette;
   let selectedTheme = appearance.theme;
+  const weather = document.body.classList.contains('lost-page') ? window.portfolioWeather : null;
+  const sceneTime = document.body.classList.contains('lost-page') ? window.portfolioSceneTime : null;
+  let selectedWeather = weather?.source === 'location' ? weather.condition : 'theme';
+  let selectedTime = sceneTime?.source === 'scene' ? sceneTime.time : 'automatic';
   let returnFocus = null;
 
   const mountPicker = () => {
@@ -28,6 +32,16 @@
     themeFieldset.setAttribute('aria-describedby', 'appearance-help');
     themeFieldset.innerHTML = `<legend>Choose an appearance</legend><p class="visually-hidden" id="appearance-help">Changes apply immediately. System follows your device setting.</p>${appearance.modes.map((theme) => `<label><input type="radio" name="portfolio-theme" value="${theme}"${theme === selectedTheme ? ' checked' : ''}><span>${theme === 'auto' ? 'System' : theme[0].toUpperCase() + theme.slice(1)}</span></label>`).join('')}`;
     picker.querySelector('.palette-panel-body').append(themeFieldset);
+    if (weather && sceneTime) {
+      picker.classList.add('has-scene-controls');
+      const weatherFieldset = document.createElement('fieldset');
+      weatherFieldset.className = 'weather-options scene-options';
+      weatherFieldset.innerHTML = `<legend>Choose 404 weather</legend><p class="palette-section-label" aria-hidden="true">Weather</p>${['theme', ...weather.conditions].map((condition) => `<label><input type="radio" name="portfolio-weather" value="${condition}"${condition === selectedWeather ? ' checked' : ''}><span>${condition === 'theme' ? 'Theme default' : condition[0].toUpperCase() + condition.slice(1)}</span></label>`).join('')}`;
+      const timeFieldset = document.createElement('fieldset');
+      timeFieldset.className = 'scene-time-options scene-options';
+      timeFieldset.innerHTML = `<legend>Choose 404 scene time</legend><p class="palette-section-label" aria-hidden="true">Scene time</p>${['automatic', ...sceneTime.times].map((time) => `<label><input type="radio" name="portfolio-scene-time" value="${time}"${time === selectedTime ? ' checked' : ''}><span>${time === 'automatic' ? 'Appearance / clock' : time[0].toUpperCase() + time.slice(1)}</span></label>`).join('')}`;
+      picker.querySelector('.palette-panel-body').append(weatherFieldset, timeFieldset);
+    }
 
     const status = document.createElement('p');
     status.className = 'palette-status visually-hidden';
@@ -41,6 +55,16 @@
     };
     const choosePalette = (name) => { appearance.setPalette(name); sync(true); };
     const chooseTheme = (mode) => { appearance.setTheme(mode); sync(true); };
+    const chooseWeather = (condition) => {
+      const state = condition === 'theme' ? weather.useThemeFallback() : weather.setLocationCondition(condition);
+      selectedWeather = state.source === 'location' ? state.condition : 'theme';
+      status.textContent = `${state.condition[0].toUpperCase() + state.condition.slice(1)} weather, ${state.source === 'theme' ? 'theme default' : 'scene override'}.`;
+    };
+    const chooseTime = (time) => {
+      const state = time === 'automatic' ? sceneTime.useAppearanceFallback() : sceneTime.setTime(time);
+      selectedTime = state.source === 'scene' ? state.time : 'automatic';
+      status.textContent = `${state.time[0].toUpperCase() + state.time.slice(1)} scene time, ${state.source === 'scene' ? 'scene override' : 'automatic'}.`;
+    };
     const close = () => {
       picker.open = false;
       picker.hidden = true;
@@ -67,10 +91,22 @@
       if (themeControl) themeControl.checked = true;
       sync();
     });
+    weather?.subscribe((state) => {
+      selectedWeather = state.source === 'location' ? state.condition : 'theme';
+      const control = picker.querySelector(`input[name="portfolio-weather"][value="${selectedWeather}"]`);
+      if (control) control.checked = true;
+    });
+    sceneTime?.subscribe((state) => {
+      selectedTime = state.source === 'scene' ? state.time : 'automatic';
+      const control = picker.querySelector(`input[name="portfolio-scene-time"][value="${selectedTime}"]`);
+      if (control) control.checked = true;
+    });
     picker.addEventListener('change', (event) => {
       if (!(event.target instanceof HTMLInputElement)) return;
       if (event.target.name === 'portfolio-theme') chooseTheme(event.target.value);
-      else choosePalette(event.target.value);
+      else if (event.target.name === 'portfolio-palette') choosePalette(event.target.value);
+      else if (event.target.name === 'portfolio-weather') chooseWeather(event.target.value);
+      else if (event.target.name === 'portfolio-scene-time') chooseTime(event.target.value);
     });
     picker.addEventListener('toggle', () => overlay.set('appearance', picker.open && !picker.hidden));
     picker.querySelector('.overlay-close').addEventListener('click', close);
