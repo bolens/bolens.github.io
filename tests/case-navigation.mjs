@@ -18,7 +18,7 @@ function setup({ hash = '', ids = ['condition', 'cause', 'correction', 'confirm'
   for (const node of nodes) node.classList = { toggle: (_, active) => { node.active = active; } };
   const links = ids.map((id) => {
     const attributes = new Map([['href', `#${id}`]]);
-    return { attributes, hash: `#${id}`, getAttribute: (key) => attributes.get(key),
+    return { attributes, getAttribute: (key) => attributes.get(key),
       setAttribute: (key, value) => attributes.set(key, value), removeAttribute: (key) => attributes.delete(key),
       toggleAttribute(key, value) { if (value) attributes.set(key, ''); else attributes.delete(key); },
       addEventListener(type, callback) { this[type] = callback; },
@@ -39,7 +39,7 @@ function setup({ hash = '', ids = ['condition', 'cause', 'correction', 'confirm'
   vm.runInNewContext(source, context, { filename: 'assets/case-study.js' });
   return {
     nodes, links, frames, scrolled,
-    state: () => ({ current: links.filter((link) => link.attributes.has('aria-current')).map((link) => link.hash.slice(1)), visited: links.filter((link) => link.attributes.has('data-visited')).map((link) => link.hash.slice(1)), active: nodes.filter((node) => node.active).map((node) => node.id), progress }),
+    state: () => ({ current: links.filter((link) => link.attributes.has('aria-current')).map((link) => link.getAttribute('href').slice(1)), visited: links.filter((link) => link.attributes.has('data-visited')).map((link) => link.getAttribute('href').slice(1)), active: nodes.filter((node) => node.active).map((node) => node.id), progress }),
     emit: (type) => listeners.get(type)?.(),
     hash(value) { location.hash = value; listeners.get('hashchange')?.(); },
     resize(height) { context.innerHeight = height; listeners.get('resize')?.(); },
@@ -113,4 +113,22 @@ test('one-section pages have finite zero progress and empty pages schedule no wo
   assert.deepEqual(empty.state(), { current: [], active: [], visited: [], progress: undefined });
   const missing = setup({ ids: ['condition'], missing: ['condition'] });
   assert.equal(missing.frames.size, 0);
+});
+
+test('resize during hash alignment cannot detach pending work or allow duplicate scroll frames', () => {
+  const h = setup(); h.frame();
+  h.hash('#confirm'); h.frame();
+  h.resize(900);
+  h.emit('scroll');
+  assert.equal(h.frames.size, 1, 'alignment must keep ownership of its pending frame');
+  h.hash('#cause');
+  assert.equal(h.frames.size, 1, 'new hash must cancel all obsolete alignment work');
+  h.frame(); h.frame();
+  assert.deepEqual(h.scrolled, ['cause']);
+  expectSection(h, 'cause', ['condition', 'cause'], 1 / 3);
+});
+
+test('unknown initial fragments preserve native anchor scrolling', () => {
+  const h = setup({ hash: '#main' }); h.frame(); h.frame();
+  assert.deepEqual(h.scrolled, [], 'the chapter controller must not replace unrelated deep links');
 });

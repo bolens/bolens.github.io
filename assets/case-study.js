@@ -34,7 +34,7 @@ if (routeLinks.length && sections.length) {
   setActiveSection(initialId);
 
   for (const link of routeLinks) {
-    link.addEventListener('click', () => setActiveSection(link.hash.slice(1)));
+    link.addEventListener('click', () => setActiveSection(link.getAttribute('href').slice(1)));
   }
 
   let frame;
@@ -60,7 +60,12 @@ if (routeLinks.length && sections.length) {
   addEventListener('scroll', () => {
     if (!frame) frame = requestAnimationFrame(updateFromScroll);
   }, { passive: true });
-  addEventListener('resize', updateFromScroll);
+  addEventListener('resize', () => {
+    // The pending callback will read the latest viewport. Do not discard
+    // its handle while a hash alignment or scroll update still owns it.
+    if (frame !== undefined) return;
+    updateFromScroll();
+  });
   addEventListener('hashchange', () => {
     const id = location.hash.slice(1);
     if (sections.some((section) => section.id === id)) {
