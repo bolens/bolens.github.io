@@ -42,6 +42,18 @@ svg { display: block; max-width: 100%; }
 @keyframes skeleton-trace { to { background-position:360% 0,0 0,0 0; } }
 .trail-glyph,.trail-arrow svg,.principle-glyph,.fact-glyph,.field-note-glyph,.detail-glyph,.project-glyph,.control-glyph,.glyph-explorer-item svg,.command-search-glyph,.summary-glyph,.overlay-heading-glyph,.overlay-close svg { --glyph-primary:currentColor; --glyph-accent:var(--copper); --glyph-secondary:currentColor; --glyph-warm:var(--copper); --glyph-cool:var(--copper); fill:none; stroke:currentColor; stroke-linecap:round; stroke-linejoin:round; }
 .button .trail-arrow svg,.nav-cta .trail-arrow svg { --glyph-accent:currentColor; --glyph-secondary:currentColor; --glyph-warm:currentColor; --glyph-cool:currentColor; }
+/* Glyph regions retain two colors even beside accent-colored labels. */
+:root:not(:has(.lost-page)) svg:has(>use[href*="#glyph-"]) {
+  --glyph-primary:var(--ink); --glyph-accent:var(--copper);
+  --glyph-secondary:var(--glyph-primary); --glyph-warm:var(--glyph-accent); --glyph-cool:var(--glyph-accent);
+}
+:root:not(:has(.lost-page)) :is(.button,.nav-cta,.overlay-close,.work-reset) svg:has(>use[href*="#glyph-"]),
+:root:not(:has(.lost-page)) :is(.contact,.availability) .eyebrow>.trail-glyph { --glyph-primary:currentColor; color:inherit; }
+:root:not(:has(.lost-page)) .button:is(:hover,:focus-visible) svg:has(>use[href*="#glyph-"]) { --glyph-accent:var(--ink); }
+:root:not(:has(.lost-page))[data-theme="night"] :is(.contact,.availability) .button svg:has(>use[href*="#glyph-"]) { --glyph-accent:var(--copper); }
+@media (prefers-color-scheme:dark) {
+  :root:not(:has(.lost-page)):not([data-theme]) :is(.contact,.availability) .button svg:has(>use[href*="#glyph-"]) { --glyph-accent:var(--copper); }
+}
 svg:has(>use[href*="#glyph-"]) { overflow:visible; }
 svg:has(>use[href*="#glyph-"])>use { transform-box:view-box; transform-origin:center; }
 svg:has(>use[href$="#glyph-trailhead"]) { --glyph-motion:none; }
