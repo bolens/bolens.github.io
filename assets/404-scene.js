@@ -73,6 +73,9 @@
   let visible = !document.hidden;
   let overlayActive = document.documentElement.classList.contains('ui-overlay-open');
   let parallaxFrame = 0;
+  let parallaxTime = 0;
+  const parallaxPosition = { x: 0, y: 0 };
+  const parallaxTarget = { x: 0, y: 0 };
   const parallaxValues = new Map();
   let marshmallowExposure = 0;
   let atmosphere = profileFor(window.portfolioWeather?.condition);
@@ -105,7 +108,7 @@
   let timeProfile = profileForTime(window.portfolioSceneTime?.state);
   const densityForWidth = (viewportWidth) => viewportWidth <= 430 ? 'compact' : viewportWidth <= 760 ? 'reduced' : 'full';
 
-  const stableParallaxPixel = (value) => (Math.round(value * 2) / 2).toFixed(2);
+  const stableParallaxPixel = (value) => (Math.round(value * 20) / 20).toFixed(2);
   const setParallaxProperty = (name, value) => {
     const next = `${stableParallaxPixel(value)}px`;
     if (parallaxValues.get(name) === next) return;
@@ -123,22 +126,56 @@
     setParallaxProperty('--parallax-near-y', y * 2.5);
   };
 
+  const stepParallax = (time) => {
+    parallaxFrame = 0;
+    if (!visible || motionReduced() || overlayActive) { resetParallax(); return; }
+    // Exponential easing has the same response at different refresh rates.
+    // Limit a delayed frame so a scheduling stall cannot produce a large jump.
+    const elapsed = Math.min(50, Math.max(0, time - parallaxTime));
+    parallaxTime = time;
+    const blend = 1 - Math.exp(-elapsed / 90);
+    for (const axis of ['x', 'y']) {
+      parallaxPosition[axis] += (parallaxTarget[axis] - parallaxPosition[axis]) * blend;
+      if (Math.abs(parallaxTarget[axis] - parallaxPosition[axis]) < .002) parallaxPosition[axis] = parallaxTarget[axis];
+    }
+    setParallax(parallaxPosition.x, parallaxPosition.y);
+    if (parallaxPosition.x !== parallaxTarget.x || parallaxPosition.y !== parallaxTarget.y) {
+      parallaxFrame = requestAnimationFrame(stepParallax);
+    } else if (parallaxTarget.x === 0 && parallaxTarget.y === 0) {
+      figure.classList.remove('is-parallax-tracking');
+    }
+  };
+  const queueParallax = () => {
+    if (parallaxFrame) return;
+    if (parallaxPosition.x === parallaxTarget.x && parallaxPosition.y === parallaxTarget.y) {
+      if (parallaxTarget.x === 0 && parallaxTarget.y === 0) figure.classList.remove('is-parallax-tracking');
+      return;
+    }
+    parallaxTime = performance.now();
+    parallaxFrame = requestAnimationFrame(stepParallax);
+  };
   figure.addEventListener('pointermove', (event) => {
-    if (motionReduced() || overlayActive || event.pointerType === 'touch') return;
-    figure.classList.add('is-parallax-tracking');
+    if (!visible || motionReduced() || overlayActive) { resetParallax(); return; }
+    if (event.pointerType === 'touch') return;
     const bounds = figure.getBoundingClientRect();
-    const x = (event.clientX - bounds.left) / bounds.width - .5;
-    const y = (event.clientY - bounds.top) / bounds.height - .5;
-    cancelAnimationFrame(parallaxFrame);
-    parallaxFrame = requestAnimationFrame(() => setParallax(x, y));
+    if (bounds.width <= 0 || bounds.height <= 0) return;
+    figure.classList.add('is-parallax-tracking');
+    parallaxTarget.x = Math.max(-.5, Math.min(.5, (event.clientX - bounds.left) / bounds.width - .5));
+    parallaxTarget.y = Math.max(-.5, Math.min(.5, (event.clientY - bounds.top) / bounds.height - .5));
+    queueParallax();
   }, { passive: true });
   const resetParallax = () => {
     cancelAnimationFrame(parallaxFrame);
     parallaxFrame = 0;
+    parallaxPosition.x = parallaxPosition.y = parallaxTarget.x = parallaxTarget.y = 0;
     figure.classList.remove('is-parallax-tracking');
     setParallax();
   };
-  figure.addEventListener('pointerleave', resetParallax);
+  figure.addEventListener('pointerleave', () => {
+    if (!visible || motionReduced() || overlayActive) { resetParallax(); return; }
+    parallaxTarget.x = parallaxTarget.y = 0;
+    queueParallax();
+  });
   figure.addEventListener('pointercancel', resetParallax);
   window.addEventListener('blur', resetParallax);
 

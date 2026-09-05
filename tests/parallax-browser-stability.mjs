@@ -36,15 +36,20 @@ try {
       const after=subjectTransforms();
       const transitions=planes.flatMap((node)=>node.getAnimations()).filter((animation)=>animation.constructor.name==='CSSTransition').length;
       const parallaxOffsets=()=>['back','far','mid','near'].flatMap((depth)=>['x','y'].map((axis)=>figure.style.getPropertyValue('--parallax-'+depth+'-'+axis)));
+      const target=points.at(-1);
+      const x=(target.x-box.left)/box.width-.5,y=(target.y-box.top)/box.height-.5;
+      const expected=[-x*.7,-y*.3,-x*1.5,-y*.7,x*2.6,y*1.3,x*5.2,y*2.5].map(value=>(Math.round(value*20)/20).toFixed(2)+'px');
+      for(let frame=0;frame<120&&!parallaxOffsets().every((value,index)=>value===expected[index]);frame++)await new Promise(requestAnimationFrame);
       const stableBefore=parallaxOffsets();
       const point=points.at(-1);for(let index=0;index<8;index++){figure.dispatchEvent(new PointerEvent('pointermove',{clientX:point.x,clientY:point.y,pointerType:'mouse',bubbles:true}));await new Promise(requestAnimationFrame)}
       figure.getAnimations({subtree:true}).forEach((animation)=>animation.play());
       const canvas=figure.querySelector('.camp-atmosphere');
-      resolve({baseline,after,planeCount:planes.length,planeMotion:planes.map((node)=>getComputedStyle(node).translate),transitions,stableBefore,stableAfter:parallaxOffsets(),density:figure.dataset.sceneDensity,renderTier:figure.dataset.renderTier,expectedTier:portfolio404Renderer.tierForWidth(figure.clientWidth),animationCount:figure.getAnimations({subtree:true}).length,canvasPixels:canvas.width*canvas.height,displayPixels:Math.round(figure.clientWidth*figure.clientHeight)});
+      resolve({baseline,after,planeCount:planes.length,planeMotion:planes.map((node)=>getComputedStyle(node).translate),transitions,expected,stableBefore,stableAfter:parallaxOffsets(),density:figure.dataset.sceneDensity,renderTier:figure.dataset.renderTier,expectedTier:portfolio404Renderer.tierForWidth(figure.clientWidth),animationCount:figure.getAnimations({subtree:true}).length,canvasPixels:canvas.width*canvas.height,displayPixels:Math.round(figure.clientWidth*figure.clientHeight)});
     })`, { awaitPromise: true });
     assert.equal(result.planeCount, 7);
     assert.ok(result.planeMotion.some((value) => value !== 'none' && value !== '0px'));
     assert.equal(result.transitions, 0);
+    assert.deepEqual(result.stableBefore, result.expected, 'easing reaches its target');
     assert.deepEqual(result.stableAfter, result.stableBefore);
     assert.deepEqual(result.after, result.baseline);
     assert.equal(result.density, viewport.width <= 430 ? 'compact' : 'full');
