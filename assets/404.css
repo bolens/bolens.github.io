@@ -4,7 +4,9 @@
   --scene-pine-lit:#315f4e;--scene-pine-mid:#173d35;--scene-pine-dark:#071d1d;--scene-ground-lit:#294b43;--scene-ground-mid:#163630;--scene-ground-dark:#071b19;
   --scene-mountain-far-lit:#274653;--scene-mountain-far-mid:#16323d;--scene-mountain-far-dark:#0a222b;--scene-mountain-lit:#35545d;--scene-mountain-mid:#1d3d48;--scene-mountain-shadow:#102c36;--scene-mountain-dark:#071e28;
   --lost-day-sky-top:#78b9d8;--lost-day-sky-mid:#b9dbe2;--lost-day-haze:#e8e2c5;--lost-day-sun:#ffe08a;--lost-day-mountain-lit:#769198;--lost-day-mountain-shadow:#45656a;--lost-day-snow:#edf1df;--lost-day-ground-lit:#557b54;--lost-day-ground-shadow:#213f32;--lost-day-river:#438a93;--lost-day-pine:#315f43;--lost-day-pine-dark:#173b30;--lost-day-bark:#65503a;--lost-day-shrub:#426b45;--lost-day-fern:#6f9259;--lost-day-tent:var(--art-hot);--lost-day-tent-edge:var(--art-warm);
-  --smoke-font:var(--serif);--smoke-weight:700;--smoke-size:148px;--smoke-tracking:-3px;min-height:100svh;color:var(--lost-copy);background:var(--lost-sky);transition:background-color .55s ease,color .55s ease;
+  --smoke-font:var(--serif);--smoke-weight:700;--smoke-size:148px;--smoke-tracking:-3px;
+  --motion-tempo:1;--motion-sway:.34deg;--motion-sway-negative:-.34deg;--motion-drift:.7px;--motion-drift-negative:-.7px;--motion-lift:1;--motion-glow:1;--motion-activity:1;--motion-play:1;--motion-water:1;--motion-smoke:1;
+  min-height:100svh;color:var(--lost-copy);background:var(--lost-sky);transition:background-color .55s ease,color .55s ease;
 }
 .lost-main { position: relative; min-height: 100svh; overflow: hidden; background: var(--lost-sky); isolation: isolate; }
 .lost-copy { position: absolute; z-index: 3; top: clamp(1.5rem,5vw,4.5rem); left: max(1.25rem,calc((100vw - 1180px)/2)); width: min(35rem,calc(100vw - 2.5rem)); padding: clamp(1rem,2.2vw,1.7rem); border: 1px solid var(--lost-line); border-radius:var(--surface-radius); background: var(--lost-panel); box-shadow:var(--surface-shadow); backdrop-filter: blur(8px); }
@@ -270,6 +272,17 @@
 .forest-fireflies > g > use:nth-child(2) { animation-delay:-2.2s; }
 .forest-fireflies > g > use:nth-child(3) { animation-delay:-4.4s; }
 .forest-fireflies .firefly-phase-one { animation-duration:6.8s;animation-delay:-2.4s; }.forest-fireflies .firefly-phase-two { animation-duration:4.7s;animation-delay:-3.6s; }.forest-fireflies .firefly-phase-three { animation-duration:7.6s;animation-delay:-5.1s; }
+.cryptid-camp :is(.horizon-forest,.forest-transition,.deep-forest,.camp-pines) > use { transform-box:fill-box;transform-origin:center bottom;animation:ambient-tree-sway calc(8.6s * var(--motion-tempo)) cubic-bezier(.45,0,.35,1) infinite alternate; }
+.cryptid-camp :is(.aspen-grove,.river-willows,.midstory-brush > use,.understory-shrubs > use) { transform-box:fill-box;transform-origin:center bottom;animation:ambient-growth-sway calc(7.4s * var(--motion-tempo)) cubic-bezier(.45,0,.35,1) infinite alternate; }
+.cryptid-camp :is(.forest-fireflies > g > use,.ufo-lights) { animation-duration:calc(6.8s * var(--motion-tempo)); }
+.cryptid-camp :is(.river-ripples,.river-reflections,.water-foam) { animation-duration:calc(5.2s * var(--motion-tempo) / var(--motion-water)); }
+.cryptid-camp :is(.tent-dog,.moth-wing,.roasting-arm,.day-windhound) { animation-duration:calc(5.7s * var(--motion-tempo) / var(--motion-play)); }
+.cryptid-camp :is(.campfire-glow,.firelight-rings,.coal-bed > *,.heat-shimmer,.lantern-halo) { animation-duration:calc(2.8s * var(--motion-tempo) / var(--motion-glow)); }
+.cryptid-camp :is(.stove-steam,.smoke-wisps,.smoke-puffs,.smoke-fine-wisps,.smoke-thread) { animation-duration:calc(8.2s * var(--motion-tempo) / var(--motion-smoke)); }
+.cryptid-camp :is(.solar-ray-field,.day-flight-ufo) { animation-duration:calc(10s * var(--motion-tempo)); }
+.cryptid-camp :is(.weather-overcast,.weather-snow,.weather-drought,.weather-wind) { animation-duration:calc(8s * var(--motion-tempo)); }
+.cryptid-camp .weather-rain { animation-duration:calc(1.1s * var(--motion-tempo)); }
+.cryptid-camp .embers > * { animation-duration:calc(4.4s * var(--motion-tempo)); }
 .river { filter:drop-shadow(0 0 12px rgba(77,143,145,.16)); }
 .river-water { transform-box:view-box;transform-origin:left bottom;transition:scale 1.1s ease,translate 1.1s ease,opacity 1.1s ease; }
 :root:is([data-weather="rainy"],[data-weather="wet"]) .river-water { scale:1 1.02;translate:0 -3px; }
@@ -337,6 +350,8 @@
 :root:is([data-weather="cloudy"],[data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .tent-lantern { --lantern-outer-opacity:.14;--lantern-inner-opacity:.32; }
 :root[data-weather="drought"] .tent-lantern { --lantern-outer-opacity:.06;--lantern-inner-opacity:.15;--lantern-light:#efb95c; }
 @keyframes camp-aurora { 0% { opacity:.22; translate:-.7% 2px; } 50% { opacity:.38; } 100% { opacity:.28; translate:.8% -3px; } }
+@keyframes ambient-tree-sway { from { rotate:calc(var(--motion-sway-negative) * .42); } to { rotate:calc(var(--motion-sway) * .58); } }
+@keyframes ambient-growth-sway { from { rotate:calc(var(--motion-sway-negative) * .72);translate:calc(var(--motion-drift-negative) * .16) 0; } to { rotate:var(--motion-sway);translate:calc(var(--motion-drift) * .22) -1px; } }
 @keyframes aurora-shimmer { from { opacity:.22;translate:-3px 1px; } to { opacity:.48;translate:4px -2px; } }
 @keyframes aurora-curtain-breathe { from { opacity:.64;scale:1 .97; } to { opacity:.9;scale:1 1.02; } }
 @keyframes aurora-rays-drift { from { opacity:.58;translate:-4px 1px;scale:1 .98; } to { opacity:.86;translate:5px -2px;scale:1 1.015; } }
@@ -353,11 +368,11 @@
 @keyframes weather-snow-drift { from { translate:-4px -7px; } to { translate:8px 11px; } }
 @keyframes weather-drought-drift { from { translate:-9px 1px;opacity:.72; } to { translate:12px -3px;opacity:1; } }
 @keyframes weather-wind-pass { 0%,100% { translate:-28px 2px;opacity:.34; } 35% { translate:4px -2px;opacity:.72; } 70% { translate:34px 1px;opacity:.48; } }
-@keyframes wind-tree-gust { 0%,100% { rotate:-.25deg; } 28% { rotate:.5deg; } 48% { rotate:1.9deg; } 64% { rotate:.7deg; } 82% { rotate:1.35deg; } }
-@keyframes wind-pliant-growth { 0%,100% { rotate:-.4deg; } 30% { rotate:.8deg; } 49% { rotate:3deg; } 66% { rotate:1.1deg; } 83% { rotate:2.1deg; } }
+@keyframes wind-tree-gust { 0%,100% { rotate:calc(var(--motion-sway-negative) * .2); } 28% { rotate:calc(var(--motion-sway) * .3); } 48% { rotate:calc(var(--motion-sway) * 1.25); } 64% { rotate:calc(var(--motion-sway) * .46); } 82% { rotate:calc(var(--motion-sway) * .88); } }
+@keyframes wind-pliant-growth { 0%,100% { rotate:calc(var(--motion-sway-negative) * .28); } 30% { rotate:calc(var(--motion-sway) * .52); } 49% { rotate:calc(var(--motion-sway) * 1.95); } 66% { rotate:calc(var(--motion-sway) * .72); } 83% { rotate:calc(var(--motion-sway) * 1.38); } }
 @keyframes wind-tent-fabric { 0%,100% { transform:skewX(-.25deg) scaleX(1); } 30% { transform:skewX(.5deg) scaleX(.998); } 50% { transform:skewX(1.6deg) scaleX(.992); } 67% { transform:skewX(.7deg) scaleX(.997); } 84% { transform:skewX(1.1deg) scaleX(.994); } }
 @keyframes wind-flame-stack { 0%,100% { rotate:-2deg;translate:-1px 0; } 32% { rotate:3deg;translate:2px -2px; } 52% { rotate:8deg;translate:7px 1px; } 70% { rotate:2deg;translate:2px -1px; } 86% { rotate:6deg;translate:5px 0; } }
-@keyframes wind-smoke { 0%,100% { translate:-2px 2px;rotate:-.4deg; } 34% { translate:8px -2px;rotate:1deg; } 54% { translate:25px -5px;rotate:3deg; } 72% { translate:12px -3px;rotate:1.3deg; } 88% { translate:20px -4px;rotate:2.4deg; } }
+@keyframes wind-smoke { 0%,100% { translate:calc(var(--motion-drift-negative) * .35) 2px;rotate:calc(var(--motion-sway-negative) * .25); } 34% { translate:calc(var(--motion-drift) * 1.4) -2px;rotate:calc(var(--motion-sway) * .65); } 54% { translate:calc(var(--motion-drift) * 4.2) -5px;rotate:calc(var(--motion-sway) * 1.9); } 72% { translate:calc(var(--motion-drift) * 2.1) -3px;rotate:calc(var(--motion-sway) * .85); } 88% { translate:calc(var(--motion-drift) * 3.4) -4px;rotate:calc(var(--motion-sway) * 1.5); } }
 @keyframes river-glint { from { opacity:.3;translate:-3px 0; } to { opacity:.68;translate:4px 0; } }
 @keyframes river-reflection { from { opacity:.55;translate:-2px 0; } to { opacity:1;translate:3px 1px; } }
 @keyframes water-foam { from { opacity:.28;translate:-1px 0; } to { opacity:.52;translate:2px 0; } }
