@@ -9,14 +9,14 @@
   min-height:100svh;color:var(--lost-copy);background:var(--lost-sky);transition:background-color .55s ease,color .55s ease;
 }
 .lost-main { position: relative; min-height: 100svh; overflow: hidden; background: var(--lost-sky); isolation: isolate; }
-.lost-copy { position: absolute; z-index: 3; top: clamp(1.5rem,5vw,4.5rem); left: max(1.25rem,calc((100vw - 1180px)/2)); width: min(35rem,calc(100vw - 2.5rem)); padding: clamp(1rem,2.2vw,1.7rem); border: 1px solid var(--lost-line); border-radius:var(--surface-radius); background: var(--lost-panel); box-shadow:var(--surface-shadow); backdrop-filter: blur(8px); }
+.lost-copy { position: absolute; z-index: 3; top: clamp(1.5rem,3vw,3rem); left: clamp(1.25rem,5vw,6rem); width: min(30rem,calc(100vw - 2.5rem)); padding: clamp(1rem,1.8vw,1.5rem); border: 1px solid var(--lost-line); border-radius:var(--surface-radius); background: var(--lost-panel); box-shadow:var(--surface-shadow); backdrop-filter: blur(8px); }
 .lost-copy .eyebrow { margin-bottom: .8rem; color: var(--lost-muted); letter-spacing: .15em; }
-.lost-copy h1 { max-width: 11ch; font-size: clamp(3rem,6.2vw,6.5rem); line-height: .94; letter-spacing: -.045em; text-shadow: 0 3px 18px rgba(0,0,0,.25); }
+.lost-copy h1 { max-width: 11ch; font-size: clamp(3rem,5.5vw,5.5rem); line-height: .94; letter-spacing: -.045em; text-shadow: 0 3px 18px rgba(0,0,0,.25); }
 .lost-copy h1 em { color: var(--lost-accent); }
 .lost-lede { max-width: 29rem; margin: 1.1rem 0 1.4rem; color: var(--lost-muted); font-size: clamp(1rem,1vw + .72rem,1.14rem); line-height: 1.62; letter-spacing: .004em; }
 .lost-button { border-color: var(--lost-copy); background: var(--lost-copy); color: var(--lost-sky); }
 .lost-button:is(:hover,:focus-visible) { border-color: var(--lost-accent); background: var(--lost-accent); color: var(--lost-sky); }
-.cryptid-camp { position: absolute; inset: 0; margin: 0; display: grid; align-items: end; opacity:1; }
+.cryptid-camp { position: absolute; inset: 0; margin: 0; display: grid; align-items: end; opacity:1; background:var(--scene-sky-top); }
 .is-loading .cryptid-camp::after { display:none; }
 .cryptid-camp svg { width: 100%; height: 100%; min-height: 620px; object-fit: cover; object-position: center bottom; }
 .cryptid-camp svg :is(path,rect,circle,ellipse,polygon,polyline,line) { transition:fill .55s ease,stroke .55s ease; }
@@ -175,6 +175,14 @@
 :root[data-scene-time="morning"] .terrain-asset { --asset-time-brightness:1;--asset-time-saturation:1.04;--asset-time-sepia:.08;--asset-time-hue:-7deg; }
 :root[data-scene-time="evening"] .terrain-asset { --asset-time-brightness:.92;--asset-time-saturation:1.08;--asset-time-sepia:.2;--asset-time-hue:-12deg; }
 :root[data-scene-time="twilight"] .terrain-asset { --asset-time-brightness:.78;--asset-time-saturation:.84;--asset-time-sepia:.04;--asset-time-hue:14deg; }
+/* Scene weather replaces local defaults; do not retain wet/snow/dry accents
+   from a placement when its active condition no longer supplies them. */
+:root[data-weather] .terrain-asset {
+  --asset-weather-brightness:1;--asset-weather-saturation:1;--asset-weather-sepia:0;
+  --asset-cloud-opacity:0;--asset-mist-opacity:0;--asset-overcast-opacity:0;
+  --asset-rain-opacity:0;--asset-wet-opacity:0;--asset-dry-opacity:0;
+  --asset-snow-opacity:0;--asset-drought-opacity:0;--asset-wind-opacity:0;
+}
 .terrain-asset[data-weather="clear"],:root[data-weather="clear"] .terrain-asset { --asset-weather-brightness:1;--asset-weather-saturation:1; }
 .terrain-asset[data-weather="cloudy"],:root[data-weather="cloudy"] .terrain-asset { --asset-weather-brightness:.88;--asset-weather-saturation:.72;--asset-cloud-opacity:.24; }
 .terrain-asset[data-weather="misty"],:root[data-weather="misty"] .terrain-asset { --asset-weather-brightness:.9;--asset-weather-saturation:.72;--asset-cloud-opacity:.16;--asset-mist-opacity:.34;--asset-wet-opacity:.14; }
@@ -205,9 +213,16 @@
 :root[data-weather="snowy"] .condition-snow,
 :root[data-weather="drought"] .condition-drought { opacity:1;visibility:visible;transition-delay:0s; }
 :root:is([data-weather="rainy"],[data-weather="snowy"]) .forest-fireflies,
-:root:is([data-weather="dry"],[data-weather="drought"]) :is(.river-ferns,.water-foam-patches),
-:root:is([data-weather="rainy"],[data-weather="wet"],[data-weather="snowy"]) .dry-ferns,
-:root:is([data-weather="dry"],[data-weather="drought"],[data-weather="snowy"]) :is(.fly-agarics,.moss-patches) { display:none; }
+:root:is([data-weather="dry"],[data-weather="drought"]) .water-foam-patches,
+:root:is([data-weather="dry"],[data-weather="drought"],[data-weather="snowy"]) .fly-agarics { display:none; }
+/* Keep roots fixed while fronds settle under rain, snow, or water stress. */
+.fern-posture { transform-box:view-box;transform-origin:35px 89px;transform:scaleY(var(--fern-upright,1)); }
+:root:is([data-weather="rainy"],[data-weather="wet"],[data-weather="misty"]) .terrain-asset[href="#fern-spray"] { --fern-upright:.9;--fern-color:#507b51;--fern-highlight:#91a96b;--fern-pinna:#72925c; }
+:root:is([data-weather="dry"],[data-weather="drought"]) :is(.river-ferns,.dry-ferns) { --fern-upright:.68;--fern-color:#88734d;--fern-highlight:#b49b64;--fern-pinna:#9b8154;--fern-fiddlehead:#7d714d; }
+:root[data-weather="drought"] .dry-ferns { --fern-upright:.48; }
+:root[data-weather="snowy"] .terrain-asset[href="#fern-spray"] { --fern-upright:.42;--fern-color:#66705a;--fern-highlight:#a6b5a3; }
+:root:is([data-weather="dry"],[data-weather="drought"]) .moss-patches .terrain-asset { --moss-condition-fill:#72674a;--moss-condition-highlight:#a29260;--moss-outline:#514d36;--moss-spore-stem:#81734c; }
+:root:is([data-weather="rainy"],[data-weather="wet"],[data-weather="misty"]) .moss-patches .terrain-asset { --moss-outline:#294938;--moss-spore-stem:#65865a; }
 :is(.campfire,.campfire-glow,.fire-ring-stones,.firelight-rings,.fire-rim-light,.smoke-404,.roasting-marshmallow,.smores-kit) { transition:opacity .38s ease,visibility 0s linear .38s; }
 :root[data-weather="drought"] :is(.campfire,.campfire-glow,.fire-ring-stones,.firelight-rings,.fire-rim-light,.smoke-404,.roasting-marshmallow,.smores-kit) { opacity:0;visibility:hidden;transition-delay:0s; }
 .day-cloud-404 text { fill:#fff;stroke:color-mix(in srgb,var(--lost-day-sky-top) 38%,#fff);stroke-width:6;paint-order:stroke fill;font:700 112px/1 var(--serif);letter-spacing:7px;opacity:.82; }
@@ -492,14 +507,14 @@
   .lost-copy h1 { font-size: clamp(2.8rem,14vw,4.8rem); }
   .lost-lede { margin-block: .8rem 1rem; }
   .cryptid-camp { position:absolute; inset:0; min-height:0; margin:0; overflow:hidden; }
-  .cryptid-camp svg { position:absolute; left:-5%; bottom:0; width:110%; height:auto; min-height:0; max-width:none; margin:0; }
+  .cryptid-camp svg { position:absolute; left:-5%; bottom:0; width:110%; height:auto; min-height:0; max-width:none; margin:0; mask-image:linear-gradient(to bottom,transparent,#000 8%); }
   .cryptid-camp figcaption { display: none; }
 }
 @media (orientation: portrait) and (min-width: 431px) {
-  .lost-copy { position:absolute; top:1rem; left:1rem; width:min(35rem,calc(100vw - 2rem)); margin:0; padding:clamp(1rem,2.5vw,1.7rem); }
-  .lost-copy h1 { font-size:clamp(3.5rem,9vw,6rem); }
+  .lost-copy { position:absolute; top:clamp(1rem,3vh,2.5rem); left:clamp(1rem,4vw,3rem); width:min(30rem,calc(100vw - 3rem)); margin:0; padding:clamp(1rem,2.5vw,1.5rem); }
+  .lost-copy h1 { font-size:clamp(3.2rem,7vw,5rem); }
   .cryptid-camp { position:absolute; inset:0; min-height:0; margin:0; overflow:hidden; }
-  .cryptid-camp svg { position:absolute; left:-6%; bottom:0; width:112%; height:auto; min-height:0; max-width:none; }
+  .cryptid-camp svg { position:absolute; left:-6%; bottom:0; width:112%; height:auto; min-height:0; max-width:none; mask-image:linear-gradient(to bottom,transparent,#000 8%); }
   .cryptid-camp figcaption { display:none; }
 }
 @media (orientation: landscape) and (max-height: 650px) {
