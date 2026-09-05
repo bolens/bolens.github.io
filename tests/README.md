@@ -20,6 +20,8 @@ outside the 404 scene.
 
 `non404-motion.mjs` also checks complete graphics under both reduced-motion settings, native chapter activation, stable hover text dimensions, hero overflow, and restrained introduction phases. System reduced-motion checks include pages with JavaScript disabled.
 
+`detail-row-layout.mjs` checks every Field Notes, Toolbox, and Work row at five viewport widths and five fixed hover phases for accent clearance, contained arrows, stable text, and responsive label/description alignment.
+
 Determinism rules:
 
 - Test observable state and independently specified expected values. Do not copy
