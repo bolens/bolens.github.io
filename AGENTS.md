@@ -18,5 +18,8 @@ Read `.specify/memory/constitution.md`, `.specify/memory/project-guide.md`,
 Use Spec Kit for new capabilities, architecture, security-sensitive behavior,
 migrations, and coordinated changes needing a written contract. Keep narrow
 fixes, dependency updates, and prose maintenance in the normal PR workflow.
-Retain completed feature directories under `specs/` as decision history; do not
-backfill specifications for already finished work.
+Retain completed feature directories under `specs/` as decision history.
+Backfill finished work only when explicitly requested. Label those documents as
+retrospective baselines, record the inspected revision and evidence, and separate
+observed behavior from proposed improvements. Never imply they preceded the code
+or mark unverified acceptance checks complete. See `specs/README.md` for coverage.

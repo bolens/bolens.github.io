@@ -3,6 +3,9 @@
 See [the delivery playbook](RELEASING.md) for push, merge, Pages deployment,
 verification, and recovery.
 
+See [specification coverage](specs/README.md) for active feature contracts,
+retrospective subsystem baselines, and their verification evidence.
+
 Michael Bolens' portfolio, built with semantic HTML, CSS, and inline SVG. It has no client-side JavaScript dependency.
 
 ## Preview
