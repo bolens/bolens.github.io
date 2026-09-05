@@ -23,21 +23,22 @@ try {
         await finishFiniteAnimations(send,'html');
         const names = await evaluate(send, `Array.from(document.querySelectorAll('*'),n=>getComputedStyle(n).viewTransitionName).filter(n=>n!=='none')`);
         assert.equal(new Set(names).size,names.length,'duplicate names reject the whole transition');
-        for(const name of ['site-mark','site-nav','page-meta','page-title','page-lede']) assert.ok(names.includes(name),name);
+        assert.deepEqual([...names].sort(),['root','site-mark','site-nav'],'only the viewport and stable header need snapshots');
         assert.ok(!names.includes('site-footer')&&!names.includes('case-next'));
         assert.equal(await evaluate(send, `getComputedStyle(document.querySelector('.hero-copy,.page-intro h1,.case-intro h1')).animationName`),'none');
         await evaluate(send, `window.styleTransition=document.startViewTransition(()=>{});styleTransition.ready.then(()=>{window.styleEffects=document.getAnimations().filter(a=>a.effect.pseudoElement?.startsWith('::view-transition'));styleEffects.forEach(a=>{a.pause();a.currentTime=0})})`, {awaitPromise:true});
         try {
           const effects = await evaluate(send, `styleEffects.map(a=>({name:a.animationName,pseudo:a.effect.pseudoElement,timing:a.effect.getTiming(),frames:a.effect.getKeyframes()}))`);
           assert.ok(effects.length>0);
-          assert.ok(effects.every(a=>a.timing.duration+a.timing.delay<=360));
+          assert.ok(effects.every(a=>a.timing.duration+a.timing.delay<=260));
+          assert.ok(effects.every(a=>a.frames.every(frame=>!('width' in frame)&&!('height' in frame))),'transition effects must not interpolate snapshot dimensions');
           assert.ok(!effects.some(a=>/mark-in|route-in/.test(a.name)));
           assert.equal(await evaluate(send, `getComputedStyle(document.documentElement,'::view-transition-new(site-mark)').animationName`),'none');
-          const incoming=effects.find(a=>a.pseudo==='::view-transition-new(page-body)');
+          const incoming=effects.find(a=>a.pseudo==='::view-transition-new(root)');
           assert.equal(incoming.frames[0].translate,direction==='back'?'-12px':'12px');
           assert.ok(incoming.frames.every(frame=>!frame.clipPath&&!frame.scale),'no cropping or scaling the reading surface');
           for(const time of [0,140,360]) {
-            const phase = await evaluate(send, `(()=>{styleEffects.forEach(a=>a.currentTime=${time});const style=getComputedStyle(document.documentElement,'::view-transition-new(page-title)');return {opacity:Number(style.opacity),width:document.body.scrollWidth,viewport:document.documentElement.clientWidth}})()`);
+            const phase = await evaluate(send, `(()=>{styleEffects.forEach(a=>a.currentTime=${time});const style=getComputedStyle(document.documentElement,'::view-transition-new(root)');return {opacity:Number(style.opacity),width:document.body.scrollWidth,viewport:document.documentElement.clientWidth}})()`);
             assert.ok(phase.width<=phase.viewport,'page content must fit beneath the viewport-sized snapshot overlay: '+JSON.stringify(phase));
             if(time===0) assert.equal(phase.opacity,0);
             if(time===140) assert.ok(phase.opacity>0&&phase.opacity<1);

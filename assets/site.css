@@ -316,29 +316,20 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
 :root[data-page-direction="back"] { --page-travel: -12px; --page-exit: 6px; }
 :root[data-page-arrived] :is(.hero-copy,.signal-map),:root[data-page-arrived] .hero::after,
 :root[data-page-arrived] :is(.page-intro,.case-intro) > :is(.eyebrow,h1,.lede) { animation:none; }
-:root:not(:has(.lost-page)) :is(.hero-copy,.page-intro,.case-intro) > .eyebrow { view-transition-name: page-meta; }
-:root:not(:has(.lost-page)) :is(.hero-copy,.page-intro,.case-intro) > h1 { view-transition-name: page-title; }
-:root:not(:has(.lost-page)) :is(.hero-copy,.page-intro,.case-intro) > .lede { view-transition-name: page-lede; }
-/* Footer and next-case links belong to their scroll position, not a flying shared layer. */
-:root:not(:has(.lost-page)) :is(.site-footer,.case-next) { view-transition-name:none; }
+/* Capture the reading surface once at viewport size. Separate headings and
+   full-document groups otherwise interpolate large widths/heights on navigation. */
+:root:not(:has(.lost-page)) :is(main,.hero-copy>.eyebrow,.hero-copy>h1,.hero-copy>.lede,.page-intro>.eyebrow,.page-intro>h1,.page-intro>.lede,.case-intro>.eyebrow,.case-intro>h1,.case-intro>.lede,.breadcrumb,.case-facts,.case-route,.site-footer,.case-next) { view-transition-name:none; }
 ::view-transition { pointer-events:none; }
 ::view-transition-image-pair(*) { isolation:auto; }
 ::view-transition-old(*),::view-transition-new(*) { mix-blend-mode:normal; }
-::view-transition-group(*) { animation-duration:360ms; animation-timing-function:var(--ease-route); }
-::view-transition-old(root) { animation:160ms ease-out both page-fade-out; }
-::view-transition-new(root) { animation:240ms ease-out both page-fade-in; }
-::view-transition-old(page-body) { animation:160ms ease-out both page-out; }
-::view-transition-new(page-body) { animation:320ms 30ms var(--ease-route) both page-in; }
-/* Keep the mark present; only crossfade changing navigation states. */
+/* Static snapshot geometry leaves only opacity and a small translation to animate. */
+::view-transition-group(root),::view-transition-group(site-mark),::view-transition-group(site-nav) { animation:none; }
+::view-transition-old(root) { animation:120ms ease-out both page-out; }
+::view-transition-new(root) { animation:260ms var(--ease-route) both page-in; }
 ::view-transition-old(site-mark) { animation:none; opacity:0; }
 ::view-transition-new(site-mark) { animation:none; }
 ::view-transition-old(site-nav) { animation:120ms ease-out both page-fade-out; }
 ::view-transition-new(site-nav) { animation:180ms ease-out both page-fade-in; }
-::view-transition-old(page-meta),::view-transition-old(page-title),::view-transition-old(page-lede),
-::view-transition-old(case-breadcrumb),::view-transition-old(case-facts),::view-transition-old(case-route) { animation:120ms ease-out both page-fade-out; }
-::view-transition-new(page-meta),::view-transition-new(case-breadcrumb) { animation:280ms var(--ease-route) both page-in; }
-::view-transition-new(page-title) { animation:320ms 20ms var(--ease-route) both page-in; }
-::view-transition-new(page-lede),::view-transition-new(case-facts),::view-transition-new(case-route) { animation:320ms 40ms var(--ease-route) both page-in; }
 @keyframes page-fade-out { to { opacity:0; } }
 @keyframes page-fade-in { from { opacity:0; } }
 @keyframes page-out { to { opacity:0; translate:var(--page-exit) 0; } }
