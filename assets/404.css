@@ -351,6 +351,9 @@
 .stellar-color circle { transform-box:fill-box;transform-origin:center;animation:stellar-breathe 9s ease-in-out infinite alternate; }.stellar-color circle:nth-child(2n) { animation-delay:-4s;animation-duration:12s; }
 .scene-orb { --orb-glow:url(#moon-glow);--orb-glow-opacity:.42;--orb-fill:url(#moon-surface);--orb-highlight-opacity:0;--orb-crater-opacity:.34;--orb-rays-opacity:0;translate:var(--scene-orb-x,0) var(--scene-orb-y,0);transform-box:fill-box;transform-origin:center;animation:moon-breathe 8s ease-in-out infinite;transition:translate 1.2s ease; }
 .weather-clouds,.weather-rain-clouds,.weather-mist,.weather-overcast,.weather-rain,.weather-snow,.weather-drought,.weather-wind { display:inline;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .38s ease,visibility 0s linear .38s; }
+.moon-terminator { d:var(--scene-moon-shadow-path,path("M100 52Z"));opacity:var(--orb-moon-shadow-opacity,0); }
+:root:is([data-scene-time="night"],[data-scene-time="twilight"]) .scene-orb { --orb-moon-shadow-opacity:1;--orb-glow-opacity:calc(.42 * var(--scene-moon-light,1));--orb-rays-opacity:0; }
+:root:is([data-scene-time="day"],[data-scene-time="morning"],[data-scene-time="evening"]) .scene-orb { --orb-moon-shadow-opacity:0; }
 :root[data-weather="thunderstorm"] :is(.weather-clouds,.weather-rain-clouds,.weather-rain) ,
 :root[data-weather="cloudy"] .weather-clouds,:root[data-weather="misty"] :is(.weather-clouds,.weather-mist),:root[data-weather="overcast"] :is(.weather-clouds,.weather-overcast),:root[data-weather="rainy"] :is(.weather-clouds,.weather-rain-clouds,.weather-rain),:root[data-weather="snowy"] :is(.weather-clouds,.weather-snow),:root[data-weather="drought"] .weather-drought,:root[data-weather="windy"] .weather-wind { opacity:var(--weather-layer-opacity,1);visibility:visible;transition-delay:0s; }
 .weather-clouds { --weather-layer-opacity:.46;filter:drop-shadow(0 8px 9px rgba(4,18,25,.18)); }
@@ -456,6 +459,7 @@
 :root[data-weather="thunderstorm"] .camp-tent > use:first-child ,
 :root[data-weather="windy"] .camp-tent > use:first-child { transform-box:fill-box;transform-origin:center bottom;animation:wind-tent-fabric 3.8s cubic-bezier(.45,0,.32,1) infinite; }
 .forest-fireflies > g > use { transform-box:fill-box;transform-origin:center;opacity:.18;animation:firefly-glow 6.8s ease-in-out infinite; }
+:root[data-scene-firefly-eligibility="0"] .forest-fireflies { display:none; }
 .forest-fireflies > g > use:nth-child(2) { animation-delay:-2.2s; }
 .forest-fireflies > g > use:nth-child(3) { animation-delay:-4.4s; }
 .forest-fireflies .firefly-phase-one { animation-duration:6.8s;animation-delay:-2.4s; }.forest-fireflies .firefly-phase-two { animation-duration:4.7s;animation-delay:-3.6s; }.forest-fireflies .firefly-phase-three { animation-duration:7.6s;animation-delay:-5.1s; }

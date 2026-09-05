@@ -39,6 +39,37 @@ const setup = (resolvedTheme = 'night', selectedAppearance = resolvedTheme) => {
   return { context, document, events, properties, timers, listeners, setClock(date) { now = date; }, setAppearance(theme, resolved = theme) { appearanceMode = theme; currentTheme = resolved; appearanceSubscriber(); } };
 };
 
+test('moon phases have bounded overrides and stable fixed-time defaults', () => {
+  const {context,properties}=setup();
+  const api=context.window.portfolioSceneTime;
+  for(const [phase,light] of [[0,0],[.25,.5],[.5,1],[.75,.5],[1,0]]) {
+    const state=api.setMoonPhase(phase);
+    assert.ok(Math.abs(state.moonIllumination-light)<1e-10);
+    assert.equal(state.moonPhase,phase===1?0:phase);
+    assert.equal(state.moonSource,'override');
+    assert.match(properties.get('--scene-moon-shadow-path'),/^path\("M/);
+    if(light===0) assert.equal(properties.get('--surface-light-strength'),'0.000');
+  }
+  for(const value of [null,undefined,NaN,Infinity,-.1,1.1,'0.5']) {
+    assert.equal(api.setMoonPhase(value).moonPhase,.5);
+    assert.equal(api.state.moonSource,'fixed');
+  }
+  api.setMoonPhase(0);api.setTime('day');
+  assert.equal(properties.get('--surface-light-strength'),'0.340','new moon must not dim sunlight');
+});
+
+test('automatic moon uses an approximate UTC lunar cycle without adding a timer', () => {
+  const {context,timers}=setup('night','auto'), api=context.window.portfolioSceneTime;
+  const anchor=Date.UTC(2000,0,6,18,15), period=29.530588*86400000;
+  for(const [part,light] of [[0,0],[.25,.5],[.5,1],[.75,.5],[1,0],[-.25,.5]]) {
+    const state=api.refresh(new Date(anchor+part*period));
+    assert.ok(Math.abs(state.moonIllumination-light)<1e-7);
+    assert.equal(state.moonSource,'clock');
+    assert.ok(state.moonPhase>=0&&state.moonPhase<1);
+  }
+  assert.equal(timers.length,1);
+});
+
 test('automatic fire uses local meal windows with exact inclusive/exclusive boundaries', () => {
   const { context, document } = setup('day', 'auto');
   const api = context.window.portfolioSceneTime;
