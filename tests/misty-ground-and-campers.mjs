@@ -26,6 +26,10 @@ test('weather changes the ground itself through layered condition detail', () =>
     assert.match(html, new RegExp(`data-region="${layer}"`), `missing ${layer}`);
   }
   for (const weather of themes.weatherModes) {
+    if (weather === 'windy') {
+      assert.match(css, /data-weather="windy"\] \.ground-weather-states \{ --condition-ground-opacity:0; \}/, 'wind alone does not change soil moisture');
+      continue;
+    }
     assert.match(css, new RegExp(`data-weather="${weather}"[^}]*--condition-ground-color:`), `${weather} has no ground palette`);
   }
 });

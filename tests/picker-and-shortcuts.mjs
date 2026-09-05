@@ -54,16 +54,16 @@ try {
     await ui.load('/404.html');
     await evaluate(send, `portfolioAppearancePicker.open()`);
     assert.deepEqual(await evaluate(send, `({weather:[...document.querySelectorAll('.weather-options input')].map((input)=>input.value),time:[...document.querySelectorAll('.scene-time-options input')].map((input)=>input.value)})`), {
-      weather: ['theme', 'clear', 'cloudy', 'misty', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought', 'windy'],
+      weather: ['theme', 'clear', 'cloudy', 'misty', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought', 'windy', 'thunderstorm'],
       time: ['automatic', 'day', 'night', 'morning', 'evening', 'twilight'],
     });
     const desktopBounds = await evaluate(send, `(()=>{const panel=document.querySelector('.palette-panels').getBoundingClientRect();return {left:panel.left,right:panel.right,top:panel.top,bottom:panel.bottom,width:innerWidth,height:innerHeight}})()`);
     assert.ok(desktopBounds.left >= 0 && desktopBounds.right <= desktopBounds.width && desktopBounds.top >= 0 && desktopBounds.bottom <= desktopBounds.height);
     const desktopCapture = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
     writeFileSync('/tmp/404-scene-controls-desktop.png', Buffer.from(desktopCapture.data, 'base64'));
-    await evaluate(send, `document.querySelector('.weather-options input[value="windy"]').click();document.querySelector('.scene-time-options input[value="twilight"]').click()`);
+    await evaluate(send, `document.querySelector('.weather-options input[value="thunderstorm"]').click();document.querySelector('.scene-time-options input[value="twilight"]').click()`);
     assert.deepEqual(await evaluate(send, `({weather:portfolioWeather.condition,weatherSource:portfolioWeather.source,time:portfolioSceneTime.time,timeSource:portfolioSceneTime.source,storedWeather:localStorage.getItem('portfolio-weather'),storedTime:localStorage.getItem('portfolio-scene-time')})`), {
-      weather: 'windy', weatherSource: 'location', time: 'twilight', timeSource: 'scene', storedWeather: null, storedTime: null,
+      weather: 'thunderstorm', weatherSource: 'location', time: 'twilight', timeSource: 'scene', storedWeather: null, storedTime: null,
     });
     await evaluate(send, `document.querySelector('.weather-options input[value="theme"]').click();document.querySelector('.scene-time-options input[value="automatic"]').click()`);
     assert.deepEqual(await evaluate(send, `({weatherSource:portfolioWeather.source,timeSource:portfolioSceneTime.source})`), { weatherSource: 'theme', timeSource: 'clock' });
