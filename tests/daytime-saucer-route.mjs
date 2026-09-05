@@ -1,8 +1,12 @@
 import assert from 'node:assert/strict';
-import {writeFileSync} from 'node:fs';
+import {mkdtempSync,writeFileSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 import {startBrowser} from './lib/cdp-browser.mjs';
 import {startSiteServer} from './lib/site-server.mjs';
 import {evaluate,navigate,waitFor,finishFiniteAnimations} from './lib/browser-test.mjs';
+const artifactDir=mkdtempSync(join(tmpdir(),'404-saucer-'));
+console.log('Saucer captures: '+artifactDir);
 const server=await startSiteServer(new URL('..',import.meta.url).pathname);
 const errors=[];let browser;
 try {
@@ -24,9 +28,10 @@ try {
     return {hit:hit?.getAttribute('href'),target:hit?.outerHTML.slice(0,180),bounds:[b.x,b.y,b.width,b.height],opacity:getComputedStyle(ufo).opacity,finite:[b.x,b.y,b.width,b.height].every(Number.isFinite),pilot:document.querySelector('#scout-ufo [href="#alien-face-art"]')!==null};
    })()`);
    assert.equal(state.finite,true);assert.equal(state.pilot,true);assert.equal(state.opacity,'1');
-   if(phase===0||phase===1)assert.equal(state.hit,'#alpine-peak','endpoint must be covered by retained mountain: '+JSON.stringify({width,phase,...state}));
+   // This proves center occlusion, not full concealment; edge peeking is intentional.
+   if(phase===0||phase===1)assert.equal(state.hit,'#alpine-peak','endpoint center must be covered by retained mountain: '+JSON.stringify({width,phase,...state}));
    if(phase===.5)assert.equal(state.hit,'#scout-ufo','mid-route must be visibly exposed');
-   const shot=await send('Page.captureScreenshot',{format:'png',fromSurface:true});writeFileSync(`/tmp/404-saucer-${width}-${phase}.png`,Buffer.from(shot.data,'base64'));
+   const shot=await send('Page.captureScreenshot',{format:'png',fromSurface:true});writeFileSync(join(artifactDir,`saucer-${width}-${phase}.png`),Buffer.from(shot.data,'base64'));
   }
   await evaluate(send,"portfolioWeather.setLocationCondition('cloudy')");
   await finishFiniteAnimations(send,'.cryptid-camp');

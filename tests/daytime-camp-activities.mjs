@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
-import {writeFileSync} from 'node:fs';
+import {mkdtempSync,writeFileSync} from 'node:fs';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
 import {startBrowser} from './lib/cdp-browser.mjs';
 import {startSiteServer} from './lib/site-server.mjs';
 import {evaluate,navigate,waitFor,finishFiniteAnimations} from './lib/browser-test.mjs';
 
+const artifactDir=mkdtempSync(join(tmpdir(),'404-activities-'));
+console.log('Activity captures: '+artifactDir);
 const server=await startSiteServer(new URL('..',import.meta.url).pathname);
 const errors=[];let browser;
 try {
@@ -53,7 +57,7 @@ try {
    assert.deepEqual(result.indoor,[!outdoor,!outdoor,!outdoor,!outdoor]);
    if(outdoor){assert.ok(result.boxes.every(b=>b.visible&&b.inside));assert.ok(result.peeks.every(r=>r<.2));assert.equal(result.perchOverlap,true);}
    assert.equal(result.overflow,false);assert.equal(result.running,0);
-   if(time==='day'&&weather==='clear'){const shot=await send('Page.captureScreenshot',{format:'png',fromSurface:true});writeFileSync(`/tmp/404-activities-${width}.png`,Buffer.from(shot.data,'base64'));}
+   if(time==='day'&&weather==='clear'){const shot=await send('Page.captureScreenshot',{format:'png',fromSurface:true});writeFileSync(join(artifactDir,`activities-${width}.png`),Buffer.from(shot.data,'base64'));}
   }
  }
  await send('Emulation.setScriptExecutionDisabled',{value:true});

@@ -1,9 +1,13 @@
 import assert from 'node:assert/strict';
-import { writeFileSync } from 'node:fs';
+import { mkdtempSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 import { evaluate, navigate, waitFor, finishFiniteAnimations } from './lib/browser-test.mjs';
 
+const artifactDir=mkdtempSync(join(tmpdir(),'404-moon-'));
+console.log('Moon captures: '+artifactDir);
 const server=await startSiteServer(new URL('..',import.meta.url).pathname);
 const errors=[];
 let browser;
@@ -30,7 +34,7 @@ try {
       assert.equal(state.glow,phase===0?0:phase===.5?1:.5);
       if(bounds)assert.deepEqual(state.bounds,bounds);else bounds=state.bounds;
       const shot=await send('Page.captureScreenshot',{format:'png',fromSurface:true});
-      writeFileSync(`/tmp/404-moon-${width}-${phase}.png`,Buffer.from(shot.data,'base64'));
+      writeFileSync(join(artifactDir,`moon-${width}-${phase}.png`),Buffer.from(shot.data,'base64'));
     }
     for(const [environment,eligible] of [[{season:'winter',temperatureC:20},false],[{season:'summer',temperatureC:5},false],[{season:'summer',temperatureC:20,fireflyHabitat:false},false],[{season:'summer',temperatureC:20,fireflyHabitat:true},true],[null,true]]) {
       const state=await evaluate(send,`(()=>{portfolioWeather.setEnvironment(${JSON.stringify(environment)});return {eligible:portfolioWeather.fireflyEligibility,display:getComputedStyle(document.querySelector('.forest-fireflies')).display};})()`);
