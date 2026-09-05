@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { evaluate, waitFor } from './lib/browser-test.mjs';
+import { evaluate, waitFor, pause } from './lib/browser-test.mjs';
 import { startUI } from './lib/ui-fixture.mjs';
 
 const ui = await startUI();
@@ -92,8 +92,19 @@ try {
     const requests = await evaluate(send, `({requests:__scrollRequests,height:document.documentElement.scrollHeight})`);
     assert.deepEqual(requests.requests, [{ top: 0, behavior: 'smooth' }, { top: requests.height, behavior: 'smooth' }]);
     const previous = await evaluate(send, 'performance.timeOrigin');
-    await ui.open('Reload page'); await ui.choose('Reload page');
-    await waitFor(send, `performance.timeOrigin!==${previous}&&document.readyState==='complete'&&!!portfolioAppearancePicker`, 'reload command loads a new document');
+    const contextReplaced = error => /Inspected target navigated or closed|Cannot find context|Execution context was destroyed/.test(error.message);
+    await ui.open('Reload page');
+    try { await ui.choose('Reload page'); } catch (error) { if (!contextReplaced(error)) throw error; }
+    // Only this intentional navigation may discard an in-flight evaluation.
+    const deadline = performance.now() + 10_000;
+    let ready = false;
+    while (!ready && performance.now() < deadline) {
+      try {
+        ready = await evaluate(send, `performance.timeOrigin!==${previous}&&document.readyState==='complete'&&!!window.portfolioAppearancePicker`);
+      } catch (error) { if (!contextReplaced(error)) throw error; }
+      if (!ready) await pause(25);
+    }
+    assert.equal(ready, true, 'reload command loads a new initialized document');
   });
 
   await test('case-study actions wrap sections and copy the active section and repository', async () => {
