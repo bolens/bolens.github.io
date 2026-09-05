@@ -59,7 +59,8 @@ try {
   const generated404 = readFileSync(join(fixture, '404.html'), 'utf8');
   if (!(generated404.indexOf('/assets/appearance-controller.js') < generated404.indexOf('/assets/404-weather.js')
     && generated404.indexOf('/assets/404-weather.js') < generated404.indexOf('/assets/404-time.js')
-    && generated404.indexOf('/assets/404-time.js') < generated404.indexOf('<link rel="stylesheet"'))) {
+    && generated404.indexOf('/assets/404-time.js') < generated404.indexOf('/assets/404-motion.js')
+    && generated404.indexOf('/assets/404-motion.js') < generated404.indexOf('<link rel="stylesheet"'))) {
     throw new Error('404 scene state must resolve before stylesheet paint');
   }
   const generatedWork = readFileSync(join(fixture, 'work/index.html'), 'utf8');

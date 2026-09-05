@@ -71,7 +71,7 @@ const themeMeta = `<meta name="theme-color" content="${defaultTheme.day.paper}" 
 const syncThemeMeta = (source) => source.replace(/<meta name="theme-color"[^>]*>(?:\s*<meta name="theme-color"[^>]*>)?/, themeMeta);
 const loadingBootstrap = '<script>document.documentElement.classList.add("is-loading")</script>';
 const runtimeScripts = `${loadingBootstrap}<script src="/assets/theme-data.js"></script><script src="/assets/appearance-controller.js"></script><script src="/assets/project-data.js" defer></script><script src="/assets/ui-overlay.js" defer></script><script src="/assets/appearance-picker.js" defer></script><script src="/assets/command-palette.js" defer></script><script src="/assets/loading-state.js" defer></script>`;
-const sceneStateScripts = '<script src="/assets/404-weather.js"></script><script src="/assets/404-time.js"></script>';
+const sceneStateScripts = '<script src="/assets/404-weather.js"></script><script src="/assets/404-time.js"></script><script src="/assets/404-motion.js"></script>';
 const syncRuntimeScripts = (source) => {
   const scripts = source.includes('/assets/404-scene.js')
     ? runtimeScripts.replace('<script src="/assets/project-data.js"', `${sceneStateScripts}<script src="/assets/project-data.js"`)
