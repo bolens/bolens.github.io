@@ -11,7 +11,7 @@ test('woody glyphs expose independently addressable detail layers', () => {
     'bare-tree': ['branch-scars', 'bark-grain'],
     'aspen-copse': ['root-flares', 'tapered-trunks', 'trunk-shadows', 'twig-tips', 'leaf-petioles', 'leaf-blades', 'serrated-margins', 'leaf-shadow', 'leaf-speckles', 'leaf-veins', 'bark-eyes', 'bark-marks'],
     'willow-clump': ['root-crowns', 'stem-highlights', 'arching-limbs', 'hanging-branchlets', 'leaf-shadow', 'leaf-veins', 'catkins', 'bud-tips'],
-    'tree-stump': ['growth-rings', 'wood-grain', 'moss-rim', 'insect-holes'],
+    'tree-stump': ['root-spurs', 'growth-rings', 'heartwood-rot', 'wood-grain', 'branch-scar', 'moss-rim', 'insect-holes'],
   };
 
   for (const [id, regions] of Object.entries(manifests)) {

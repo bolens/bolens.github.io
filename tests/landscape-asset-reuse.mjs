@@ -64,8 +64,10 @@ test('midground woody growth reuses condition-aware glyphs', () => {
 });
 
 test('clearing deadwood, stones, and stumps use condition-aware glyphs', () => {
-  assert.match(html, /<symbol id="tree-stump"[^>]+data-regions="root-flare,stump-body,cut-face,growth-rings,wood-grain,bark-ridges,moss-rim,insect-holes,conditions"/);
-  assert.equal([...html.matchAll(/href="#tree-stump"/g)].length, 2);
+  assert.match(html, /<symbol id="tree-stump"[^>]+data-regions="root-flare,root-spurs,stump-body,cut-face,growth-rings,heartwood-rot,wood-grain,bark-ridges,branch-scar,moss-rim,insect-holes,conditions"/);
+  assert.equal([...html.matchAll(/href="#tree-stump"/g)].length, 4);
+  assert.match(html, /data-placement-pattern="mixed-age-scatter"/);
+  for (const variable of ['--stump-rot-opacity:.9', '--stump-scar-opacity:1', '--stump-moss-opacity:0', '--stump-root-spur-opacity:1']) assert.match(html, new RegExp(variable));
   assert.equal([...html.matchAll(/href="#river-stone"/g)].length, 13);
   assert.equal([...html.matchAll(/href="#fallen-branch"/g)].length, 8);
   assert.doesNotMatch(html, /class="clearing-understory"[^>]*>[\s\S]*?<g fill="#43524a"/);

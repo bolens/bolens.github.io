@@ -4,6 +4,7 @@ import { resolve } from 'node:path';
 import test from 'node:test';
 
 const html = readFileSync(resolve(import.meta.dirname, '..', '404.html'), 'utf8');
+const css = readFileSync(resolve(import.meta.dirname, '..', 'assets/404.css'), 'utf8');
 const indexOf = (fragment) => {
   const index = html.indexOf(fragment);
   assert.notEqual(index, -1, `missing ${fragment}`);
@@ -65,6 +66,24 @@ test('tree scale increases from distant rows to the camp frame', () => {
   assert.ok(Math.max(...distant) < Math.max(...near) * .55);
   assert.ok(Math.max(...mid) < Math.max(...near) * .55);
   assert.ok(Math.min(...near) > 80);
+});
+
+test('ridge and forest placements form deterministic irregular compositions', () => {
+  for (const pattern of ['broken-saddle', 'offset-ridge', 'clearing-saddle', 'edge-clusters', 'staggered-groves', 'trail-pocket', 'asymmetric-frame']) {
+    assert.match(html, new RegExp(`data-placement-pattern="${pattern}"`));
+  }
+  for (const className of ['mountain-range-far', 'mountain-range-middle', 'mountain-range-near']) {
+    const body = groupBody(className);
+    const rotations = [...body.matchAll(/transform="rotate\((-?[\d.]+)/g)].map((match) => Number(match[1]));
+    assert.ok(rotations.length >= 6 && new Set(rotations).size >= 6, `${className} should vary peak lean`);
+    assert.ok(rotations.some((value) => value < 0) && rotations.some((value) => value > 0), `${className} should lean both ways`);
+  }
+  for (const className of ['horizon-forest', 'forest-transition', 'deep-forest', 'camp-pines']) {
+    const baselines = [...groupBody(className).matchAll(/y="([\d.]+)"[^>]+height="([\d.]+)"/g)].map((match) => Number(match[1]) + Number(match[2]));
+    assert.ok(new Set(baselines).size >= 4, `${className} should stagger its planted baseline`);
+  }
+  assert.match(css, /--tree-motion-duration:10\.8s;--tree-wind-duration:4\.35s;--tree-motion-delay:-3\.1s/);
+  assert.match(css, /@keyframes ambient-tree-sway \{ from \{ rotate:calc\(var\(--motion-sway-negative\) \* var\(--tree-sway-out,/);
 });
 
 test('foreground occlusion stays at the edges and in front of atmospheric effects', () => {
