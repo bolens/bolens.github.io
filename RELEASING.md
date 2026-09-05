@@ -39,10 +39,20 @@ Verify checks on the merged SHA and delete the merged branch.
 
 ## Deploy and verify
 
-Merging to `main` triggers `Deploy GitHub Pages`. It validates generated
-content, runs browser smoke tests, uploads the repository as a Pages artifact,
-and deploys through the `github-pages` environment. Review repository contents
-as public publication input. A merge must be authorized with this automatic
+Merging to `main` runs `Lint`, including generated-content validation and the
+full test suite. Only a successful main-branch push or manual `Lint` run triggers
+`Deploy GitHub Pages`. PR runs cannot publish. Deployment checks out the exact
+validated revision, skips superseded revisions, and rechecks main after any
+`github-pages` environment approval. Validation runs once per main revision.
+
+The Pages artifact contains only root HTML, `.nojekyll`, crawler metadata,
+`assets/`, `about/`, `work/`, and `case-studies/`. Tests, source data, scripts,
+and repository instructions are excluded. Add any new public top-level path to
+the staging list in `.github/workflows/deploy-pages.yml`.
+
+For a manual redeploy, run `Lint` on `main` from Actions (or
+`gh workflow run lint.yml --ref main`). This follows the same complete gate;
+there is no validation bypass. A merge must be authorized with automatic
 deployment in mind.
 
 Wait for both `Lint` and `Deploy GitHub Pages` on the merged SHA. Verify the
