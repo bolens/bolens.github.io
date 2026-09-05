@@ -18,12 +18,16 @@
 .about-principles article > p:last-child { max-width: 58ch; margin: .8rem 0 0; color: var(--muted); line-height: 1.65; }
 .about-field-notes { display: grid; grid-template-columns: .8fr 1.4fr; gap: clamp(3rem,8vw,8rem); padding-block: clamp(5rem,9vw,8rem); border-bottom: 1px solid var(--line); }
 .about-field-notes h2 { max-width: 10ch; margin: 0; font: 400 clamp(2.2rem,4.2vw,4rem)/1.02 var(--serif); letter-spacing: -.04em; }
-.about-field-notes dl { margin: 0; }
-.about-field-notes dl div { display: grid; grid-template-columns: minmax(8rem,.55fr) 1fr; gap: 1.5rem; padding: 1.35rem 0; border-bottom: 1px solid var(--line); transition:background var(--motion-fast),box-shadow var(--motion-fast); }
+.about-field-notes dl { min-width:0; margin:0; container-type:inline-size; }
+.about-field-notes dl div { display: grid; grid-template-columns:minmax(0,11rem) minmax(0,1fr); gap:1.5rem; padding:1.35rem 1rem; border-bottom: 1px solid var(--line); transition:background var(--motion-fast),box-shadow var(--motion-fast); }
 .about-field-notes dl div:hover { background:var(--snow); box-shadow:inset 3px 0 var(--copper); }
-.about-field-notes dt { color: var(--copper); font: 700 .72rem/1.4 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
-.about-field-notes dd { margin: 0; color: var(--muted); line-height: 1.6; }
+.about-field-notes dt { align-self:start; min-width:0; color: var(--copper); font: 700 .72rem/1.4 var(--mono); letter-spacing: .09em; text-transform: uppercase; }
+.about-field-notes dd { min-width:0; overflow-wrap:anywhere; margin: 0; color: var(--muted); line-height: 1.6; }
 .availability { margin-top: 5rem; padding: clamp(2rem, 6vw, 5rem); background: var(--ink); color: var(--snow); }
 .availability h2 { max-width: 800px; }
 .availability .button { margin-top: 2.5rem; border-color: var(--snow); background: var(--snow); color: var(--ink); }
 .availability .button:is(:hover,:focus-visible) { color: var(--snow); background: var(--copper); border-color: var(--copper); }
+
+@container (max-width:30rem) {
+  .about-field-notes dl > div { grid-template-columns:minmax(0,1fr); gap:.65rem; }
+}
