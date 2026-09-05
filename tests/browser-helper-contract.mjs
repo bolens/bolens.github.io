@@ -1,5 +1,5 @@
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { navigate, evaluate, finishFiniteAnimations, waitFor } from './lib/browser-test.mjs';
+import { navigate, evaluate, finishFiniteAnimations, waitFor, freezeAnimationClock, waitForFrames } from './lib/browser-test.mjs';
 
 const browser = await startBrowser();
 const { send } = browser;
@@ -46,6 +46,19 @@ try {
       if (!String(error).includes('animation scope not found: .missing')) throw error;
     },
   );
+
+  const focused = await evaluate(send, `(()=>{const input=document.createElement('input');document.body.append(input);input.focus();return {document:document.hasFocus(),active:document.activeElement===input,pseudo:input.matches(':focus')}})()`);
+  if (!focused.document || !focused.active || !focused.pseudo) throw new Error('debugger target focus does not match CSS focus state');
+
+  await freezeAnimationClock(send);
+  await evaluate(send, `window.heldEffect=document.querySelector('.inside').animate([{opacity:0},{opacity:1}],{duration:500});`);
+  await waitForFrames(send);
+  const firstTime = await evaluate(send, 'heldEffect.currentTime');
+  await waitForFrames(send, 4);
+  const held = await evaluate(send, `({time:heldEffect.currentTime,state:heldEffect.playState})`);
+  if (held.time !== firstTime || held.state !== 'running') throw new Error('animation clock did not hold the real running effect');
+  const phases = await evaluate(send, `(()=>{heldEffect.pause();heldEffect.currentTime=125;const first=getComputedStyle(document.querySelector('.inside')).opacity;heldEffect.currentTime=375;return [first,getComputedStyle(document.querySelector('.inside')).opacity]})()`);
+  if (JSON.stringify(phases) !== JSON.stringify(['0.25','0.75'])) throw new Error('held animation could not be sampled at explicit phases');
 
   console.log('Browser helper contract passed evaluation values, promises, exceptions, and scoped animation behavior.');
 } finally {

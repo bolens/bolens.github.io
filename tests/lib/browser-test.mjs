@@ -80,3 +80,10 @@ export async function hoverElement(send, selector, timeout = 10_000) {
   }
   throw new Error(`timed out acquiring ${selector} hover after ${timeout}ms (last hit: ${lastHit ?? 'none'})`);
 }
+
+// Freeze the browser's animation clock before creating phase-test fixtures.
+// Timers, frame callbacks, and native animation construction remain real.
+export async function freezeAnimationClock(send) {
+  await send('Animation.enable');
+  await send('Animation.setPlaybackRate', { playbackRate: 0 });
+}

@@ -2,7 +2,7 @@ import { mkdirSync, writeFileSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { navigate, hoverElement, waitFor } from './lib/browser-test.mjs';
+import { navigate, hoverElement, waitFor, freezeAnimationClock } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -273,6 +273,9 @@ try {
 
   await navigate(send, `${server.origin}/`);
   await waitFor(send, `document.readyState==='complete'&&!!window.portfolioAppearancePicker`, 'home glyph gallery');
+  // Hold finite glyph effects before hover creates them. A slow host cannot
+  // finish a 680ms effect between acquiring hover and sampling its phases.
+  await freezeAnimationClock(send);
 
   await send('Runtime.evaluate', { expression: `(()=>{const gallery=document.createElement('section');gallery.id='glyph-motion-gallery';gallery.setAttribute('aria-label','Glyph motion test gallery');gallery.innerHTML=${JSON.stringify(Object.keys(glyphs).map((name) => `<button class="overlay-close glyph-explorer-item" data-glyph="${name}" aria-label="Animate ${name}"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="/assets/trail-glyphs.svg#glyph-${name}"></use></svg><small>${name}</small></button>`).join(''))};gallery.style.cssText='position:fixed;z-index:100;inset:1rem;display:grid;grid-template-columns:repeat(7,1fr);gap:.65rem;padding:1rem;overflow:auto;background:var(--paper)';gallery.querySelectorAll('button').forEach((button)=>button.style.cssText='width:auto;height:5.4rem;border-radius:5px;display:grid;place-items:center;gap:.25rem');gallery.querySelectorAll('svg').forEach((svg)=>svg.style.cssText='width:2rem;height:2rem');gallery.querySelectorAll('small').forEach((label)=>label.style.cssText='font:600 10px var(--mono)');document.body.append(gallery)})()` });
 

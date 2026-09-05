@@ -134,6 +134,9 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
     socket.onclose = () => { void stop(new Error('browser connection closed unexpectedly'), false).catch(() => {}); };
     socket.onerror = () => { void stop(new Error('browser connection closed unexpectedly'), false).catch(() => {}); };
     await send('Page.enable');
+    // The debugger target is a separate tab. Give it stable focus independent
+    // of browser startup ordering or whichever tab the host considers active.
+    await send('Emulation.setFocusEmulationEnabled', { enabled: true });
     await send('Emulation.setTimezoneOverride', { timezoneId: 'UTC' });
     await send('Emulation.setLocaleOverride', { locale: 'en-US' });
     await send('Emulation.setEmulatedMedia', { features: [
