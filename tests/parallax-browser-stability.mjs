@@ -59,6 +59,38 @@ try {
       const motionMatrix = await evaluate(send, `(()=>{const result={};for(const time of ['day','night','morning','evening','twilight'])for(const condition of ['clear','cloudy','misty','overcast','rainy','wet','dry','snowy','drought','windy']){portfolioSceneTime.setTime(time);portfolioWeather.setLocationCondition(condition);result[time+'-'+condition]=document.querySelector('.cryptid-camp').getAnimations({subtree:true}).filter((animation)=>animation.effect?.target?.dataset.runtimeMotion==='live').length}return result})()`);
       assert.ok(Math.max(...Object.entries(motionMatrix).filter(([name])=>!name.endsWith('-windy')).map(([,count])=>count)) <= 15, `standard motion budget exceeded: ${JSON.stringify(motionMatrix)}`);
       assert.ok(Math.max(...Object.entries(motionMatrix).filter(([name])=>name.endsWith('-windy')).map(([,count])=>count)) <= 21, `wind motion budget exceeded: ${JSON.stringify(motionMatrix)}`);
+      const incompatibleAccents = await evaluate(send, `(()=>{
+        const failures=[];
+        const supported={snow:['snowy'],rain:['rainy'],wet:['rainy','wet','snowy','misty'],dry:['dry','drought'],drought:['drought']};
+        for(const condition of ['snowy','rainy','drought','clear','wet','dry','cloudy','misty','overcast','windy']){
+          portfolioWeather.setLocationCondition(condition);
+          for(const node of document.querySelectorAll('.terrain-asset')){
+            const style=getComputedStyle(node);
+            for(const [accent,conditions] of Object.entries(supported)){
+              if(!conditions.includes(condition)&&parseFloat(style.getPropertyValue('--asset-'+accent+'-opacity'))>0) failures.push(condition+':'+node.getAttribute('href')+':'+accent);
+            }
+          }
+        }
+        return failures;
+      })()`);
+      assert.deepEqual(incompatibleAccents, [], 'scene weather must clear incompatible placement accents');
+      const plantStates = await evaluate(send, `(()=>{
+        const states={};
+        for(const condition of ['clear','rainy','drought','snowy','clear']){
+          portfolioWeather.setLocationCondition(condition);
+          const banks=getComputedStyle(document.querySelector('.river-ferns use'));
+          const exposed=getComputedStyle(document.querySelector('.dry-ferns use'));
+          const moss=getComputedStyle(document.querySelector('.moss-patches use'));
+          states[condition]={bank:Number(banks.getPropertyValue('--fern-upright')||1),exposed:Number(exposed.getPropertyValue('--fern-upright')||1),dormant:moss.getPropertyValue('--moss-condition-fill').trim(),visible:['.river-ferns','.dry-ferns','.moss-patches'].every(selector=>getComputedStyle(document.querySelector(selector)).display!=='none')};
+        }
+        return states;
+      })()`);
+      assert.ok(Object.values(plantStates).every(state=>state.visible), 'perennial ground plants remain in place');
+      assert.ok(plantStates.drought.exposed < plantStates.drought.bank, 'sheltered ferns retain more height under drought');
+      assert.ok(plantStates.snowy.bank < plantStates.rainy.bank, 'snow loads fronds more than rain');
+      assert.ok(plantStates.drought.dormant, 'dry moss retains a dormant material');
+      assert.equal(plantStates.clear.bank, 1, 'fronds recover on return to clear conditions');
+      assert.equal(plantStates.clear.dormant, '', 'moss restores its placement palette');
       const rainLayering = await evaluate(send, `(()=>{
         portfolioWeather.setLocationCondition('rainy');
         const rain=document.querySelector('.weather-rain');
