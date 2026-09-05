@@ -11,7 +11,7 @@ test('seating and firewood share one scalable detailed log', () => {
   assert.match(html, /<symbol id="camp-bench" viewBox="0 0 340 64"[^>]*data-regions="ground-shadow,seat-log,support-legs"/);
   assert.equal([...html.matchAll(/href="#camp-log"/g)].length, 7);
   assert.equal([...html.matchAll(/href="#camp-bench"/g)].length, 2);
-  assert.equal([...html.matchAll(/href="#ground-shadow"/g)].length, 4);
+  assert.equal([...html.matchAll(/href="#ground-shadow"/g)].length, 7);
   assert.doesNotMatch(html, /charred-log-detail/);
 });
 
@@ -98,7 +98,7 @@ test('fire ring and forest floor use configurable asset families', () => {
   assert.equal([...html.matchAll(/href="#gravel-patch"/g)].length, 3);
   assert.match(html, /data-region="grass-and-soil-cover"/);
   assert.equal([...html.matchAll(/href="#moss-clump"/g)].length, 7);
-  assert.equal([...html.matchAll(/href="#fungi-cluster"/g)].length, 4);
+  assert.equal([...html.matchAll(/href="#fungi-cluster"/g)].length, 5);
   assert.equal([...html.matchAll(/href="#shelf-fungi"/g)].length, 2);
   assert.equal([...html.matchAll(/href="#pinecone-sprig"/g)].length, 5);
   assert.equal([...html.matchAll(/href="#wildflower-clump"/g)].length, 3);
@@ -126,7 +126,7 @@ test('river surface details reuse condition-aware assets', () => {
 });
 
 test('tent occupants share one configurable detailed camper glyph', () => {
-  assert.equal([...html.matchAll(/href="#tent-camper"/g)].length, 2);
+  assert.equal([...html.matchAll(/href="#tent-camper"/g)].length, 4);
   assert.match(html, /class="terrain-asset tent-guy"[^>]+--camper-glasses-opacity:1;--camper-facial-hair-opacity:1/);
   assert.match(html, /class="terrain-asset tent-girl"[^>]+--camper-short-hair-opacity:0;--camper-long-hair-opacity:1/);
   assert.doesNotMatch(html, /<g class="tent-(?:guy|girl)"/);
@@ -209,6 +209,6 @@ test('the camera and windhound use responsive campsite symbols', () => {
   assert.match(html, /<symbol id="trail-camera"[^>]+data-regions="[^"]*lens-glint[^"]*conditions"/);
   assert.equal([...html.matchAll(/href="#trail-camera"/g)].length, 1);
   assert.match(html, /<symbol id="camp-windhound"[^>]+data-regions="[^"]*face-mask[^"]*conditions"/);
-  assert.equal([...html.matchAll(/href="#camp-windhound"/g)].length, 2);
+  assert.equal([...html.matchAll(/href="#camp-windhound"/g)].length, 3);
   assert.doesNotMatch(html, /<g class="tent-dog"/);
 });
