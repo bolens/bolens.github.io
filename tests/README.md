@@ -53,3 +53,6 @@ JUnit results as a 14-day artifact even when tests fail. New commits cancel olde
 runs for the same PR; main and manual validation runs retain their results. A
 15-minute job limit bounds setup and process hangs in addition to the per-test
 60-second deadline. The suite still runs without retries.
+
+`project-evidence-layout.mjs` checks selected-work text clearance from dividers
+and cell boundaries at six widths, including fixed hover and focus phases.
