@@ -18,6 +18,7 @@
     misty: Object.freeze({ stars: .18, fog: 1.8, fireflies: .45, embers: .7 }),
     overcast: Object.freeze({ stars: .1, fog: 1.45, fireflies: .35, embers: .72 }),
     rainy: Object.freeze({ stars: .08, fog: 1.4, fireflies: .25, embers: .18 }),
+    thunderstorm: Object.freeze({ stars: 0, fog: 1.65, fireflies: 0, embers: .06 }),
     wet: Object.freeze({ stars: .7, fog: 1.2, fireflies: .8, embers: .85 }),
     dry: Object.freeze({ stars: .9, fog: .45, fireflies: 1.1, embers: 1 }),
     snowy: Object.freeze({ stars: .35, fog: 1.55, fireflies: .18, embers: .25 }),
@@ -76,7 +77,7 @@
   let marshmallowExposure = 0;
   let atmosphere = profileFor(window.portfolioWeather?.condition);
   let motionProfile = window.portfolioSceneMotion?.profile || Object.freeze({ tempo:1, drift:.7, lift:1, glow:1, activity:1, play:1, water:1, smoke:1 });
-  const fireStrength = Object.freeze({ clear:1, cloudy:.9, misty:.8, overcast:.8, rainy:.45, wet:.95, dry:1.08, snowy:.65, drought:0, windy:1.06 });
+  const fireStrength = Object.freeze({ clear:1, cloudy:.9, misty:.8, overcast:.8, rainy:.45, wet:.95, dry:1.08, snowy:.65, drought:0, windy:1.06, thunderstorm:.2 });
   const updateMarshmallowCook = () => {
     if (!visible || overlayActive) return;
     marshmallowExposure = Math.min(180, marshmallowExposure + (fireStrength[window.portfolioWeather?.condition] ?? 1));

@@ -40,6 +40,16 @@ test('celestial and weather geometry is reusable', () => {
   assert.match(html, /class="weather-wind"[^>]+href="#wind-field"/);
 });
 
+test('cloud formations reuse named geometry across weather states', () => {
+  const cloud = html.match(/<symbol id="cloud-bank"[\s\S]*?<\/symbol>/)?.[0];
+  for (const [region, variant] of [['cumulus-lobes','cumulus'], ['stratus-sheet','stratus'], ['cirrus-filaments','cirrus'], ['fractus-shreds','fractus']]) {
+    assert.ok(cloud.includes(`data-region="${region}"`));
+    assert.ok(cloud.includes(`--cloud-${variant}-display`));
+  }
+  assert.match(css, /\.overcast-cloud,\.mist-bank,\.rain-cloud \{[^}]*--cloud-stratus-display:inline/);
+  assert.match(css, /data-weather="snowy"\] \.weather-rain-clouds \{[^}]*visibility:visible/);
+});
+
 test('day and night keep one active scene composition', () => {
   assert.match(html, /<use class="scene-orb sky-orb"/);
   assert.match(css, /\.day-scene \{ display:none!important; \}/);

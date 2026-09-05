@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { writeFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { startBrowser } from './lib/cdp-browser.mjs';
-import { evaluate, navigate, waitFor, waitForFrames } from './lib/browser-test.mjs';
+import { evaluate, navigate, waitFor, waitForFrames, finishFiniteAnimations } from './lib/browser-test.mjs';
 import { startSiteServer } from './lib/site-server.mjs';
 
 const root = resolve(import.meta.dirname, '..');
@@ -56,13 +56,13 @@ try {
     const screenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
     writeFileSync(`/tmp/404-parallax-${viewport.name}.png`, Buffer.from(screenshot.data, 'base64'));
     if (viewport.name === 'desktop') {
-      const motionMatrix = await evaluate(send, `(()=>{const result={};for(const time of ['day','night','morning','evening','twilight'])for(const condition of ['clear','cloudy','misty','overcast','rainy','wet','dry','snowy','drought','windy']){portfolioSceneTime.setTime(time);portfolioWeather.setLocationCondition(condition);result[time+'-'+condition]=document.querySelector('.cryptid-camp').getAnimations({subtree:true}).filter((animation)=>animation.effect?.target?.dataset.runtimeMotion==='live').length}return result})()`);
-      assert.ok(Math.max(...Object.entries(motionMatrix).filter(([name])=>!name.endsWith('-windy')).map(([,count])=>count)) <= 15, `standard motion budget exceeded: ${JSON.stringify(motionMatrix)}`);
-      assert.ok(Math.max(...Object.entries(motionMatrix).filter(([name])=>name.endsWith('-windy')).map(([,count])=>count)) <= 21, `wind motion budget exceeded: ${JSON.stringify(motionMatrix)}`);
+      const motionMatrix = await evaluate(send, `(()=>{const result={};for(const time of ['day','night','morning','evening','twilight'])for(const condition of portfolioWeather.conditions){portfolioSceneTime.setTime(time);portfolioWeather.setLocationCondition(condition);result[time+'-'+condition]=document.querySelector('.cryptid-camp').getAnimations({subtree:true}).filter((animation)=>animation.effect?.target?.dataset.runtimeMotion==='live').length}return result})()`);
+      assert.ok(Math.max(...Object.entries(motionMatrix).filter(([name])=>!/(windy|thunderstorm)$/.test(name)).map(([,count])=>count)) <= 15, `standard motion budget exceeded: ${JSON.stringify(motionMatrix)}`);
+      assert.ok(Math.max(...Object.entries(motionMatrix).filter(([name])=>/(windy|thunderstorm)$/.test(name)).map(([,count])=>count)) <= 21, `wind motion budget exceeded: ${JSON.stringify(motionMatrix)}`);
       const incompatibleAccents = await evaluate(send, `(()=>{
         const failures=[];
-        const supported={snow:['snowy'],rain:['rainy'],wet:['rainy','wet','snowy','misty'],dry:['dry','drought'],drought:['drought']};
-        for(const condition of ['snowy','rainy','drought','clear','wet','dry','cloudy','misty','overcast','windy']){
+        const supported={snow:['snowy'],rain:['rainy','thunderstorm'],wet:['rainy','thunderstorm','wet','snowy','misty'],dry:['dry','drought'],drought:['drought']};
+        for(const condition of portfolioWeather.conditions){
           portfolioWeather.setLocationCondition(condition);
           for(const node of document.querySelectorAll('.terrain-asset')){
             const style=getComputedStyle(node);
@@ -74,6 +74,26 @@ try {
         return failures;
       })()`);
       assert.deepEqual(incompatibleAccents, [], 'scene weather must clear incompatible placement accents');
+      const exposureErrors = await evaluate(send, `(()=>{
+        const errors=[];
+        for(const condition of portfolioWeather.conditions){
+          portfolioWeather.setLocationCondition(condition);
+          for(const node of document.querySelectorAll('[data-weather-exposure="sheltered"] .terrain-asset')){
+            const style=getComputedStyle(node);
+            for(const accent of ['rain','snow','wet','dry','drought','wind']) if(Number(style.getPropertyValue('--asset-'+accent+'-opacity'))!==0) errors.push(condition+':shelter:'+accent);
+          }
+          const tent=getComputedStyle(document.querySelector('use[href="#camp-tent-shell"]'));
+          for(const accent of ['dry','drought']) if(Number(tent.getPropertyValue('--asset-'+accent+'-opacity'))!==0) errors.push(condition+':fabric:'+accent);
+          if(condition==='snowy'&&Number(tent.getPropertyValue('--asset-snow-opacity'))<=0) errors.push('exposed tent must still collect snow');
+        }
+        return errors;
+      })()`);
+      assert.deepEqual(exposureErrors, [], 'shelter and material must constrain weather deposits');
+      await evaluate(send, `portfolioWeather.setLocationCondition('windy')`);
+      await finishFiniteAnimations(send, '.cryptid-camp');
+      const windyGround = await evaluate(send, `({cover:getComputedStyle(document.querySelector('.ground-dry-cover')).visibility,tint:getComputedStyle(document.querySelector('.ground-weather-states')).getPropertyValue('--condition-ground-opacity')})`);
+      assert.equal(windyGround.cover, 'hidden', 'wind alone does not expose dry ground');
+      assert.equal(Number(windyGround.tint), 0, 'wind alone does not brown the ground');
       const plantStates = await evaluate(send, `(()=>{
         const states={};
         for(const condition of ['clear','rainy','drought','snowy','clear']){
@@ -91,6 +111,18 @@ try {
       assert.ok(plantStates.drought.dormant, 'dry moss retains a dormant material');
       assert.equal(plantStates.clear.bank, 1, 'fronds recover on return to clear conditions');
       assert.equal(plantStates.clear.dormant, '', 'moss restores its placement palette');
+      await evaluate(send, `portfolioWeather.setLocationCondition('thunderstorm')`);
+      await finishFiniteAnimations(send, '.cryptid-camp');
+      const storm = await evaluate(send, `(()=>{
+        const style=selector=>getComputedStyle(document.querySelector(selector));
+        return {condition:portfolioWeather.condition,formation:style('.rain-cloud').getPropertyValue('--cloud-storm-display').trim(),rain:style('.weather-rain').visibility,flame:style('.flame-stack').scale,water:style('.river-water').translate,motion:portfolioSceneMotion.profile.signature};
+      })()`);
+      assert.equal(storm.condition, 'thunderstorm');
+      assert.equal(storm.formation, 'inline');
+      assert.equal(storm.rain, 'visible');
+      assert.equal(storm.flame, '0.48 0.34');
+      assert.equal(storm.water, '0px -5px');
+      assert.ok(storm.motion.endsWith('-thunderstorm'));
       const rainLayering = await evaluate(send, `(()=>{
         portfolioWeather.setLocationCondition('rainy');
         const rain=document.querySelector('.weather-rain');

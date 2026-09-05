@@ -24,7 +24,7 @@ const colorPattern = /^#[0-9a-f]{6}$/i;
 const paletteEntries = Object.entries(themes.palettes);
 if (!themes.palettes[themes.defaultPalette]) throw new Error('data/themes.json: defaultPalette must name a palette');
 if (JSON.stringify(themes.modes) !== JSON.stringify(['auto', 'day', 'night'])) throw new Error('data/themes.json: modes must be auto, day, and night');
-const weatherModes = ['clear', 'cloudy', 'misty', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought', 'windy'];
+const weatherModes = ['clear', 'cloudy', 'misty', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought', 'windy', 'thunderstorm'];
 if (JSON.stringify(themes.weatherModes) !== JSON.stringify(weatherModes)) throw new Error(`data/themes.json: weatherModes must be ${weatherModes.join(', ')}`);
 const timeModes = ['day', 'night', 'morning', 'evening', 'twilight'];
 if (JSON.stringify(themes.timeModes) !== JSON.stringify(timeModes)) throw new Error(`data/themes.json: timeModes must be ${timeModes.join(', ')}`);

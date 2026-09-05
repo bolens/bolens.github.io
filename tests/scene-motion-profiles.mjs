@@ -10,7 +10,7 @@ const html = readFileSync(resolve(root, '404.html'), 'utf8');
 const css = readFileSync(resolve(root, 'assets/404.css'), 'utf8');
 const scene = readFileSync(resolve(root, 'assets/404-scene.js'), 'utf8');
 const times = ['day', 'night', 'morning', 'evening', 'twilight'];
-const conditions = ['clear', 'cloudy', 'misty', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought', 'windy'];
+const conditions = ['clear', 'cloudy', 'misty', 'overcast', 'rainy', 'wet', 'dry', 'snowy', 'drought', 'windy', 'thunderstorm'];
 
 const setup = () => {
   let weatherSubscriber;
@@ -39,8 +39,8 @@ test('every time and weather pairing has a stable, distinct motion signature', (
   const { context } = setup();
   const api = context.window.portfolioSceneMotion;
   const profiles = times.flatMap((time) => conditions.map((condition) => api.resolve(time, condition)));
-  assert.equal(profiles.length, 50);
-  assert.equal(new Set(profiles.map(({ signature }) => signature)).size, 50);
+  assert.equal(profiles.length, 55);
+  assert.equal(new Set(profiles.map(({ signature }) => signature)).size, 55);
   for (const profile of profiles) {
     assert.ok(Object.isFrozen(profile));
     assert.deepEqual(profile, api.resolve(profile.time, profile.condition));

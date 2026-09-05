@@ -32,7 +32,7 @@
       '.day-flight-ufo', '.background-ufo', '.ufo-lights', '.tent-dog', '.moth-wing',
     ]),
   });
-  const weatherMotion = Object.freeze({ rainy:'.weather-rain', snowy:'.weather-snow', misty:'.weather-mist', windy:'.weather-wind' });
+  const weatherMotion = Object.freeze({ rainy:'.weather-rain', snowy:'.weather-snow', misty:'.weather-mist', windy:'.weather-wind', thunderstorm:'.weather-rain' });
 
   let currentTier;
   let overlayActive = document.documentElement.classList.contains('ui-overlay-open');
@@ -54,7 +54,7 @@
     const selectors = [...liveByTier[currentTier]];
     const weatherSelector = weatherMotion[window.portfolioWeather?.condition];
     if (weatherSelector) selectors.push(weatherSelector);
-    if (window.portfolioWeather?.condition === 'windy' && currentTier !== 'minimal') selectors.push('.camp-pines,.river-willows,.camp-tent > use:first-child,.smoke-character');
+    if (['windy', 'thunderstorm'].includes(window.portfolioWeather?.condition) && currentTier !== 'minimal') selectors.push('.camp-pines,.river-willows,.camp-tent > use:first-child,.smoke-character');
     for (const selector of selectors) {
       for (const target of figure.querySelectorAll(selector)) target.dataset.runtimeMotion = 'live';
     }

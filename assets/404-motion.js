@@ -3,6 +3,7 @@
   const sceneTime = window.portfolioSceneTime;
   if (!weather || !sceneTime) return;
   const weatherProfiles = Object.freeze({
+    thunderstorm: Object.freeze({ tempo: .74, sway: 1.3, drift: 4.6, lift: .18, glow: .42, activity: .22, play: .3, water: 1.48, smoke: .46 }),
     clear: Object.freeze({ tempo: 1, sway: .34, drift: .7, lift: 1, glow: 1, activity: 1, play: 1, water: .82, smoke: 1 }),
     cloudy: Object.freeze({ tempo: 1.08, sway: .42, drift: 1.2, lift: .9, glow: .9, activity: .84, play: .82, water: .9, smoke: 1.08 }),
     misty: Object.freeze({ tempo: 1.2, sway: .32, drift: 1.3, lift: .68, glow: .84, activity: .58, play: .68, water: 1.04, smoke: 1.22 }),
