@@ -52,9 +52,13 @@
 @property --hobby-emphasis { syntax:'<percentage>'; inherits:true; initial-value:0%; }
 .hobbies { display:grid; grid-template-columns:minmax(13rem,.8fr) 2fr; align-items:center; gap:clamp(2rem,6vw,6rem); padding-block:clamp(4rem,8vw,7rem); border-top:1px solid var(--line); }
 .hobbies-heading h2 { max-width: 22rem; margin: 0; font: 400 clamp(1.7rem,2.8vw,2.65rem)/1.03 var(--serif); letter-spacing: -.04em; }
-.hobby-route { position: relative; min-width: 0; isolation: isolate; }
+.hobby-route { --hobby-badge-size:clamp(3.3rem,5.5vw,4.25rem); --hobby-stagger:1.6rem; container-type:inline-size; position: relative; min-width: 0; isolation: isolate; }
 .hobbies[data-motion="paused"] .hobby-route * { animation-play-state: paused!important; }
-.hobby-trail,.hobby-flight-layer { position: absolute; inset: 5px 0 auto; width: 100%; height: 96px; overflow: visible; pointer-events: none; }.hobby-trail { z-index: -1; }.hobby-flight-layer { z-index: 2; }
+.hobby-trail,.hobby-flight-layer { position: absolute; inset: auto 0;
+ /* Align the flight's beer stop (y=36.9) with the tap center (y=3).
+ Container units retain the 1000:96 drawing ratio at every width. */
+ top:calc(var(--hobby-stagger) + .65rem + (var(--hobby-badge-size) - 1.3rem - 2px)/16 - 3.69cqw);
+ width: 100%; height: auto; overflow: visible; pointer-events: none; }.hobby-trail { z-index: -1; }.hobby-flight-layer { z-index: 2; }
 .hobby-trail path { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: .018 .014; vector-effect: non-scaling-stroke; }
 .hobby-traveler,.hobby-landed-disc { fill: var(--copper); stroke: var(--paper); stroke-width: 2.5; vector-effect: non-scaling-stroke; }.traveler-disc .disc-body { fill:var(--art-hot);stroke:var(--art-warm); }.traveler-disc .disc-rim { fill:none;stroke:color-mix(in srgb,var(--art-hot) 65%,var(--ink));stroke-width:1.3; }.traveler-disc .disc-mark { fill:var(--scene-celestial);stroke:none; }.hobby-landed-disc { display: none; }
 .hobby-thrower { fill: var(--paper); stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; transform-box: view-box; transform-origin: 25px 60px; animation: thrower-exit 24s linear infinite; }.hobby-thrower path { fill: none; }.thrower-body { transform-box: view-box; transform-origin: 25px 47px; animation: drive-lean 24s ease-out infinite; }.throwing-arm { transform-box: view-box; transform-origin: 25px 47px; animation: disc-throw 24s cubic-bezier(.2,.8,.3,1) infinite,throw-arm-visibility 24s linear infinite; }.walking-arm { opacity:0;animation:walk-arm-visibility 24s linear infinite; }.thrower-leg { transform-box: view-box; transform-origin: 25px 60px; }.thrower-leg-front { animation: walk-front 24s ease-in-out infinite; }.thrower-leg-back { animation: walk-back 24s ease-in-out infinite; }
@@ -74,7 +78,7 @@
 .hobby-route li { display: grid; justify-items: center; gap: .65rem; min-width: 0; color: var(--ink); font: 700 clamp(.66rem,1vw,.75rem)/1.2 var(--mono); letter-spacing: .06em; text-align: center; text-transform: uppercase; }
 .hobby-hiking { animation: scene-hiking 24s linear infinite; }.hobby-camping { animation: scene-camping 24s linear infinite; }.hobby-cycling { animation: scene-cycling 24s linear infinite; }.hobby-disc-golf { animation: scene-disc-golf 24s linear infinite; }.hobby-craft-beer { animation: scene-craft-beer 24s linear infinite; }
 .hobby-route li:nth-child(even) { translate: 0 1.6rem; }
-.hobby-route li svg { width: clamp(3.3rem,5.5vw,4.25rem); padding: .65rem; overflow: visible; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+.hobby-route li svg { width: var(--hobby-badge-size); padding: .65rem; overflow: visible; border: 1px solid var(--line); border-radius: 50%; background: var(--paper); fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
 .camp-star { transform-box: fill-box; transform-origin: center; animation: hobby-twinkle 3.6s ease-in-out infinite; }
 .scene-night-only,.hike-aurora,.hike-moon,.moon-crater,.hike-stars,.camp-moon,.camp-sky-stars,.camp-star { visibility:hidden; }.scene-day-only { visibility:visible; }.hike-day-sun { animation:hobby-rise 4s ease-in-out infinite; fill:color-mix(in srgb,transparent,var(--scene-celestial) var(--hobby-emphasis));stroke:color-mix(in srgb,currentColor,var(--scene-celestial) var(--hobby-emphasis)); }.camp-day-sun { animation:hobby-rise 4s ease-in-out infinite; fill:color-mix(in srgb,transparent,var(--scene-celestial) var(--hobby-emphasis));stroke:color-mix(in srgb,currentColor,var(--scene-celestial) var(--hobby-emphasis)); }
 .hike-night-sky { fill:color-mix(in srgb,var(--paper),var(--scene-sky) var(--hobby-emphasis));stroke:color-mix(in srgb,currentColor,var(--scene-sky-edge) var(--hobby-emphasis)); }.hike-aurora { fill: none; opacity: .7; stroke-width: 2.4; animation: alpine-aurora 5.5s ease-in-out infinite alternate; stroke:color-mix(in srgb,currentColor,var(--aurora-active) var(--hobby-emphasis)); }.aurora-one { --aurora-active:var(--art-success); }.aurora-two { --aurora-active:var(--art-violet); animation-delay:-2.1s; }.hike-moon { fill:color-mix(in srgb,var(--paper),var(--scene-celestial) var(--hobby-emphasis));stroke:color-mix(in srgb,currentColor,var(--scene-celestial) var(--hobby-emphasis)); }.moon-crater,.hike-stars { animation: alpine-stars 3.8s ease-in-out infinite; stroke:color-mix(in srgb,currentColor,var(--scene-celestial) var(--hobby-emphasis)); }.hike-snow { fill:color-mix(in srgb,var(--paper),var(--snow) var(--hobby-emphasis));stroke:color-mix(in srgb,currentColor,var(--snow) var(--hobby-emphasis)); }.hike-pines { stroke:color-mix(in srgb,currentColor,var(--art-forest) var(--hobby-emphasis)); }
@@ -84,7 +88,7 @@
 @keyframes hobby-rise { 0%,100% { translate: 0 1px; rotate: -4deg; } 50% { translate: 0 -2px; rotate: 4deg; } }
 @keyframes hobby-pedal { to { rotate: 360deg; } }
 
-@keyframes traveler-disc-form { 0%,4%,40%,49%,69.3%,89.5% { opacity:1;scale:1;rotate:0deg; } 6%,38% { opacity:0;scale:1;rotate:0deg; } 49.6%,68.7% { opacity:0;scale:.7 .45;rotate:-8deg; } 91%,100% { opacity:0;scale:1;rotate:0deg; } }
+@keyframes traveler-disc-form { 0%,4%,40%,49%,69.3%,89.5% { opacity:1;scale:1;rotate:0deg; } 6%,38% { opacity:0;scale:1;rotate:0deg; } 49.6%,68.7% { opacity:0;scale:.7 .45;rotate:-8deg; } 91%,100% { opacity:0;scale:1;rotate:0deg; } 0%,69.3% { translate:0; } 91%,100% { translate:var(--hobby-catch-x,0px) var(--hobby-catch-y,0px); } }
 @keyframes traveler-ufo-form { 0%,4%,40%,100% { opacity: 0; } 6%,38% { opacity: 1; } }
 @keyframes traveler-ufo-lights { 0%,100% { opacity:.45; } 50% { opacity:1; } }
 @keyframes beer-disc-handoff { 0%,49%,69.3%,100% { opacity:0;scale:1;rotate:0deg; } 49.6% { opacity:1;scale:1;rotate:0deg; } 50.8%,66% { opacity:0;scale:.3 .16;rotate:-12deg; } 67.3% { opacity:1;scale:.3 .16;rotate:12deg; } 68.7% { opacity:1;scale:1;rotate:0deg; } }
@@ -113,7 +117,7 @@
 @keyframes beer-fill { 0%,49% { opacity:0;scale:1 0; } 52% { opacity:.9;scale:1 .08; } 65%,100% { opacity:.94;scale:1 1; } }
 @keyframes beer-content-visibility { 0%,51% { opacity:0; } 54%,100% { opacity:1; } }
 @keyframes beer-foam-rise { 0%,49% { translate:0 31px; } 52% { translate:0 29px; } 65%,100% { translate:0; } }
-@keyframes cheerers-arrive { 0%,87% { opacity:0;translate:-18px 5px; } 92%,100% { opacity:1;translate:0; } }
+@keyframes cheerers-arrive { 0%,87% { opacity:0;translate:-18px 5px; } 92%,97% { opacity:1;translate:0; } 100% { opacity:0;translate:0; } }
 @keyframes cheer-left { 0%,88% { rotate:24deg; } 92%,94%,98%,100% { rotate:-16deg; } 93%,96%,99% { rotate:8deg; } }
 @keyframes cheer-right { 0%,88% { rotate:-24deg; } 92%,94%,98%,100% { rotate:16deg; } 93%,96%,99% { rotate:-8deg; } }
 @keyframes cheer-dog { 0%,88% { translate:-6px 3px; } 92%,96%,100% { translate:0; } 94%,98% { translate:0 -2px; } }
@@ -133,7 +137,7 @@
 
 @keyframes route-tree-color { 0%,9%,30%,100% { fill:transparent;stroke:var(--ink); } 11%,28% { fill:color-mix(in srgb,var(--art-forest) 38%,var(--paper));stroke:var(--art-forest); } }
 
-@keyframes basket-disc-catch { 0%,89.5% { opacity:0; } 91%,99.9% { opacity:1; } 100% { opacity:0; } }
+@keyframes basket-disc-catch { 0%,89.5% { opacity:0; } 91%,97% { opacity:1; } 100% { opacity:0; } }
 @keyframes hobby-bubble { 0% { opacity: 0; translate: 0 4px; } 35% { opacity: 1; } 100% { opacity: 0; translate: 0 -8px; } }
 /* Only decorative descendants pause; card and hero entrances still finish. */
 :is(.signal-map,.project-visual)[data-motion="paused"] svg * { animation-play-state:paused!important; }
@@ -141,4 +145,11 @@
 @media (prefers-reduced-motion:reduce) {
   .signal-map svg *,.project-visual svg * { animation:none!important; }
   .map-node .pulse { display:none; }
+}
+
+/* Saved and system reduced motion share the same complete static scene. */
+:root[data-motion="reduced"] :is(.hobby-traveler,.route-bigfoot,.route-bike) { display:none; }
+:root[data-motion="reduced"] .hobby-landed-disc { display:block; }
+@media (prefers-reduced-motion:reduce) {
+  .hobby-route * { animation:none!important; transition:none!important; }
 }

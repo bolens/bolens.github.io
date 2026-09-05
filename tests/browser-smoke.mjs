@@ -258,9 +258,10 @@ try {
     animation.currentTime=1600;const wheelEnd=getComputedStyle(wheel).rotate;
     const hobby=document.querySelector('.hobby-flight-layer');const discForm=document.querySelector('.traveler-disc');const ufoForm=document.querySelector('.traveler-ufo');
     const center=(box)=>({x:box.x+box.width/2,y:box.y+box.height/2});
-    hobby.setCurrentTime(0);const discStart=center(discForm.getBoundingClientRect());
-    hobby.setCurrentTime(14);const discMiddle=center(discForm.getBoundingClientRect());
-    hobby.setCurrentTime(22);const discEnd=center(discForm.getBoundingClientRect());
+    const discAnimation=discForm.getAnimations()[0];discAnimation.pause();
+    hobby.setCurrentTime(0);discAnimation.currentTime=0;const discStart=center(discForm.getBoundingClientRect());
+    hobby.setCurrentTime(14);discAnimation.currentTime=14000;const discMiddle=center(discForm.getBoundingClientRect());
+    hobby.setCurrentTime(22);discAnimation.currentTime=22000;const discEnd=center(discForm.getBoundingClientRect());
     const basket=center(document.querySelector('.disc-basket-rim').getBoundingClientRect());
     for(const form of [discForm,ufoForm]){const formAnimation=form.getAnimations()[0];formAnimation.pause();formAnimation.currentTime=2600}
     const discOpacity=Number(getComputedStyle(discForm).opacity);const ufoOpacity=Number(getComputedStyle(ufoForm).opacity);

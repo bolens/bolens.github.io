@@ -334,7 +334,7 @@ h1 em, h2 em { color: var(--copper); font-weight: 400; }
   .section-heading { grid-template-columns: 1fr; }.section-heading .eyebrow { margin-bottom: 0; }.project-list { grid-template-columns: 1fr; }.project-featured { grid-column: auto; }.project-featured .project-visual { aspect-ratio: 1.55 / 1; }
   .toolbox, .current, .contact, .hobbies, .about-grid, .about-field-notes { grid-template-columns: 1fr; }.toolbox,.current,.contact { gap: 2rem; }.hobbies { gap: 2rem; }.about-heading { position: static; }.about-heading h2,.about-field-notes h2 { max-width: 14ch; }.about-field-notes { gap: 2rem; }
   .hobbies-heading { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; align-items: start; }.hobbies-heading .eyebrow { margin: .3rem 0 0; }
-  .hobby-trail,.hobby-flight-layer { top: 0; }.hobby-route ul { grid-template-columns: repeat(5,1fr); }.hobby-route li:nth-child(even) { translate: none; }
+  .hobby-route { --hobby-stagger:0rem; }.hobby-route ul { grid-template-columns: repeat(5,1fr); }.hobby-route li:nth-child(even) { translate: none; }
   .index-list a { grid-template-columns:1.6rem minmax(0,1fr) 1.5rem; gap:1rem; }.index-list .project-glyph { grid-column:1; grid-row:1 / span 2; }.index-list span { grid-column:2; grid-row:1; }.index-list i { grid-column:2; grid-row:2; }.index-list strong { grid-column:3; grid-row:1 / span 2; }
   .case-thesis { grid-template-columns: 1fr; gap: .45rem; }.case-facts { grid-template-columns: 1fr; }.case-facts div + div { border-top: 1px solid var(--line); }
   .case-story > section { grid-template-columns: 1fr; gap: 1.5rem; }.case-story > section .eyebrow { margin-bottom: 0; }.case-next { grid-template-columns: 1fr; gap: .8rem; }

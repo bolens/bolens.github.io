@@ -8,6 +8,28 @@
   }]));
   if (!scenes.size) return;
 
+  // The final badge stays readable at a fixed size while the flight scales
+  // with the route. Measure their shared catch point only when either resizes.
+  const flight = document.querySelector('.hobby-flight-layer');
+  const basket = document.querySelector('.hobby-disc-golf > svg');
+  const caught = basket?.querySelector('.basket-caught-disc');
+  const path = flight?.querySelector('#hobby-flight-path');
+  if (flight && basket && caught && path) {
+    const endpoint = path.getPointAtLength(path.getTotalLength());
+    const alignCatch = () => {
+      const flightMatrix = flight.getScreenCTM();
+      const basketMatrix = basket.getScreenCTM();
+      if (!flightMatrix?.a || !flightMatrix.d || !basketMatrix) return;
+      const point = new DOMPoint(Number(caught.getAttribute('cx')), Number(caught.getAttribute('cy')))
+        .matrixTransform(basketMatrix).matrixTransform(flightMatrix.inverse());
+      flight.style.setProperty('--hobby-catch-x', `${point.x - endpoint.x}px`);
+      flight.style.setProperty('--hobby-catch-y', `${point.y - endpoint.y}px`);
+    };
+    const sizes = new ResizeObserver(alignCatch);
+    sizes.observe(flight);
+    sizes.observe(basket);
+  }
+
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)');
   let overlayOpen = document.documentElement.classList.contains('ui-overlay-open');
   const sync = () => {

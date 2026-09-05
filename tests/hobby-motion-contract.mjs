@@ -19,6 +19,7 @@ function setup({ count = 1 } = {}) {
     hidden: false,
     documentElement: { dataset: {}, classList: { contains: () => false } },
     querySelectorAll: () => sections,
+    querySelector: () => null,
     addEventListener: (type, callback) => listeners.set(type, callback),
   };
   let intersect;
