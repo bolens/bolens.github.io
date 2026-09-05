@@ -5,6 +5,17 @@ import test from 'node:test';
 
 const html = readFileSync(resolve(import.meta.dirname, '..', '404.html'), 'utf8');
 
+test('seated Bigfoot and dogman retain distinct reported body plans', () => {
+  const bigfoot = html.slice(html.indexOf('<g class="camper bigfoot scene-layer"'), html.indexOf('<g class="camper alien scene-layer"'));
+  for (const region of ['trapezius-fur','long-resting-arm','low-resting-hand']) assert.match(bigfoot, new RegExp(`data-region="${region}"`));
+  assert.doesNotMatch(bigfoot, /10-9 9-8 11 9/, 'crown is rounded rather than a pointed hood');
+  const dog = html.slice(html.indexOf('<g class="camper dogman scene-layer"'), html.indexOf('<g class="fire-rim-light"'));
+  for (const region of ['deep-chest-tucked-waist','upright-canine-ears','raised-canine-hocks']) assert.match(dog, new RegExp(`data-region="${region}"`));
+  assert.ok(dog.indexOf('raised-canine-hocks') < dog.indexOf('dogman-extremities'), 'paws overlap the lower hocks');
+  assert.match(bigfoot, /class="bigfoot-feet"/);
+  assert.match(dog, /class="roasting-arm arm-dogman"/);
+});
+
 test('the grey alien keeps a lanky readable silhouette', () => {
   const alien = html.match(/<g class="camper alien scene-layer"[\s\S]*?<g class="roasting-arm arm-alien">/)?.[0] ?? '';
   assert.match(alien, /data-anatomy="lanky-grey"/);
