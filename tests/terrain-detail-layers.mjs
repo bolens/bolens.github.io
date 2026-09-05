@@ -90,6 +90,26 @@ test('solid surfaces author their own wetness and snow deposits', () => {
   }
 });
 
+test('river stones provide complete deterministic shape variants', () => {
+  const stone = symbols['river-stone'];
+  for (const [region, token, fallback] of [['angular-cobble','angular','inline'],['rounded-cobble','rounded','none'],['flat-slab','slab','none']]) {
+    assert.match(stone, new RegExp(`data-region="${region}" style="display:var\\(--stone-${token}-display,${fallback}\\)"`));
+  }
+  assert.equal([...stone.matchAll(/data-region="surface-wetness"/g)].length, 3);
+  assert.equal([...stone.matchAll(/data-region="ledge-snow"/g)].length, 3);
+});
+
+test('shrubs keep loaded foliage rooted and surface deposits inside their posture', () => {
+  for (const [id, posture, wet, snow] of [['evergreen-shrub','evergreen-shrub-posture','wet-tips','snow-pockets'],['berry-shrub','berry-shrub-posture','wet-leaf-edges','branch-snow']]) {
+    const shrub=symbols[id];
+    assert.match(shrub,new RegExp(`class="${posture}" data-region="rooted-growth"`));
+    assert.match(shrub,new RegExp(`data-region="${wet}"`));
+    assert.match(shrub,new RegExp(`data-region="${snow}"`));
+    assert.match(shrub, /<\/g>\s*<use href="#terrain-condition-marks"/);
+    assert.match(shrub, /--shrub-condition-fill,var\(--shrub-fill/);
+  }
+});
+
 test('campsite gear exposes construction and wear detail', () => {
   const manifests = {
     'trail-boots': ['toe-caps', 'eyelets', 'tread-lugs', 'scuff-marks'],

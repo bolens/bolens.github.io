@@ -244,6 +244,16 @@
 :root:is([data-weather="dry"],[data-weather="drought"],[data-weather="snowy"]) .fly-agarics { display:none; }
 /* Keep roots fixed while fronds settle under rain, snow, or water stress. */
 .fern-posture { transform-box:view-box;transform-origin:35px 89px;transform:scaleY(var(--fern-upright,1)); }
+.evergreen-shrub-posture { transform-box:view-box;transform-origin:58px 74px;transform:scaleY(calc(var(--shrub-growth,1) * var(--shrub-load,1))); }
+.berry-shrub-posture { transform-box:view-box;transform-origin:63px 100px;transform:scaleY(calc(var(--shrub-growth,1) * var(--shrub-load,1))); }
+.terrain-asset[data-shrub-form="low"] { --shrub-growth:.76; }
+:root:is([data-weather="rainy"],[data-weather="thunderstorm"]) .terrain-asset[href="#berry-shrub"] { --shrub-load:.9; }
+:root[data-weather="snowy"] .terrain-asset:is([href="#evergreen-shrub"],[href="#berry-shrub"]) { --shrub-load:.8; }
+:root:is([data-weather="dry"],[data-weather="drought"]) .terrain-asset[href="#berry-shrub"] { --shrub-load:.78;--shrub-condition-fill:#77744b;--berry-highlight:#aaa16a; }
+:root[data-weather="drought"] .terrain-asset[href="#berry-shrub"] { --shrub-load:.64;--shrub-condition-fill:#81704b; }
+:root[data-weather="drought"] .terrain-asset[href="#evergreen-shrub"] { --shrub-load:.92;--shrub-condition-fill:#536447; }
+.terrain-asset[data-stone-form="rounded"] { --stone-angular-display:none;--stone-rounded-display:inline; }
+.terrain-asset[data-stone-form="slab"] { --stone-angular-display:none;--stone-slab-display:inline; }
 /* Deform rooted growth, not the placement or its ground/weather accents. */
 .flower-posture { transform-box:view-box;transform-origin:30px 56px;transform:skewX(var(--plant-lean,0deg)) scaleY(var(--flower-upright,1)); }
 .reed-posture { transform-box:view-box;transform-origin:14px 42px;transform:skewX(var(--plant-lean,0deg)) scaleY(var(--reed-upright,1)); }

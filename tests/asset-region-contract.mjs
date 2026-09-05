@@ -39,6 +39,17 @@ test("shared terrain conditions expose addressable weather regions", () => {
   assert.deepEqual(addressable, declared);
 });
 
+test("named editing regions resolve to unique elements in migrated glyphs", () => {
+  for (const id of ["evergreen-shrub", "berry-shrub", "fern-spray", "wildflower-clump", "reed-clump", "camp-tent-shell", "alpine-boulder", "trail-camera"]) {
+    const symbol = symbols.find(candidate => candidate.id === id);
+    const declared = symbol.attributes.match(/data-regions="([^"]+)"/)[1].split(",");
+    const targets = [...symbol.body.matchAll(/\bdata-region="([^"]+)"/g)].map(match => match[1]);
+    assert.equal(new Set(targets).size, targets.length, `${id} has ambiguous editing targets`);
+    assert.deepEqual([...targets].sort(), [...declared].sort(), `${id} manifest must match addressable geometry`);
+    assert.match(symbol.body, /<use href="#terrain-condition-marks"[^>]*data-region="conditions"/);
+  }
+});
+
 test("condition-aware assets name their shared condition region", () => {
   const conditionAwareIds = [
     "alpine-boulder", "river-stone", "fern-spray", "berry-shrub", "evergreen-shrub",
