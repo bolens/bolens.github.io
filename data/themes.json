@@ -8,6 +8,7 @@
   "weatherModes": [
     "clear",
     "cloudy",
+    "misty",
     "overcast",
     "rainy",
     "wet",

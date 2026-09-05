@@ -5,6 +5,7 @@
   const weatherProfiles = Object.freeze({
     clear: Object.freeze({ tempo: 1, sway: .34, drift: .7, lift: 1, glow: 1, activity: 1, play: 1, water: .82, smoke: 1 }),
     cloudy: Object.freeze({ tempo: 1.08, sway: .42, drift: 1.2, lift: .9, glow: .9, activity: .84, play: .82, water: .9, smoke: 1.08 }),
+    misty: Object.freeze({ tempo: 1.2, sway: .32, drift: 1.3, lift: .68, glow: .84, activity: .58, play: .68, water: 1.04, smoke: 1.22 }),
     overcast: Object.freeze({ tempo: 1.16, sway: .48, drift: 1.5, lift: .76, glow: .82, activity: .68, play: .68, water: .94, smoke: 1.16 }),
     rainy: Object.freeze({ tempo: .82, sway: .62, drift: 2.2, lift: .36, glow: .6, activity: .54, play: .5, water: 1.3, smoke: .62 }),
     wet: Object.freeze({ tempo: 1.04, sway: .4, drift: 1, lift: .86, glow: 1.04, activity: .92, play: .9, water: 1.18, smoke: 1.06 }),

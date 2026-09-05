@@ -16,12 +16,17 @@
 .lost-lede { max-width: 29rem; margin: 1.1rem 0 1.4rem; color: var(--lost-muted); font-size: clamp(1rem,1vw + .72rem,1.14rem); line-height: 1.62; letter-spacing: .004em; }
 .lost-button { border-color: var(--lost-copy); background: var(--lost-copy); color: var(--lost-sky); }
 .lost-button:is(:hover,:focus-visible) { border-color: var(--lost-accent); background: var(--lost-accent); color: var(--lost-sky); }
-.cryptid-camp { position: absolute; inset: 0; margin: 0; display: grid; align-items: end; opacity:1; transition:opacity .24s ease-out; }
-.is-loading .cryptid-camp { opacity:0; }
+.cryptid-camp { position: absolute; inset: 0; margin: 0; display: grid; align-items: end; opacity:1; }
 .is-loading .cryptid-camp::after { display:none; }
 .cryptid-camp svg { width: 100%; height: 100%; min-height: 620px; object-fit: cover; object-position: center bottom; }
 .cryptid-camp svg :is(path,rect,circle,ellipse,polygon,polyline,line) { transition:fill .55s ease,stroke .55s ease; }
 .cryptid-camp svg stop { transition:stop-color .55s ease,stop-opacity .55s ease; }
+.cryptid-camp[data-render-runtime] svg :is(path,rect,circle,ellipse,polygon,polyline,line,stop) { transition:none; }
+.cryptid-camp[data-render-runtime] .terrain-asset { --asset-light-shadow:none;--asset-time-shadow:none;transition:none; }
+.cryptid-camp[data-render-runtime] svg * { animation-play-state:paused!important; }
+.cryptid-camp[data-render-runtime] [data-runtime-motion="off"] { animation:none!important; }
+.cryptid-camp[data-render-runtime] [data-runtime-motion="live"] { animation-play-state:running!important; }
+:root[data-weather="windy"] .cryptid-camp[data-render-runtime] .camp-pines[data-runtime-motion="live"] { animation:runtime-wind-canopy 4.6s cubic-bezier(.45,0,.32,1) infinite alternate!important;transform-box:view-box;transform-origin:center bottom; }
 .cryptid-camp figcaption { position: absolute; right: clamp(1rem,3vw,2.5rem); bottom: 1rem; color: color-mix(in srgb,var(--lost-copy) 70%,transparent); font: 700 .67rem/1.4 var(--mono); letter-spacing: .1em; text-transform: uppercase; }
 .palette-wash { fill:var(--lost-night-tint);opacity:.085;mix-blend-mode:color; }
 .theme-light-wash { display:inline;fill:#d9e6d3;opacity:0;mix-blend-mode:screen;transition:opacity .55s ease; }
@@ -65,12 +70,12 @@
 :root:is([data-scene-time="night"],[data-scene-time="twilight"]) .day-flight-ufo { display:none; }
 :root:is([data-scene-time="night"],[data-scene-time="twilight"]) .background-ufo { display:inline; }
 :root:is([data-scene-time="morning"],[data-scene-time="evening"],[data-scene-time="twilight"]) .scene-time-wash { visibility:visible; }
-:root[data-scene-time="morning"] .scene-time-wash { fill:#f6c58d;opacity:.2;mix-blend-mode:screen; }
+:root[data-scene-time="morning"] .scene-time-wash { fill:#e9a85f;opacity:.14;mix-blend-mode:soft-light; }
 :root[data-scene-time="evening"] .scene-time-wash { fill:#d16f62;opacity:.24;mix-blend-mode:soft-light; }
 :root[data-scene-time="twilight"] .scene-time-wash { fill:#5f568e;opacity:.3;mix-blend-mode:color; }
 :root[data-scene-time="day"] .lost-page { --scene-sky-top:#5c9ec1;--scene-sky-upper:#78b9d8;--scene-sky-mid:#b9dbe2;--scene-sky-haze:#e8e2c5;--scene-sky-depth:#a8d1dd;--scene-sky-depth-opacity:.18;--scene-pine-lit:#5f8962;--scene-pine-mid:#315f43;--scene-pine-dark:#173b30;--scene-ground-lit:#668b5d;--scene-ground-mid:#3e6547;--scene-ground-dark:#213f32;--scene-mountain-far-lit:#9eb4b4;--scene-mountain-far-mid:#78959a;--scene-mountain-far-dark:#59787e;--scene-mountain-lit:#8fa8aa;--scene-mountain-mid:#6f8d91;--scene-mountain-shadow:#55757a;--scene-mountain-dark:#3f6166; }
 :root[data-scene-time="night"] .lost-page { --scene-sky-top:#020914;--scene-sky-upper:#071927;--scene-sky-mid:#12313e;--scene-sky-haze:#28504b;--scene-sky-depth:#162442;--scene-sky-depth-opacity:.28;--scene-pine-lit:#315f4e;--scene-pine-mid:#173d35;--scene-pine-dark:#071d1d;--scene-ground-lit:#294b43;--scene-ground-mid:#163630;--scene-ground-dark:#071b19;--scene-mountain-far-lit:#274653;--scene-mountain-far-mid:#16323d;--scene-mountain-far-dark:#0a222b;--scene-mountain-lit:#35545d;--scene-mountain-mid:#1d3d48;--scene-mountain-shadow:#102c36;--scene-mountain-dark:#071e28; }
-:root[data-scene-time="morning"] .lost-page { --scene-sky-top:#6f9db3;--scene-sky-upper:#9ab9bd;--scene-sky-mid:#d3bea8;--scene-sky-haze:#f2cc93;--scene-sky-depth:#a8abb9;--scene-sky-depth-opacity:.2;--scene-pine-lit:#597861;--scene-pine-mid:#355643;--scene-pine-dark:#183629;--scene-ground-lit:#6a7955;--scene-ground-mid:#455b3e;--scene-ground-dark:#273b2d;--scene-mountain-far-lit:#a9aaa1;--scene-mountain-far-mid:#828f8e;--scene-mountain-far-dark:#627778;--scene-mountain-lit:#a4998c;--scene-mountain-mid:#7f8079;--scene-mountain-shadow:#626b69;--scene-mountain-dark:#46595c; }
+:root[data-scene-time="morning"] .lost-page { --scene-sky-top:#578ca6;--scene-sky-upper:#83a9ae;--scene-sky-mid:#c5a888;--scene-sky-haze:#eebd78;--scene-sky-depth:#89949f;--scene-sky-depth-opacity:.24;--scene-pine-lit:#4d7358;--scene-pine-mid:#294c39;--scene-pine-dark:#102d22;--scene-ground-lit:#617348;--scene-ground-mid:#394f34;--scene-ground-dark:#1d3225;--scene-mountain-far-lit:#969b92;--scene-mountain-far-mid:#707f7e;--scene-mountain-far-dark:#516a6c;--scene-mountain-lit:#95887a;--scene-mountain-mid:#6f746d;--scene-mountain-shadow:#515e5d;--scene-mountain-dark:#384e52; }
 :root[data-scene-time="evening"] .lost-page { --scene-sky-top:#4d6282;--scene-sky-upper:#866f83;--scene-sky-mid:#c17f72;--scene-sky-haze:#e8ad72;--scene-sky-depth:#704f70;--scene-sky-depth-opacity:.3;--scene-pine-lit:#465c4b;--scene-pine-mid:#294738;--scene-pine-dark:#102c25;--scene-ground-lit:#575c42;--scene-ground-mid:#354433;--scene-ground-dark:#192d28;--scene-mountain-far-lit:#8b7c82;--scene-mountain-far-mid:#665f70;--scene-mountain-far-dark:#424c5d;--scene-mountain-lit:#8a7777;--scene-mountain-mid:#665b64;--scene-mountain-shadow:#494958;--scene-mountain-dark:#293848; }
 :root[data-scene-time="twilight"] .lost-page { --scene-sky-top:#202844;--scene-sky-upper:#34375e;--scene-sky-mid:#625779;--scene-sky-haze:#987583;--scene-sky-depth:#39365f;--scene-sky-depth-opacity:.34;--scene-pine-lit:#36524b;--scene-pine-mid:#1d3e38;--scene-pine-dark:#0b2927;--scene-ground-lit:#3d5044;--scene-ground-mid:#263b35;--scene-ground-dark:#102826;--scene-mountain-far-lit:#5d6176;--scene-mountain-far-mid:#434b63;--scene-mountain-far-dark:#28364e;--scene-mountain-lit:#686375;--scene-mountain-mid:#494e64;--scene-mountain-shadow:#303d55;--scene-mountain-dark:#172b42; }
 :root[data-scene-time="day"] .scene-orb,:root[data-scene-time="morning"] .scene-orb,:root[data-scene-time="evening"] .scene-orb { --orb-glow:var(--lost-day-sun);--orb-fill:var(--lost-day-sun);--orb-highlight:#fff7c9;--orb-crater-opacity:0;--orb-rays-opacity:1; }
@@ -88,6 +93,7 @@
 :root[data-scene-time="twilight"] :is(.milky-way,.aurora-curtains,.aurora-ray-filaments,.camp-aurora) { display:inline;opacity:.3; }
 :root:is([data-scene-time="morning"],[data-scene-time="evening"],[data-scene-time="twilight"],[data-scene-time="night"]) .camp-atmosphere { display:block; }
 :root:is([data-scene-time="day"],[data-scene-time="morning"]) .theme-light-wash { opacity:.24; }
+:root[data-scene-time="morning"] .theme-light-wash { opacity:.1; }
 :root:is([data-scene-time="evening"],[data-scene-time="twilight"],[data-scene-time="night"]) .theme-light-wash { opacity:0; }
 :root[data-scene-time="morning"] :is(.campfire-glow,.firelight-rings,.fire-rim-light) { opacity:.48; }
 :root[data-scene-time="evening"] :is(.campfire-glow,.firelight-rings,.fire-rim-light) { opacity:.74; }
@@ -129,6 +135,7 @@
   --asset-weather-saturation:1;
   --asset-weather-sepia:0;
   --asset-cloud-opacity:0;
+  --asset-mist-opacity:0;
   --asset-overcast-opacity:0;
   --asset-rain-opacity:0;
   --asset-wet-opacity:0;
@@ -165,11 +172,12 @@
 .terrain-asset[data-light="shadow"] { --asset-light-brightness:.68;--asset-light-saturation:.62;--asset-light-sepia:0;--asset-light-hue:8deg;--asset-light-shadow:drop-shadow(2px 3px 2px rgba(2,9,12,.32)); }
 :root[data-scene-time="day"] .terrain-asset { --asset-time-brightness:1.06;--asset-time-saturation:1.02;--asset-time-sepia:.05;--asset-time-hue:-3deg; }
 :root[data-scene-time="night"] .terrain-asset { --asset-time-brightness:.94;--asset-time-saturation:.86;--asset-time-hue:8deg; }
-:root[data-scene-time="morning"] .terrain-asset { --asset-time-brightness:1.04;--asset-time-saturation:.94;--asset-time-sepia:.13;--asset-time-hue:-9deg; }
+:root[data-scene-time="morning"] .terrain-asset { --asset-time-brightness:1;--asset-time-saturation:1.04;--asset-time-sepia:.08;--asset-time-hue:-7deg; }
 :root[data-scene-time="evening"] .terrain-asset { --asset-time-brightness:.92;--asset-time-saturation:1.08;--asset-time-sepia:.2;--asset-time-hue:-12deg; }
 :root[data-scene-time="twilight"] .terrain-asset { --asset-time-brightness:.78;--asset-time-saturation:.84;--asset-time-sepia:.04;--asset-time-hue:14deg; }
 .terrain-asset[data-weather="clear"],:root[data-weather="clear"] .terrain-asset { --asset-weather-brightness:1;--asset-weather-saturation:1; }
 .terrain-asset[data-weather="cloudy"],:root[data-weather="cloudy"] .terrain-asset { --asset-weather-brightness:.88;--asset-weather-saturation:.72;--asset-cloud-opacity:.24; }
+.terrain-asset[data-weather="misty"],:root[data-weather="misty"] .terrain-asset { --asset-weather-brightness:.9;--asset-weather-saturation:.72;--asset-cloud-opacity:.16;--asset-mist-opacity:.34;--asset-wet-opacity:.14; }
 .terrain-asset[data-weather="overcast"],:root[data-weather="overcast"] .terrain-asset { --asset-weather-brightness:.8;--asset-weather-saturation:.54;--asset-cloud-opacity:.32;--asset-overcast-opacity:.28; }
 .terrain-asset[data-weather="rainy"],:root[data-weather="rainy"] .terrain-asset { --asset-weather-brightness:.82;--asset-weather-saturation:.8;--asset-cloud-opacity:.22;--asset-rain-opacity:.52;--asset-wet-opacity:.3; }
 .terrain-asset[data-weather="wet"],:root[data-weather="wet"] .terrain-asset { --asset-weather-brightness:1.04;--asset-weather-saturation:1.12;--asset-wet-opacity:.4; }
@@ -208,7 +216,7 @@
 .day-bigfoot,.day-dogman { transform-box:fill-box;transform-origin:center bottom;animation:day-peek 7s ease-in-out infinite alternate; }
 .day-mothman { transform-box:fill-box;transform-origin:center bottom;animation:day-perch 8s -3s ease-in-out infinite alternate; }
 .day-windhound { transform-box:view-box;transform-origin:1060px 648px;animation:day-dog-look 6s -2s ease-in-out infinite alternate; }
-.ui-overlay-open .lost-page svg * { animation-play-state:paused!important; }
+:root.ui-overlay-open .cryptid-camp svg * { animation-play-state:paused!important; }
 .aurora-ribbon { --aurora-width:34;--aurora-opacity:.3; }
 .aurora-ribbon-one { --aurora-color:url(#aurora-green);animation:camp-aurora 10s ease-in-out infinite alternate; }
 .aurora-ribbon-two { --aurora-color:url(#aurora-blue);--aurora-width:25;animation:camp-aurora 12s -4s ease-in-out infinite alternate-reverse; }
@@ -236,11 +244,19 @@
 :root:is([data-weather="dry"],[data-weather="drought"]) .meteor { --traveler-dust-opacity:.58;--traveler-fragment-opacity:.88; }
 .stellar-color circle { transform-box:fill-box;transform-origin:center;animation:stellar-breathe 9s ease-in-out infinite alternate; }.stellar-color circle:nth-child(2n) { animation-delay:-4s;animation-duration:12s; }
 .scene-orb { --orb-glow:url(#moon-glow);--orb-glow-opacity:.42;--orb-fill:url(#moon-surface);--orb-highlight-opacity:0;--orb-crater-opacity:.34;--orb-rays-opacity:0;translate:var(--scene-orb-x,0) var(--scene-orb-y,0);transform-box:fill-box;transform-origin:center;animation:moon-breathe 8s ease-in-out infinite;transition:translate 1.2s ease; }
-.weather-clouds,.weather-overcast,.weather-rain,.weather-snow,.weather-drought,.weather-wind { display:inline;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .38s ease,visibility 0s linear .38s; }
-:root[data-weather="cloudy"] .weather-clouds,:root[data-weather="overcast"] :is(.weather-clouds,.weather-overcast),:root[data-weather="rainy"] .weather-clouds,:root[data-weather="snowy"] .weather-clouds,:root[data-weather="rainy"] .weather-rain,:root[data-weather="snowy"] .weather-snow,:root[data-weather="drought"] .weather-drought,:root[data-weather="windy"] .weather-wind { opacity:var(--weather-layer-opacity,1);visibility:visible;transition-delay:0s; }
+.weather-clouds,.weather-rain-clouds,.weather-mist,.weather-overcast,.weather-rain,.weather-snow,.weather-drought,.weather-wind { display:inline;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .38s ease,visibility 0s linear .38s; }
+:root[data-weather="cloudy"] .weather-clouds,:root[data-weather="misty"] :is(.weather-clouds,.weather-mist),:root[data-weather="overcast"] :is(.weather-clouds,.weather-overcast),:root[data-weather="rainy"] :is(.weather-clouds,.weather-rain-clouds,.weather-rain),:root[data-weather="snowy"] :is(.weather-clouds,.weather-snow),:root[data-weather="drought"] .weather-drought,:root[data-weather="windy"] .weather-wind { opacity:var(--weather-layer-opacity,1);visibility:visible;transition-delay:0s; }
 .weather-clouds { --weather-layer-opacity:.46;filter:drop-shadow(0 8px 9px rgba(4,18,25,.18)); }
+:root[data-weather="cloudy"] .weather-clouds { --weather-layer-opacity:.72; }
+:root[data-weather="rainy"] .weather-clouds { --weather-layer-opacity:.82; }
+:root[data-weather="misty"] .weather-clouds { --weather-layer-opacity:.38; }
 .weather-cloud { --cloud-fill:#9bb8bd;--cloud-edge:#6f9299;--cloud-shadow:#496d76; }
 .weather-cloud-right { --cloud-fill:#8baab1;--cloud-edge:#65858e;--cloud-shadow:#3c626c; }
+.weather-rain-clouds { --weather-layer-opacity:.78;filter:drop-shadow(0 12px 13px rgba(2,12,18,.28)); }
+.rain-cloud { --cloud-fill:#637b82;--cloud-edge:#506b73;--cloud-shadow:#304f59;--cloud-shadow-opacity:.58; }
+.weather-mist { --weather-layer-opacity:.82;filter:blur(5px);animation:weather-mist-drift 16s ease-in-out infinite alternate; }
+.mist-bank { --cloud-fill:#b9cbc5;--cloud-edge:#9eb5b0;--cloud-shadow:#7f9b96;--cloud-shadow-opacity:.2;opacity:.54; }
+.mist-bank-two { opacity:.68; }.mist-bank-three { opacity:.46; }
 .weather-overcast { --weather-layer-opacity:.88;filter:drop-shadow(0 10px 12px rgba(4,18,25,.2));animation:overcast-drift 18s ease-in-out infinite alternate; }
 .overcast-cloud { --cloud-fill:#82969b;--cloud-edge:#657b81;--cloud-shadow:#526c73;--cloud-shadow-opacity:.44; }
 :root[data-theme="day"][data-weather="overcast"] .weather-overcast { --weather-layer-opacity:.72; }
@@ -248,6 +264,7 @@
 :root[data-weather="overcast"] :is(.scene-orb,.camp-aurora) { opacity:.2; }
 :root[data-weather="overcast"] :is(.camp-stars,.star-dust,.deep-stars,.stellar-color) { opacity:.08; }
 :root[data-weather="overcast"] .forest-mist { opacity:.13; }
+:root[data-weather="misty"] .forest-mist { opacity:.22; }
 :root[data-weather="cloudy"] .solar-ray-field { opacity:calc(var(--scene-ray-opacity,.5) * .42); }
 :root:is([data-weather="overcast"],[data-weather="rainy"],[data-weather="snowy"]) .solar-ray-field { display:none; }
 :root[data-weather="cloudy"] .terrain-asset { --asset-time-shadow:drop-shadow(var(--scene-shadow-x) var(--scene-shadow-y) calc(var(--scene-shadow-blur) + 2px) rgba(8,20,26,.1)); }
@@ -257,6 +274,32 @@
 .weather-snow { transform-box:view-box;transform-origin:center;animation:weather-snow-drift 7.5s ease-in-out infinite alternate; }
 .weather-drought { transform-box:view-box;transform-origin:center;animation:weather-drought-drift 12s ease-in-out infinite alternate; }
 .weather-wind { --weather-layer-opacity:.72;transform-box:view-box;transform-origin:center;animation:weather-wind-pass 3.8s ease-in-out infinite; }
+.ground-weather-states { --condition-ground-color:transparent;--condition-ground-opacity:0;pointer-events:none; }
+.ground-condition-wash { transition:fill .55s ease,opacity .55s ease; }
+.ground-detail { opacity:0;visibility:hidden;transition:opacity .55s ease,visibility 0s linear .55s; }
+:root[data-weather="clear"] .ground-weather-states { --condition-ground-color:#395a43;--condition-ground-opacity:.08; }
+:root[data-weather="cloudy"] .ground-weather-states { --condition-ground-color:#46574a;--condition-ground-opacity:.3; }
+:root[data-weather="misty"] .ground-weather-states { --condition-ground-color:#52665d;--condition-ground-opacity:.44; }
+:root[data-weather="overcast"] .ground-weather-states { --condition-ground-color:#4b5048;--condition-ground-opacity:.5; }
+:root[data-weather="rainy"] .ground-weather-states { --condition-ground-color:#173b34;--condition-ground-opacity:.56; }
+:root[data-weather="wet"] .ground-weather-states { --condition-ground-color:#285141;--condition-ground-opacity:.38; }
+:root[data-weather="dry"] .ground-weather-states { --condition-ground-color:#786948;--condition-ground-opacity:.6; }
+:root[data-weather="snowy"] .ground-weather-states { --condition-ground-color:#c8d3cd;--condition-ground-opacity:.4; }
+:root[data-weather="drought"] .ground-weather-states { --condition-ground-color:#8b6842;--condition-ground-opacity:.76; }
+:root[data-weather="windy"] .ground-weather-states { --condition-ground-color:#5c5840;--condition-ground-opacity:.28; }
+:root:is([data-weather="cloudy"],[data-weather="overcast"]) .ground-muted-duff,
+:root:is([data-weather="rainy"],[data-weather="wet"]) .ground-wet-sheen,
+:root:is([data-weather="dry"],[data-weather="windy"]) .ground-dry-cover,
+:root[data-weather="snowy"] .ground-snow-cover,
+:root[data-weather="drought"] :is(.ground-drought-soil,.ground-dry-cover),
+:root[data-weather="misty"] :is(.ground-mist-pockets,.ground-wet-sheen) { opacity:1;visibility:visible;transition-delay:0s; }
+:root[data-weather="misty"] .ground-mist-pockets { opacity:.32;filter:blur(8px);animation:ground-mist-breathe 12s ease-in-out infinite alternate; }
+:root[data-weather="rainy"] .ground-wet-sheen { opacity:.72; }
+:root[data-weather="wet"] .ground-wet-sheen { opacity:.48; }
+:root[data-weather="dry"] .ground-dry-cover { opacity:.7; }
+:root[data-weather="windy"] .ground-dry-cover { opacity:.46;animation:ground-cover-shiver 4.6s ease-in-out infinite alternate; }
+:root[data-weather="snowy"] .ground-snow-cover { opacity:.9; }
+:root[data-weather="drought"] .ground-dry-cover { opacity:.54; }
 :root[data-weather="drought"] .horizon-forest,:root[data-weather="drought"] .deep-forest,:root[data-weather="drought"] .camp-pines,:root[data-weather="drought"] .high-country-deciduous { filter:saturate(.46) sepia(.2) brightness(.94); }
 :root[data-weather="drought"] .forest-mist { opacity:.025; }
 .horizon-forest { filter:saturate(.72); }
@@ -280,9 +323,17 @@
 .cryptid-camp :is(.campfire-glow,.firelight-rings,.coal-bed > *,.heat-shimmer,.lantern-halo) { animation-duration:calc(2.8s * var(--motion-tempo) / var(--motion-glow)); }
 .cryptid-camp :is(.stove-steam,.smoke-wisps,.smoke-puffs,.smoke-fine-wisps,.smoke-thread) { animation-duration:calc(8.2s * var(--motion-tempo) / var(--motion-smoke)); }
 .cryptid-camp :is(.solar-ray-field,.day-flight-ufo) { animation-duration:calc(10s * var(--motion-tempo)); }
-.cryptid-camp :is(.weather-overcast,.weather-snow,.weather-drought,.weather-wind) { animation-duration:calc(8s * var(--motion-tempo)); }
+.cryptid-camp :is(.weather-mist,.weather-overcast,.weather-snow,.weather-drought,.weather-wind) { animation-duration:calc(8s * var(--motion-tempo)); }
 .cryptid-camp .weather-rain { animation-duration:calc(1.1s * var(--motion-tempo)); }
 .cryptid-camp .embers > * { animation-duration:calc(4.4s * var(--motion-tempo)); }
+.leaf-litter-piece,.leaf-litter-detail { transform-box:fill-box;transform-origin:center;animation:leaf-litter-breathe calc(11s * var(--motion-tempo)) ease-in-out infinite; }
+.leaf-litter-two { animation-delay:-3.7s;animation-duration:calc(13s * var(--motion-tempo)); }.leaf-litter-three { animation-delay:-7.1s;animation-duration:calc(9.6s * var(--motion-tempo)); }.leaf-litter-four { animation-delay:-5.3s;animation-direction:reverse; }.leaf-litter-five { animation-delay:-8.4s;animation-duration:calc(14.5s * var(--motion-tempo)); }
+:root[data-weather="windy"] :is(.leaf-litter-piece,.leaf-litter-detail) { animation-name:leaf-litter-skitter;animation-duration:calc(4.2s * var(--motion-tempo));animation-timing-function:cubic-bezier(.45,0,.3,1); }
+:root[data-weather="rainy"] :is(.leaf-litter-piece,.leaf-litter-detail) { animation-name:leaf-litter-rain-tap;animation-duration:calc(1.8s * var(--motion-tempo));animation-timing-function:ease-out; }
+:root[data-weather="snowy"] :is(.leaf-litter-piece,.leaf-litter-detail) { animation-name:leaf-litter-snow-settle;animation-duration:calc(12s * var(--motion-tempo)); }
+:root:is([data-weather="dry"],[data-weather="drought"]) :is(.leaf-litter-piece,.leaf-litter-detail) { animation-name:leaf-litter-dry-curl;animation-duration:calc(8.8s * var(--motion-tempo)); }
+.fungi-fruit { transform-box:fill-box;transform-origin:center bottom;translate:var(--fruit-x,0) var(--fruit-y,0);rotate:var(--fruit-lean,0deg);scale:var(--fruit-scale,1); }
+.shelf-tier { transform-box:fill-box;transform-origin:left center;translate:var(--shelf-x,0) var(--shelf-y,0);rotate:var(--shelf-lean,0deg);scale:var(--shelf-scale,1); }
 .river { filter:drop-shadow(0 0 12px rgba(77,143,145,.16)); }
 .river-water { transform-box:view-box;transform-origin:left bottom;transition:scale 1.1s ease,translate 1.1s ease,opacity 1.1s ease; }
 :root:is([data-weather="rainy"],[data-weather="wet"]) .river-water { scale:1 1.02;translate:0 -3px; }
@@ -352,6 +403,11 @@
 @keyframes camp-aurora { 0% { opacity:.22; translate:-.7% 2px; } 50% { opacity:.38; } 100% { opacity:.28; translate:.8% -3px; } }
 @keyframes ambient-tree-sway { from { rotate:calc(var(--motion-sway-negative) * .42); } to { rotate:calc(var(--motion-sway) * .58); } }
 @keyframes ambient-growth-sway { from { rotate:calc(var(--motion-sway-negative) * .72);translate:calc(var(--motion-drift-negative) * .16) 0; } to { rotate:var(--motion-sway);translate:calc(var(--motion-drift) * .22) -1px; } }
+@keyframes leaf-litter-breathe { 0%,78%,100% { translate:0 0;rotate:0deg; } 84% { translate:-.6px -.2px;rotate:-1.2deg; } 91% { translate:.5px 0;rotate:.8deg; } }
+@keyframes leaf-litter-skitter { 0%,28%,100% { translate:0 0;rotate:0deg; } 43% { translate:calc(var(--motion-drift) * .35) -1px;rotate:calc(var(--motion-sway) * .8); } 58% { translate:calc(var(--motion-drift) * .7) .3px;rotate:calc(var(--motion-sway) * 1.5); } 70% { translate:calc(var(--motion-drift) * .45) 0;rotate:calc(var(--motion-sway) * .55); } }
+@keyframes leaf-litter-rain-tap { 0%,44%,100% { translate:0 0;scale:1;rotate:0deg; } 48% { translate:0 1.1px;scale:1 .94;rotate:-.7deg; } 55% { translate:.35px 0;scale:1;rotate:.45deg; } }
+@keyframes leaf-litter-snow-settle { 0%,72%,100% { translate:0 0;rotate:0deg; } 82% { translate:0 .7px;rotate:.35deg; } 90% { translate:0 .3px;rotate:-.18deg; } }
+@keyframes leaf-litter-dry-curl { 0%,68%,100% { translate:0 0;scale:1;rotate:0deg; } 76% { translate:.5px -.5px;scale:.97 .88;rotate:1.6deg; } 86% { translate:-.25px 0;scale:1 .96;rotate:-.8deg; } }
 @keyframes aurora-shimmer { from { opacity:.22;translate:-3px 1px; } to { opacity:.48;translate:4px -2px; } }
 @keyframes aurora-curtain-breathe { from { opacity:.64;scale:1 .97; } to { opacity:.9;scale:1 1.02; } }
 @keyframes aurora-rays-drift { from { opacity:.58;translate:-4px 1px;scale:1 .98; } to { opacity:.86;translate:5px -2px;scale:1 1.015; } }
@@ -368,6 +424,10 @@
 @keyframes weather-snow-drift { from { translate:-4px -7px; } to { translate:8px 11px; } }
 @keyframes weather-drought-drift { from { translate:-9px 1px;opacity:.72; } to { translate:12px -3px;opacity:1; } }
 @keyframes weather-wind-pass { 0%,100% { translate:-28px 2px;opacity:.34; } 35% { translate:4px -2px;opacity:.72; } 70% { translate:34px 1px;opacity:.48; } }
+@keyframes runtime-wind-canopy { from { rotate:calc(var(--motion-sway) * -.22); } to { rotate:calc(var(--motion-sway) * .28); } }
+@keyframes weather-mist-drift { from { translate:-10px 2px; } to { translate:12px -3px; } }
+@keyframes ground-mist-breathe { from { translate:-5px 1px;opacity:.24; } to { translate:7px -2px;opacity:.38; } }
+@keyframes ground-cover-shiver { from { translate:-1px 0; } to { translate:2px -1px; } }
 @keyframes wind-tree-gust { 0%,100% { rotate:calc(var(--motion-sway-negative) * .2); } 28% { rotate:calc(var(--motion-sway) * .3); } 48% { rotate:calc(var(--motion-sway) * 1.25); } 64% { rotate:calc(var(--motion-sway) * .46); } 82% { rotate:calc(var(--motion-sway) * .88); } }
 @keyframes wind-pliant-growth { 0%,100% { rotate:calc(var(--motion-sway-negative) * .28); } 30% { rotate:calc(var(--motion-sway) * .52); } 49% { rotate:calc(var(--motion-sway) * 1.95); } 66% { rotate:calc(var(--motion-sway) * .72); } 83% { rotate:calc(var(--motion-sway) * 1.38); } }
 @keyframes wind-tent-fabric { 0%,100% { transform:skewX(-.25deg) scaleX(1); } 30% { transform:skewX(.5deg) scaleX(.998); } 50% { transform:skewX(1.6deg) scaleX(.992); } 67% { transform:skewX(.7deg) scaleX(.997); } 84% { transform:skewX(1.1deg) scaleX(.994); } }
