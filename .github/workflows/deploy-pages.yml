@@ -1,39 +1,91 @@
 name: Deploy GitHub Pages
 
 on:
-  push:
+  workflow_run:
+    workflows: [Lint]
+    types: [completed]
     branches: [main]
-  workflow_dispatch:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: pages
   cancel-in-progress: false
 
 jobs:
+  prepare:
+    # Never promote PR/fork artifacts or a failed validation run.
+    if: >-
+      github.event.workflow_run.conclusion == 'success' &&
+      contains(fromJSON('["push", "workflow_dispatch"]'), github.event.workflow_run.event) &&
+      github.event.workflow_run.head_branch == 'main' &&
+      github.event.workflow_run.head_repository.full_name == github.repository
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    outputs:
+      current: ${{ steps.revision.outputs.current }}
+      sha: ${{ github.event.workflow_run.head_sha }}
+    steps:
+      - name: Check validated revision is still current
+        id: revision
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VALIDATED_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          current_head=$(gh api "repos/$GH_REPO/git/ref/heads/main" --jq '.object.sha')
+          if [ "$current_head" = "$VALIDATED_SHA" ]; then
+            echo 'current=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'Skipping superseded validation run.' >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - uses: actions/checkout@v7
+        if: steps.revision.outputs.current == 'true'
+        with:
+          ref: ${{ github.event.workflow_run.head_sha }}
+          persist-credentials: false
+      - name: Stage public site files
+        if: steps.revision.outputs.current == 'true'
+        run: |
+          mkdir -p "$RUNNER_TEMP/site"
+          cp -R index.html 404.html .nojekyll robots.txt sitemap.xml llms.txt \
+            assets about work case-studies "$RUNNER_TEMP/site/"
+      - uses: actions/upload-pages-artifact@v5
+        if: steps.revision.outputs.current == 'true'
+        with:
+          path: ${{ runner.temp }}/site
+
   deploy:
+    needs: prepare
+    if: needs.prepare.outputs.current == 'true'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-node@v7
-        with:
-          node-version: 24
-          package-manager-cache: false
-      - name: Validate site
-        run: node scripts/build-site.mjs --check && node tests/build-site-contract.mjs && node tests/check-site.mjs && node tests/check-site-contract.mjs
-      - name: Run browser smoke tests
-        run: node tests/server-lifecycle.mjs && node tests/browser-isolation.mjs && node tests/browser-helper-contract.mjs && node tests/theme-smoke.mjs && node tests/interaction-contract.mjs && node tests/browser-smoke.mjs && node tests/glyph-site-placement.mjs
+      - name: Recheck revision after environment approval
+        id: revision
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          VALIDATED_SHA: ${{ needs.prepare.outputs.sha }}
+        run: |
+          current_head=$(gh api "repos/$GH_REPO/git/ref/heads/main" --jq '.object.sha')
+          if [ "$current_head" = "$VALIDATED_SHA" ]; then
+            echo 'current=true' >> "$GITHUB_OUTPUT"
+            echo "Deploying validated revision $VALIDATED_SHA" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Skipping superseded deployment.' >> "$GITHUB_STEP_SUMMARY"
+          fi
       - uses: actions/configure-pages@v6
-      - uses: actions/upload-pages-artifact@v5
-        with:
-          path: .
+        if: steps.revision.outputs.current == 'true'
       - name: Deploy
+        if: steps.revision.outputs.current == 'true'
         id: deployment
         uses: actions/deploy-pages@v5

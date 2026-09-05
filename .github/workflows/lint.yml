@@ -4,20 +4,46 @@ on:
   pull_request:
   push:
     branches: [main]
+  workflow_dispatch:
 
 permissions:
   contents: read
 
+# Superseded PR heads are disposable; main and manual runs keep their evidence.
+concurrency:
+  group: validation-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   lint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version: 24
           package-manager-cache: false
+      - name: Record runtime versions
+        run: |
+          node --version
+          google-chrome --version
       - name: Lint
         run: node scripts/lint.mjs
       - name: Tests
-        run: node --test --test-concurrency=2 --test-timeout=60000 tests/*.mjs
+        run: >-
+          node --test --test-concurrency=2 --test-timeout=60000
+          --test-reporter=spec --test-reporter=junit
+          --test-reporter-destination=stdout
+          --test-reporter-destination="$RUNNER_TEMP/test-results.xml"
+          tests/*.mjs
+      - name: Save test report
+        if: ${{ always() && !cancelled() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: test-results-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/test-results.xml
+          if-no-files-found: ignore
+          retention-days: 14
