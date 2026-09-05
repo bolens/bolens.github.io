@@ -26,3 +26,8 @@ test('static depth groups cannot inherit live parallax repaints', () => {
   assert.match(css, /\.cryptid-camp\.is-parallax-tracking \[data-parallax-plane\] \{ transition:none; \}/);
   assert.match(scene, /if \(parallaxValues\.get\(name\) === next\) return;/);
 });
+
+test('mountain rows separate depth without adding moving planes', () => {
+  assert.match(css, /\.mountain-range-far\[data-parallax-plane\][^}]*--parallax-far-x,0px\) \* \.4/);
+  assert.match(css, /\.mountain-range-middle\[data-parallax-plane\][^}]*--parallax-far-x,0px\) \* \.7/);
+});

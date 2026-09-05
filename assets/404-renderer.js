@@ -24,12 +24,12 @@
       '.day-flight-ufo',
     ]),
     balanced: Object.freeze([
-      '.scene-orb', '.flame-stack', '.flame-outer', '.flame-inner', '.flame-core',
-      '.day-flight-ufo', '.background-ufo', '.tent-dog', '.moth-wing',
+      '.scene-orb', '.flame-stack', '.flame-outer', '.flame-inner',
+      '.day-flight-ufo', '.river-ripples', '.tent-dog', '.moth-wing',
     ]),
     full: Object.freeze([
-      '.scene-orb', '.solar-ray-field', '.flame-stack', '.flame-outer', '.flame-inner', '.flame-core',
-      '.day-flight-ufo', '.background-ufo', '.ufo-lights', '.tent-dog', '.moth-wing',
+      '.scene-orb', '.solar-ray-field', '.flame-stack', '.flame-outer', '.flame-inner',
+      '.day-flight-ufo', '.river-ripples', '.river-ferns', '.tent-dog', '.moth-wing',
     ]),
   });
   const weatherMotion = Object.freeze({ rainy:'.weather-rain', snowy:'.weather-snow', misty:'.weather-mist', windy:'.weather-wind', thunderstorm:'.weather-rain' });

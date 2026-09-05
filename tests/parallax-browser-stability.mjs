@@ -54,13 +54,18 @@ try {
     assert.deepEqual(result.after, result.baseline);
     assert.equal(result.density, viewport.width <= 430 ? 'compact' : 'full');
     assert.equal(result.renderTier, result.expectedTier);
+    const stoneForms = await evaluate(send, `(()=>{const result=[];for(const condition of portfolioWeather.conditions){portfolioWeather.setLocationCondition(condition);for(const form of ['rounded','slab']){const node=document.querySelector('[data-stone-form="'+form+'"]');const style=getComputedStyle(node);result.push({form,angular:style.getPropertyValue('--stone-angular-display').trim(),active:style.getPropertyValue('--stone-'+form+'-display').trim()})}}portfolioWeather.useThemeFallback();return result})()`);
+    assert.ok(stoneForms.every(state=>state.angular==='none'&&state.active==='inline'), 'stone selection survives every weather state');
     assert.ok(result.animationCount <= ({ minimal:11, balanced:14, full:14 })[result.renderTier], `runtime animation budget exceeded: ${result.animationCount}`);
     assert.ok(result.canvasPixels <= result.displayPixels * ({ minimal:.26, balanced:.5, full:.65 })[result.renderTier], `canvas pixel budget exceeded: ${result.canvasPixels}/${result.displayPixels}`);
     await waitFor(send, `Number.parseFloat(getComputedStyle(document.querySelector('.cryptid-camp')).opacity)>.99`, `${viewport.name} scene reveal`);
+    await finishFiniteAnimations(send, '.cryptid-camp');
     await waitForFrames(send);
     const screenshot = await send('Page.captureScreenshot', { format: 'png', fromSurface: true });
     writeFileSync(`/tmp/404-parallax-${viewport.name}.png`, Buffer.from(screenshot.data, 'base64'));
     if (viewport.name === 'desktop') {
+      const ambientPhases = await evaluate(send, `(()=>{portfolioWeather.setLocationCondition('clear');const figure=document.querySelector('.cryptid-camp');const result=[];for(const selector of ['.river-ripples','.river-ferns']){const node=document.querySelector(selector);const animation=node.getAnimations()[0];if(!animation){result.push({selector,active:false});continue}animation.pause();animation.currentTime=0;const start=getComputedStyle(node).translate+' '+getComputedStyle(node).rotate;animation.currentTime=animation.effect.getTiming().duration*.38;const middle=getComputedStyle(node).translate+' '+getComputedStyle(node).rotate;animation.play();result.push({selector,active:true,start,middle})}return {tier:figure.dataset.renderTier,result}})()`);
+      if (ambientPhases.tier === 'full') assert.ok(ambientPhases.result.every(phase=>phase.active&&phase.start!==phase.middle), 'water and rooted ferns have distinct ambient phases');
       const camperClip = await evaluate(send, `(()=>{const boxes=['.tent-guy','.tent-girl'].map(selector=>document.querySelector(selector).getBoundingClientRect());const x=Math.min(...boxes.map(box=>box.left)),y=Math.min(...boxes.map(box=>box.top));return {x,y,width:Math.max(...boxes.map(box=>box.right))-x,height:Math.max(...boxes.map(box=>box.bottom))-y,scale:4}})()`);
       const campers = await send('Page.captureScreenshot', { format:'png', fromSurface:true, clip:camperClip });
       writeFileSync('/tmp/404-campers-detail.png', Buffer.from(campers.data, 'base64'));
@@ -137,6 +142,13 @@ try {
       assert.equal(meadowStates.thunderstorm.lean, '-14deg');
       assert.equal(meadowStates.clear.petal, '', 'clear restores placement-specific flower colors');
       assert.equal(meadowStates.clear.lean, '');
+      const shrubStates=await evaluate(send, `(()=>{const result={};for(const condition of ['rainy','drought','snowy','clear']){portfolioWeather.setLocationCondition(condition);const style=selector=>getComputedStyle(document.querySelector(selector));const berry=style('use[href="#berry-shrub"]'),evergreen=style('use[href="#evergreen-shrub"]');result[condition]={berry:Number(berry.getPropertyValue('--shrub-load')||1),evergreen:Number(evergreen.getPropertyValue('--shrub-load')||1),color:berry.getPropertyValue('--shrub-condition-fill').trim(),low:style('[data-shrub-form="low"]').getPropertyValue('--shrub-growth').trim()}}return result})()`);
+      assert.ok(shrubStates.drought.berry<shrubStates.rainy.berry);
+      assert.ok(shrubStates.drought.evergreen>shrubStates.drought.berry);
+      assert.equal(shrubStates.snowy.evergreen,.8);
+      assert.equal(shrubStates.clear.color,'');
+      assert.equal(shrubStates.clear.berry,1);
+      assert.ok(Object.values(shrubStates).every(state=>state.low==='.76'));
       await evaluate(send, `portfolioWeather.setLocationCondition('thunderstorm')`);
       await finishFiniteAnimations(send, '.cryptid-camp');
       const storm = await evaluate(send, `(()=>{

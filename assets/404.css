@@ -119,6 +119,8 @@
 .cryptid-camp.is-parallax-tracking [data-parallax-plane] { transition:none; }
 .depth-back { translate:var(--parallax-back-x,0) var(--parallax-back-y,0); }
 .depth-far { translate:var(--parallax-far-x,0) var(--parallax-far-y,0); }
+.mountain-range-far[data-parallax-plane] { translate:calc(var(--parallax-far-x,0px) * .4) calc(var(--parallax-far-y,0px) * .4); }
+.mountain-range-middle[data-parallax-plane] { translate:calc(var(--parallax-far-x,0px) * .7) calc(var(--parallax-far-y,0px) * .7); }
 .depth-mid { translate:var(--parallax-mid-x,0) var(--parallax-mid-y,0); }
 .depth-near { translate:var(--parallax-near-x,0) var(--parallax-near-y,0); }
 .terrain-asset {
@@ -446,6 +448,7 @@
 :root[data-weather="drought"] .river-water { scale:1 .88;translate:0 9px;opacity:.78; }
 :root[data-weather="drought"] :is(.river-ripples,.river-reflections) { opacity:.2; }
 .river-ripples { animation:river-glint 5s ease-in-out infinite alternate; }
+.river-ferns { transform-box:fill-box;transform-origin:center bottom;animation:bank-fern-breathe calc(8.4s * var(--motion-tempo)) ease-in-out infinite; }
 .river-reflections { animation:river-reflection 6.5s ease-in-out infinite alternate; }
 .water-foam { animation:water-foam 4s ease-in-out infinite alternate; }
 .river-ferns { transform-box:fill-box;transform-origin:center bottom;animation:fern-sway 6.8s ease-in-out infinite alternate; }.dry-ferns { transform-box:fill-box;transform-origin:center bottom;animation:fern-sway 8.2s -3s ease-in-out infinite alternate-reverse; }
@@ -552,6 +555,7 @@
 @keyframes river-reflection { from { opacity:.55;translate:-2px 0; } to { opacity:1;translate:3px 1px; } }
 @keyframes water-foam { from { opacity:.28;translate:-1px 0; } to { opacity:.52;translate:2px 0; } }
 @keyframes fern-sway { from { rotate:-1deg; } to { rotate:1.4deg; } }
+@keyframes bank-fern-breathe { 0%,100% { rotate:calc(var(--motion-sway) * -.35); } 38% { rotate:calc(var(--motion-sway) * .65); } 72% { rotate:calc(var(--motion-sway) * .15); } }
 @keyframes ufo-lights { 0%,100% { opacity:.48; } 50% { opacity:.68; } }
 @keyframes dog-look { 0%,35%,100% { rotate:0deg; } 50%,68% { rotate:-5deg; } }
 @keyframes wing-left { 0%,100% { rotate:0deg; } 50% { rotate:-4deg; } } @keyframes wing-right { 0%,100% { rotate:0deg; } 50% { rotate:4deg; } }
