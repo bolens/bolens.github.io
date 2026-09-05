@@ -75,7 +75,7 @@ const sceneStateScripts = '<script src="/assets/404-weather.js"></script><script
 const syncRuntimeScripts = (source) => {
   const scripts = source.includes('/assets/404-scene.js')
     ? runtimeScripts.replace('<script src="/assets/project-data.js"', `${sceneStateScripts}<script src="/assets/project-data.js"`)
-    : runtimeScripts;
+    : runtimeScripts.replace('<script src="/assets/project-data.js"', '<script src="/assets/page-transitions.js"></script><script src="/assets/project-data.js"');
   return source.replace(/(?:<script>document\.documentElement\.classList\.add\("is-loading"\)<\/script>)?<script src="\/assets\/theme-data\.js"><\/script>[\s\S]*?<script src="\/assets\/command-palette\.js" defer><\/script>(?:<script src="\/assets\/loading-state\.js" defer><\/script>)?/, scripts);
 };
 outputs.set('404.html', syncRuntimeScripts(syncThemeMeta(readFileSync(resolve(root, '404.html'), 'utf8'))));
