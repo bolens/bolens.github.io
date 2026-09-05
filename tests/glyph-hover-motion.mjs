@@ -160,7 +160,6 @@ if (!/glyph-pine-canopy[\s\S]*glyph-pine-trunk/.test(sprite)) throw new Error('p
 if (!/glyph-search-lens[\s\S]*glyph-search-handle[\s\S]*glyph-search-scan/.test(sprite)) throw new Error('search scan must move independently inside a fixed magnifier');
 if (!/glyph-database-shell[\s\S]*glyph-database-row-a" pathLength="1"[\s\S]*glyph-database-row-b" pathLength="1"/.test(sprite)) throw new Error('database rows must read independently inside a fixed shell');
 if (!/glyph-boot-body" d="[^"]*V12H7V3\.5Z/.test(sprite) || !/glyph-boot-laces[\s\S]*glyph-boot-tread/.test(sprite)) throw new Error('boot must have a closed rear contour with independent laces and tread');
-if (!/\.glyph-wrench-body\{transform-box:view-box;transform-origin:6\.7px 17\.3px;animation:var\(--glyph-wrench-motion,none\)\}[\s\S]*@keyframes glyph-wrench-tighten\{0%,16%\{transform:none\}48%\{transform:rotate\(18deg\)\}72%\{transform:rotate\(-4deg\)\}/.test(sprite)) throw new Error('wrench must make a controlled tightening turn around its stationary fastener');
 if (!/glyph-mug-body[\s\S]*glyph-mug-steam/.test(sprite)) throw new Error('mug steam must animate independently from the cup');
 if (!/glyph-river-banks[\s\S]*glyph-river-current" pathLength="1"/.test(sprite)) throw new Error('river current must flow between fixed banks');
 if (!/glyph-flag-pole[\s\S]*glyph-flag-cloth/.test(sprite)) throw new Error('flag cloth must wave independently from its pole');
@@ -198,7 +197,7 @@ for (const glyph of ['shield', 'terminal', 'network', 'wrench']) if (!sprite.inc
 for (const glyph of ['cloud', 'database', 'lock', 'refresh', 'package', 'bug', 'monitor', 'code']) if (!sprite.includes(`id="glyph-${glyph}"`)) throw new Error(`missing ${glyph} suite glyph`);
 for (const [, motion] of allInternalMotions) if (!sprite.includes(`@keyframes ${motion}`)) throw new Error(`${motion} must be defined inside the external sprite`);
 const keyframeNames = [...sprite.matchAll(/@keyframes\s+([\w-]+)/g)].map((match) => match[1]);
-const intentionalRefinements = new Set(['glyph-shelter-pitch', 'glyph-wrench-tighten', 'glyph-trail-blaze-paint']);
+const intentionalRefinements = new Set(['glyph-shelter-pitch', 'glyph-trail-blaze-paint']);
 const duplicateKeyframes = keyframeNames.filter((name, index) => keyframeNames.indexOf(name) !== index && !intentionalRefinements.has(name));
 if (duplicateKeyframes.length) throw new Error(`sprite keyframes must be unique: ${[...new Set(duplicateKeyframes)].join(', ')}`);
 
