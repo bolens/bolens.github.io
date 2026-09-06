@@ -35,7 +35,7 @@ try {
   assert.equal(track.instances,1,'one discoverable track, not a repeated pattern');
   assert.deepEqual(track.outside,[],'the complete sole and all toes fit inside the trail before clipping');
   await evaluate(send, `portfolioWeather.setLocationCondition('clear');const proof=document.createElement('div');proof.id='ground-proof';proof.style.cssText='position:fixed;left:0;top:0;width:360px;height:230px;background:white;z-index:1000';document.body.append(proof)`);
-  for (const [id, viewBox, conditions] of [['forest-trail','0 0 700 430',['wet','snow','drought']],['pine-needle-mat','0 0 94 32',['wet','snow']],['gravel-patch','0 0 104 34',['wet','snow','drought']],['bigfoot-track','0 0 52 96',['wet','snow','drought']]]) {
+  for (const [id, viewBox, conditions] of [['forest-trail','0 0 700 430',['wet','snow','drought']],['pine-needle-mat','0 0 94 32',['wet','snow']],['gravel-patch','0 0 104 34',['wet','snow','drought']],['bigfoot-track','0 0 52 96',['wet','snow','drought']],['fire-ring-stone','0 0 44 30',['wet','snow']]]) {
     const [,,w,h] = viewBox.split(' ').map(Number);
     await evaluate(send, `document.querySelector('#ground-proof').innerHTML='<svg width="350" height="220" viewBox="${viewBox}"><use class="terrain-asset" data-detail="rich" href="#${id}" width="${w}" height="${h}"/></svg>'`);
     const paint = async (name, detail='rich', condition='none') => {

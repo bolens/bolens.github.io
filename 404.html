@@ -326,26 +326,28 @@
             <g class="asset-detail-secondary" data-region="snow-lip"><path d="M9 31q-3 9 1 17l4 5q-4-14 0-22Zm0 44q-4 17 13 20l-1-4q-10-2-8-16ZM5 14q0-8 7-10l-1 4q-4 2-3 8Z" fill="var(--track-snow,#e3ece7)" opacity="var(--asset-snow-opacity,0)"/></g>
             <use href="#terrain-condition-marks" data-region="conditions" width="52" height="96" style="display:none"/>
           </symbol>
-          <symbol id="forest-trail" viewBox="0 0 700 430" data-regions="trail-bed,trail-edge,trail-wear,embedded-stones,root-crossings,conditions,trail-surface-detail,compacted-tread,edge-deposits,scattered-trail-grit,trail-damp-hollows,trail-drought-fissures,trail-snow-pockets,bigfoot-trail-discovery">
-            <path id="trail-bed-outline" d="M62 54q69-8 105 14 31 31-9 64-34 28 34 63 55 28 88 61 29 29 85 38 60 9 126 45L700 410l-38 30-222-80q-54-25-112-26-68-2-108-39-32-30-79-51-71-32-45-79 16-28 43-45 21-14-6-35-32-24-84-34Z" fill="var(--trail-bed,#66543a)" stroke="var(--trail-edge,#27352e)" stroke-width="5" stroke-linejoin="round"/>
-            <path d="M69 58q60-4 94 18 27 26-9 56-37 31 31 69 50 28 81 59 34 34 94 44 51 8 103 35L684 423" fill="none" stroke="var(--trail-wear,#ad8a5a)" stroke-width="9" stroke-linecap="round" opacity="var(--trail-wear-opacity,.4)"/>
-            <path d="M88 65q28-2 47 0m12 82q-17 16 18 35m45 27q21 13 36 27m43 39q23 13 49 17m48 10q28 7 51 19" fill="none" stroke="var(--trail-rut,#3c382b)" stroke-width="5" stroke-linecap="round" opacity=".5"/>
-            <g data-region="trail-surface-detail" clip-path="url(#trail-surface-clip)">
-              <g class="asset-detail-secondary" data-region="compacted-tread" fill="none" stroke="var(--trail-compaction,#846d48)" stroke-width="12" stroke-linecap="round"><path opacity=".45" d="M154 82q18 24-10 48m4 55q38 24 69 47m38 36q45 43 104 49m61 18 105 47m23 10 107 39"/></g>
-              <g class="asset-detail-secondary" data-region="edge-deposits" fill="none" stroke="var(--trail-deposit,#493d2e)" stroke-width="4" stroke-linecap="round"><path d="M108 140q-23 27-5 50m43 39 58 33m81 53q39 22 79 19m80 22 94 35m41 17 63 22"/></g>
-              <g class="asset-detail-fine" data-region="scattered-trail-grit" fill="var(--trail-grit,#c0a17b)"><path d="m160 103 4-2 2 3-4 2Zm-24 53 3-2 3 3-4 2Zm43 55 5-1 1 3-5 1Zm69 50 4-2 2 4-4 1Zm45 39 5-1 1 3-4 2Zm77 23 5-2 3 3-6 2Zm69 34 4-1 3 3-5 2Zm98 35 5-2 3 3-6 1Zm63 24 4-1 3 3-4 2Z"/></g>
-              <g class="asset-detail-secondary" data-region="trail-damp-hollows" fill="var(--trail-damp,#34433a)"><path d="M142 166q18-8 26 2-8 8-23 7Zm175 151q25-8 42 4-27 6-42-4Zm182 70q34-6 59 14-32 0-59-14Z" opacity="var(--asset-wet-opacity,0)"/></g>
-              <g class="asset-detail-fine" data-region="trail-drought-fissures" fill="none" stroke="var(--trail-crack,#493c2c)" stroke-width="1.5" stroke-linecap="round"><path d="m146 174 8 7 12-3m-12 3-2 10m150 111 12 6 10-3m-10 3 2 8m176 79 12 3 7 9m-7-9 9-4" opacity="var(--asset-drought-opacity,0)"/></g>
-              <g class="asset-detail-secondary" data-region="trail-snow-pockets" fill="var(--trail-snow,#dce7df)"><path d="M116 143q-13 15-9 28l7-4q-1-12 9-21Zm169 164q25 18 43 18l-4 6q-23-3-45-20Zm170 53 52 20-9 2-49-16Z" opacity="var(--asset-snow-opacity,0)"/></g>
+          <symbol id="forest-trail" viewBox="0 0 700 430" data-regions="trail-bed,trail-edge,trail-wear,embedded-stones,root-crossings,conditions,trail-surface-detail,compacted-tread,edge-deposits,scattered-trail-grit,trail-damp-hollows,trail-drought-fissures,trail-snow-pockets,bigfoot-trail-discovery,trail-tent-bypass">
+            <path id="trail-bed-outline" d="M62 54q69-8 105 14 31 31-9 50-16 17 44 32C300 173 403 143 505 168l85 8 120 55-10 24-120-59C480 176 284 211 184 177Q108 158 139 120q21-14-6-35-32-24-84-34Z" fill="var(--trail-bed,#66543a)" stroke="var(--trail-edge,#27352e)" stroke-width="5" stroke-linejoin="round"/>
+            <g data-region="trail-tent-bypass" clip-path="url(#trail-surface-clip)">
+              <path d="M69 58q60-4 94 18 27 26-9 42-22 23 48 44C302 190 400 156 502 181l81 6 121 54" fill="none" stroke="var(--trail-wear,#ad8a5a)" stroke-width="9" stroke-linecap="round" opacity="var(--trail-wear-opacity,.4)"/>
+              <path d="M88 65q28-2 47 0m24 67q7 15 34 21m45 18 53 5m49 0 47-1m51 4 54 12m56 13 53 15" fill="none" stroke="var(--trail-rut,#3c382b)" stroke-width="5" stroke-linecap="round" opacity=".5"/>
+              <g data-region="trail-surface-detail" clip-path="url(#trail-surface-clip)">
+                <g class="asset-detail-secondary" data-region="compacted-tread" fill="none" stroke="var(--trail-compaction,#846d48)" stroke-width="12" stroke-linecap="round"><path opacity=".45" d="M154 82q18 24-10 36m42 42 90 16m48 0 97-2m65 15 70 19m30 9 100 28"/></g>
+                <g class="asset-detail-secondary" data-region="edge-deposits" fill="none" stroke="var(--trail-deposit,#493d2e)" stroke-width="4" stroke-linecap="round"><path d="M143 135q-4 18 38 29m43 18 67 4m55-2 73 0m79 20 76 20m48 14 65 19"/></g>
+                <g class="asset-detail-fine" data-region="scattered-trail-grit" fill="var(--trail-grit,#c0a17b)"><path d="m160 103 4-2 2 3-4 2Zm30 49 3-2 3 3-4 2Zm53 22 5-1 1 3-5 1Zm69 1 4-2 2 4-4 1Zm55-2 5-1 1 3-4 2Zm67 3 5-2 3 3-6 2Zm69 24 4-1 3 3-5 2Zm78 20 5-2 3 3-6 1Zm73 24 4-1 3 3-4 2Z"/></g>
+                <g class="asset-detail-secondary" data-region="trail-damp-hollows" fill="var(--trail-damp,#34433a)"><path d="M182 163q18-8 26 2-8 8-23 7Zm135 18q25-8 42 4-27 6-42-4Zm222 33q34-6 59 14-32 0-59-14Z" opacity="var(--asset-wet-opacity,0)"/></g>
+                <g class="asset-detail-fine" data-region="trail-drought-fissures" fill="none" stroke="var(--trail-crack,#493c2c)" stroke-width="1.5" stroke-linecap="round"><path d="m206 171 8 7 12-3m-12 3-2 7m130-5 12 6 10-3m-10 3 2 7m176 36 12 3 7 9m-7-9 9-4" opacity="var(--asset-drought-opacity,0)"/></g>
+                <g class="asset-detail-secondary" data-region="trail-snow-pockets" fill="var(--trail-snow,#dce7df)"><path d="M143 134q-4 13 16 19l-7 3q-20-9-15-21Zm152 50q25 3 43 0l-4 6q-23 3-45-1Zm240 33 52 16-9 2-49-12Z" opacity="var(--asset-snow-opacity,0)"/></g>
+              </g>
+              <g fill="var(--trail-stone,#8b7656)" stroke="var(--trail-stone-edge,#384039)" stroke-width="2"><path d="m129 91 8-5 10 3 1 7-9 4-9-3Z"/><path d="m186 167 7-4 10 3 1 7-9 4-8-3Z"/><path d="m226 179 9-5 11 4-1 8-10 3-9-4Z"/><path d="m326 178 9-4 11 5-2 7-10 2-8-4Z"/><path d="m415 181 8-4 10 4-1 7-10 2-7-4Z"/></g>
+              <g fill="none" stroke="var(--trail-root,#58432f)" stroke-width="4" stroke-linecap="round"><path d="m100 117 57 13m-16-7 11-12m-3 15 15 12M368 174l57 15m-17-10 13-11m-6 15 17 12"/></g>
+              <g data-region="bigfoot-trail-discovery" clip-path="url(#trail-surface-clip)">
+                <use class="terrain-asset" data-detail="rich" data-light="ambient" data-weather="clear" href="#bigfoot-track" x="267" y="153" width="26" height="46" transform="rotate(-80 280 176)"/>
+              </g>
+              <use href="#terrain-condition-marks" x="54" y="7" width="100" height="100"/>
+              <use href="#terrain-condition-marks" x="155" y="118" width="100" height="100"/>
+              <use href="#terrain-condition-marks" x="328" y="212" width="100" height="100"/>
             </g>
-            <g fill="var(--trail-stone,#8b7656)" stroke="var(--trail-stone-edge,#384039)" stroke-width="2"><path d="m129 91 8-5 10 3 1 7-9 4-9-3Z"/><path d="m126 157 7-4 10 3 1 7-9 4-8-3Z"/><path d="m226 229 9-5 11 4-1 8-10 3-9-4Z"/><path d="m326 282 9-4 11 5-2 7-10 2-8-4Z"/><path d="m415 303 8-4 10 4-1 7-10 2-7-4Z"/></g>
-            <g fill="none" stroke="var(--trail-root,#58432f)" stroke-width="4" stroke-linecap="round"><path d="m100 117 57 13m-16-7 11-12m-3 15 15 12M248 250l57 15m-17-10 13-11m-6 15 17 12"/></g>
-            <g data-region="bigfoot-trail-discovery" clip-path="url(#trail-surface-clip)">
-              <use class="terrain-asset" data-detail="rich" data-light="ambient" data-weather="clear" href="#bigfoot-track" x="347" y="287" width="26" height="46" transform="rotate(-55 360 310)"/>
-            </g>
-            <use href="#terrain-condition-marks" x="54" y="7" width="100" height="100"/>
-            <use href="#terrain-condition-marks" x="155" y="118" width="100" height="100"/>
-            <use href="#terrain-condition-marks" x="328" y="212" width="100" height="100"/>
           </symbol>
           <symbol id="terrain-condition-marks" viewBox="0 0 100 100" overflow="visible" data-regions="cloud-cover,mist-condensation,overcast-diffusion,rain-streaks,wet-sheen,dry-cracks,snow-cap,drought-stress,wind-sweep">
             <g class="asset-cloud-mark" data-region="cloud-cover" fill="none" stroke="var(--asset-cloud-color,#c1d0ce)" stroke-linecap="round" opacity="var(--asset-cloud-opacity,0)"><path d="M6 20q19-9 38-1t39-1" stroke-width="8"/><path d="M17 29q15-6 29 0t28-1" stroke-width="3"/></g>
@@ -377,17 +379,19 @@
             </g>
             <use href="#terrain-condition-marks" width="140" height="90" data-region="conditions"/>
           </symbol>
-          <symbol id="fire-ring-stone" viewBox="0 0 44 30" data-regions="stone-body,stone-face,buried-contact-face,stone-cracks,mineral-specks,soot-band,ember-edge,surface-wetness,ledge-snow,conditions">
+          <symbol id="fire-ring-stone" viewBox="0 0 44 30" data-regions="stone-body,stone-face,outer-facet,buried-contact-face,stone-cracks,mineral-specks,soot-band,ember-edge,chipped-ledge,surface-wetness,ledge-snow,conditions">
             <path data-region="stone-body" d="M3 18q0-6 5-9l7-5 13 1 8 5q6 3 5 9l-7 7-13 2-11-2Z" fill="var(--ring-stone-fill,#566059)" stroke="var(--ring-stone-outline,#263432)" stroke-width="2.5" stroke-linejoin="round"/>
             <path class="asset-detail-secondary" data-region="stone-face" d="m9 11 7-5 12 1 7 6-12 3-12-1Z" fill="var(--ring-stone-face,#84908a)"/>
+            <path class="asset-detail-secondary" data-region="outer-facet" d="m28 7 8 5 3 6-6 7-8 1 4-10-7-1Z" fill="var(--ring-stone-facet,#46504b)"/>
             <path class="asset-detail-secondary" data-region="buried-contact-face" d="m5 19 10 3 11-1 12-3-5 7-13 2-10-2Z" fill="var(--ring-stone-shadow,#303b36)"/>
-            <path class="asset-detail-secondary" d="m15 9 5 7-6 7m17-13-6 8 5 6" fill="none" stroke="var(--ring-stone-crack,#242d2b)" stroke-width="1.8" stroke-linecap="round"/>
-            <g class="asset-detail-fine" fill="var(--ring-stone-mineral,#aeb2a0)"><circle cx="14" cy="11" r="1"/><circle cx="29" cy="12" r=".8"/><circle cx="34" cy="18" r=".9"/></g>
-            <path class="asset-detail-fine" d="M6 18q15-5 32 0" fill="none" stroke="var(--ring-stone-soot,#171b1a)" stroke-width="4" stroke-linecap="round"/>
-            <path d="M7 20q14-6 29 0" fill="none" stroke="var(--ring-stone-ember,#d26f3e)" stroke-width="2" stroke-linecap="round" opacity="var(--ring-stone-ember-opacity,.22)"/>
+            <path class="asset-detail-secondary" data-region="stone-cracks" d="m15 9 5 7-6 7m17-13-6 8 5 6" fill="none" stroke="var(--ring-stone-crack,#242d2b)" stroke-width="1.8" stroke-linecap="round"/>
+            <g class="asset-detail-fine" data-region="mineral-specks" fill="var(--ring-stone-mineral,#aeb2a0)"><circle cx="14" cy="11" r="1"/><circle cx="29" cy="12" r=".8"/><circle cx="34" cy="18" r=".9"/></g>
+            <path class="asset-detail-fine" data-region="soot-band" d="M6 18q15-5 32 0" fill="none" stroke="var(--ring-stone-soot,#171b1a)" stroke-width="4" stroke-linecap="round"/>
+            <path data-region="ember-edge" d="M7 20q14-6 29 0" fill="none" stroke="var(--ring-stone-ember,#d26f3e)" stroke-width="2" stroke-linecap="round" opacity="var(--ring-stone-ember-opacity,.22)"/>
+            <path class="asset-detail-fine" data-region="chipped-ledge" d="m8 12 7-5 5 1m4 8 5-1 5-3m-23 8 4 2" fill="none" stroke="var(--ring-stone-edge-light,#a0aaa0)" stroke-width=".8" stroke-linecap="round"/>
             <g data-region="surface-wetness" opacity="var(--asset-wet-opacity,0)"><path d="m6 18 12 1 18-2-5 8-17 1Z" fill="#182d2b"/><path d="m13 8 16 1" stroke="var(--asset-wet-color,#c2d8d1)" stroke-width="1"/></g>
             <path data-region="ledge-snow" d="m7 13 5-8 20 1 6 8-9-3-8 1-7-2Z" fill="var(--asset-snow-color,#e7f2f1)" opacity="var(--asset-snow-opacity,0)"/>
-            <use href="#terrain-condition-marks" width="44" height="30"/>
+            <use href="#terrain-condition-marks" width="44" height="30" data-region="conditions"/>
           </symbol>
           <symbol id="fire-bed" viewBox="0 0 180 65" data-regions="burned-ground,scorched-edge,coal-bed,coal-fissures,ash-lines,ash-flecks,char-dust,conditions">
             <path d="M8 34Q14 13 38 12L61 5l27 5 23-6 25 9q28 1 36 21-5 19-31 20l-26 8-29-5-25 5-24-8Q13 54 8 34Z" fill="var(--fire-bed-fill,#191e1d)" stroke="var(--fire-bed-edge,#37403d)" stroke-width="5" stroke-linejoin="round"/>
@@ -1062,7 +1066,7 @@
             <use class="terrain-asset" data-detail="standard" data-light="shadow" data-weather="wet" href="#grass-tuft" x="8" y="584" width="72" height="36"/>
             <use class="terrain-asset" data-density-hide="tablet" data-detail="rich" data-light="ambient" data-weather="clear" href="#grass-tuft" x="326" y="575" width="61" height="31" transform="rotate(-5 357 591)" style="--grass-fill:#496b50"/>
             <use class="terrain-asset" data-detail="simple" data-light="fire" data-weather="dry" href="#grass-tuft" x="560" y="583" width="66" height="33" style="--grass-fill:#746447;--grass-thatch:#b1834e"/>
-            <use class="terrain-asset" data-density-hide="phone" data-detail="rich" data-light="moon" data-weather="cloudy" href="#grass-tuft" x="1110" y="600" width="78" height="39" transform="rotate(4 1149 620)"/>
+            <use class="terrain-asset" data-density-hide="phone" data-detail="rich" data-light="moon" data-weather="cloudy" href="#grass-tuft" x="1110" y="560" width="78" height="39" transform="rotate(4 1149 580)"/>
             <use class="terrain-asset" data-detail="rich" data-light="shadow" data-weather="dry" href="#pine-needle-mat" x="118" y="617" width="112" height="38" transform="rotate(-7 174 636)"/>
             <use class="terrain-asset" data-density-hide="tablet" data-detail="standard" data-light="fire" data-weather="clear" href="#pine-needle-mat" x="535" y="606" width="97" height="33" style="--needle-fill:#bd8245"/>
             <use class="terrain-asset" data-detail="simple" data-light="ambient" data-weather="wet" href="#pine-needle-mat" x="824" y="621" width="104" height="35" transform="rotate(6 876 639)" style="--needle-bed:#423b2d"/>
@@ -1235,8 +1239,8 @@
             <use class="terrain-asset" data-light="moon" data-weather="wet" href="#evergreen-shrub" x="20" y="554" width="91" height="59" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
             <use class="terrain-asset" data-light="shadow" data-weather="clear" href="#evergreen-shrub" x="164" y="460" width="112" height="73" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
             <use class="terrain-asset" data-shrub-form="low" data-light="fire" data-weather="dry" href="#evergreen-shrub" x="436" y="626" width="86" height="56" style="--shrub-fill:#294a39;--shrub-highlight:#9a744d"/>
-            <use class="terrain-asset" data-light="fire" data-weather="clear" href="#evergreen-shrub" x="718" y="536" width="92" height="60" style="--shrub-fill:#294a39;--shrub-highlight:#9a744d"/>
-            <use class="terrain-asset" data-light-facing="left" data-light="moon" data-weather="cloudy" href="#evergreen-shrub" x="1102" y="584" width="84" height="55" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
+            <use class="terrain-asset" data-light="fire" data-weather="clear" href="#evergreen-shrub" x="718" y="475" width="92" height="60" style="--shrub-fill:#294a39;--shrub-highlight:#9a744d"/>
+            <use class="terrain-asset" data-light-facing="left" data-light="moon" data-weather="cloudy" href="#evergreen-shrub" x="1102" y="524" width="84" height="55" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
             <use class="terrain-asset" data-light="shadow" data-weather="dry" href="#evergreen-shrub" x="1085" y="651" width="101" height="66" style="--shrub-fill:#173b33;--shrub-highlight:#547a5b"/>
           </g>
           <g class="clearing-stones" data-region="clearing-stones">
@@ -1249,8 +1253,8 @@
             <use class="terrain-asset" data-light="shadow" data-weather="drought" href="#fallen-branch" x="953" y="687" width="113" height="42" transform="rotate(3 1010 708)" style="--branch-fill:#4a3021;--branch-highlight:#6f4930"/>
           </g>
           <g class="clearing-stumps" data-placement-pattern="mixed-age-scatter" data-region="clearing-stumps">
-            <use class="terrain-asset" data-detail="rich" data-light="moon" data-weather="wet" href="#tree-stump" x="272" y="619" width="76" height="64" transform="rotate(-4 310 683)" style="--stump-root-spur-opacity:.9;--stump-moss-opacity:1"/>
-            <use class="terrain-asset" data-detail="simple" data-light="shadow" data-weather="dry" href="#tree-stump" x="978" y="660" width="58" height="48" transform="rotate(3 1007 708)" style="--stump-bark:#563b2b;--stump-cut:#866344;--stump-moss-opacity:.18;--stump-scar-opacity:1"/>
+            <use class="terrain-asset" data-detail="rich" data-light="moon" data-weather="wet" href="#tree-stump" x="255" y="714" width="48" height="40" transform="rotate(-4 279 754)" style="--stump-root-spur-opacity:.9;--stump-moss-opacity:1"/>
+            <use class="terrain-asset" data-detail="simple" data-light="shadow" data-weather="dry" href="#tree-stump" x="1010" y="682" width="58" height="48" transform="rotate(3 1039 730)" style="--stump-bark:#563b2b;--stump-cut:#866344;--stump-moss-opacity:.18;--stump-scar-opacity:1"/>
             <use class="terrain-asset" data-light-facing="left" data-density-hide="tablet" data-detail="rich" data-light="ambient" data-weather="wet" href="#tree-stump" x="1115" y="475" width="48" height="40" transform="rotate(-7 1139 515)" style="--stump-bark:#4d3c2d;--stump-cut:#71563e;--stump-rot-opacity:.9;--stump-moss-opacity:.82;--stump-root-spur-opacity:.45"/>
             <use class="terrain-asset" data-density-hide="phone" data-detail="standard" data-light="fire" data-weather="dry" href="#tree-stump" x="423" y="690" width="42" height="35" transform="rotate(5 444 725)" style="--stump-bark:#73503a;--stump-cut:#b17b4d;--stump-moss-opacity:0;--stump-scar-opacity:.7;--stump-root-spur-opacity:1"/>
           </g>
@@ -1289,7 +1293,7 @@
           <use class="terrain-asset" data-light="ambient" data-weather="wet" href="#berry-shrub" x="8" y="492" width="155" height="108"/>
           <use class="terrain-asset" data-shrub-form="low" data-light="ambient" data-weather="clear" href="#berry-shrub" x="258" y="557" width="132" height="112"/>
           <use class="terrain-asset" data-light="fire" data-weather="dry" href="#evergreen-shrub" x="366" y="620" width="88" height="57" style="--shrub-fill:#31503c;--shrub-highlight:#947047"/>
-          <use class="terrain-asset" data-light="fire" data-weather="clear" href="#evergreen-shrub" x="800" y="535" width="82" height="53" style="--shrub-fill:#2c4b39;--shrub-highlight:#8b6947"/>
+          <use class="terrain-asset" data-light="fire" data-weather="clear" href="#evergreen-shrub" x="800" y="475" width="82" height="53" style="--shrub-fill:#2c4b39;--shrub-highlight:#8b6947"/>
           <use class="terrain-asset" data-light="ambient" data-weather="dry" href="#berry-shrub" x="1014" y="582" width="170" height="119"/>
         </g>
 
@@ -1321,16 +1325,17 @@
         </g>
 
         <ellipse class="campfire-glow" cx="610" cy="641" rx="198" ry="105" fill="url(#fire-glow)" filter="url(#camp-soft)"/>
-        <g class="fire-ring-stones depth-near scene-layer" data-scene-layer="campsite-ground" data-scale-band="subject">
+        <g class="fire-ring-stones scene-layer" data-scene-layer="campsite-ground" data-scale-band="subject" data-region="rear-firepit-rim">
+          <ellipse data-region="firepit-ground-contact" cx="611" cy="697" rx="112" ry="35" fill="#10211e" opacity=".42"/>
           <use class="terrain-asset fire-bed" data-light="fire" data-weather="dry" href="#fire-bed" x="522" y="651" width="180" height="65"/>
-          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="505" y="644" width="52" height="35" transform="rotate(8 531 662)" style="--ring-stone-fill:#515b55;--ring-stone-crack-opacity:.7"/>
+          <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="519" y="644" width="52" height="35" transform="rotate(8 545 662)" style="--ring-stone-fill:#515b55;--ring-stone-crack-opacity:.7"/>
           <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="546" y="633" width="53" height="36" transform="rotate(-5 573 651)" style="--ring-stone-fill:#626b62;--ring-stone-face-opacity:.52"/>
           <use class="terrain-asset" data-light="fire" data-weather="wet" href="#fire-ring-stone" x="589" y="628" width="53" height="36" style="--ring-stone-fill:#566059"/>
           <use class="terrain-asset" data-light="fire" data-weather="clear" href="#fire-ring-stone" x="632" y="636" width="52" height="35" transform="rotate(6 658 654)" style="--ring-stone-fill:#49534e;--ring-stone-crack-opacity:.55"/>
           <use class="terrain-asset" data-light="fire" data-weather="dry" href="#fire-ring-stone" x="673" y="650" width="50" height="34" transform="rotate(12 698 667)" style="--ring-stone-fill:#59615a;--ring-stone-face-opacity:.25"/>
         </g>
-        <use class="bench bench-left scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" href="#camp-bench" x="212" y="606" width="340" height="64"/>
-        <use class="bench bench-right scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" href="#camp-bench" x="692" y="610" width="260" height="49" style="--log-end:#684029;--log-ring:#a2643d"/>
+        <use class="bench bench-left scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" href="#camp-bench" x="212" y="606" width="296" height="56"/>
+        <use class="bench bench-right scene-layer" data-scene-layer="campsite-furniture" data-scale-band="subject" href="#camp-bench" x="704" y="610" width="180" height="34" style="--log-end:#684029;--log-ring:#a2643d"/>
         <g class="seat-shadows" aria-hidden="true" data-region="camper-ground-shadows">
           <use href="#ground-shadow" x="295" y="611" width="110" height="22"/>
           <use href="#ground-shadow" x="456" y="612" width="86" height="20"/>
@@ -1477,7 +1482,6 @@
           <path d="M399 604q15-62-1-105M540 605q8-56-9-91M724 604q-4-55 13-93M826 606q-5-56 10-98"/>
           <path d="M461 574 575 542m95 28-52-30" stroke-width="3" opacity=".85"/>
         </g>
-        <use class="terrain-asset smores-kit" data-light="fire" data-weather="dry" href="#camp-snack-plate" x="668" y="679" width="100" height="32"/>
 
         <rect class="scene-grain" width="1200" height="760" fill="#8fa39c" filter="url(#scene-grain)" opacity=".055" style="mix-blend-mode:soft-light" pointer-events="none"/>
 
@@ -1512,6 +1516,8 @@
         <g class="condition-detail condition-drought drought-camp-stove depth-near" data-region="drought-cooking-station">
           <use class="terrain-asset" data-light="fire" data-weather="drought" href="#camp-stove" x="535" y="610" width="150" height="92" style="--asset-dry-opacity:0;--asset-drought-opacity:0"/>
         </g>
+
+        <use class="terrain-asset smores-kit scene-layer" data-scene-layer="campsite-effects" data-region="campsite-serving-tray" data-scale-band="subject" data-light="fire" data-weather="dry" href="#camp-snack-plate" x="735" y="703" width="100" height="32"/>
 
         <g class="smoke-404 scene-layer" data-scene-layer="air-front" data-region="campfire-number-smoke" data-detail-layer="effect" data-weather-reactive="smoke" data-light-reactive="ambient" mask="url(#smoke-cutout)" filter="url(#smoke-texture)">
           <g class="smoke-character smoke-character-left">

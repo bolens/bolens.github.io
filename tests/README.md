@@ -38,15 +38,23 @@ It verifies that foam/currents follow the water while bank roots remain fixed,
 and captures normal, storm, and drought levels for visual inspection.
 
 `trail-clearance.mjs` checks fitted root/ground footprints against the authored
-trail bed across desktop/phone layouts, four weather states, and three parallax
+trail bed across desktop/phone layouts, day/night, four weather states, and three parallax
 positions. Trees, shrubs, stumps, large stones, and rooted plants must leave the
 path clear. Loose branches, leaf litter, and the trail's embedded stones remain
 allowed. Canopies may overhang the trail without placing roots in its bed.
+The same check samples the complete seating-bench bounds against the trail and
+checks that stump bounds do not overlap either bench. The tent bypass retains
+the existing campsite seating and the trail's clipped material/detail layers.
+Bench bounds must also clear the tent and fire ring. The serving tray stays outside
+the rim, and both halves of the ring remain fixed during parallax changes.
+`firepit-layout.mjs` checks that the front rim paints before the serving tray.
 
 `ground-material-detail.mjs` compares actual reused trail, needle-mat, and gravel
 pixels at simple/rich detail levels and with wet, snow, and drought accents.
 It captures the full scene at desktop/phone widths across four weather states.
 Material-order and named-region contracts live in `terrain-detail-layers.mjs`.
+The rendered-detail matrix also covers the fire-ring stone's facets, chipped
+ledges, wet surfaces, and snow deposits.
 
 `mountain-variation.mjs` checks three summit families in every mountain row,
 opaque bounded rock bodies, unique region targets, and unchanged placement counts.
