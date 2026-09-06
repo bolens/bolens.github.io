@@ -9,6 +9,13 @@
   const sceneTime = document.body.classList.contains('lost-page') ? window.portfolioSceneTime : null;
   let selectedWeather = weather?.source === 'location' ? weather.condition : 'theme';
   let selectedTime = sceneTime?.source === 'scene' ? sceneTime.time : 'automatic';
+  const moonChoices = [
+    ['automatic', 'Appearance / clock'], ['0', 'New moon'], ['0.125', 'Waxing crescent'],
+    ['0.25', 'First quarter'], ['0.375', 'Waxing gibbous'], ['0.5', 'Full moon'],
+    ['0.625', 'Waning gibbous'], ['0.75', 'Last quarter'], ['0.875', 'Waning crescent'],
+  ];
+  const moonChoice = (state) => state?.moonSource !== 'override' ? 'automatic'
+    : moonChoices.some(([value]) => value === String(state.moonPhase)) ? String(state.moonPhase) : 'custom';
   let returnFocus = null;
 
   const mountPicker = () => {
@@ -41,6 +48,23 @@
       timeFieldset.className = 'scene-time-options scene-options';
       timeFieldset.innerHTML = `<legend>Choose 404 scene time</legend><p class="palette-section-label" aria-hidden="true">Scene time</p>${['automatic', ...sceneTime.times].map((time) => `<label><input type="radio" name="portfolio-scene-time" value="${time}"${time === selectedTime ? ' checked' : ''}><span>${time === 'automatic' ? 'Appearance / clock' : time[0].toUpperCase() + time.slice(1)}</span></label>`).join('')}`;
       picker.querySelector('.palette-panel-body').append(weatherFieldset, timeFieldset);
+      const addSceneChoices = (className, name, heading, choices, selectedValue, help) => {
+        const fieldset = document.createElement('fieldset');
+        fieldset.className = `${className} scene-options`;
+        fieldset.setAttribute('aria-describedby', `${name}-help`);
+        fieldset.innerHTML = `<legend>Choose 404 ${heading.toLowerCase()}</legend><p class="palette-section-label" aria-hidden="true">${heading}</p><p class="visually-hidden" id="${name}-help">${help}</p>${choices.map(([value, label]) => `<label${value === 'custom' && selectedValue !== 'custom' ? ' hidden' : ''}><input type="radio" name="${name}" value="${value}"${value === selectedValue ? ' checked' : ''}${value === 'custom' ? ' disabled' : ''}><span>${label}</span></label>`).join('')}`;
+        picker.querySelector('.palette-panel-body').append(fieldset);
+      };
+      if (weather.seasons && weather.setEnvironment) {
+        addSceneChoices('scene-season-options', 'portfolio-scene-season', 'Season',
+          [['default', 'Scene default'], ...weather.seasons.map(season => [season, season[0].toUpperCase() + season.slice(1)])],
+          weather.environment.season || 'default', 'Changes vegetation without changing weather or scene time. Scene default restores the original vegetation.');
+      }
+      if (sceneTime.setMoonPhase) {
+        addSceneChoices('scene-moon-options', 'portfolio-moon-phase', 'Moon phase',
+          [...moonChoices, ['custom', 'Custom phase']], moonChoice(sceneTime.state),
+          'Changes the moon when visible. Appearance / clock restores the scene lighting default or the running lunar cycle. Custom phase indicates an externally supplied value.');
+      }
     }
 
     const status = document.createElement('p');
@@ -64,6 +88,15 @@
       const state = time === 'automatic' ? sceneTime.useAppearanceFallback() : sceneTime.setTime(time);
       selectedTime = state.source === 'scene' ? state.time : 'automatic';
       status.textContent = `${state.time[0].toUpperCase() + state.time.slice(1)} scene time, ${state.source === 'scene' ? 'scene override' : 'automatic'}.`;
+    };
+    const chooseSeason = (season) => {
+      const state = weather.setEnvironment({ ...weather.environment, season: season === 'default' ? null : season });
+      status.textContent = state.environment.season ? `${state.environment.season[0].toUpperCase() + state.environment.season.slice(1)} season.` : 'Scene default vegetation.';
+    };
+    const chooseMoon = (phase) => {
+      if (!moonChoices.some(([value]) => value === phase)) return;
+      sceneTime.setMoonPhase(phase === 'automatic' ? null : Number(phase));
+      status.textContent = `${moonChoices.find(([value]) => value === phase)[1]} moon phase.`;
     };
     const close = () => {
       picker.open = false;
@@ -95,11 +128,18 @@
       selectedWeather = state.source === 'location' ? state.condition : 'theme';
       const control = picker.querySelector(`input[name="portfolio-weather"][value="${selectedWeather}"]`);
       if (control) control.checked = true;
+      const seasonControl = picker.querySelector(`input[name="portfolio-scene-season"][value="${state.environment?.season || 'default'}"]`);
+      if (seasonControl) seasonControl.checked = true;
     });
     sceneTime?.subscribe((state) => {
       selectedTime = state.source === 'scene' ? state.time : 'automatic';
       const control = picker.querySelector(`input[name="portfolio-scene-time"][value="${selectedTime}"]`);
       if (control) control.checked = true;
+      const choice = moonChoice(state);
+      const moonControl = picker.querySelector(`input[name="portfolio-moon-phase"][value="${choice}"]`);
+      if (moonControl) moonControl.checked = true;
+      const customControl = picker.querySelector('input[name="portfolio-moon-phase"][value="custom"]');
+      if (customControl) customControl.closest('label').hidden = choice !== 'custom';
     });
     picker.addEventListener('change', (event) => {
       if (!(event.target instanceof HTMLInputElement)) return;
@@ -107,6 +147,8 @@
       else if (event.target.name === 'portfolio-palette') choosePalette(event.target.value);
       else if (event.target.name === 'portfolio-weather') chooseWeather(event.target.value);
       else if (event.target.name === 'portfolio-scene-time') chooseTime(event.target.value);
+      else if (event.target.name === 'portfolio-scene-season') chooseSeason(event.target.value);
+      else if (event.target.name === 'portfolio-moon-phase') chooseMoon(event.target.value);
     });
     picker.addEventListener('toggle', () => overlay.set('appearance', picker.open && !picker.hidden));
     picker.querySelector('.overlay-close').addEventListener('click', close);

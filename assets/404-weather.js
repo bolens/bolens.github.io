@@ -31,6 +31,7 @@
     const state = snapshot();
     document.documentElement.dataset.weather = state.condition;
     document.documentElement.dataset.weatherSource = state.source;
+    document.documentElement.dataset.sceneSeason = state.environment.season || 'default';
     document.documentElement.dataset.sceneFireflyEligibility = String(state.fireflyEligibility);
     for (const subscriber of subscribers) subscriber(state);
     dispatchEvent(new CustomEvent('portfolio-weather-change', { detail: state }));
@@ -64,6 +65,7 @@
 
   window.portfolioWeather = Object.freeze({
     conditions: Object.freeze([...weatherModes]),
+    seasons: Object.freeze([...seasons]),
     setLocationCondition,
     setEnvironment,
     useThemeFallback,

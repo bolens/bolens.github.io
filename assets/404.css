@@ -253,6 +253,63 @@
 }
 :root:is([data-weather="thunderstorm"],[data-weather="wet"]) .aspen-grove ,
 :root:is([data-weather="rainy"],[data-weather="wet"]) .aspen-grove { --aspen-bark:#c8d1c4;--aspen-edge:#53695f;--aspen-leaf:#365f4b;--aspen-leaf-shadow:#244839;--aspen-highlight:#86a875; }
+/* Season is phenology, not weather. Material colors mix beneath existing light,
+   surface wetness, snow, and detail layers; structural bodies remain opaque. */
+:root[data-scene-season="spring"] { --season-aspen:#86a356;--season-willow:#789457;--season-shrub:#628449;--season-grass:#729056;--season-litter:#665640;--season-flower:#dbc3e8; }
+:root[data-scene-season="summer"] { --season-aspen:#4c753e;--season-willow:#4c794b;--season-shrub:#366541;--season-grass:#496d40;--season-litter:#69563c;--season-flower:#b995d0; }
+:root[data-scene-season="autumn"] { --season-aspen:#c4a047;--season-willow:#a79a4c;--season-shrub:#a66b43;--season-grass:#96804f;--season-litter:#a7773e;--season-flower:#806344; }
+:root[data-scene-season="winter"] { --season-aspen:#827a5d;--season-willow:#817b60;--season-shrub:#77624b;--season-grass:#8b8266;--season-litter:#736550;--season-flower:#77674e; }
+:root[data-scene-season] { --season-color-share:100%;--season-weather-tone:#3a4939; }
+:root:is([data-weather="rainy"],[data-weather="thunderstorm"],[data-weather="wet"]) { --season-color-share:72%;--season-weather-tone:#263d30; }
+:root:is([data-weather="dry"],[data-weather="drought"]) { --season-color-share:32%;--season-weather-tone:#8a714b; }
+:root[data-weather="snowy"] { --season-color-share:68%;--season-weather-tone:#7b867c; }
+/* Classes live on the referenced regions: symbol-ID ancestor selectors do not
+   survive the SVG use instance tree. Defaults retain the authored instance color. */
+.season-aspen-leaf { fill:color-mix(in srgb,var(--season-aspen,var(--aspen-leaf,#52735a)) var(--season-color-share,100%),var(--aspen-leaf,#52735a)); }
+.season-aspen-shadow { fill:color-mix(in srgb,var(--season-aspen,var(--aspen-leaf-shadow,#365b47)) 56%,var(--aspen-leaf-shadow,#365b47)); }
+.season-aspen-highlight { stroke:var(--season-aspen-highlight,var(--aspen-highlight,#a8b77b)); }
+.season-aspen-highlight[data-region="leaf-veins"] { stroke:var(--season-aspen-highlight,var(--aspen-leaf-vein,#d1d6aa)); }
+.season-willow-leaf { fill:color-mix(in srgb,var(--season-willow,var(--willow-leaf,#52745a)) var(--season-color-share,100%),var(--willow-leaf,#52745a)); }
+.season-willow-highlight { stroke:var(--season-willow-highlight,var(--willow-highlight,#8da27a)); }
+.season-shrub-leaf { fill:var(--shrub-condition-fill,color-mix(in srgb,var(--season-shrub,var(--shrub-fill,#315c45)) var(--season-color-share,100%),var(--shrub-fill,#315c45))); }
+.season-shrub-highlight { fill:var(--season-shrub-highlight,var(--berry-highlight,#9aaa75)); }
+.season-grass { stroke:var(--season-grass-paint,var(--grass-fill,#52745a)); }
+.season-grass-side { stroke:var(--season-grass-side,var(--grass-side,#6f8b63)); }
+.season-grass-highlight { stroke:var(--season-grass-highlight,var(--grass-highlight,#91a678)); }
+.season-litter { fill:var(--season-litter-paint,var(--debris-leaf,#39433a)); }
+.season-litter-edge { stroke:var(--season-litter-edge,var(--debris-leaf-edge,#69725a)); }
+.season-petals { fill:var(--flower-condition-petal,var(--season-flower,var(--flower-petal,#c8b5d8))); }
+:root:is([data-scene-season="spring"],[data-scene-season="summer"],[data-scene-season="autumn"],[data-scene-season="winter"]) {
+  --season-aspen-highlight:color-mix(in srgb,var(--season-aspen) 65%,#d3c98d);
+  --season-willow-highlight:color-mix(in srgb,var(--season-willow) 62%,#cbc795);
+  --season-shrub-highlight:color-mix(in srgb,var(--season-shrub) 72%,#c1b782);
+  --season-grass-paint:color-mix(in srgb,var(--season-grass) var(--season-color-share),var(--season-weather-tone));
+  --season-grass-side:color-mix(in srgb,var(--season-grass) 80%,#8d7650);
+  --season-grass-highlight:color-mix(in srgb,var(--season-grass) 70%,#c4b689);
+  --season-litter-paint:color-mix(in srgb,var(--season-litter) var(--season-color-share),var(--season-weather-tone));
+  --season-litter-edge:color-mix(in srgb,var(--season-litter) 68%,#c3aa79);
+}
+/* Hide only phenological regions. Trunks, branchlets and snow keep their paint. */
+:root[data-scene-season="winter"] { --season-deciduous-display:none; }
+:root:is([data-scene-season="summer"],[data-scene-season="autumn"],[data-scene-season="winter"]) { --season-catkin-display:none; }
+:root[data-scene-season="spring"] { --season-berry-display:none; }
+:root:is([data-scene-season="summer"],[data-scene-season="autumn"]) { --season-bud-display:none; }
+:root:is([data-scene-season="autumn"],[data-scene-season="winter"]) { --season-bloom-display:none;--season-stalk:#86724e;--season-seed:var(--season-flower); }
+.season-deciduous-leaf { display:var(--season-deciduous-display,inline); }
+.season-catkins { display:var(--season-catkin-display,inline); }
+.season-berries { display:var(--season-berry-display,inline); }
+.season-buds { display:var(--season-bud-display,inline); }
+.season-bloom { display:var(--season-bloom-display,inline); }
+.season-flower-stalks { stroke:var(--flower-condition-stem,var(--season-stalk,var(--flower-stem,#52745a))); }
+.season-flower-centers { fill:var(--season-seed,var(--flower-center,#d7a846)); }
+/* Keep opaque soil depth and the running light cycle. Weather washes still
+   paint above this base; a season never manufactures snow or standing water. */
+:root:is([data-scene-season="spring"],[data-scene-season="summer"],[data-scene-season="autumn"],[data-scene-season="winter"]) .lost-page {
+  --season-ground-share:calc(42% - var(--scene-cycle-darkness,1) * 32%);
+  --season-ground-lit:color-mix(in srgb,var(--season-grass) var(--season-ground-share),var(--scene-ground-lit));
+  --season-ground-mid:color-mix(in srgb,var(--season-grass) var(--season-ground-share),var(--scene-ground-mid));
+  --season-ground-dark:color-mix(in srgb,var(--season-grass) calc(var(--season-ground-share) * .4),var(--scene-ground-dark));
+}
 :root:is([data-weather="dry"],[data-weather="drought"]) .aspen-grove { --aspen-bark:#d2c7ad;--aspen-leaf:#77734f;--aspen-leaf-shadow:#58553e;--aspen-highlight:#b39761;--aspen-leaf-opacity:.74; }
 :root[data-weather="snowy"] .aspen-grove { --aspen-bark:#e0e4da;--aspen-edge:#76837c;--aspen-leaf:#657467;--aspen-highlight:#c4d1bc;--aspen-leaf-opacity:.48; }
 .terrain-asset[data-species="aspen"] { --snag-pine-display:none;--snag-aspen-display:inline; }
