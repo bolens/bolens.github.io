@@ -88,7 +88,7 @@ export function createScene({ condition = 'clear', reduced = false, restrained =
       }
       now = end;
     },
-    pointer(clientX = 1200, clientY = 760, pointerType = 'mouse') { figure.emit('pointermove', { clientX, clientY, pointerType }); },
+    pointer(clientX = 1200, clientY = 760, pointerType = 'mouse') { document.emit('pointermove', { clientX, clientY, pointerType }); },
     hide(hidden) { document.hidden = hidden; document.emit('visibilitychange'); },
     overlay(active) { window.emit('ui-overlay-change', { detail: { active } }); },
     reduce(matches) { media.matches = matches; media.emit('change'); },

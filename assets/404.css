@@ -377,7 +377,11 @@
 .day-bigfoot,.day-dogman { transform-box:fill-box;transform-origin:center bottom;animation:day-peek 7s ease-in-out infinite alternate; }
 .day-mothman { transform-box:fill-box;transform-origin:center bottom;animation:day-perch 8s -3s ease-in-out infinite alternate; }
 .day-windhound { transform-box:view-box;transform-origin:1060px 648px;animation:day-dog-look 6s -2s ease-in-out infinite alternate; }
-:root.ui-overlay-open .cryptid-camp svg * { animation-play-state:paused!important; }
+/* Keep the legacy all-node pause behind a fallback-only inherited value. A
+   root overlay class change must not invalidate every runtime SVG primitive. */
+:root.ui-overlay-open .cryptid-camp:not([data-render-runtime]) { --scene-overlay-play-state:paused; }
+.cryptid-camp:not([data-render-runtime]) svg * { animation-play-state:var(--scene-overlay-play-state)!important; }
+:root.ui-overlay-open .cryptid-camp[data-render-runtime] [data-runtime-motion="live"] { animation-play-state:paused!important; }
 .aurora-ribbon { --aurora-width:34;--aurora-opacity:.3; }
 .aurora-ribbon-one { --aurora-color:url(#aurora-green);animation:camp-aurora 10s ease-in-out infinite alternate; }
 .aurora-ribbon-two { --aurora-color:url(#aurora-blue);--aurora-width:25;animation:camp-aurora 12s -4s ease-in-out infinite alternate-reverse; }

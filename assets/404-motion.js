@@ -43,7 +43,9 @@
   let currentProfile;
   const subscribers = new Set();
   const publish = () => {
-    currentProfile = resolve(currentTime, currentWeather);
+    const nextProfile = resolve(currentTime, currentWeather);
+    if (currentProfile?.signature === nextProfile.signature) return currentProfile;
+    currentProfile = nextProfile;
     const root = document.documentElement;
     root.dataset.sceneMotion = currentProfile.signature;
     root.style.setProperty('--motion-tempo', String(currentProfile.tempo));
