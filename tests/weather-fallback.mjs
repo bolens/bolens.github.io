@@ -35,6 +35,40 @@ const setup = () => {
   };
 };
 
+test('season catalog and DOM agree before notifications across every weather choice', () => {
+  const { context, setPalette } = setup();
+  const api = context.window.portfolioWeather;
+  const dataset = context.document.documentElement.dataset;
+  assert.deepEqual([...api.seasons], ['spring', 'summer', 'autumn', 'winter']);
+  assert.ok(Object.isFrozen(api.seasons));
+  assert.equal(dataset.sceneSeason, 'default');
+  let calls = 0;
+  const unsubscribe = api.subscribe(state => {
+    calls++;
+    assert.equal(dataset.sceneSeason, state.environment.season || 'default');
+    assert.ok(Object.isFrozen(state.environment));
+  });
+  for (const season of [null, ...api.seasons]) {
+    api.setEnvironment({ season, temperatureC: 18, fireflyHabitat: true });
+    for (const condition of api.conditions) {
+      api.setLocationCondition(condition);
+      assert.equal(api.environment.season, season);
+      assert.equal(api.condition, condition);
+    }
+    setPalette('desert');
+    api.useThemeFallback();
+    assert.equal(dataset.sceneSeason, season || 'default');
+  }
+  assert.ok(calls > 55);
+  unsubscribe();
+  const before = calls;
+  for (const season of ['', 'WINTER', '__proto__', {}, undefined]) {
+    api.setEnvironment({ season });
+    assert.equal(dataset.sceneSeason, 'default');
+  }
+  assert.equal(calls, before);
+});
+
 test('optional environment validates, resets, and gates flying firefly habitat', () => {
   const {context}=setup(), api=context.window.portfolioWeather;
   assert.equal(api.fireflyEligibility,1);

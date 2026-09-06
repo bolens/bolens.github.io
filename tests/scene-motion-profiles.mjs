@@ -77,6 +77,24 @@ test('weather and time changes synchronously publish one shared motion profile',
   assert.equal(properties.get('--motion-play'), String(profile.play));
 });
 
+test('unchanged inputs preserve profile identity and do not notify subscribers', () => {
+  const { context, weatherSubscriber, timeSubscriber } = setup();
+  const api = context.window.portfolioSceneMotion;
+  const initial = api.profile;
+  const notifications = [];
+  const unsubscribe = api.subscribe((profile) => notifications.push(profile));
+  weatherSubscriber({ condition: 'clear' });
+  timeSubscriber({ time: 'night', cycle: 'dynamic', darkness: .9 });
+  assert.equal(api.profile, initial);
+  assert.equal(notifications.length, 0);
+  weatherSubscriber({ condition: 'windy' });
+  timeSubscriber({ time: 'morning' });
+  assert.deepEqual(notifications.map(({ signature }) => signature), ['night-windy', 'morning-windy']);
+  unsubscribe();
+  weatherSubscriber({ condition: 'snowy' });
+  assert.equal(notifications.length, 2);
+});
+
 test('the shared profile controls SVG and canvas motion with reduced-motion intact', () => {
   const weatherIndex = html.indexOf('/assets/404-weather.js');
   const timeIndex = html.indexOf('/assets/404-time.js');

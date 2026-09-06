@@ -30,6 +30,7 @@ a substitute for that contract.
 | 404 rendering, parallax, and atmosphere | Retrospective baseline through PR #12 | [008-scene-runtime](008-scene-runtime/spec.md) |
 | Verification, delivery, and repository tooling | Retrospective baseline | [009-verification-delivery](009-verification-delivery/spec.md) |
 | Daytime activities, tree peeks, and covered routes | Implemented and verified locally, not published | [Spec](010-daytime-activities/spec.md), [plan](010-daytime-activities/plan.md), [tasks](010-daytime-activities/tasks.md) |
+| Seasonal vegetation and 404 season/moon controls | Implemented and verified locally, not published | [Spec](011-season-customization/spec.md), [plan](011-season-customization/plan.md), [evidence](011-season-customization/verification.md) |
 | Bird, moth, rainbow, real location/weather provider, and precise astronomical behavior | Candidate ideas, not scoped or implemented in this pass | Create separate feature contracts if selected. This register does not authorize implementation or publication. |
 
 The register covers this checkout, not uncommitted changes in other agents'
@@ -63,7 +64,8 @@ Paths below are relative to the repository root. Test names are relative to `tes
 `404.html` owns the shared symbols, named regions, placements, static fallback, and
 return link. `assets/404.css` owns material styling, layer visibility, and authored
 motion. The controllers below consume the existing appearance and overlay owners.
-Packages 001 and 010 cover the season/moon and daytime-activity additions.
+Packages 001, 010, and 011 cover environment eligibility, lunar phases, daytime
+activities, seasonal vegetation, and 404-only customization controls.
 Packages 006 through 008 retain the earlier retrospective scene baselines.
 
 | Owner or concern | Existing contract evidence |

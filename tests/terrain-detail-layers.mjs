@@ -17,8 +17,8 @@ test('woody glyphs expose independently addressable detail layers', () => {
   for (const [id, regions] of Object.entries(manifests)) {
     assert.ok(symbols[id], `${id} symbol is required`);
     for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
-    assert.match(symbols[id], /class="asset-detail-secondary"/);
-    assert.match(symbols[id], /class="asset-detail-fine"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-secondary(?:\s[^"\n]*)?"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-fine(?:\s[^"\n]*)?"/);
   }
 });
 
@@ -27,8 +27,8 @@ test('pine glyph exposes layered trunk, branch, and needle anatomy', () => {
   for (const region of ['root-flare', 'tapered-trunk', 'branch-whorls', 'needle-tiers', 'canopy-shadow', 'branch-lines', 'tip-shoots', 'bark-segments']) {
     assert.match(pine, new RegExp(`data-regions="[^"]*${region}`));
   }
-  assert.match(pine, /class="asset-detail-secondary"/);
-  assert.match(pine, /class="asset-detail-fine"/);
+  assert.match(pine, /class="(?:[^"\n]*\s)?asset-detail-secondary(?:\s[^"\n]*)?"/);
+  assert.match(pine, /class="(?:[^"\n]*\s)?asset-detail-fine(?:\s[^"\n]*)?"/);
 });
 
 test('forest-floor glyphs expose natural surface detail', () => {
@@ -47,9 +47,29 @@ test('forest-floor glyphs expose natural surface detail', () => {
   for (const [id, regions] of Object.entries(manifests)) {
     assert.ok(symbols[id], `${id} symbol is required`);
     for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
-    assert.match(symbols[id], /class="asset-detail-secondary"/);
-    assert.match(symbols[id], /class="asset-detail-fine"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-secondary(?:\s[^"\n]*)?"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-fine(?:\s[^"\n]*)?"/);
   }
+});
+
+test('trail and ground material layers preserve substrate order and shared condition controls', () => {
+  const additions = {
+    'forest-trail': ['compacted-tread','edge-deposits','scattered-trail-grit','trail-damp-hollows','trail-drought-fissures','trail-snow-pockets'],
+    'pine-needle-mat': ['packed-duff','needle-fibers','damp-duff','duff-snow-pockets'],
+    'gravel-patch': ['silt-fans','fine-grit-scatter','gravel-damp-pockets','silt-drought-cracks','gravel-snow-pockets'],
+  };
+  for (const [id, regions] of Object.entries(additions)) {
+    for (const region of regions) {
+      assert.match(symbols[id], new RegExp(`data-region="${region}"`));
+      assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
+    }
+    assert.match(symbols[id], /--asset-wet-opacity/);
+    assert.match(symbols[id], /--asset-snow-opacity/);
+    assert.doesNotMatch(symbols[id], /<animate|animation:/);
+  }
+  assert.ok(symbols['pine-needle-mat'].indexOf('data-region="packed-duff"') < symbols['pine-needle-mat'].indexOf('data-region="crossed-needles"'));
+  assert.ok(symbols['gravel-patch'].indexOf('data-region="silt-fans"') < symbols['gravel-patch'].indexOf('data-region="pebble-bodies"'));
+  assert.match(symbols['forest-trail'], /data-region="trail-surface-detail" clip-path="url\(#trail-surface-clip\)"/);
 });
 
 test('small botanical glyphs expose anatomical detail layers', () => {
@@ -64,8 +84,8 @@ test('small botanical glyphs expose anatomical detail layers', () => {
   for (const [id, regions] of Object.entries(manifests)) {
     assert.ok(symbols[id], `${id} symbol is required`);
     for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
-    assert.match(symbols[id], /class="asset-detail-secondary"/);
-    assert.match(symbols[id], /class="asset-detail-fine"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-secondary(?:\s[^"\n]*)?"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-fine(?:\s[^"\n]*)?"/);
   }
 });
 
@@ -122,8 +142,8 @@ test('campsite gear exposes construction and wear detail', () => {
   for (const [id, regions] of Object.entries(manifests)) {
     assert.ok(symbols[id], `${id} symbol is required`);
     for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
-    assert.match(symbols[id], /class="asset-detail-secondary"/);
-    assert.match(symbols[id], /class="asset-detail-fine"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-secondary(?:\s[^"\n]*)?"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-fine(?:\s[^"\n]*)?"/);
   }
 });
 
@@ -139,8 +159,8 @@ test('rock and fire-bed glyphs expose material detail layers', () => {
   for (const [id, regions] of Object.entries(manifests)) {
     assert.ok(symbols[id], `${id} symbol is required`);
     for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
-    assert.match(symbols[id], /class="asset-detail-secondary"/);
-    assert.match(symbols[id], /class="asset-detail-fine"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-secondary(?:\s[^"\n]*)?"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-fine(?:\s[^"\n]*)?"/);
   }
 });
 
@@ -154,8 +174,8 @@ test('shrubs and mushrooms expose growth detail layers', () => {
   for (const [id, regions] of Object.entries(manifests)) {
     assert.ok(symbols[id], `${id} symbol is required`);
     for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
-    assert.match(symbols[id], /class="asset-detail-secondary"/);
-    assert.match(symbols[id], /class="asset-detail-fine"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-secondary(?:\s[^"\n]*)?"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-fine(?:\s[^"\n]*)?"/);
   }
 });
 
@@ -172,8 +192,8 @@ test('river glyphs expose water and erosion detail layers', () => {
   for (const [id, regions] of Object.entries(manifests)) {
     assert.ok(symbols[id], `${id} symbol is required`);
     for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
-    assert.match(symbols[id], /class="asset-detail-secondary"/);
-    assert.match(symbols[id], /class="asset-detail-fine"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-secondary(?:\s[^"\n]*)?"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-fine(?:\s[^"\n]*)?"/);
   }
 });
 
@@ -188,8 +208,8 @@ test('camp food, light, and shelter expose detail layers', () => {
   for (const [id, regions] of Object.entries(manifests)) {
     assert.ok(symbols[id], `${id} symbol is required`);
     for (const region of regions) assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
-    assert.match(symbols[id], /class="asset-detail-secondary"/);
-    assert.match(symbols[id], /class="asset-detail-fine"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-secondary(?:\s[^"\n]*)?"/);
+    assert.match(symbols[id], /class="(?:[^"\n]*\s)?asset-detail-fine(?:\s[^"\n]*)?"/);
   }
 });
 

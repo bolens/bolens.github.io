@@ -39,20 +39,24 @@
   let currentTier;
   let overlayActive = document.documentElement.classList.contains('ui-overlay-open');
   let playbackFrame = 0;
+  let liveTargets = new Set();
+  // Establish the static allocation once. Control changes should only write
+  // targets entering or leaving the live set, not invalidate the whole scene.
+  for (const target of animatedTargets) target.dataset.runtimeMotion = 'off';
   const syncAnimationPlayback = () => {
     cancelAnimationFrame(playbackFrame);
     playbackFrame = requestAnimationFrame(() => {
       const paused = overlayActive || document.hidden || reducedMotion.matches || document.documentElement.dataset.motion === 'reduced';
       for (const animation of figure.getAnimations({ subtree:true })) {
         const live = animation.effect?.target?.dataset.runtimeMotion === 'live';
-        if (!paused && live) animation.play();
-        else animation.pause();
+        if (!paused && live) {
+          if (animation.playState !== 'running') animation.play();
+        } else if (animation.playState !== 'paused') animation.pause();
       }
     });
   };
   const applyMotionTargets = () => {
-    for (const target of figure.querySelectorAll('[data-runtime-motion="live"]')) target.dataset.runtimeMotion = 'off';
-    for (const target of animatedTargets) target.dataset.runtimeMotion = 'off';
+    const nextTargets = new Set();
     const nightSky = ['evening', 'twilight', 'night'].includes(window.portfolioSceneTime?.state?.time)
       && !['overcast', 'rainy', 'snowy', 'thunderstorm'].includes(window.portfolioWeather?.condition);
     // Reuse daytime-only slots, preserving the tier's animation allocation.
@@ -68,9 +72,16 @@
       for (const target of figure.querySelectorAll(selector)) {
         const coldFire = window.portfolioSceneTime?.state?.fireActive === false || window.portfolioWeather?.condition === 'drought';
         if (coldFire && target.closest('.campfire,.smoke-404')) continue;
-        target.dataset.runtimeMotion = 'live';
+        nextTargets.add(target);
       }
     }
+    for (const target of liveTargets) {
+      if (!nextTargets.has(target)) target.dataset.runtimeMotion = 'off';
+    }
+    for (const target of nextTargets) {
+      if (!liveTargets.has(target)) target.dataset.runtimeMotion = 'live';
+    }
+    liveTargets = nextTargets;
     syncAnimationPlayback();
   };
   const applyTier = (width) => {

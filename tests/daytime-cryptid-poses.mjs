@@ -57,7 +57,24 @@ try {
           assert.equal(state.sharedPlane, true);
           assert.equal(state.pilots, 1);
           assert.deepEqual(state.pilotOrder, ['cockpit-interior','alien-pilot','cockpit-glass','glass-reflection']);
-          if (day) assert.equal(state.inFrame, true);
+          if (day) {
+            assert.equal(state.inFrame, true);
+            const landmarks = await evaluate(send, `(() => {
+              const points = [[[335,477],[365,478],[350,495]],[[859,467],[880,467],[855,503]]];
+              return [...document.querySelectorAll('.daytime-cryptid')].map((group,index) => {
+                const face = group.querySelector('[data-region="peeking-face"]');
+                const previous = face.style.pointerEvents;
+                face.style.pointerEvents = 'all';
+                const visible = points[index].map(([x,y]) => {
+                  const p = new DOMPoint(x,y).matrixTransform(face.getScreenCTM());
+                  return document.elementsFromPoint(p.x,p.y).find(el => el instanceof SVGUseElement) === face;
+                });
+                face.style.pointerEvents = previous;
+                return visible;
+              });
+            })()`);
+            assert.deepEqual(landmarks, [[true,true,true],[true,true,true]], width+' '+time+' eyes and muzzles remain uncovered');
+          }
           assert.equal(state.running, 0);
           assert.equal(state.overflow, false);
           if (theme === 'day' && ['day','night'].includes(time) && weather === 'clear') {

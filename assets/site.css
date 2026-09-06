@@ -117,6 +117,7 @@ svg:has(>use[href$="#glyph-owl"]),svg:has(>use[href$="#glyph-trout"]),svg:has(>u
 .palette-picker.has-scene-controls .palette-panel-body { grid-template-columns:minmax(13rem,1fr) minmax(10rem,.8fr); }
 .palette-picker .scene-options { min-width:9rem; }
 .palette-picker .scene-options label { grid-template-columns:auto 1fr; }
+.palette-picker .scene-options label[hidden] { display:none; }
 .palette-section-label { margin:.2rem .55rem .35rem;color:var(--muted);font-size:.64rem;letter-spacing:.12em; }
 .palette-picker legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 .palette-picker label { display: grid; min-height:var(--control-height); grid-template-columns: auto 2.6rem 1fr; align-items: center; gap: .65rem; padding: .65rem .55rem; border-radius:calc(var(--surface-radius) - 2px); cursor: pointer; transition:background var(--motion-fast),box-shadow var(--motion-fast); }.palette-picker label:is(:hover,:has(input:focus-visible)) { background: var(--paper); box-shadow:inset 3px 0 var(--copper); }.palette-picker input { margin: 0; accent-color: var(--copper); }

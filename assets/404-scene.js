@@ -74,11 +74,14 @@
   let overlayActive = document.documentElement.classList.contains('ui-overlay-open');
   let parallaxFrame = 0;
   let parallaxTime = 0;
+  let pendingPointer = null;
+  let lastPointer = null;
   const parallaxPosition = { x: 0, y: 0 };
   const parallaxTarget = { x: 0, y: 0 };
   const parallaxValues = new Map();
   let marshmallowExposure = 0;
   let atmosphere = profileFor(window.portfolioWeather?.condition);
+  let atmosphereFireflyEligibility = window.portfolioWeather?.fireflyEligibility ?? 1;
   let motionProfile = window.portfolioSceneMotion?.profile || Object.freeze({ tempo:1, drift:.7, lift:1, glow:1, activity:1, play:1, water:1, smoke:1 });
   const fireStrength = Object.freeze({ clear:1, cloudy:.9, misty:.8, overcast:.8, rainy:.45, wet:.95, dry:1.08, snowy:.65, drought:0, windy:1.06, thunderstorm:.2 });
   let fireEnabled = window.portfolioSceneTime?.state?.fireActive !== false;
@@ -132,11 +135,20 @@
   const stepParallax = (time) => {
     parallaxFrame = 0;
     if (!visible || motionReduced() || overlayActive) { resetParallax(); return; }
+    // Cursor tilt is normalized in the scene's screen rectangle, not SVG units.
+    // Read geometry once per frame, regardless of the pointer event rate.
+    if (pendingPointer) {
+      const bounds = figure.getBoundingClientRect();
+      if (bounds.width <= 0 || bounds.height <= 0) { resetParallax(); return; }
+      parallaxTarget.x = Math.max(-.5, Math.min(.5, (pendingPointer.x - bounds.left) / bounds.width - .5));
+      parallaxTarget.y = Math.max(-.5, Math.min(.5, (pendingPointer.y - bounds.top) / bounds.height - .5));
+      pendingPointer = null;
+    }
     // Exponential easing has the same response at different refresh rates.
     // Limit a delayed frame so a scheduling stall cannot produce a large jump.
-    const elapsed = Math.min(50, Math.max(0, time - parallaxTime));
+    const elapsed = Math.min(32, Math.max(0, time - parallaxTime));
     parallaxTime = time;
-    const blend = 1 - Math.exp(-elapsed / 90);
+    const blend = 1 - Math.exp(-elapsed / (lastPointer ? 60 : 120));
     for (const axis of ['x', 'y']) {
       parallaxPosition[axis] += (parallaxTarget[axis] - parallaxPosition[axis]) * blend;
       if (Math.abs(parallaxTarget[axis] - parallaxPosition[axis]) < .002) parallaxPosition[axis] = parallaxTarget[axis];
@@ -150,39 +162,49 @@
   };
   const queueParallax = () => {
     if (parallaxFrame) return;
-    if (parallaxPosition.x === parallaxTarget.x && parallaxPosition.y === parallaxTarget.y) {
+    if (!pendingPointer && parallaxPosition.x === parallaxTarget.x && parallaxPosition.y === parallaxTarget.y) {
       if (parallaxTarget.x === 0 && parallaxTarget.y === 0) figure.classList.remove('is-parallax-tracking');
       return;
     }
     parallaxTime = performance.now();
     parallaxFrame = requestAnimationFrame(stepParallax);
   };
-  figure.addEventListener('pointermove', (event) => {
+  document.addEventListener('pointermove', (event) => {
     if (!visible || motionReduced() || overlayActive) { resetParallax(); return; }
     if (event.pointerType === 'touch') return;
-    const bounds = figure.getBoundingClientRect();
-    if (bounds.width <= 0 || bounds.height <= 0) return;
+    if (!Number.isFinite(event.clientX) || !Number.isFinite(event.clientY)) return;
+    if (lastPointer?.x === event.clientX && lastPointer?.y === event.clientY) return;
+    lastPointer = pendingPointer = { x:event.clientX, y:event.clientY };
     figure.classList.add('is-parallax-tracking');
-    parallaxTarget.x = Math.max(-.5, Math.min(.5, (event.clientX - bounds.left) / bounds.width - .5));
-    parallaxTarget.y = Math.max(-.5, Math.min(.5, (event.clientY - bounds.top) / bounds.height - .5));
     queueParallax();
-  }, { passive: true });
+  }, { passive: true, capture: true });
   const resetParallax = () => {
     cancelAnimationFrame(parallaxFrame);
     parallaxFrame = 0;
+    pendingPointer = lastPointer = null;
     parallaxPosition.x = parallaxPosition.y = parallaxTarget.x = parallaxTarget.y = 0;
     figure.classList.remove('is-parallax-tracking');
     setParallax();
   };
-  figure.addEventListener('pointerleave', () => {
+  const leaveParallax = () => {
     if (!visible || motionReduced() || overlayActive) { resetParallax(); return; }
     parallaxTarget.x = parallaxTarget.y = 0;
+    pendingPointer = lastPointer = null;
     queueParallax();
-  });
-  figure.addEventListener('pointercancel', resetParallax);
+  };
+  document.addEventListener('pointerleave', leaveParallax);
+  document.addEventListener('pointerout', (event) => {
+    if (event.relatedTarget === null && event.pointerType !== 'touch') leaveParallax();
+  }, { passive:true });
+  document.addEventListener('pointercancel', resetParallax, { passive:true, capture:true });
   window.addEventListener('blur', resetParallax);
+  const refreshPointerGeometry = () => {
+    if (lastPointer) { pendingPointer = lastPointer; queueParallax(); }
+  };
+  document.addEventListener('scroll', refreshPointerGeometry, { passive:true, capture:true });
 
   const resize = () => {
+    refreshPointerGeometry();
     const bounds = figure.getBoundingClientRect();
     width = Math.max(1, bounds.width);
     height = Math.max(1, bounds.height);
@@ -332,16 +354,23 @@
   reducedMotion.addEventListener?.('change', () => { resetParallax(); updateMotion(); });
   window.portfolioAppearance?.subscribe(() => { resetParallax(); updateMotion(); });
   window.portfolioWeather?.subscribe(({ condition }) => {
-    atmosphere = profileFor(condition);
+    const nextAtmosphere = profileFor(condition);
+    const nextEligibility = window.portfolioWeather?.fireflyEligibility ?? 1;
     figure.dataset.atmosphereCondition = condition;
+    if (atmosphere === nextAtmosphere && atmosphereFireflyEligibility === nextEligibility) return;
+    atmosphere = nextAtmosphere;
+    atmosphereFireflyEligibility = nextEligibility;
     draw(motionReduced() ? 7.25 : performance.now() / 1000);
   });
   window.portfolioSceneTime?.subscribe((state) => {
-    fireEnabled = state.fireActive !== false;
-    timeProfile = profileForTime(state);
+    const nextFireEnabled = state.fireActive !== false;
+    const nextProfile = profileForTime(state);
+    const changed = fireEnabled !== nextFireEnabled || ['stars', 'fireflies', 'embers'].some((key) => timeProfile[key] !== nextProfile[key]);
+    fireEnabled = nextFireEnabled;
+    timeProfile = nextProfile;
     figure.dataset.atmosphereTime = state.time;
     figure.dataset.atmosphereCycle = state.cycle;
-    draw(motionReduced() ? 7.25 : performance.now() / 1000);
+    if (changed) draw(motionReduced() ? 7.25 : performance.now() / 1000);
   });
   window.portfolioSceneMotion?.subscribe((profile) => {
     motionProfile = profile;

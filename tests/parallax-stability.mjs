@@ -34,7 +34,7 @@ test('pointer exit eases back to center and stops scheduling parallax', () => {
   scene.pointer();
   settle(scene);
   const idleFrames = scene.frames.size;
-  scene.figure.emit('pointerleave');
+  scene.document.emit('pointerleave');
   scene.frame(816);
   assert.ok(offsets(scene)[6] > 0 && offsets(scene)[6] < 2.6);
   settle(scene, 816);
@@ -60,11 +60,56 @@ test('elapsed-time easing agrees across refresh rates and settles when idle', ()
 
 test('pointer bursts coalesce to the latest position', () => {
   const scene = createScene();
+  let reads = 0;
+  const bounds = scene.figure.getBoundingClientRect;
+  scene.figure.getBoundingClientRect = () => { reads++; return bounds(); };
   scene.pointer(0, 0);
   scene.pointer(1200, 760);
   scene.pointer(600, 380);
+  assert.equal(reads, 0, 'input handlers do not force layout');
   scene.frame();
+  assert.equal(reads, 1, 'one geometry read for the entire pointer burst');
   assert.deepEqual(offsets(scene), centered);
+});
+
+test('cursor tracking catches up promptly while exit uses a softer return', () => {
+  const scene = createScene();
+  scene.pointer();
+  for (let time = 16; time <= 96; time += 16) scene.frame(time);
+  assert.ok(offsets(scene)[6] >= 2, 'reach most of the 2.6px travel within 96ms');
+  settle(scene, 96);
+  scene.document.emit('pointerleave');
+  for (let time = 912; time <= 992; time += 16) scene.frame(time);
+  assert.ok(offsets(scene)[6] > 1, 'exit decelerates instead of snapping back');
+  settle(scene, 992);
+  assert.deepEqual(offsets(scene), centered);
+});
+
+test('crossing foreground content does not reset cursor tracking', () => {
+  const scene = createScene();
+  scene.pointer();
+  settle(scene);
+  scene.figure.emit('pointerleave');
+  settle(scene, 800);
+  assert.equal(offsets(scene)[6], 2.6);
+});
+
+test('scroll remaps a stationary cursor once and viewport exit clears pending input', () => {
+  const scene = createScene();
+  scene.pointer(900, 380);
+  settle(scene);
+  assert.equal(offsets(scene)[6], 1.3);
+  scene.figure.getBoundingClientRect = () => ({ left:300, top:0, width:1200, height:760 });
+  scene.document.emit('scroll');
+  settle(scene, 800);
+  assert.equal(offsets(scene)[6], 0);
+  scene.pointer(1200, 760);
+  scene.document.emit('pointerout', { relatedTarget:null, pointerType:'mouse' });
+  settle(scene, 1600);
+  assert.deepEqual(offsets(scene), centered);
+  scene.pointer(1200, 760);
+  settle(scene, 2400);
+  assert.equal(offsets(scene)[6], 1.3, 're-entry at the same cursor location is not discarded');
 });
 
 test('delayed frames and out-of-bounds input cannot cause unbounded jumps', () => {
@@ -87,7 +132,7 @@ test('saved reduced motion stops an already active easing loop', () => {
 });
 
 for (const [name, interrupt] of [
-  ['pointercancel', (scene) => scene.figure.emit('pointercancel')],
+  ['pointercancel', (scene) => scene.document.emit('pointercancel')],
   ['window blur', (scene) => scene.window.emit('blur')],
   ['hidden document', (scene) => scene.hide(true)],
   ['open overlay', (scene) => scene.overlay(true)],
