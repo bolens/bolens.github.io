@@ -92,7 +92,7 @@ test('drought supports asset-level selection and scene-wide stress', () => {
 
 test('every terrain placement opts into valid light and weather modes', () => {
   const placements = [...html.matchAll(/<use class="[^"]*\bterrain-asset\b[^"]*"[^>]+href="#([^"]+)"[^>]*>/g)].map((match) => match[0]);
-  assert.equal(placements.length, 206);
+  assert.equal(placements.length, 207);
   for (const placement of placements) {
     const asset = placement.match(/href="#([^"]+)"/)?.[1];
     const light = placement.match(/data-light="([^"]+)"/)?.[1];
