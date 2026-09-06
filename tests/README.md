@@ -19,6 +19,9 @@ The same glyph is stowed against the tent whenever campers shelter. The activity
 matrix checks mutually exclusive rod placements, a relaxed stored shape with no
 cast line or ripples, foreground paint order, viewport containment, and the
 script-disabled fallback. Night captures cover desktop and phone visibility.
+`fishing-glyph-rendering.mjs` measures native SVG-instance pixels to verify the
+relaxed stored rod, hidden cast line and ripples, and wet/drought translations of
+the painted float, ripple contours, and connected line.
 
 The [seasonal customization contract](../specs/011-season-customization/spec.md)
 adds `season-customization.mjs` for native season/moon controls, independent resets,

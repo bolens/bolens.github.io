@@ -725,13 +725,14 @@
 .daytime-activities { display:var(--outdoor-camp-display,none); }
 .riverbank-angler { translate:65px 0; }
 .fishing-float { translate:0 var(--fishing-water-shift,0px); }
+.fishing-line { d:var(--fishing-line-shape,path("M13 38L20 124")); }
 .fishing-rod-blank { d:var(--fishing-rod-shape,path("M88 76C54 30 11 3 13 38")); }
 .fishing-rod-guides { d:var(--fishing-guide-shape,path("M62 46q-3 0-3 3M37 27q-3 1-2 4M20 23q-2 2 0 4")); }
 .stowed-fishing-rod { display:var(--indoor-camp-display,inline);--fishing-cast-display:none;--fishing-rod:#c5ab7e;--fishing-rod-shape:path("M88 76Q53 36 13 10");--fishing-guide-shape:path("m72 58-3 3m-17-23-3 3m-17-20-2 3"); }
 :root[data-weather="drought"] .riverbank-angler { --fishing-water-shift:36px; }
-:root[data-weather="drought"] .fishing-line { d:path("M13 38L20 160"); }
+:root[data-weather="drought"] { --fishing-line-shape:path("M13 38L20 160"); }
 :root:is([data-weather="wet"],[data-weather="rainy"]) .riverbank-angler { --fishing-water-shift:-8px; }
-:root:is([data-weather="wet"],[data-weather="rainy"]) .fishing-line { d:path("M13 38L20 116"); }
+:root:is([data-weather="wet"],[data-weather="rainy"]) { --fishing-line-shape:path("M13 38L20 116"); }
 :is(.tent-guy,.tent-girl,.tent-dog,.tent-camera) { display:var(--indoor-camp-display,inline); }
 :root:not([data-scene-time])[data-theme="day"],
 :root:is([data-scene-time="day"],[data-scene-time="morning"],[data-scene-time="evening"]) { --outdoor-camp-display:inline;--indoor-camp-display:none; }
