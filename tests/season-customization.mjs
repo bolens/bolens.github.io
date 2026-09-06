@@ -74,15 +74,19 @@ try {
     assert.ok(paints.autumn.gold > paints.summer.gold + 500, JSON.stringify(paints));
     assert.ok(paints.summer.green > paints.autumn.green + 500, JSON.stringify(paints));
     await evaluate(send, `document.querySelector('#season-paint-proof').remove()`);
-    const matrix = await evaluate(send, `(()=>{
-      const rows=[];
-      for(const season of [null,...portfolioWeather.seasons])for(const condition of portfolioWeather.conditions){
+    const matrix = [];
+    const catalog = await evaluate(send, '({seasons:[null,...portfolioWeather.seasons],conditions:portfolioWeather.conditions})');
+    // Bound each style flush independently instead of blocking one browser
+    // command on all 55 full-scene changes under concurrent test load.
+    for (const season of catalog.seasons) for (const condition of catalog.conditions) {
+      matrix.push(await evaluate(send, `(()=>{
+        const season=${JSON.stringify(season)},condition=${JSON.stringify(condition)};
         portfolioWeather.setEnvironment({season});portfolioWeather.setLocationCondition(condition);
         const style=s=>getComputedStyle(document.querySelector(s));
         const leaves=['#aspen-copse [data-region="leaf-clusters"]','#aspen-copse [data-region="leaf-shadow"]','#aspen-copse [data-region="leaf-highlights"]','#aspen-copse [data-region="leaf-speckles"]','#aspen-copse [data-region="leaf-veins"]','#willow-clump [data-region="willow-leaves"]','#willow-clump [data-region="leaf-shadow"]','#willow-clump [data-region="leaf-veins"]','#berry-shrub [data-region="leaf-mass"]','#berry-shrub [data-region="leaf-highlights"]','#berry-shrub [data-region="leaf-veins"]','#berry-shrub [data-region="wet-leaf-edges"]'];
-        rows.push({season,condition,dom:document.documentElement.dataset.sceneSeason,hidden:leaves.map(s=>style(s).display==='none'),trunk:style('#aspen-copse [data-region="tapered-trunks"]').display,branches:style('#berry-shrub [data-region="shrub-branches"]').display,petals:style('#wildflower-clump [data-region="petals"]').display,stalks:style('#wildflower-clump [data-region="flower-stalks"]').display});
-      }return rows;
-    })()`);
+        return {season,condition,dom:document.documentElement.dataset.sceneSeason,hidden:leaves.map(s=>style(s).display==='none'),trunk:style('#aspen-copse [data-region="tapered-trunks"]').display,branches:style('#berry-shrub [data-region="shrub-branches"]').display,petals:style('#wildflower-clump [data-region="petals"]').display,stalks:style('#wildflower-clump [data-region="flower-stalks"]').display};
+      })()`));
+    }
     assert.equal(matrix.length, 55);
     for (const row of matrix) {
       assert.equal(row.dom, row.season || 'default');
