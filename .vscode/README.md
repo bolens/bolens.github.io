@@ -15,7 +15,7 @@ Extension recommendations do not install command-line dependencies.
 | Lint site | `node scripts/lint.mjs` |
 | Build generated site | `node scripts/build-site.mjs` |
 | Preview on localhost | `python3 -m http.server 4173 --bind 127.0.0.1` |
-| Test site | `node --test --test-concurrency=2 --test-timeout=60000 tests/*.mjs ` |
+| Test site | `node --test --test-concurrency=2 --test-timeout=60000 tests/*.mjs` |
 | Check diff whitespace | `git diff --check` |
 
 This checkout has no application debug entry configured. Use its validation tasks
