@@ -25,7 +25,7 @@ try {
           const exposure=selector=>getComputedStyle(document.querySelector(selector)).getPropertyValue('--surface-exposure').trim();
           return {strength:+style.getPropertyValue('--surface-light-strength'),cloud:+style.getPropertyValue('--surface-cloud'),color:style.getPropertyValue('--surface-light-color').trim(),shelter:exposure('[data-weather-exposure="sheltered"]'),canopy:exposure('.woodland-plants'),open:exposure('.camp-boulders'),layers:document.querySelectorAll('symbol .surface-light').length,gradient:getComputedStyle(document.querySelector('[data-light-facing="left"]')).getPropertyValue('--surface-gradient').trim()};
         })()`);
-        assert.equal(state.layers, 5);
+        assert.equal(state.layers, 8, 'five existing surfaces plus three summit silhouettes');
         assert.equal(state.shelter, '0');
         assert.ok(+state.canopy < +state.open);
         assert.ok(state.strength > 0 && state.strength <= .34);

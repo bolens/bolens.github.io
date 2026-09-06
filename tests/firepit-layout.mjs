@@ -33,6 +33,7 @@ try {
       // The burner lives in a symbol. Its instance inherits the cold-state rule.
       if(!burning) {assert.equal(state.stoveFlame,false);assert.equal(state.coal,'0');}
       assert.equal(state.front,true);assert.equal(state.rear,true);
+      assert.equal(await evaluate(send,`!!(document.querySelector('.fire-ring-front').compareDocumentPosition(document.querySelector('.smores-kit'))&Node.DOCUMENT_POSITION_FOLLOWING)`),true,'serving tray paints after the front rim');
       assert.ok(state.fuel.x>state.bed.x && state.fuel.right<state.bed.right);
       assert.ok(state.fuel.bottom>state.bed.y && state.fuel.bottom<state.bed.bottom);
       assert.equal(state.running,0);

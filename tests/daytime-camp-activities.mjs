@@ -31,11 +31,33 @@ try {
     return {activities:visible(activities),boxes,peeks,perchOverlap:p.bottom>t.top+20&&p.top<t.top+40,indoor:['.tent-guy','.tent-girl','.tent-dog','.tent-camera'].map(s=>visible(document.querySelector(s))),overflow:document.documentElement.scrollWidth>innerWidth,running:document.querySelector('.cryptid-camp').getAnimations({subtree:true}).filter(a=>a.playState==='running').length};
    })()`);
    assert.equal(result.activities,outdoor);
+   const rodStorage=await evaluate(send,`(()=>{
+    const rod=document.querySelector('.stowed-fishing-rod'),cast=document.querySelector('[data-region="fishing-tackle"]'),tent=document.querySelector('.camp-tent');
+    const visible=node=>node.getBoundingClientRect().width>0&&getComputedStyle(node).display!=='none';
+    const b=rod.getBoundingClientRect(),style=getComputedStyle(rod);
+    return {visible:visible(rod),count:[rod,cast].filter(visible).length,ref:rod.getAttribute('href'),cast:style.getPropertyValue('--fishing-cast-display').trim(),shape:style.getPropertyValue('--fishing-rod-shape').trim(),inside:b.left>=0&&b.right<=innerWidth&&b.top>=0&&b.bottom<=innerHeight,afterTent:!!(tent.compareDocumentPosition(rod)&Node.DOCUMENT_POSITION_FOLLOWING)};
+   })()`);
+   assert.equal(rodStorage.visible,!outdoor,'rod is stowed when campers shelter');
+   assert.equal(rodStorage.count,1,'only one fishing rod placement is visible');
+   assert.equal(rodStorage.ref,'#fishing-kit');
+   assert.equal(rodStorage.cast,'none','stowed gear has no dangling cast or floating water rings');
+   assert.ok(rodStorage.shape.includes('M88 76Q53 36 13 10'),'stowed rod is relaxed');
+   assert.equal(rodStorage.afterTent,true,'rod paints in front of its supporting tent');
+   if(!outdoor)assert.equal(rodStorage.inside,true,'stowed rod fits the visible scene');
    if(outdoor){
     const contacts=await evaluate(send,`(()=>{
      const g=document.querySelector('.riverbank-angler');
      const inWater=(x,y)=>{const p=new DOMPoint(x,y).matrixTransform(g.getScreenCTM());return [...document.querySelectorAll('.river-water > path')].filter(n=>n.getAttribute('fill')!=='none').some(n=>n.isPointInFill(p.matrixTransform(n.getScreenCTM().inverse())));};
      const shift=parseFloat(getComputedStyle(g).getPropertyValue('--fishing-water-shift'))||0;
+     const rod=document.querySelector('#fishing-kit [data-region="rod-blank"]'),line=document.querySelector('#fishing-kit .fishing-line');
+     const tip=rod.getPointAtLength(rod.getTotalLength()),start=line.getPointAtLength(0),end=line.getPointAtLength(line.getTotalLength());
+     const preceding=rod.getPointAtLength(rod.getTotalLength()-5);
+     const ripples=[...document.querySelectorAll('#fishing-kit [data-region="bobber-ripples"] > *')];
+     const ripplesInWater=ripples.every(ripple=>Array.from({length:24},(_,i)=>ripple.getPointAtLength(ripple.getTotalLength()*i/24)).every(p=>inWater(305+p.x,408+p.y+shift)));
+     if(Math.hypot(tip.x-start.x,tip.y-start.y)>.01)throw Error('line disconnected from rod tip');
+     if(Math.hypot(end.x-20,end.y-(124+shift))>.01)throw Error('line disconnected from bobber');
+     if(preceding.y>=tip.y)throw Error('rod tip should bend down under tension');
+     if(ripples.length!==3||!ripplesInWater)throw Error('bobber ripples must stay on the water: '+document.documentElement.dataset.weather+' '+JSON.stringify(ripples.flatMap(ripple=>Array.from({length:24},(_,i)=>ripple.getPointAtLength(ripple.getTotalLength()*i/24))).filter(p=>!inWater(305+p.x,408+p.y+shift)).map(p=>[p.x,p.y])));
      return {feet:inWater(420,552),paws:inWater(477,556),float:inWater(325,532+shift)};
     })()`);
     assert.deepEqual(contacts,{feet:false,paws:false,float:true},width+' '+weather+' bank contacts');
@@ -58,6 +80,12 @@ try {
    if(outdoor){assert.ok(result.boxes.every(b=>b.visible&&b.inside));assert.ok(result.peeks.every(r=>r<.2));assert.equal(result.perchOverlap,true);}
    assert.equal(result.overflow,false);assert.equal(result.running,0);
    if(time==='day'&&weather==='clear'){const shot=await send('Page.captureScreenshot',{format:'png',fromSurface:true});writeFileSync(join(artifactDir,`activities-${width}.png`),Buffer.from(shot.data,'base64'));}
+   if(time==='night'&&weather==='clear'){
+    await evaluate(send,`portfolioAppearance.setTheme('night')`);
+    await finishFiniteAnimations(send,'.cryptid-camp');
+    const shot=await send('Page.captureScreenshot',{format:'png',fromSurface:true});
+    writeFileSync(join(artifactDir,`stowed-rod-${width}.png`),Buffer.from(shot.data,'base64'));
+   }
   }
  }
  await send('Emulation.setScriptExecutionDisabled',{value:true});
@@ -66,6 +94,7 @@ try {
   await navigate(send,server.origin+'/404.html');
   const fallback=await evaluate(send,"({outdoor:getComputedStyle(document.querySelector('.daytime-activities')).display,indoor:getComputedStyle(document.querySelector('.tent-guy')).display})");
   assert.deepEqual(fallback,{outdoor:scheme==='light'?'inline':'none',indoor:scheme==='light'?'none':'inline'},'script-disabled '+scheme+' occupancy');
+  assert.equal(await evaluate(send,`getComputedStyle(document.querySelector('.stowed-fishing-rod')).display`),scheme==='light'?'none':'inline','script-disabled stowed rod follows camper occupancy');
  }
  assert.deepEqual(errors,[]);
 }finally{await browser?.close();await server.close();}

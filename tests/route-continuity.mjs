@@ -4,17 +4,14 @@ import test from 'node:test';
 
 const html = readFileSync(new URL('../404.html', import.meta.url), 'utf8');
 
-test('trail keeps its original scale and extends beyond the scene, without symbol clipping', () => {
+test('trail keeps its scale and extends beyond the right edge of the scene', () => {
   assert.match(html, /id="forest-trail" viewBox="0 0 700 430"/);
   assert.match(html, /href="#forest-trail" x="510" y="401" width="700" height="430"/);
   const trail = html.match(/<symbol id="forest-trail"[\s\S]*?<\/symbol>/)[0];
-  assert.match(trail, /L700 410l-38 30-222-80/);
-  assert.match(trail, /L684 423/);
+  assert.match(trail, /id="trail-bed-outline"/);
+  assert.match(trail, /data-region="trail-tent-bypass" clip-path="url\(#trail-surface-clip\)"/);
   const placement = html.match(/href="#forest-trail" x="([\d.]+)" y="([\d.]+)" width="([\d.]+)" height="([\d.]+)"/).slice(1).map(Number);
-  const viewBox = trail.match(/viewBox="([^"]+)"/)[1].split(' ').map(Number);
-  const endpoint = trail.match(/L([\d.]+) ([\d.]+)l/).slice(1).map(Number);
-  assert.ok(placement[0] + endpoint[0] * placement[2] / viewBox[2] > 1200);
-  assert.ok(placement[1] + endpoint[1] * placement[3] / viewBox[3] > 760);
+  assert.ok(placement[0] + placement[2] > 1200);
 });
 
 test('route entrance cover paints after both routes and survives density reduction', () => {

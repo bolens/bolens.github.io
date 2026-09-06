@@ -142,6 +142,20 @@
 .depth-far { translate:var(--parallax-far-x,0) var(--parallax-far-y,0); }
 .mountain-range-far[data-parallax-plane] { translate:calc(var(--parallax-far-x,0px) * .4) calc(var(--parallax-far-y,0px) * .4); }
 .mountain-range-middle[data-parallax-plane] { translate:calc(var(--parallax-far-x,0px) * .7) calc(var(--parallax-far-y,0px) * .7); }
+/* Authored summit families keep geology stable across weather and resizes.
+   Only deposits and shape-bound illumination change; rock stays opaque. */
+[data-summit="crag"] { --peak-horn-display:none;--peak-crag-display:inline; }
+[data-summit="dome"] { --peak-horn-display:none;--peak-dome-display:inline; }
+.mountain-range { --peak-snow-retention:1;--peak-pocket-opacity:.18;--peak-wet-opacity:0;--surface-material:.65; }
+.mountain-range-far { --asset-detail-secondary-opacity:.32;--asset-detail-fine-opacity:0; }
+.mountain-range-middle { --asset-detail-secondary-opacity:.58;--asset-detail-fine-opacity:.2; }
+.mountain-range-near { --asset-detail-secondary-opacity:.82;--asset-detail-fine-opacity:.6; }
+:root[data-scene-season="summer"] .mountain-range { --peak-snow-retention:.68;--peak-pocket-opacity:.08; }
+:root[data-scene-season="autumn"] .mountain-range { --peak-snow-retention:.8;--peak-pocket-opacity:.12; }
+:root:is([data-weather="rainy"],[data-weather="wet"],[data-weather="thunderstorm"]) .mountain-range { --peak-wet-opacity:.6; }
+:root[data-weather="dry"] .mountain-range { --peak-snow-retention:.6;--peak-pocket-opacity:.06; }
+:root[data-weather="drought"] .mountain-range { --peak-snow-retention:.22;--peak-pocket-opacity:.02; }
+:root[data-weather="snowy"] .mountain-range { --peak-snow-retention:1.65;--peak-pocket-opacity:.85; }
 .depth-mid { translate:var(--parallax-mid-x,0) var(--parallax-mid-y,0); }
 .depth-near { translate:var(--parallax-near-x,0) var(--parallax-near-y,0); }
 .day-flight-ufo.depth-back { translate:0 65px;transform-box:fill-box;transform-origin:center; }
@@ -711,10 +725,14 @@
 .daytime-activities { display:var(--outdoor-camp-display,none); }
 .riverbank-angler { translate:65px 0; }
 .fishing-float { translate:0 var(--fishing-water-shift,0px); }
+.fishing-line { d:var(--fishing-line-shape,path("M13 38L20 124")); }
+.fishing-rod-blank { d:var(--fishing-rod-shape,path("M88 76C54 30 11 3 13 38")); }
+.fishing-rod-guides { d:var(--fishing-guide-shape,path("M62 46q-3 0-3 3M37 27q-3 1-2 4M20 23q-2 2 0 4")); }
+.stowed-fishing-rod { display:var(--indoor-camp-display,inline);--fishing-cast-display:none;--fishing-rod:#c5ab7e;--fishing-rod-shape:path("M88 76Q53 36 13 10");--fishing-guide-shape:path("m72 58-3 3m-17-23-3 3m-17-20-2 3"); }
 :root[data-weather="drought"] .riverbank-angler { --fishing-water-shift:36px; }
-:root[data-weather="drought"] .fishing-line { d:path("M13 10Q23 89 20 160"); }
+:root[data-weather="drought"] { --fishing-line-shape:path("M13 38L20 160"); }
 :root:is([data-weather="wet"],[data-weather="rainy"]) .riverbank-angler { --fishing-water-shift:-8px; }
-:root:is([data-weather="wet"],[data-weather="rainy"]) .fishing-line { d:path("M13 10Q23 67 20 116"); }
+:root:is([data-weather="wet"],[data-weather="rainy"]) { --fishing-line-shape:path("M13 38L20 116"); }
 :is(.tent-guy,.tent-girl,.tent-dog,.tent-camera) { display:var(--indoor-camp-display,inline); }
 :root:not([data-scene-time])[data-theme="day"],
 :root:is([data-scene-time="day"],[data-scene-time="morning"],[data-scene-time="evening"]) { --outdoor-camp-display:inline;--indoor-camp-display:none; }
@@ -725,6 +743,7 @@
 :root:is([data-weather="rainy"],[data-weather="wet"],[data-weather="thunderstorm"]) [data-region="route-head-earth"] { fill:#294b3e; }
 @media (max-width:600px) {
   .riverbank-angler { translate:80px -45px; }
+  .stowed-fishing-rod { translate:-45px 0; }
   :root[data-weather="drought"] .riverbank-angler { translate:65px 0; }
 }
 @keyframes overcast-drift { from { translate:-4px 1px; } to { translate:5px -2px; } }

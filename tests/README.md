@@ -12,6 +12,16 @@ adds `daytime-camp-activities.mjs` for occupancy, depth-relative scale, dry-bank
 rod contacts, and script-disabled fallbacks. `daytime-saucer-route.mjs` checks fixed
 flight phases and both reduced-motion preferences. `scene-habitat-placement.mjs`
 also checks opaque upstream cover across seasonal water levels.
+The activity check also verifies the loaded rod's downward tip, connected line
+endpoints, and all three bobber ripple contours remaining in the river at each
+tested water level. Ripples share the float's water-level translation.
+The same glyph is stowed against the tent whenever campers shelter. The activity
+matrix checks mutually exclusive rod placements, a relaxed stored shape with no
+cast line or ripples, foreground paint order, viewport containment, and the
+script-disabled fallback. Night captures cover desktop and phone visibility.
+`fishing-glyph-rendering.mjs` measures native SVG-instance pixels to verify the
+relaxed stored rod, hidden cast line and ripples, and wet/drought translations of
+the painted float, ripple contours, and connected line.
 
 The [seasonal customization contract](../specs/011-season-customization/spec.md)
 adds `season-customization.mjs` for native season/moon controls, independent resets,
@@ -38,17 +48,33 @@ It verifies that foam/currents follow the water while bank roots remain fixed,
 and captures normal, storm, and drought levels for visual inspection.
 
 `trail-clearance.mjs` checks fitted root/ground footprints against the authored
-trail bed across desktop/phone layouts, four weather states, and three parallax
+trail bed across desktop/phone layouts, day/night, four weather states, and three parallax
 positions. Trees, shrubs, stumps, large stones, and rooted plants must leave the
 path clear. Loose branches, leaf litter, and the trail's embedded stones remain
 allowed. Canopies may overhang the trail without placing roots in its bed.
+The same check samples the complete seating-bench bounds against the trail and
+checks that stump bounds do not overlap either bench. The tent bypass retains
+the existing campsite seating and the trail's clipped material/detail layers.
+Bench bounds must also clear the tent and fire ring. The serving tray stays outside
+the rim, and both halves of the ring remain fixed during parallax changes.
+`firepit-layout.mjs` checks that the front rim paints before the serving tray.
 
 `ground-material-detail.mjs` compares actual reused trail, needle-mat, and gravel
 pixels at simple/rich detail levels and with wet, snow, and drought accents.
 It captures the full scene at desktop/phone widths across four weather states.
 Material-order and named-region contracts live in `terrain-detail-layers.mjs`.
+The rendered-detail matrix also covers the fire-ring stone's facets, chipped
+ledges, wet surfaces, and snow deposits.
 
-The same rendered-detail test covers the reusable Bigfoot track, including five
+`mountain-variation.mjs` checks three summit families in every mountain row,
+opaque bounded rock bodies, unique region targets, and unchanged placement counts.
+Rendered instance comparisons cover detail tiers, rain, snow, and drought.
+Native pixel comparisons also verify fixed direct illumination for each summit
+family. Material values and geometry must return exactly to clear-state values.
+Desktop/phone day/night captures also check responsive row counts,
+reduced motion, overflow, and browser exceptions.
+
+`ground-material-detail.mjs` also covers the reusable Bigfoot track, including five
 toe impressions, the entire track fitting within the trail before clipping,
 detail tiers, and wet/snow/drought pixel changes.
 
