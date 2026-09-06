@@ -142,6 +142,20 @@
 .depth-far { translate:var(--parallax-far-x,0) var(--parallax-far-y,0); }
 .mountain-range-far[data-parallax-plane] { translate:calc(var(--parallax-far-x,0px) * .4) calc(var(--parallax-far-y,0px) * .4); }
 .mountain-range-middle[data-parallax-plane] { translate:calc(var(--parallax-far-x,0px) * .7) calc(var(--parallax-far-y,0px) * .7); }
+/* Authored summit families keep geology stable across weather and resizes.
+   Only deposits and shape-bound illumination change; rock stays opaque. */
+[data-summit="crag"] { --peak-horn-display:none;--peak-crag-display:inline; }
+[data-summit="dome"] { --peak-horn-display:none;--peak-dome-display:inline; }
+.mountain-range { --peak-snow-retention:1;--peak-pocket-opacity:.18;--peak-wet-opacity:0;--surface-material:.65; }
+.mountain-range-far { --asset-detail-secondary-opacity:.32;--asset-detail-fine-opacity:0; }
+.mountain-range-middle { --asset-detail-secondary-opacity:.58;--asset-detail-fine-opacity:.2; }
+.mountain-range-near { --asset-detail-secondary-opacity:.82;--asset-detail-fine-opacity:.6; }
+:root[data-scene-season="summer"] .mountain-range { --peak-snow-retention:.68;--peak-pocket-opacity:.08; }
+:root[data-scene-season="autumn"] .mountain-range { --peak-snow-retention:.8;--peak-pocket-opacity:.12; }
+:root:is([data-weather="rainy"],[data-weather="wet"],[data-weather="thunderstorm"]) .mountain-range { --peak-wet-opacity:.6; }
+:root[data-weather="dry"] .mountain-range { --peak-snow-retention:.6;--peak-pocket-opacity:.06; }
+:root[data-weather="drought"] .mountain-range { --peak-snow-retention:.22;--peak-pocket-opacity:.02; }
+:root[data-weather="snowy"] .mountain-range { --peak-snow-retention:1.65;--peak-pocket-opacity:.85; }
 .depth-mid { translate:var(--parallax-mid-x,0) var(--parallax-mid-y,0); }
 .depth-near { translate:var(--parallax-near-x,0) var(--parallax-near-y,0); }
 .day-flight-ufo.depth-back { translate:0 65px;transform-box:fill-box;transform-origin:center; }

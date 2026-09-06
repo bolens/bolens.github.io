@@ -48,6 +48,13 @@ pixels at simple/rich detail levels and with wet, snow, and drought accents.
 It captures the full scene at desktop/phone widths across four weather states.
 Material-order and named-region contracts live in `terrain-detail-layers.mjs`.
 
+`mountain-variation.mjs` checks three summit families in every mountain row,
+opaque bounded rock bodies, unique region targets, and unchanged placement counts.
+Rendered instance comparisons cover detail tiers, rain, snow, and drought. Native
+material values and geometry must return exactly to clear-state values.
+Desktop/phone day/night captures also check responsive row counts,
+reduced motion, overflow, and browser exceptions.
+
 The same rendered-detail test covers the reusable Bigfoot track, including five
 toe impressions, the entire track fitting within the trail before clipping,
 detail tiers, and wet/snow/drought pixel changes.

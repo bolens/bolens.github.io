@@ -280,12 +280,33 @@
             <path d="M1000 126 866 546h116l45-414Z" opacity=".68"/>
             <path d="M936 103 540 454h143l281-333Z" opacity=".52"/>
           </symbol>
-          <symbol id="alpine-peak" viewBox="0 0 240 220" data-regions="mountain-face,mountain-shadow,snow-cap,ridge-lines,rock-glints">
-            <path d="m0 220 26-43 11-9 18-38 13-8 23-54 10-8 19-50 15 28 6 24 20 19 12 32 15 14 15 34 13 12 24 47Z" fill="var(--peak-fill,url(#mountain-near))"/>
-            <path d="m120 10 15 28 6 24 20 19 12 32 15 14 15 34 13 12 24 47-82-78-38 45-22-54-42 49Z" fill="var(--peak-shadow,#173744)" opacity="var(--peak-shadow-opacity,.82)"/>
-            <path d="M120 10 135 38 141 62 151 72 132 57 119 75 103 61 91 68 101 60Z" fill="var(--peak-snow,#d4e0dc)" opacity="var(--peak-snow-opacity,.52)"/>
-            <path d="m120 10-22 123m22-58 38 67m-60-9-42 49m102-40 33 31" fill="none" stroke="var(--peak-ridge,#31515a)" stroke-width="4" stroke-linecap="round" opacity="var(--peak-ridge-opacity,.6)"/>
-            <path d="m81 118 18-15 13 4m42 18 12-5 11 9" fill="none" stroke="var(--peak-glint,#6f898b)" stroke-width="2.5" stroke-linecap="round" opacity=".42"/>
+          <symbol id="alpine-peak" viewBox="0 0 240 220" data-regions="horn-summit,crag-summit,dome-summit,rock-shelves,scree-fans,sheltered-snow,wet-gullies,rock-glints">
+            <g data-region="horn-summit" style="display:var(--peak-horn-display,inline)">
+              <path d="m0 220 26-43 11-9 18-38 13-8 23-54 10-8 19-50 15 28 6 24 20 19 12 32 15 14 15 34 13 12 24 47Z" fill="var(--peak-fill,url(#mountain-near))"/>
+              <path d="M120 10 135 38 141 62 161 81 173 113 188 127 203 161 216 173 240 220 158 142 120 187 98 133 56 182Z" fill="var(--peak-shadow,#173744)" opacity="var(--peak-shadow-opacity,.82)"/>
+              <path d="M120 10 135 38 141 62 151 72 132 57 119 75 103 61 91 68 101 60Z" fill="var(--peak-snow,#d4e0dc)" opacity="calc(var(--peak-snow-opacity,.52) * var(--peak-snow-retention,1))"/>
+              <path d="M120 10 98 133 56 182m64-107 38 67 33 31" fill="none" stroke="var(--peak-ridge,#31515a)" stroke-width="2.4" stroke-linejoin="round" opacity="var(--peak-ridge-opacity,.6)"/>
+              <path class="surface-light" d="m0 220 26-43 11-9 18-38 13-8 23-54 10-8 19-50 15 28 6 24 20 19 12 32 15 14 15 34 13 12 24 47Z"/>
+            </g>
+            <g data-region="crag-summit" style="display:var(--peak-crag-display,none)">
+              <path d="M0 220 26 176 48 158 67 99 82 86 105 28 116 42 122 59 141 22 154 49 159 79 177 102 187 142 212 169 240 220Z" fill="var(--peak-fill,url(#mountain-near))"/>
+              <path d="M141 22 154 49 159 79 177 102 187 142 212 169 240 220 160 162 147 115 125 140 116 91 105 28 122 59Z" fill="var(--peak-shadow,#173744)" opacity="var(--peak-shadow-opacity,.82)"/>
+              <path d="M105 28 116 42 122 59 141 22 154 49 159 79 146 62 134 80 122 76 113 59 97 70Z" fill="var(--peak-snow,#d4e0dc)" opacity="calc(var(--peak-snow-opacity,.52) * var(--peak-snow-retention,1))"/>
+              <path d="M105 28 116 91 91 148 62 178m50-57 13 19 22-25 13 47 34 26m-53-166 6 93" fill="none" stroke="var(--peak-ridge,#31515a)" stroke-width="2.4" stroke-linejoin="round" opacity="var(--peak-ridge-opacity,.6)"/>
+              <path class="surface-light" d="M0 220 26 176 48 158 67 99 82 86 105 28 116 42 122 59 141 22 154 49 159 79 177 102 187 142 212 169 240 220Z"/>
+            </g>
+            <g data-region="dome-summit" style="display:var(--peak-dome-display,none)">
+              <path d="M0 220 25 178 45 165 62 112 77 90 88 55 107 38 128 34 151 52 164 89 185 119 192 148 219 176 240 220Z" fill="var(--peak-fill,url(#mountain-near))"/>
+              <path d="M128 34 151 52 164 89 185 119 192 148 219 176 240 220 177 176 145 135 133 166 109 108 107 38Z" fill="var(--peak-shadow,#173744)" opacity="var(--peak-shadow-opacity,.82)"/>
+              <path d="M88 55 107 38 128 34 151 52 164 89 145 71 136 83 119 69 107 77 96 68 81 82Z" fill="var(--peak-snow,#d4e0dc)" opacity="calc(var(--peak-snow-opacity,.52) * var(--peak-snow-retention,1))"/>
+              <path d="M107 38 109 108 79 150 61 181m30-50 25 21 17 14 12-31 32 41m-49-142 17 101" fill="none" stroke="var(--peak-ridge,#31515a)" stroke-width="2.4" stroke-linejoin="round" opacity="var(--peak-ridge-opacity,.6)"/>
+              <path class="surface-light" d="M0 220 25 178 45 165 62 112 77 90 88 55 107 38 128 34 151 52 164 89 185 119 192 148 219 176 240 220Z"/>
+            </g>
+            <g class="asset-detail-secondary" data-region="rock-shelves" fill="none" stroke="var(--peak-ridge,#31515a)" stroke-width="1.8"><path d="m79 121 16-10 12 5m-39 30 20-6 12 4m34-42 11 4 13 21m-43 36 20-8 15 10m14 10 17 8 13 1"/></g>
+            <g class="asset-detail-secondary" data-region="scree-fans" fill="var(--peak-glint,#6f898b)" opacity=".25"><path d="m91 147-22 47 37-9Zm62 10-13 42 39-3Zm-30 21-9 30 24-4Z"/></g>
+            <g class="asset-detail-secondary" data-region="sheltered-snow" fill="var(--peak-snow,#d4e0dc)"><path d="m113 87-9 32 4 17 6-22 5-10Zm26 37-9 29 7-5 7-15Zm-47 37-13 24 9-6 10-18Z" opacity="var(--peak-pocket-opacity,.18)"/></g>
+            <g class="asset-detail-secondary" data-region="wet-gullies" fill="none" stroke="var(--peak-shadow,#173744)" stroke-width="3"><path d="m112 93-9 29 8 23-11 29m39-45 10 28-8 31" opacity="var(--peak-wet-opacity,0)"/></g>
+            <g class="asset-detail-fine" data-region="rock-glints" fill="none" stroke="var(--peak-glint,#6f898b)" stroke-width="1.2" stroke-linecap="round"><path d="m81 118 13-7m60 14 9-3 8 8m-93 45 7-4m7 6 5-3m52 13 6-2m8 7 5 2m-50-10 4-7"/></g>
           </symbol>
           <symbol id="bigfoot-track" viewBox="0 0 52 96" data-regions="sole-impression,toe-impressions,compressed-rim,heel-pressure,skin-creases,loose-grit,pooled-water,dry-fractures,snow-lip,conditions">
             <path data-region="sole-impression" d="M14 27Q9 33 12 47l3 13q-3 12-2 22 1 9 12 10 13 0 14-10 2-10-2-24l5-19q2-12-8-14-9-3-20 2Z" fill="var(--track-soil,#514431)" stroke="var(--track-edge,#776246)" stroke-width="1.8"/>
@@ -963,30 +984,30 @@
         <use class="weather-drought" aria-hidden="true" href="#drought-field" width="1200" height="760"/>
 
         <g class="mountain-range mountain-range-far depth-far scene-layer" data-parallax-plane="far" data-scene-layer="terrain-far" data-scale-band="far" data-placement-pattern="broken-saddle" data-region="far-mountain-ridge" style="--peak-fill:url(#mountain-far);--peak-shadow:#102b35;--peak-snow:#91aaa9;--peak-snow-opacity:.3;--peak-ridge:#31515a">
-          <use href="#alpine-peak" x="-18" y="326" width="142" height="119" transform="rotate(-1.8 53 445)" style="--peak-shadow-opacity:.66"/>
-          <use href="#alpine-peak" x="86" y="265" width="210" height="181" transform="rotate(1.2 191 446)" style="--peak-snow-opacity:.24"/>
-          <use href="#alpine-peak" x="238" y="150" width="318" height="296" transform="rotate(-.7 397 446)" style="--peak-shadow-opacity:.72"/>
-          <use href="#alpine-peak" x="476" y="277" width="184" height="169" transform="rotate(1.6 568 446)" style="--peak-snow-opacity:.2"/>
-          <use href="#alpine-peak" x="610" y="193" width="273" height="253" transform="rotate(-1.1 747 446)" style="--peak-shadow-opacity:.7"/>
-          <use href="#alpine-peak" x="824" y="235" width="258" height="211" transform="rotate(1.1 953 446)" style="--peak-snow-opacity:.26"/>
-          <use href="#alpine-peak" x="1038" y="305" width="184" height="141" transform="rotate(-1.5 1130 446)" style="--peak-shadow-opacity:.68"/>
+          <use data-summit="dome" href="#alpine-peak" x="-18" y="326" width="142" height="119" transform="rotate(-1.8 53 445)" style="--peak-shadow-opacity:.66"/>
+          <use data-summit="horn" href="#alpine-peak" x="86" y="265" width="210" height="181" transform="rotate(1.2 191 446)" style="--peak-snow-opacity:.24"/>
+          <use data-summit="crag" href="#alpine-peak" x="238" y="150" width="318" height="296" transform="rotate(-.7 397 446)" style="--peak-shadow-opacity:.72"/>
+          <use data-summit="dome" href="#alpine-peak" x="476" y="277" width="184" height="169" transform="rotate(1.6 568 446)" style="--peak-snow-opacity:.2"/>
+          <use data-summit="horn" href="#alpine-peak" x="610" y="193" width="273" height="253" transform="rotate(-1.1 747 446)" style="--peak-shadow-opacity:.7"/>
+          <use data-summit="crag" href="#alpine-peak" x="824" y="235" width="258" height="211" transform="rotate(1.1 953 446)" style="--peak-snow-opacity:.26"/>
+          <use data-summit="dome" href="#alpine-peak" x="1038" y="305" width="184" height="141" transform="rotate(-1.5 1130 446)" style="--peak-shadow-opacity:.68"/>
         </g>
         <g class="mountain-range mountain-range-middle depth-far scene-layer" data-parallax-plane="far" data-scene-layer="terrain-middle" data-scale-band="far-middle" data-placement-pattern="offset-ridge" data-region="middle-mountain-ridge" style="--peak-fill:#31505a;--peak-shadow:#112f3a;--peak-snow:#b2c5c0;--peak-snow-opacity:.37;--peak-ridge:#3b5d64">
-          <use href="#alpine-peak" x="-54" y="286" width="194" height="171" transform="rotate(1.4 43 457)" style="--peak-shadow-opacity:.72;--peak-snow-opacity:.28"/>
-          <use href="#alpine-peak" x="83" y="219" width="258" height="238" transform="rotate(-1.2 212 457)" style="--peak-shadow-opacity:.78"/>
-          <use href="#alpine-peak" x="298" y="300" width="202" height="157" transform="rotate(2 399 457)" style="--peak-snow-opacity:.3"/>
-          <use href="#alpine-peak" x="444" y="202" width="286" height="255" transform="rotate(-.8 587 457)" style="--peak-shadow-opacity:.8;--peak-snow-opacity:.42"/>
-          <use href="#alpine-peak" x="680" y="279" width="220" height="178" transform="rotate(1.7 790 457)" style="--peak-snow-opacity:.31"/>
-          <use href="#alpine-peak" x="848" y="214" width="278" height="243" transform="rotate(-1 987 457)" style="--peak-shadow-opacity:.79;--peak-snow-opacity:.4"/>
-          <use href="#alpine-peak" x="1070" y="310" width="178" height="147" transform="rotate(1.5 1159 457)" style="--peak-shadow-opacity:.7;--peak-snow-opacity:.27"/>
+          <use data-summit="crag" href="#alpine-peak" x="-54" y="286" width="194" height="171" transform="rotate(1.4 43 457)" style="--peak-shadow-opacity:.72;--peak-snow-opacity:.28"/>
+          <use data-summit="dome" href="#alpine-peak" x="83" y="219" width="258" height="238" transform="rotate(-1.2 212 457)" style="--peak-shadow-opacity:.78"/>
+          <use data-summit="horn" href="#alpine-peak" x="298" y="300" width="202" height="157" transform="rotate(2 399 457)" style="--peak-snow-opacity:.3"/>
+          <use data-summit="crag" href="#alpine-peak" x="444" y="202" width="286" height="255" transform="rotate(-.8 587 457)" style="--peak-shadow-opacity:.8;--peak-snow-opacity:.42"/>
+          <use data-summit="dome" href="#alpine-peak" x="680" y="279" width="220" height="178" transform="rotate(1.7 790 457)" style="--peak-snow-opacity:.31"/>
+          <use data-summit="horn" href="#alpine-peak" x="848" y="214" width="278" height="243" transform="rotate(-1 987 457)" style="--peak-shadow-opacity:.79;--peak-snow-opacity:.4"/>
+          <use data-summit="crag" href="#alpine-peak" x="1070" y="310" width="178" height="147" transform="rotate(1.5 1159 457)" style="--peak-shadow-opacity:.7;--peak-snow-opacity:.27"/>
         </g>
         <g class="mountain-range mountain-range-near depth-far scene-layer" data-parallax-plane="far" data-scene-layer="terrain-near" data-scale-band="far-near" data-placement-pattern="clearing-saddle" data-region="near-mountain-ridge" style="--peak-fill:url(#mountain-near);--peak-shadow:#173744;--peak-snow:#d4e0dc;--peak-snow-opacity:.48;--peak-ridge:#31515a">
-          <use href="#alpine-peak" x="-8" y="288" width="226" height="169" transform="rotate(-1.4 105 457)" style="--peak-shadow:#173542;--peak-snow-opacity:.34"/>
-          <use href="#alpine-peak" x="142" y="168" width="326" height="289" transform="rotate(.8 305 457)" style="--peak-shadow-opacity:.86;--peak-snow-opacity:.52"/>
-          <use href="#alpine-peak" x="418" y="291" width="224" height="166" transform="rotate(-2 530 457)" style="--peak-shadow:#0c2631;--peak-snow-opacity:.3"/>
-          <use href="#alpine-peak" x="586" y="207" width="304" height="250" transform="rotate(1 738 457)" style="--peak-shadow:#193946;--peak-snow-opacity:.5"/>
-          <use href="#alpine-peak" x="828" y="254" width="258" height="203" transform="rotate(-1.6 957 457)" style="--peak-shadow:#0c2631;--peak-snow-opacity:.32"/>
-          <use href="#alpine-peak" x="1018" y="294" width="210" height="163" transform="rotate(1.2 1123 457)" style="--peak-shadow-opacity:.76;--peak-snow-opacity:.38"/>
+          <use data-summit="dome" href="#alpine-peak" x="-8" y="288" width="226" height="169" transform="rotate(-1.4 105 457)" style="--peak-shadow:#173542;--peak-snow-opacity:.34"/>
+          <use data-summit="horn" href="#alpine-peak" x="142" y="168" width="326" height="289" transform="rotate(.8 305 457)" style="--peak-shadow-opacity:.86;--peak-snow-opacity:.52"/>
+          <use data-summit="crag" href="#alpine-peak" x="418" y="291" width="224" height="166" transform="rotate(-2 530 457)" style="--peak-shadow:#0c2631;--peak-snow-opacity:.3"/>
+          <use data-summit="dome" href="#alpine-peak" x="586" y="207" width="304" height="250" transform="rotate(1 738 457)" style="--peak-shadow:#193946;--peak-snow-opacity:.5"/>
+          <use data-summit="crag" href="#alpine-peak" x="828" y="254" width="258" height="203" transform="rotate(-1.6 957 457)" style="--peak-shadow:#0c2631;--peak-snow-opacity:.32"/>
+          <use data-summit="horn" href="#alpine-peak" x="1018" y="294" width="210" height="163" transform="rotate(1.2 1123 457)" style="--peak-shadow-opacity:.76;--peak-snow-opacity:.38"/>
         </g>
         <path d="M0 435q105-62 207-21 98 39 191-13 106-60 212 3 90 54 189 4 117-58 201 8 86 67 200 8v103H0Z" fill="#163a3c" opacity=".78"/>
         <path d="M0 446c169-55 331-34 486-2 206 43 386-27 714-14v330H0Z" fill="url(#forest-floor-depth)"/>
