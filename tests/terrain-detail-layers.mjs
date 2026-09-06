@@ -52,6 +52,26 @@ test('forest-floor glyphs expose natural surface detail', () => {
   }
 });
 
+test('trail and ground material layers preserve substrate order and shared condition controls', () => {
+  const additions = {
+    'forest-trail': ['compacted-tread','edge-deposits','scattered-trail-grit','trail-damp-hollows','trail-drought-fissures','trail-snow-pockets'],
+    'pine-needle-mat': ['packed-duff','needle-fibers','damp-duff','duff-snow-pockets'],
+    'gravel-patch': ['silt-fans','fine-grit-scatter','gravel-damp-pockets','silt-drought-cracks','gravel-snow-pockets'],
+  };
+  for (const [id, regions] of Object.entries(additions)) {
+    for (const region of regions) {
+      assert.match(symbols[id], new RegExp(`data-region="${region}"`));
+      assert.match(symbols[id], new RegExp(`data-regions="[^"]*${region}`));
+    }
+    assert.match(symbols[id], /--asset-wet-opacity/);
+    assert.match(symbols[id], /--asset-snow-opacity/);
+    assert.doesNotMatch(symbols[id], /<animate|animation:/);
+  }
+  assert.ok(symbols['pine-needle-mat'].indexOf('data-region="packed-duff"') < symbols['pine-needle-mat'].indexOf('data-region="crossed-needles"'));
+  assert.ok(symbols['gravel-patch'].indexOf('data-region="silt-fans"') < symbols['gravel-patch'].indexOf('data-region="pebble-bodies"'));
+  assert.match(symbols['forest-trail'], /data-region="trail-surface-detail" clip-path="url\(#trail-surface-clip\)"/);
+});
+
 test('small botanical glyphs expose anatomical detail layers', () => {
   const manifests = {
     'fungi-cluster': ['fruiting-bodies', 'stem-striations', 'cap-mottling', 'mycelium'],

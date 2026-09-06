@@ -13,6 +13,45 @@ rod contacts, and script-disabled fallbacks. `daytime-saucer-route.mjs` checks f
 flight phases and both reduced-motion preferences. `scene-habitat-placement.mjs`
 also checks opaque upstream cover across seasonal water levels.
 
+The [seasonal customization contract](../specs/011-season-customization/spec.md)
+adds `season-customization.mjs` for native season/moon controls, independent resets,
+external state synchronization, all 55 season/weather combinations, and actual
+SVG-instance pixel checks. `season-motion.mjs` checks unchanged animation budgets,
+two fixed wind phases, both reduced-motion preferences, and narrow/short panels.
+`weather-fallback.mjs` checks the frozen season catalog and DOM state at notification.
+
+`picker-performance.mjs` counts animation-allocation writes and atmosphere redraws
+for unchanged control inputs at desktop and phone widths. It also verifies real
+weather/time repainting, overlay pause/resume, reduced motion, and the CSS-only
+pause fallback. These are deterministic work-count assertions, not timing budgets.
+`scene-motion-profiles.mjs` checks duplicate-notification suppression and unsubscribe.
+
+`parallax-cursor.mjs` drives real mouse input over the illustration and foreground
+card at desktop and phone widths, captures both settled positions, and checks
+overlay and reduced-motion gates. `parallax-stability.mjs` uses controlled frames
+to cover prompt tracking, softer return, one geometry read per input burst,
+stationary-cursor remapping on scroll, viewport exit, and cancellation.
+
+`river-containment.mjs` checks native painted hit regions against both the fixed
+bank boundary and moving water surface at two widths and six weather states.
+It verifies that foam/currents follow the water while bank roots remain fixed,
+and captures normal, storm, and drought levels for visual inspection.
+
+`trail-clearance.mjs` checks fitted root/ground footprints against the authored
+trail bed across desktop/phone layouts, four weather states, and three parallax
+positions. Trees, shrubs, stumps, large stones, and rooted plants must leave the
+path clear. Loose branches, leaf litter, and the trail's embedded stones remain
+allowed. Canopies may overhang the trail without placing roots in its bed.
+
+`ground-material-detail.mjs` compares actual reused trail, needle-mat, and gravel
+pixels at simple/rich detail levels and with wet, snow, and drought accents.
+It captures the full scene at desktop/phone widths across four weather states.
+Material-order and named-region contracts live in `terrain-detail-layers.mjs`.
+
+The same rendered-detail test covers the reusable Bigfoot track, including five
+toe impressions, the entire track fitting within the trail before clipping,
+detail tiers, and wet/snow/drought pixel changes.
+
 | Code | Behavioral coverage |
 | --- | --- |
 | `assets/appearance-controller.js` | `appearance-controller.mjs` checks restored and invalid preferences, preview precedence, persistence failure, metadata, atomic notifications, system changes, toggles, reset, and cross-tab events. `theme-smoke.mjs` verifies integration with actual theme data and CSS. |

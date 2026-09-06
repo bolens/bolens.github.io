@@ -142,7 +142,7 @@ test('riverbank profile, roots, and pebbles use configurable assets', () => {
 });
 
 test('the forest trail reuses a condition-aware path beneath the tree frame', () => {
-  assert.match(html, /<symbol id="forest-trail"[^>]+data-regions="trail-bed,trail-edge,trail-wear,embedded-stones,root-crossings,conditions"/);
+  assert.match(html, /<symbol id="forest-trail"[^>]+data-regions="trail-bed,trail-edge,trail-wear,embedded-stones,root-crossings,conditions(?:,[^"]+)?"/);
   assert.equal([...html.matchAll(/href="#forest-trail"/g)].length, 1);
   assert.match(html, /class="terrain-asset background-trail depth-mid scene-layer"[^>]+data-region="winding-forest-trail"/);
   assert.ok(html.indexOf('data-region="winding-forest-trail"') < html.indexOf('data-region="midground-tree-line"'));

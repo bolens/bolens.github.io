@@ -173,6 +173,8 @@
   filter:brightness(var(--asset-light-brightness)) saturate(var(--asset-light-saturation)) sepia(var(--asset-light-sepia)) hue-rotate(var(--asset-light-hue)) brightness(var(--asset-time-brightness)) saturate(var(--asset-time-saturation)) sepia(var(--asset-time-sepia)) hue-rotate(var(--asset-time-hue)) brightness(var(--asset-weather-brightness)) saturate(var(--asset-weather-saturation)) sepia(var(--asset-weather-sepia)) var(--asset-light-shadow) var(--asset-time-shadow);
   transition:filter .55s ease;
 }
+/* Impressions receive the soil's lighting, but do not cast object shadows. */
+.terrain-asset[href="#bigfoot-track"] { filter:brightness(var(--asset-light-brightness)) saturate(var(--asset-light-saturation)) sepia(var(--asset-light-sepia)) hue-rotate(var(--asset-light-hue)) brightness(var(--asset-time-brightness)) saturate(var(--asset-time-saturation)) sepia(var(--asset-time-sepia)) hue-rotate(var(--asset-time-hue)) brightness(var(--asset-weather-brightness)) saturate(var(--asset-weather-saturation)) sepia(var(--asset-weather-sepia)); }
 .terrain-asset[data-detail="simple"] { --asset-detail-secondary-opacity:0;--asset-detail-fine-opacity:0; }
 .terrain-asset[data-detail="standard"] { --asset-detail-secondary-opacity:.72;--asset-detail-fine-opacity:.42; }
 .terrain-asset[data-detail="rich"] { --asset-detail-secondary-opacity:1;--asset-detail-fine-opacity:.86; }
@@ -251,8 +253,6 @@
   --asset-dry-opacity:0;--asset-drought-opacity:0;--asset-wind-opacity:0;
   --asset-weather-brightness:1;--asset-weather-saturation:1;--asset-weather-sepia:0;
 }
-:root:is([data-weather="thunderstorm"],[data-weather="wet"]) .aspen-grove ,
-:root:is([data-weather="rainy"],[data-weather="wet"]) .aspen-grove { --aspen-bark:#c8d1c4;--aspen-edge:#53695f;--aspen-leaf:#365f4b;--aspen-leaf-shadow:#244839;--aspen-highlight:#86a875; }
 /* Season is phenology, not weather. Material colors mix beneath existing light,
    surface wetness, snow, and detail layers; structural bodies remain opaque. */
 :root[data-scene-season="spring"] { --season-aspen:#86a356;--season-willow:#789457;--season-shrub:#628449;--season-grass:#729056;--season-litter:#665640;--season-flower:#dbc3e8; }
@@ -310,6 +310,8 @@
   --season-ground-mid:color-mix(in srgb,var(--season-grass) var(--season-ground-share),var(--scene-ground-mid));
   --season-ground-dark:color-mix(in srgb,var(--season-grass) calc(var(--season-ground-share) * .4),var(--scene-ground-dark));
 }
+:root:is([data-weather="thunderstorm"],[data-weather="wet"]) .aspen-grove ,
+:root:is([data-weather="rainy"],[data-weather="wet"]) .aspen-grove { --aspen-bark:#c8d1c4;--aspen-edge:#53695f;--aspen-leaf:#365f4b;--aspen-leaf-shadow:#244839;--aspen-highlight:#86a875; }
 :root:is([data-weather="dry"],[data-weather="drought"]) .aspen-grove { --aspen-bark:#d2c7ad;--aspen-leaf:#77734f;--aspen-leaf-shadow:#58553e;--aspen-highlight:#b39761;--aspen-leaf-opacity:.74; }
 :root[data-weather="snowy"] .aspen-grove { --aspen-bark:#e0e4da;--aspen-edge:#76837c;--aspen-leaf:#657467;--aspen-highlight:#c4d1bc;--aspen-leaf-opacity:.48; }
 .terrain-asset[data-species="aspen"] { --snag-pine-display:none;--snag-aspen-display:inline; }
