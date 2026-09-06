@@ -54,3 +54,8 @@ Project listings, command-palette entries, shared page chrome, `sitemap.xml`, an
 - `assets/appearance-picker.js` owns the appearance controls and their focus behavior.
 - `assets/ui-overlay.js` aggregates picker and command-dialog state for animation consumers.
 - `assets/command-palette.js` owns search, commands, and keyboard shortcuts and uses the public appearance and overlay interfaces.
+
+## License scope and attribution
+
+See [third-party notices](THIRD_PARTY_NOTICES.md) for the project license scope,
+retained upstream notices, and dependency or asset exceptions.
