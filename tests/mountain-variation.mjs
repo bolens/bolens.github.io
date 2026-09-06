@@ -59,6 +59,9 @@ try {
     // State restoration is exact. Screenshots prove visible state differences,
     // not byte-identical rasterization across independent compositor frames.
     assert.deepEqual((await paint('clear')).state,clear.state,'clear restores material values, variant, detail, and geometry');
+    await evaluate(send,`document.querySelector('#mountain-proof').style.setProperty('--surface-light-strength','.34')`);
+    assert.notEqual((await paint('clear')).hash,clear.hash,variant+' instance paints fixed direct illumination');
+    await evaluate(send,`document.querySelector('#mountain-proof').style.setProperty('--surface-light-strength','0')`);
   }
   assert.equal(new Set(shapes).size,3,'all summit silhouettes render differently');
   await evaluate(send,`document.querySelector('#mountain-proof').remove();document.querySelector('#mountain-proof-still').remove()`);
