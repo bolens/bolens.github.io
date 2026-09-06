@@ -40,3 +40,7 @@ commands, defaults, schemas, and generated catalogs instead of copying them. Cha
 affected references together. Update this index when adding or moving a guide, and verify relative
 links and heading anchors. Historical specs and audits describe their recorded revision, not current
 runtime proof. A topic without an implementation stays explicitly unimplemented.
+
+## Topic guides
+
+- [Editor setup](../.vscode/README.md)
