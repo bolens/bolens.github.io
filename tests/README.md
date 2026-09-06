@@ -12,6 +12,13 @@ adds `daytime-camp-activities.mjs` for occupancy, depth-relative scale, dry-bank
 rod contacts, and script-disabled fallbacks. `daytime-saucer-route.mjs` checks fixed
 flight phases and both reduced-motion preferences. `scene-habitat-placement.mjs`
 also checks opaque upstream cover across seasonal water levels.
+The activity check also verifies the loaded rod's downward tip, connected line
+endpoints, and all three bobber ripple contours remaining in the river at each
+tested water level. Ripples share the float's water-level translation.
+The same glyph is stowed against the tent whenever campers shelter. The activity
+matrix checks mutually exclusive rod placements, a relaxed stored shape with no
+cast line or ripples, foreground paint order, viewport containment, and the
+script-disabled fallback. Night captures cover desktop and phone visibility.
 
 The [seasonal customization contract](../specs/011-season-customization/spec.md)
 adds `season-customization.mjs` for native season/moon controls, independent resets,
