@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-05
 
-**Status**: Implemented and verified locally; not yet published
+**Status**: Implemented on audited main `e5b5212b80f0`; see the retrofit verification receipt.
 
 **Input**: Continue with the next candidates after merging the 404 scene pass.
 
