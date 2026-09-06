@@ -1,7 +1,9 @@
 # Agent guidance
 
-Read `.specify/memory/constitution.md`, `.specify/memory/project-guide.md`,
-`README.md`, and `tests/README.md` before planning or implementing changes.
+Use `README.md` to locate site sources and `tests/README.md` to select behavior
+and browser checks. For substantial changes, read the constitution and project
+guide under `.specify/memory/`. Prose-only edits need the affected content and
+its source, without unrelated browser or architecture documentation.
 
 - Keep public content accurate and private information out of published files.
 - Edit generated project and theme surfaces through their data sources and
