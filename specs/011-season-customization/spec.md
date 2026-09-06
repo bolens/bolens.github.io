@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-05
 
-**Status**: Implemented and verified locally, not published
+**Status**: Implemented on audited main `e5b5212b80f0`; see the retrofit verification receipt.
 
 **Input**: User description: "continue to iterate and improve on scene variations and dynamicism and customizations than we have already implemented"
 

@@ -1,6 +1,6 @@
 # Feature specification: Daytime campsite activities
 **Created**: 2026-09-05
-**Status**: Implemented and verified locally. Specification began before implementation.
+**Status**: Implemented on audited main `e5b5212b80f0`; see the retrofit verification receipt.
 **Branch**: feat/404-season-moon
 **Input**: Hide Mothman behind a pine tip, scale daytime Bigfoot/dogman realistically, show the man fishing with the dog and the woman mushroom picking, and make the flying alien/saucer emerge from and return behind cloud/ridge cover.
 

@@ -1,6 +1,8 @@
 # Specification coverage
 
-Audited on 2026-09-05 against `8ef9aa5` and the local `feat/404-season-moon` changes.
+Initial baseline: `8ef9aa5` and the local season/moon changes.
+Retrofit verification on 2026-09-05: current main `e5b5212b80f0` plus the
+T010 tests. The complete gate passed 453 tests without failures or skips.
 
 ## What requires a specification
 
@@ -20,7 +22,7 @@ a substitute for that contract.
 
 | Feature | Status | Contract and evidence |
 | --- | --- | --- |
-| Seasonal firefly eligibility and lunar phases | Implemented locally, not published | [Spec](001-season-moon/spec.md), [plan](001-season-moon/plan.md), [tasks](001-season-moon/tasks.md), [state contract](001-season-moon/contracts/scene-state.md), [traceability](001-season-moon/coverage.md), [quality checklist](001-season-moon/checklists/requirements.md) |
+| Seasonal firefly eligibility and lunar phases | Present on audited main | [Spec](001-season-moon/spec.md), [plan](001-season-moon/plan.md), [tasks](001-season-moon/tasks.md), [state contract](001-season-moon/contracts/scene-state.md), [traceability](001-season-moon/coverage.md), [quality checklist](001-season-moon/checklists/requirements.md) |
 | Site content and generation | Retrospective baseline | [002-site-content](002-site-content/spec.md) |
 | Appearance, overlays, and commands | Retrospective baseline | [003-appearance-commands](003-appearance-commands/spec.md) |
 | Navigation and project discovery | Retrospective baseline | [004-navigation-discovery](004-navigation-discovery/spec.md) |
@@ -29,8 +31,8 @@ a substitute for that contract.
 | 404 terrain, habitat, cryptids, and camp | Retrospective baseline through PR #12 | [007-scene-composition](007-scene-composition/spec.md) |
 | 404 rendering, parallax, and atmosphere | Retrospective baseline through PR #12 | [008-scene-runtime](008-scene-runtime/spec.md) |
 | Verification, delivery, and repository tooling | Retrospective baseline | [009-verification-delivery](009-verification-delivery/spec.md) |
-| Daytime activities, tree peeks, and covered routes | Implemented and verified locally, not published | [Spec](010-daytime-activities/spec.md), [plan](010-daytime-activities/plan.md), [tasks](010-daytime-activities/tasks.md) |
-| Seasonal vegetation and 404 season/moon controls | Implemented and verified locally, not published | [Spec](011-season-customization/spec.md), [plan](011-season-customization/plan.md), [evidence](011-season-customization/verification.md) |
+| Daytime activities, tree peeks, and covered routes | Present on audited main | [Spec](010-daytime-activities/spec.md), [plan](010-daytime-activities/plan.md), [tasks](010-daytime-activities/tasks.md) |
+| Seasonal vegetation and 404 season/moon controls | Present on audited main | [Spec](011-season-customization/spec.md), [plan](011-season-customization/plan.md), [evidence](011-season-customization/verification.md) |
 | Bird, moth, rainbow, real location/weather provider, and precise astronomical behavior | Candidate ideas, not scoped or implemented in this pass | Create separate feature contracts if selected. This register does not authorize implementation or publication. |
 
 The register covers this checkout, not uncommitted changes in other agents'
@@ -134,3 +136,12 @@ the original local selector afterward if the command changes it.
 
 No extension/preset hooks were configured during this audit. Managed templates,
 scripts, workflow references, and integration manifests were not edited.
+
+## Recurring verification
+
+Manual checks in baseline quickstarts apply whenever the relevant visual or
+delivery boundary changes. Their task files now distinguish these recurring
+obligations from unfinished implementation. The retrofit changes tests and
+evidence only. The existing Chromium suite passes, and desktop quarter-moon
+and narrow season/moon control captures were inspected. This does not establish
+universal device performance or replace later publication review.

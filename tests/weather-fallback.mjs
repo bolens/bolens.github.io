@@ -91,6 +91,56 @@ test('optional environment validates, resets, and gates flying firefly habitat',
   assert.equal(api.fireflyEligibility,1);
 });
 
+test('environment bounds and invalid fields normalize independently without retaining omitted values', () => {
+  const { context } = setup();
+  const api = context.window.portfolioWeather;
+  for (const [input, expected] of [[-90.01, null], [-90, -90], [60, 60], [60.01, null]]) {
+    const state = api.setEnvironment({ temperatureC: input, season: 'summer', fireflyHabitat: false });
+    assert.deepEqual({ ...state.environment }, { temperatureC: expected, season: 'summer', fireflyHabitat: false });
+  }
+  for (const [input, expected] of [
+    [{ temperatureC: 20, season: 'invalid', fireflyHabitat: true }, { temperatureC: 20, season: null, fireflyHabitat: true }],
+    [{ temperatureC: '20', season: 'winter', fireflyHabitat: true }, { temperatureC: null, season: 'winter', fireflyHabitat: true }],
+    [{ temperatureC: 20, season: 'spring', fireflyHabitat: 1 }, { temperatureC: 20, season: 'spring', fireflyHabitat: null }],
+    [{ season: 'autumn' }, { temperatureC: null, season: 'autumn', fireflyHabitat: null }],
+    [null, { temperatureC: null, season: null, fireflyHabitat: null }],
+  ]) {
+    assert.deepEqual({ ...api.setEnvironment(input).environment }, expected);
+  }
+});
+
+test('environment notifications observe committed DOM and preserve independent weather selection', () => {
+  const { context, events, setPalette } = setup();
+  const api = context.window.portfolioWeather;
+  const dataset = context.document.documentElement.dataset;
+  api.setLocationCondition('rainy');
+  const calls = [];
+  const first = api.subscribe(state => {
+    assert.equal(dataset.sceneSeason, state.environment.season || 'default');
+    assert.equal(dataset.sceneFireflyEligibility, String(state.fireflyEligibility));
+    assert.equal(dataset.weather, 'rainy');
+    assert.equal(api.environment, state.environment);
+    assert.ok(Object.isFrozen(state));
+    assert.ok(Object.isFrozen(state.environment));
+    calls.push(['first', state]);
+  });
+  const second = api.subscribe(state => calls.push(['second', state]));
+  const state = api.setEnvironment({ season: 'winter', temperatureC: -5 });
+  assert.deepEqual(calls.map(([name]) => name), ['first', 'second']);
+  assert.equal(calls[0][1], state);
+  assert.equal(calls[1][1], state);
+  assert.equal(events.at(-1).detail, state);
+  first();
+  calls.length = 0;
+  setPalette('desert');
+  assert.equal(api.environment.season, 'winter');
+  api.setEnvironment(null);
+  assert.deepEqual(calls.map(([name]) => name), ['second', 'second']);
+  assert.equal(api.condition, 'rainy');
+  assert.equal(api.source, 'location');
+  second();
+});
+
 test('every named palette defines a valid fallback condition', () => {
   const { context } = setup();
   const { palettes, weatherModes } = context.window.portfolioThemeData;

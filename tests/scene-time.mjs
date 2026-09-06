@@ -70,6 +70,40 @@ test('automatic moon uses an approximate UTC lunar cycle without adding a timer'
   assert.equal(timers.length,1);
 });
 
+test('moon overrides survive time, appearance, clock and reset interleavings', () => {
+  const { context, setAppearance, setClock, timers } = setup('day', 'auto');
+  const api = context.window.portfolioSceneTime;
+  const anchor = new Date(Date.UTC(2000, 0, 6, 18, 15));
+  setClock(anchor);
+  for (const phase of [0, .25, .75, 1]) {
+    api.setMoonPhase(phase);
+    for (const time of ['day', 'night', 'morning', 'evening', 'twilight', 'invalid']) {
+      api.setTime(time);
+      for (const appearance of ['day', 'night', 'auto']) {
+        setAppearance(appearance, appearance === 'auto' ? 'day' : appearance);
+        timers[0].callback();
+        assert.equal(api.state.moonPhase, phase === 1 ? 0 : phase);
+        assert.equal(api.state.moonSource, 'override');
+      }
+      api.useAppearanceFallback();
+      assert.equal(api.state.moonPhase, phase === 1 ? 0 : phase);
+    }
+  }
+  for (const invalid of [null, undefined, NaN, Infinity, -Infinity, -.001, 1.001, '0.5', {}, []]) {
+    api.setTime('evening');
+    api.setMoonPhase(.25);
+    api.setMoonPhase(invalid);
+    assert.equal(api.time, 'evening');
+    assert.equal(api.source, 'scene');
+    assert.equal(api.state.moonPhase, .5);
+    assert.equal(api.state.moonSource, 'fixed');
+    api.useAppearanceFallback();
+    assert.equal(api.state.moonSource, 'clock');
+    assert.ok(api.state.moonPhase < 1e-10);
+  }
+  assert.equal(timers.length, 1);
+});
+
 test('automatic fire uses local meal windows with exact inclusive/exclusive boundaries', () => {
   const { context, document } = setup('day', 'auto');
   const api = context.window.portfolioSceneTime;

@@ -22,7 +22,22 @@
 ## Documentation audit follow-up
 
 - [x] T009 Add explicit state boundaries and requirement/evidence mappings in `contracts/scene-state.md`, `data-model.md`, `research.md`, `quickstart.md`, and `coverage.md` during the requested specification audit.
-- [ ] T010 Add independent boundary, field-normalization, subscriber-order, and override-interleaving assertions in `tests/weather-fallback.mjs` and `tests/scene-time.mjs` for the gaps recorded in `coverage.md`. This is follow-up test work, not completed by the documentation pass.
+- [x] T010 Add independent boundary, field-normalization, subscriber-order, and override-interleaving assertions in `tests/weather-fallback.mjs` and `tests/scene-time.mjs` for the gaps recorded in `coverage.md`.
+
+## Retrofit verification: 2026-09-05
+
+The follow-up was implemented against main revision `e5b5212b80f0`.
+Three added tests cover the exact -90/60 input bounds, independent invalid-field
+normalization, omitted-field replacement, committed DOM and shared immutable
+snapshots at notification, unsubscribe, and phase persistence across all named
+times, appearance choices, clock refresh, and reset. Invalid phase values release
+only the phase override and restore either fixed or clock defaults.
+
+`node scripts/lint.mjs` passed. The complete README gate passed 453 tests with
+zero failures or skips on Node.js 24.20.0. Browser checks used the repository's
+isolated loopback harness. No application behavior or animation budget changed.
+Hosted delivery evidence belongs to the retrofit PR, not the historical local
+receipt below.
 
 ## Dependencies
 

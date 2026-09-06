@@ -29,7 +29,10 @@ not claim historical implementation work or unperformed manual review.
 ## Phase 5: Verification
 
 - [x] T005 Run the automated checks in `quickstart.md` through the full repository gate and record the outcome in `../audit.md`.
-- [ ] T006 Perform manual checks in `quickstart.md` when the relevant visual or delivery change is next proposed; retain separate revision-specific evidence.
+T006 is a recurring delivery obligation: perform the manual checks in
+`quickstart.md` when the relevant visual or delivery change is proposed and
+retain revision-specific evidence. It is not an unfinished implementation task
+or a claim that future manual checks have passed.
 - [x] T007 Check path/ID links and spec quality in `checklists/requirements.md` and `../audit.md`.
 
 ## Dependencies and strategy
