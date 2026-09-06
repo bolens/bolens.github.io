@@ -20,6 +20,7 @@ const assets = [
   'grass-tuft',
   'pine-needle-mat',
   'gravel-patch',
+  'bigfoot-track',
   'fungi-cluster',
   'fly-agaric',
   'shelf-fungi',
@@ -75,7 +76,7 @@ test('lighting and weather modes form an orthogonal variant matrix', () => {
   for (const mode of lightModes) assert.match(css, new RegExp(`data-light="${mode}"`), `missing ${mode} light mode`);
   for (const mode of weatherModes) assert.match(css, new RegExp(`data-weather="${mode}"`), `missing ${mode} weather mode`);
   for (const mode of timeModes) assert.match(css, new RegExp(`data-scene-time="${mode}"[^}]+\\.terrain-asset`), `missing ${mode} scene-time mode`);
-  assert.equal(timeModes.length * lightModes.length * weatherModes.length * assets.length, 14025);
+  assert.equal(timeModes.length * lightModes.length * weatherModes.length * assets.length, 14300);
 });
 
 test('snow supports asset-level selection and scene-wide accumulation', () => {
