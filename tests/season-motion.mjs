@@ -9,6 +9,8 @@ try {
   browser = await startBrowser();
   const { send } = browser;
   await send('Runtime.enable');
+  // This test samples the full tier's pine sway, not the host's CPU budget.
+  await send('Emulation.setHardwareConcurrencyOverride', { hardwareConcurrency: 8 });
   await send('Emulation.setDeviceMetricsOverride', { width: 1440, height: 900, deviceScaleFactor: 1, mobile: false });
   await send('Emulation.setEmulatedMedia', { features: [{ name: 'prefers-reduced-motion', value: 'no-preference' }] });
   await navigate(send, server.origin + '/404.html');
