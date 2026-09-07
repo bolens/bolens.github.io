@@ -1,5 +1,7 @@
 # Portfolio Constitution
 
+[Documentation](../../docs/README.md)
+
 ## Core principles
 
 ### I. Accurate public content

@@ -1,5 +1,7 @@
 # Site delivery playbook
 
+[Documentation](docs/README.md)
+
 This repository continuously deploys the portfolio to
 <https://bolens.github.io/> from `main`. It has no package version or release
 tags. `.github/workflows/deploy-pages.yml` owns GitHub Pages publication.

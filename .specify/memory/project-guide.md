@@ -1,5 +1,7 @@
 # bolens.github.io Spec Kit project guide
 
+[Documentation](../../docs/README.md)
+
 A static portfolio with generated project/navigation data and browser-tested interactive
 presentation.
 
