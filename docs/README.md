@@ -44,3 +44,4 @@ runtime proof. A topic without an implementation stays explicitly unimplemented.
 ## Topic guides
 
 - [Editor setup](../.vscode/README.md)
+- [License scope and attribution](../THIRD_PARTY_NOTICES.md)
