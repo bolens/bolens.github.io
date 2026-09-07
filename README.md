@@ -59,3 +59,8 @@ Project listings, command-palette entries, shared page chrome, `sitemap.xml`, an
 
 See [third-party notices](THIRD_PARTY_NOTICES.md) for the project license scope,
 retained upstream notices, and dependency or asset exceptions.
+
+## Devcontainer
+
+See [the devcontainer guide](.devcontainer/README.md) for the repository toolchain,
+setup, checks and platform limits.
