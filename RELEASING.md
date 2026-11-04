@@ -48,7 +48,8 @@ validated revision, skips superseded revisions, and rechecks main after any
 `github-pages` environment approval. Validation runs once per main revision.
 
 The Pages artifact contains only root HTML, `.nojekyll`, crawler metadata,
-`assets/`, `about/`, `work/`, and `case-studies/`. Tests, source data, scripts,
+`.well-known/security.txt`, `assets/`, `about/`, `work/`, and `case-studies/`.
+Hidden-file upload is enabled only for this staged allowlist. Tests, source data, scripts,
 and repository instructions are excluded. Add any new public top-level path to
 the staging list in `.github/workflows/deploy-pages.yml`.
 
