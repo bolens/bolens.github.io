@@ -138,6 +138,15 @@ for (const [relativePath, prefix, current, workHref, aboutHref, footerHref, foot
     .replace(/<footer class="site-footer wrap">[\s\S]*?<\/footer>/, footer));
 }
 
+// Shared analytics is generated once on every public page, including 404.
+const analyticsTag = '<script src="/assets/web-analytics.js" defer></script>';
+for (const [path, content] of outputs) {
+  if (!path.endsWith('.html')) continue;
+  outputs.set(path, content
+    .replace(/<script src="\/assets\/web-analytics\.js" defer><\/script>\n?/g, '')
+    .replace('</body>', `${analyticsTag}\n</body>`));
+}
+
 let writeSequence = 0;
 const writeAtomically = (path, content) => {
   const temporary = `${path}.${process.pid}.${++writeSequence}.tmp`;
