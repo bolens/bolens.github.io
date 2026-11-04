@@ -73,3 +73,9 @@ Report security issues privately to `michael@bolens.dev`. The published contact
 file is [security.txt](https://michael.bolens.dev/.well-known/security.txt), sourced
 from [`.well-known/security.txt`](.well-known/security.txt). Review the contact
 details and renew its expiration before October 31, 2027.
+
+## Web analytics
+
+Production pages load Cloudflare Web Analytics for aggregate traffic and page-performance measurements. `assets/web-analytics.js` enables the optional module only on `michael.bolens.dev` and `bolens.github.io`; it respects Global Privacy Control and Do Not Track. Preview hosts do not load the beacon. Blocking analytics does not prevent the site from working.
+
+The site supplies no custom events, account identifiers, cookies, or stored preferences to analytics. Cloudflare receives standard page and performance measurements; see its [collection documentation](https://developers.cloudflare.com/web-analytics/data-metrics/data-origin-and-collection/). The beacon identifier is public configuration, not an API credential. Shared script inclusion belongs to `scripts/build-site.mjs`; regenerate HTML after changing it.
