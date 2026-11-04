@@ -66,3 +66,10 @@ retained upstream notices, and dependency or asset exceptions.
 
 See [the devcontainer guide](.devcontainer/README.md) for the repository toolchain,
 setup, checks and platform limits.
+
+## Security contact
+
+Report security issues privately to `michael@bolens.dev`. The published contact
+file is [security.txt](https://michael.bolens.dev/.well-known/security.txt), sourced
+from [`.well-known/security.txt`](.well-known/security.txt). Review the contact
+details and renew its expiration before October 31, 2027.
