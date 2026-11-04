@@ -20,3 +20,8 @@ test('UI fixture accepts explicit skip diagnostics without hiding other AbortErr
   assert.equal(isApplicationException({ exception: { description: 'AbortError: The operation was aborted' }, url: `${origin}/assets/site.js` }, origin), true);
   assert.equal(isApplicationException({ exception: { description: 'AbortError: Transition was skipped. unexpected application failure' }, url: `${origin}/assets/site.js` }, origin), true);
 });
+
+test('UI fixture ignores native opt-in refusal while preserving application state errors', () => {
+  assert.equal(isApplicationException({ exception: { description: 'InvalidStateError: Transition was aborted because of invalid state. ViewTransition opt-in disabled' }, url: `${origin}/about/` }, origin), false);
+  assert.equal(isApplicationException({ exception: { description: 'InvalidStateError: application state is invalid' }, url: `${origin}/assets/site.js` }, origin), true);
+});
