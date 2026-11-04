@@ -9,7 +9,7 @@ packages. Setup installs dependencies from this checkout's lockfiles and runs
 `smoke.sh`. Rebuild the container after Dockerfile changes. Rerun
 `bash .devcontainer/post-create.sh` after changing dependency lockfiles.
 
-Includes Node 24 and Chromium for the repository browser tests. Run
+Includes Node 26 and Chromium for the repository browser tests. Run
 `python3 -m http.server 8000 --bind 0.0.0.0` for a localhost-forwarded preview.
 
 Run from the workspace root:
