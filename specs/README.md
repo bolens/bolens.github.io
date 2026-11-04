@@ -22,7 +22,7 @@ a substitute for that contract.
 
 | Feature | Status | Contract and evidence |
 | --- | --- | --- |
-| Public portfolio caching and deployment purge | Implementation pending | [Spec](013-public-site-cache/spec.md), [plan](013-public-site-cache/plan.md), [tasks](013-public-site-cache/tasks.md) |
+| Public portfolio caching and deployment purge | Delivered November 4, 2026 | [Spec](013-public-site-cache/spec.md), [plan](013-public-site-cache/plan.md), [tasks](013-public-site-cache/tasks.md) |
 | Seasonal firefly eligibility and lunar phases | Present on audited main | [Spec](001-season-moon/spec.md), [plan](001-season-moon/plan.md), [tasks](001-season-moon/tasks.md), [state contract](001-season-moon/contracts/scene-state.md), [traceability](001-season-moon/coverage.md), [quality checklist](001-season-moon/checklists/requirements.md) |
 | Site content and generation | Retrospective baseline | [002-site-content](002-site-content/spec.md) |
 | Appearance, overlays, and commands | Retrospective baseline | [003-appearance-commands](003-appearance-commands/spec.md) |
