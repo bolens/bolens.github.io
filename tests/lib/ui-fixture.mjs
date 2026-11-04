@@ -5,7 +5,8 @@ import { startSiteServer } from './site-server.mjs';
 
 export const isApplicationException = (details, origin) => {
   const description = details.exception?.description ?? details.text;
-  if (description === 'AbortError: Transition was skipped') return false;
+  if (description === 'AbortError: Transition was skipped'
+    || description === 'AbortError: Transition was skipped. skipTransition() called') return false;
   const urls = [details.url, ...(details.stackTrace?.callFrames ?? []).map((frame) => frame.url)].filter(Boolean);
   return urls.some((url) => url.startsWith(origin));
 };
