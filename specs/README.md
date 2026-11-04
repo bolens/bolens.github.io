@@ -33,7 +33,7 @@ a substitute for that contract.
 | Verification, delivery, and repository tooling | Retrospective baseline | [009-verification-delivery](009-verification-delivery/spec.md) |
 | Daytime activities, tree peeks, and covered routes | Present on audited main | [Spec](010-daytime-activities/spec.md), [plan](010-daytime-activities/plan.md), [tasks](010-daytime-activities/tasks.md) |
 | Seasonal vegetation and 404 season/moon controls | Present on audited main | [Spec](011-season-customization/spec.md), [plan](011-season-customization/plan.md), [evidence](011-season-customization/verification.md) |
-| Cloudflare Web Analytics | Implemented; delivery pending | [Spec](012-cloudflare-analytics/spec.md), [plan](012-cloudflare-analytics/plan.md), [tasks](012-cloudflare-analytics/tasks.md) |
+| Cloudflare Web Analytics | Delivered and verified November 4, 2026 | [Spec](012-cloudflare-analytics/spec.md), [plan](012-cloudflare-analytics/plan.md), [tasks](012-cloudflare-analytics/tasks.md) |
 | Bird, moth, rainbow, real location/weather provider, and precise astronomical behavior | Candidate ideas, not scoped or implemented in this pass | Create separate feature contracts if selected. This register does not authorize implementation or publication. |
 
 The register covers this checkout, not uncommitted changes in other agents'
