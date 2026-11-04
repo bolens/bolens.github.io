@@ -6,7 +6,8 @@ import { startSiteServer } from './site-server.mjs';
 export const isApplicationException = (details, origin) => {
   const description = details.exception?.description ?? details.text;
   if (description === 'AbortError: Transition was skipped'
-    || description === 'AbortError: Transition was skipped. skipTransition() called') return false;
+    || description === 'AbortError: Transition was skipped. skipTransition() called'
+    || description === 'InvalidStateError: Transition was aborted because of invalid state. ViewTransition opt-in disabled') return false;
   const urls = [details.url, ...(details.stackTrace?.callFrames ?? []).map((frame) => frame.url)].filter(Boolean);
   return urls.some((url) => url.startsWith(origin));
 };
