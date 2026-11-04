@@ -14,3 +14,9 @@ test('UI fixture reports only attributable application exceptions', () => {
 test('UI fixture ignores expected cross-document transition cancellation', () => {
   assert.equal(isApplicationException({ exception: { description: 'AbortError: Transition was skipped' }, url: `${origin}/case-studies/uddns/` }, origin), false);
 });
+
+test('UI fixture accepts explicit skip diagnostics without hiding other AbortErrors', () => {
+  assert.equal(isApplicationException({ exception: { description: 'AbortError: Transition was skipped. skipTransition() called' }, url: `${origin}/about/` }, origin), false);
+  assert.equal(isApplicationException({ exception: { description: 'AbortError: The operation was aborted' }, url: `${origin}/assets/site.js` }, origin), true);
+  assert.equal(isApplicationException({ exception: { description: 'AbortError: Transition was skipped. unexpected application failure' }, url: `${origin}/assets/site.js` }, origin), true);
+});
