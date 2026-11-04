@@ -83,3 +83,15 @@ with the same tooling revision pinned in
 [the workflow](.github/workflows/source-lint.yml). Review exclusions when adding
 source files; generated and imported files retain their native validation.
 Require the new check to pass on the current PR head before merging.
+
+## Cloudflare caching
+
+Cloudflare proxies the public website and caches eligible responses while respecting the origin's cache-control and browser lifetime. Hostname-scoped rules exclude cookie/authorization requests and avoid storing error responses. Dynamic homelab applications are outside these rules.
+
+After a successful Pages deployment, the same deployment job purges only `michael.bolens.dev`. Hostname purging also clears query variants and deleted routes. PR validation, skipped/failed deployments and superseded portfolio revisions cannot purge. The purge uses no custom cache key and never requests a zone-wide purge.
+
+The `github-pages` environment supplies `CLOUDFLARE_CACHE_PURGE_TOKEN` as a secret and `CLOUDFLARE_ZONE_ID` as a variable. Each site's token has only Cache Purge permission for its own zone. Cloudflare scopes this permission by zone rather than hostname, so the workflow's fixed hostname payload is the narrower operational boundary. Credentials expire November 4, 2027, Denver time. Renew with the same scope before expiry and replace the environment secret. Keep credentials out of Git and public artifacts.
+
+A missing credential, invalid zone ID, HTTP failure or unsuccessful API response fails the workflow after deployment. The site may already be deployed when purging fails. Inspect the failure, repair the credential/configuration and retry the failed deployment job through Actions. Requests have bounded timeouts/retries. Purging Cloudflare does not clear visitors' browser caches or the GitHub Pages origin CDN, which currently advertises a 10-minute lifetime.
+
+For rollback, disable the site's new cache rules and restore its recorded DNS proxy flags. Preserve the GitHub Pages custom domain, HTTPS origin certificate and mail records. DNS/rule baselines and live verification receipts are stored privately outside this repository.
