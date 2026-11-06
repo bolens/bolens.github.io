@@ -155,7 +155,7 @@ successful main workflow and rechecks that the validated revision is current.
 For a local subset, Node still supports `--test-shard=1/3` (replace `1` with `2`
 or `3`). This is a diagnostic option; the native CI gate always runs the full glob.
 
-Owned test browsers use Chromium's [explicit testing switch](https://chromium.googlesource.com/chromium/src/+/refs/tags/156.0.8078.79/chrome/common/chrome_switches.cc)
+Owned test browsers use Chromium's [explicit testing switch](https://chromium.googlesource.com/chromium/src/+/refs/tags/156.0.8078.79/chrome/common/chrome_switches.h)
 to disable Crashpad initialization, preventing detached crash-helper processes
 from outliving their fixture. These browser tests do not collect or qualify
 Crashpad dump symbolization. Browser stderr, CDP exceptions, assertions and
