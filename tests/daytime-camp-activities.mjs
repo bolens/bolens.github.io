@@ -17,7 +17,7 @@ try {
  for(const [width,height] of [[1440,900],[390,844]]) {
   await send('Emulation.setDeviceMetricsOverride',{width,height,deviceScaleFactor:1,mobile:false});
   await navigate(send,server.origin+'/404.html');
-  await waitFor(send,"document.querySelector('.hybrid-effects-ready')&&!document.documentElement.classList.contains('is-loading')",'scene ready');
+  await waitFor(send,"document.querySelector('.hybrid-effects-ready')&&!document.documentElement.classList.contains('is-loading')&&!!(window.portfolioAppearance&&window.portfolioSceneTime&&window.portfolioWeather)",'scene ready');
   for(const [time,weather,outdoor] of [['day','clear',true],['day','drought',true],['morning','rainy',true],['evening','wet',true],['day','snowy',false],['day','thunderstorm',false],['night','clear',false],['twilight','dry',false]]) {
    await evaluate(send,`portfolioAppearance.setTheme('${outdoor?'night':'day'}');portfolioSceneTime.setTime('${time}');portfolioWeather.setLocationCondition('${weather}')`);
    await finishFiniteAnimations(send,'.cryptid-camp');

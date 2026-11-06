@@ -79,3 +79,17 @@ details and renew its expiration before October 31, 2027.
 Production pages load Cloudflare Web Analytics for aggregate traffic and page-performance measurements. `assets/web-analytics.js` enables the optional module only on `michael.bolens.dev` and `bolens.github.io`; it respects Global Privacy Control and Do Not Track. Preview hosts do not load the beacon. Blocking analytics does not prevent the site from working.
 
 The site supplies no custom events, account identifiers, cookies, or stored preferences to analytics. Cloudflare receives standard page and performance measurements; see its [collection documentation](https://developers.cloudflare.com/web-analytics/data-metrics/data-origin-and-collection/). The beacon identifier is public configuration, not an API credential. Shared script inclusion belongs to `scripts/build-site.mjs`; regenerate HTML after changing it.
+
+## Woodpecker validation
+
+[The native portfolio pipeline](.woodpecker/portfolio.yml) runs lint and the
+complete Node test file set on pull requests and main pushes, with two workers
+and no retries. Tests use isolated Chromium profiles and owned loopback servers.
+The Node 24 and clone images are digest-pinned; Chromium resolves from Debian's
+configured package repositories and its version is logged on every run. No host
+mounts, privileged containers, or deployment credentials are required.
+
+GitHub's Lint gate and Pages deployment remain intact until exact-head native PR
+and genuine main validation pass. The existing source/workflow lint and GitHub
+Pages environment remain separate gates. Review YAML image pins monthly and on
+security releases; Dependabot's Dockerfile updates do not update these references.

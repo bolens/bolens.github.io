@@ -13,7 +13,7 @@ links, accessibility, and privacy. Edit generated content through
 `data/projects.json`, `data/themes.json`, or `scripts/build-site.mjs`, then run
 `node scripts/build-site.mjs` when those sources change.
 
-Run the same gate as the `lint` job in `.github/workflows/lint.yml`:
+Run the complete gate used by Woodpecker `portfolio` and GitHub Lint:
 
 ```sh
 node scripts/lint.mjs
@@ -34,7 +34,7 @@ Push only the feature branch:
 git push --set-upstream origin HEAD
 ```
 
-Open a PR against `main`. Review the full diff, require all applicable checks
+Open a PR against `main`. Review the full diff, require all applicable GitHub and Woodpecker checks
 on the current head, resolve conversations, and squash-merge. Never push
 directly to `main`, force-push, skip failing hooks, or bypass protection.
 Verify checks on the merged SHA and delete the merged branch.

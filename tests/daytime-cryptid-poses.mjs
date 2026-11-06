@@ -17,7 +17,7 @@ try {
   for (const [width, height] of [[1440,900], [390,844]]) {
     await send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor:1, mobile:false });
     await navigate(send, `${server.origin}/404.html`);
-    await waitFor(send, `document.querySelector('.hybrid-effects-ready') && !document.documentElement.classList.contains('is-loading')`, 'character scene ready');
+    await waitFor(send, `document.querySelector('.hybrid-effects-ready') && !document.documentElement.classList.contains('is-loading') && !!(window.portfolioAppearance && window.portfolioSceneTime && window.portfolioWeather)`, 'character scene ready');
     for (const theme of ['day', 'night']) {
       await evaluate(send, `portfolioAppearance.setTheme('${theme}')`);
       for (const time of ['day', 'morning', 'evening', 'twilight', 'night']) {
