@@ -52,14 +52,8 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
         while (live() && performance.now() < forcedDeadline) await new Promise(done => setTimeout(done, 25));
         if (live()) throw new Error('Owned browser cleanup did not finish before its deadline');
       }
-      const cleanupDeadline = performance.now() + 2_000;
-      let absentChecks = 0;
-      while (absentChecks < 3 && performance.now() < cleanupDeadline) {
-        rmSync(profile, { recursive: true, force: true });
-        await new Promise((done) => setTimeout(done, 25));
-        absentChecks = existsSync(profile) ? 0 : absentChecks + 1;
-      }
       rmSync(profile, { recursive: true, force: true });
+      if (existsSync(profile)) throw new Error('Owned browser profile cleanup is incomplete');
     })();
     return closing;
   };
