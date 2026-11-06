@@ -116,9 +116,12 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
     const send = (method, params = {}, timeoutMs = 30_000) => new Promise((resolve, reject) => {
       if (closed) return reject(new Error('browser connection is closed'));
       const requestId = ++id;
+      const expression = method === 'Runtime.evaluate' ? `: ${String(params.expression).slice(0, 180)}` : '';
+      const timeoutError = new Error(`browser command timed out after ${timeoutMs}ms: ${method}${expression}`);
+      Error.captureStackTrace(timeoutError, send);
       const timeout = setTimeout(() => {
         pending.delete(requestId);
-        reject(new Error(`browser command timed out after ${timeoutMs}ms: ${method}`));
+        reject(timeoutError);
       }, timeoutMs);
       pending.set(requestId, { resolve, reject, timeout });
       socket.send(JSON.stringify({ id: requestId, method, params }));

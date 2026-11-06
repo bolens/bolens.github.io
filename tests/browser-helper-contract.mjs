@@ -34,6 +34,14 @@ try {
     },
   );
 
+  await send('Runtime.evaluate', { expression: 'new Promise(() => {})', awaitPromise: true }, 100).then(
+    () => { throw new Error('unresolved browser command was accepted'); },
+    (error) => {
+      if (!error.message.includes('Runtime.evaluate: new Promise(() => {})') || !error.stack.includes('browser-helper-contract.mjs')) throw error;
+    },
+  );
+  if (await evaluate(send, '6 * 7') !== 42) throw new Error('timed-out command prevented later protocol work');
+
   const finished = await finishFiniteAnimations(send, '.scope');
   const states = await evaluate(send, `(()=>Object.fromEntries(['inside','ambient','outside'].map((name)=>[name,document.querySelector('.'+name).getAnimations()[0].playState])))()`);
   if (finished !== 1 || JSON.stringify(states) !== JSON.stringify({ inside: 'finished', ambient: 'paused', outside: 'paused' })) {
