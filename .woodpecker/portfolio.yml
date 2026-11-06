@@ -22,8 +22,9 @@ steps:
       DEBIAN_FRONTEND: noninteractive
     commands:
       - apt-get update
-      - apt-get install -y --no-install-recommends chromium git
+      - apt-get install -y --no-install-recommends chromium git python3
       - node --version
       - chromium --version
+      - python3 -m unittest discover -s scripts -p 'test_woodpecker_handoff.py' -v
       - node scripts/lint.mjs
       - node --test --test-concurrency=1 --test-timeout=60000 tests/*.mjs
