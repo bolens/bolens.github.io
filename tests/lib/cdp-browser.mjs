@@ -122,6 +122,7 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
     };
     const send = (method, params = {}, timeoutMs = 30_000) => new Promise((resolve, reject) => {
       if (closed) return reject(new Error('browser connection is closed'));
+      if (method === 'Browser.close') tracker?.observe();
       const requestId = ++id;
       const expression = method === 'Runtime.evaluate' ? `: ${String(params.expression).slice(0, 180)}` : '';
       const timeoutError = new Error(`browser command timed out after ${timeoutMs}ms: ${method}${expression}`);
@@ -134,7 +135,6 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
       socket.send(JSON.stringify({ id: requestId, method, params }));
     });
     const close = async () => {
-      tracker?.observe();
       if (!closed) {
         try {
           await send('Browser.close', {}, 2_000);
@@ -155,6 +155,7 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
       { name: 'prefers-reduced-motion', value: 'no-preference' },
     ] });
     await send('Page.addScriptToEvaluateOnNewDocument', { source: browserEnvironment });
+    tracker?.observe();
     return { debugPort: port, send, close };
   } catch (error) {
     await stop();
