@@ -17,6 +17,21 @@ test('frame diagnostics preserve native frame waits and the original failure', a
   assert.match(calls[1].params.expression, /remaining=2/);
   assert.match(calls[1].params.expression, /requestAnimationFrame\(next\)/);
   assert.equal(calls[1].params.awaitPromise, true);
+  assert.doesNotMatch(calls[0].params.expression, /getAnimations/);
+  assert.match(calls[2].params.expression, /getAnimations/);
+});
+
+test('unavailable initial diagnostics cannot block otherwise healthy native frames', async () => {
+  const calls = [];
+  const send = async (...args) => {
+    calls.push(args);
+    if (calls.length === 1) throw new Error('initial inspection unavailable');
+    return { result: { value: true } };
+  };
+  await waitForFrames(send);
+  assert.equal(calls.length, 2);
+  assert.equal(calls[1][1].awaitPromise, true);
+  assert.equal(calls[1][2], undefined);
 });
 
 test('failed diagnostic inspection cannot turn a frame failure into success', async () => {
