@@ -133,20 +133,17 @@ runs for the same PR; main and manual validation runs retain their results. A
 `project-evidence-layout.mjs` checks selected-work text clearance from dividers
 and cell boundaries at six widths, including fixed hover and focus phases.
 
-The Lint workflow uses `dorny/paths-filter` to skip test shards only for
-Markdown-only PRs. Lint itself always runs. Every other PR change, main push,
-and manual run executes all tests in three native Node shards, each with two
-workers and its own JUnit artifact. Shards do not cancel siblings on failure.
-The required `lint` aggregate fails if validation or any required shard fails,
-is cancelled, or is unexpectedly skipped. Pages still waits for the complete
-successful main workflow.
+[Woodpecker](../.woodpecker/portfolio.yml) runs every `tests/*.mjs` file with
+one browser worker in its two-CPU isolated Linux job. The full glob includes new
+test files automatically. Tests retain their 60-second deadlines and assertions;
+there are no automatic test retries or live third-party fixtures. Chromium and
+Node versions are logged.
 
-Run a single shard locally with `node --test --test-concurrency=2
---test-timeout=60000 --test-shard=1/3 tests/*.mjs` (replace `1` with `2` or `3`).
-Node partitions the complete file list; new test files join automatically.
+GitHub’s stable `lint` gate runs the status-handoff boundary tests and requires
+the exact source’s trusted native status. It accepts success only for this
+repository’s correct event context and pipeline; failures fail immediately and
+pending/missing statuses have a bounded deadline. Pages waits for that complete
+successful main workflow and rechecks that the validated revision is current.
 
-The staged [Woodpecker pipeline](../.woodpecker/portfolio.yml) executes the same
-complete file glob with one browser worker in its two-CPU isolated Linux job. GitHub's existing
-three-shard gate remains active until native PR/main evidence and the Pages
-validation handoff agree. Chromium and Node versions are logged; no test retries
-or live third-party fixtures are added.
+For a local subset, Node still supports `--test-shard=1/3` (replace `1` with `2`
+or `3`). This is a diagnostic option; the native CI gate always runs the full glob.
