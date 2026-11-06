@@ -9,102 +9,26 @@ on:
 permissions:
   contents: read
 
-# Superseded validation is disposable; deployment has its own protected queue.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  validate:
+  # Keep the stable protection and Pages gate, joined to actual native work.
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
     permissions:
       contents: read
-      pull-requests: read
-    outputs:
-      tests: ${{ github.event_name != 'pull_request' || steps.changes.outputs.runtime == 'true' }}
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
+      statuses: read
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        with:
-          node-version: 24
-          package-manager-cache: false
-      - uses: dorny/paths-filter@ceb8a2b8f2d89434be7ff52d3de7ec3738c5cc9d # v4
-        if: github.event_name == 'pull_request'
-        id: changes
-        with:
-          predicate-quantifier: every
-          filters: |
-            runtime:
-              - '**'
-              - '!**/*.md'
-      - name: Record runtime versions
-        run: |
-          node --version
-          google-chrome --version
-      - name: Lint
-        run: node scripts/lint.mjs
-
-  tests:
-    needs: validate
-    if: needs.validate.outputs.tests == 'true'
-    runs-on: ubuntu-24.04
-    timeout-minutes: 15
-    strategy:
-      fail-fast: false
-      matrix:
-        shard: [1, 2, 3]
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
-        with:
-          persist-credentials: false
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
-        with:
-          node-version: 24
-          package-manager-cache: false
-      - name: Record runtime versions
-        run: |
-          node --version
-          google-chrome --version
-      - name: Tests
+      - name: Verify native-status handoff boundaries
+        run: python3 -m unittest discover -s scripts -p 'test_woodpecker_handoff.py' -v
+      - name: Require exact-revision Woodpecker validation
         env:
-          SHARD: ${{ matrix.shard }}
-        run: >-
-          node --test --test-concurrency=2 --test-timeout=60000
-          --test-shard="$SHARD/3"
-          --test-reporter=spec --test-reporter=junit
-          --test-reporter-destination=stdout
-          --test-reporter-destination="$RUNNER_TEMP/test-results.xml"
-          tests/*.mjs
-      - name: Save test report
-        if: ${{ always() && !cancelled() }}
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7
-        with:
-          name: test-results-${{ github.run_id }}-${{ github.run_attempt }}-shard-${{ matrix.shard }}
-          path: ${{ runner.temp }}/test-results.xml
-          if-no-files-found: ignore
-          retention-days: 14
-
-  # Branch protection and Pages retain one gate, including docs-only PRs.
-  lint:
-    needs: [validate, tests]
-    if: always()
-    runs-on: ubuntu-24.04
-    timeout-minutes: 2
-    permissions: {}
-    steps:
-      - name: Require complete validation
-        env:
-          VALIDATION: ${{ needs.validate.result }}
-          TESTS_REQUIRED: ${{ needs.validate.outputs.tests }}
-          TESTS: ${{ needs.tests.result }}
-        run: |
-          test "$VALIDATION" = success
-          if [ "$TESTS_REQUIRED" = true ]; then
-            test "$TESTS" = success
-          else
-            test "$TESTS_REQUIRED" = false
-            test "$TESTS" = skipped
-          fi
+          GH_TOKEN: ${{ github.token }}
+          TARGET_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 scripts/wait-for-woodpecker.py

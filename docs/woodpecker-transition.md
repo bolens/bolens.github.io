@@ -7,9 +7,12 @@ it does not retry failures or omit browser suites. The native runner allocates
 two CPUs per workflow, so browser work is serialized within that allocation. It uses isolated profiles,
 loopback servers, and existing fixture-controlled external responses.
 
-First add the native pipeline alongside GitHub Lint and verify actual PR and
-genuine main results. Keep the GitHub `lint` aggregate and its Pages dependency
-until a reviewed exact-revision native-status handoff replaces the Linux work.
+The GitHub `lint` gate verifies the latest native status for the exact PR head
+or main push. It binds repository, revision, event context, publisher, pipeline
+URL, and the latest combined/history status ID; it never reuses an older success
+after a newer pending result. Missing/pending statuses wait within a bounded
+deadline and failure/error statuses fail immediately. A manual GitHub run must
+select main and uses that revision’s genuine push result.
 Publication must still refuse failed, fork, PR, and superseded revisions, recheck
 main after environment approval, and preserve the existing public artifact
 allowlist and hostname-only Cloudflare purge.

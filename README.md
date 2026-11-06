@@ -44,8 +44,9 @@ git config core.hooksPath .githooks
 
 The hook runs `node scripts/lint.mjs`, which checks JavaScript syntax, parses JSON,
 verifies generated files, and validates the site contract. CI runs the same command
-for pull requests and pushes to `main`. Tests run across three shards; only
-Markdown-only PRs skip them. Main and manual runs always run the complete suite.
+for pull requests and pushes to `main` in Woodpecker, alongside the complete
+test suite. GitHub Lint verifies the exact source revision’s native result before
+Pages can publish it. Manual GitHub runs use the verified main push result.
 
 Project listings, command-palette entries, shared page chrome, `sitemap.xml`, and `llms.txt` are generated from `data/projects.json` and `scripts/build-site.mjs`. Palette tokens, picker previews, browser theme colors, and 404 scene accents are generated from `data/themes.json`. Run `node scripts/build-site.mjs` after changing either data source or shared navigation.
 
@@ -90,7 +91,10 @@ The Node 24 and clone images are digest-pinned; Chromium resolves from Debian's
 configured package repositories and its version is logged on every run. No host
 mounts, privileged containers, or deployment credentials are required.
 
-GitHub's Lint gate and Pages deployment remain intact until exact-head native PR
-and genuine main validation pass. The existing source/workflow lint and GitHub
-Pages environment remain separate gates. Review YAML image pins monthly and on
+GitHub’s stable `lint` gate requires the native result for the same repository,
+source revision, event context, publisher, and pipeline. Missing/pending results
+wait within a bounded deadline; native failures fail immediately. The Pages
+workflow and protected credentials remain in GitHub, with their existing
+same-repository/main checks and superseded-revision guards. Source/workflow
+lint and CodeQL remain separate checks. Review YAML image pins monthly and on
 security releases; Dependabot's Dockerfile updates do not update these references.

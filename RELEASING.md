@@ -13,7 +13,7 @@ links, accessibility, and privacy. Edit generated content through
 `data/projects.json`, `data/themes.json`, or `scripts/build-site.mjs`, then run
 `node scripts/build-site.mjs` when those sources change.
 
-Run the complete gate used by Woodpecker `portfolio` and GitHub Lint:
+Run the complete gate used by Woodpecker `portfolio`:
 
 ```sh
 node scripts/lint.mjs
@@ -41,8 +41,9 @@ Verify checks on the merged SHA and delete the merged branch.
 
 ## Deploy and verify
 
-Merging to `main` runs `Lint`, including generated-content validation and the
-full test suite. Only a successful main-branch push or manual `Lint` run triggers
+Merging to `main` runs Woodpecker’s generated-content validation and full test
+suite. GitHub `Lint` verifies that exact revision’s genuine native push result.
+Only a successful main-branch push or manual `Lint` run triggers
 `Deploy GitHub Pages`. PR runs cannot publish. Deployment checks out the exact
 validated revision, skips superseded revisions, and rechecks main after any
 `github-pages` environment approval. Validation runs once per main revision.
