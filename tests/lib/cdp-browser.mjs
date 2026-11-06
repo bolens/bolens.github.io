@@ -1,12 +1,14 @@
 import { existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { spawn } from 'node:child_process';
 import { browserEnvironment } from './browser-environment.mjs';
+import { trackBrowserProcesses } from './browser-processes.mjs';
 
 export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = globalThis.fetch } = {}) {
   const executable = ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium'].find(existsSync);
   if (!executable) throw new Error('Chrome or Chromium is required for the browser smoke test');
   const profile = mkdtempSync('/tmp/bolens-site-smoke-');
   const process = spawn(executable, ['--headless=new', '--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox', '--no-first-run', '--disable-background-networking', '--disable-component-update', '--no-default-browser-check', '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { detached: true, stdio: ['ignore', 'ignore', 'pipe'] });
+  let tracker;
   let log = '';
   let socket;
   let closed = false;
@@ -26,25 +28,29 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
     }
     pending.clear();
     closing = (async () => {
-      const groupExists = () => {
-        try {
-          globalThis.process.kill(-process.pid, 0);
-          return true;
-        } catch {
-          return false;
+      const leaderExited = () => process.exitCode !== null || process.signalCode !== null || !process.pid;
+      const live = () => {
+        if (!process.pid) return false;
+        if (tracker) return tracker.observe().length !== 0 || !leaderExited();
+        if (globalThis.process.platform === 'linux') {
+          if (!leaderExited()) process.kill('SIGKILL');
+          throw new Error('Owned browser cleanup identity is unavailable');
         }
+        try { globalThis.process.kill(-process.pid, 0); return true; }
+        catch (error) { if (error.code === 'ESRCH') return !leaderExited(); throw error; }
       };
-      if (groupExists()) {
-        globalThis.process.kill(-process.pid, 'SIGTERM');
+      const signal = value => {
+        if (tracker) tracker.signal(value);
+        else { try { globalThis.process.kill(-process.pid, value); } catch (error) { if (error.code !== 'ESRCH') throw error; } }
+      };
+      if (live()) {
+        signal('SIGTERM');
         const gracefulDeadline = performance.now() + 2_000;
-        while (groupExists() && performance.now() < gracefulDeadline) {
-          await new Promise((done) => setTimeout(done, 25));
-        }
-        if (groupExists()) globalThis.process.kill(-process.pid, 'SIGKILL');
+        while (live() && performance.now() < gracefulDeadline) await new Promise(done => setTimeout(done, 25));
+        if (live()) signal('SIGKILL');
         const forcedDeadline = performance.now() + 2_000;
-        while (groupExists() && performance.now() < forcedDeadline) {
-          await new Promise((done) => setTimeout(done, 25));
-        }
+        while (live() && performance.now() < forcedDeadline) await new Promise(done => setTimeout(done, 25));
+        if (live()) throw new Error('Owned browser cleanup did not finish before its deadline');
       }
       const cleanupDeadline = performance.now() + 2_000;
       let absentChecks = 0;
@@ -59,6 +65,7 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
   };
 
   try {
+    if (globalThis.process.platform === 'linux') tracker = trackBrowserProcesses(process.pid);
     const deadline = performance.now() + 45_000;
     let port;
     while (performance.now() < deadline) {
@@ -127,6 +134,7 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
       socket.send(JSON.stringify({ id: requestId, method, params }));
     });
     const close = async () => {
+      tracker?.observe();
       if (!closed) {
         try {
           await send('Browser.close', {}, 2_000);

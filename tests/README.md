@@ -29,6 +29,13 @@ external state synchronization, all 55 season/weather combinations, and actual
 SVG-instance pixel checks. `season-motion.mjs` checks unchanged animation budgets,
 two fixed wind phases, both reduced-motion preferences, and narrow/short panels.
 `weather-fallback.mjs` checks the frozen season catalog and DOM state at notification.
+Each seasonal viewport trial owns a fresh browser and awaits verified process
+cleanup before the next trial; its 55-state matrix, transitions, captures and
+shared error aggregation remain intact. Actual ordinary terrain instances keep
+all eleven color functions while runtime shadow tokens stay empty, including all
+weather/light cases; the CSS-only fallback retains its shadows and color chain.
+`browser-processes-contract.mjs` covers process identity, zombie exclusion,
+detached descendants, PID reuse and unanchored-session rejection.
 
 `picker-performance.mjs` counts animation-allocation writes and atmosphere redraws
 for unchanged control inputs at desktop and phone widths. It also verifies real

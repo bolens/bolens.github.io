@@ -22,7 +22,7 @@
 .cryptid-camp svg :is(path,rect,circle,ellipse,polygon,polyline,line) { transition:fill .55s ease,stroke .55s ease; }
 .cryptid-camp svg stop { transition:stop-color .55s ease,stop-opacity .55s ease; }
 .cryptid-camp[data-render-runtime] svg :is(path,rect,circle,ellipse,polygon,polyline,line,stop) { transition:none; }
-.cryptid-camp[data-render-runtime] .terrain-asset { --asset-light-shadow:none;--asset-time-shadow:none;transition:none; }
+:root .cryptid-camp[data-render-runtime] svg .terrain-asset { --asset-light-shadow: ;--asset-time-shadow: ;transition:none; }
 .cryptid-camp[data-render-runtime] svg * { animation-play-state:paused!important; }
 .cryptid-camp[data-render-runtime] [data-runtime-motion="off"] { animation:none!important; }
 .cryptid-camp[data-render-runtime] [data-runtime-motion="live"] { animation-play-state:running!important; }
