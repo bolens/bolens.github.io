@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { collectOwnedProcesses, parseProcessStat } from './lib/browser-processes.mjs';
+import { collectOwnedProcesses, crashpadDatabase, matchesProfileHelper, parseProcessStat } from './lib/browser-processes.mjs';
 
 const owner = { pid: 100, start: '1000' };
 const item = (pid, parent = 100, session = 100, start = String(1000 + pid), state = 'S') => ({ pid, parent, session, start, state });
@@ -31,4 +31,30 @@ test('a reused descendant PID in a foreign session is never signalled', () => {
 });
 test('unanchored numeric session coincidence cannot prove browser ownership', () => {
   assert.throws(() => collectOwnedProcesses(owner, new Map([[100, owner]]), [item(101, 1, 100)]), /unavailable/);
+});
+
+
+test('crash database parsing accepts one absolute value and rejects ambiguous or relative arguments', () => {
+  assert.equal(crashpadDatabase('handler\0--database=/tmp/owned/chromium/Crash Reports\0--monitor-self\0'), '/tmp/owned/chromium/Crash Reports');
+  assert.equal(crashpadDatabase('handler\0--database\0/tmp/owned/chromium/Crash Reports\0'), '/tmp/owned/chromium/Crash Reports');
+  for (const value of ['handler\0--database=relative\0', 'handler\0--database=\0', 'handler\0--database=/one\0--database=/two\0', 'handler\0--database\0']) assert.equal(crashpadDatabase(value), undefined);
+});
+test('detached helper admission requires exact actual image identity, owned database and start generation', () => {
+  const expected = { image: { path: '/usr/lib/chromium/chrome_crashpad_handler', dev: '1', ino: '2' }, databases: ['/tmp/owned/chrome-config/chromium/Crash Reports'] };
+  const helper = { ...item(105, 1, 105), image: { ...expected.image }, database: expected.databases[0] };
+  assert.equal(matchesProfileHelper(owner, expected, helper), true);
+  for (const changed of [
+    undefined, { ...helper, pid: -1 }, { ...helper, pid: 0 }, { ...helper, start: undefined }, { ...helper, image: undefined },
+    { ...helper, start: '999' },
+    { ...helper, image: { ...helper.image, path: '/other/chrome_crashpad_handler' } },
+    { ...helper, image: { ...helper.image, dev: '3' } },
+    { ...helper, image: { ...helper.image, ino: '3' } },
+    { ...helper, database: '/tmp/owned-lookalike/chrome-config/chromium/Crash Reports' },
+    { ...helper, database: '/home/other/Crash Reports' },
+  ]) assert.equal(matchesProfileHelper(owner, expected, changed), false);
+});
+test('admitted detached helper identity remains independently owned after browser leader exit', () => {
+  const helper = item(105, 1, 105), known = new Map([[100, owner], [105, helper]]);
+  assert.deepEqual(collectOwnedProcesses(owner, known, [helper]).map(value => value.pid), [105]);
+  assert.deepEqual(collectOwnedProcesses(owner, known, [{ ...helper, start: '9999', session: 999 }]), []);
 });

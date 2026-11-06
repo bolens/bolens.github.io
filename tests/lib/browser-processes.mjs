@@ -1,4 +1,5 @@
-import { readFileSync, readdirSync } from 'node:fs';
+import { readFileSync, readdirSync, readlinkSync, realpathSync, statSync } from 'node:fs';
+import { dirname, isAbsolute, join } from 'node:path';
 
 export function parseProcessStat(text) {
   const end = text.lastIndexOf(') ');
@@ -52,14 +53,67 @@ function stat(pid) {
   }
 }
 
-export function trackBrowserProcesses(pid) {
+export function crashpadDatabase(commandLine) {
+  const args = commandLine.split('\0');
+  const values = [];
+  for (let index = 0; index < args.length; index++) {
+    if (args[index].startsWith('--database=')) values.push(args[index].slice('--database='.length));
+    else if (args[index] === '--database') values.push(args[++index]);
+  }
+  return values.length === 1 && typeof values[0] === 'string' && isAbsolute(values[0]) ? values[0] : undefined;
+}
+
+export function matchesProfileHelper(owner, expected, item) {
+  return Boolean(item && Number.isSafeInteger(item.pid) && item.pid > 0 && typeof item.start === 'string' && /^\d+$/.test(item.start) && item.image &&
+    BigInt(item.start) >= BigInt(owner.start) && item.image.path === expected.image.path &&
+    item.image.dev === expected.image.dev && item.image.ino === expected.image.ino && expected.databases.includes(item.database));
+}
+
+const fileIdentity = path => {
+  const info = statSync(path, { bigint: true });
+  if (!info.isFile()) throw new Error('Browser helper image is not a regular file');
+  return { path: realpathSync(path), dev: String(info.dev), ino: String(info.ino) };
+};
+const raced = error => ['ENOENT', 'ESRCH', 'EACCES', 'EPERM'].includes(error.code);
+
+export function trackBrowserProcesses(pid, profile) {
   const owner = stat(pid);
   if (!owner || owner.session !== pid) throw new Error('Cannot establish owned browser session');
   const known = new Map([[pid, owner]]);
+  const helpers = new Map();
+  const config = join(realpathSync(profile), 'chrome-config');
+  const databases = ['chromium', 'google-chrome', 'google-chrome-beta', 'google-chrome-unstable', 'google-chrome-for-testing'].map(brand => join(config, brand, 'Crash Reports'));
+  let expected;
+  const helperMetadata = item => {
+    if (!expected) return undefined;
+    try {
+      const imagePath = readlinkSync(`/proc/${item.pid}/exe`);
+      if (imagePath !== expected.image.path) return undefined;
+      const info = statSync(`/proc/${item.pid}/exe`, { bigint: true });
+      const commandLine = readFileSync(`/proc/${item.pid}/cmdline`);
+      if (commandLine.length > 16_384) return undefined;
+      const database = crashpadDatabase(commandLine.toString('utf8'));
+      if (!database) return undefined;
+      return { ...item, image: { path: imagePath, dev: String(info.dev), ino: String(info.ino) }, database: realpathSync(database) };
+    } catch (error) { if (raced(error)) return undefined; throw error; }
+  };
   const observe = () => {
     const pids = readdirSync('/proc').filter(name => /^[1-9]\d*$/.test(name));
     if (pids.length > 65_536) throw new Error('Process identity census exceeds bound');
     const snapshot = pids.map(id => stat(Number(id))).filter(Boolean);
+    const root = snapshot.find(item => item.pid === pid && item.start === owner.start);
+    if (!expected && root) {
+      try { expected = { image: fileIdentity(join(dirname(readlinkSync(`/proc/${pid}/exe`)), 'chrome_crashpad_handler')), databases }; }
+      catch (error) { if (!raced(error)) throw error; }
+    }
+    for (const item of snapshot) {
+      if (['Z', 'X', 'x'].includes(item.state) || BigInt(item.start) < BigInt(owner.start)) continue;
+      const helper = helperMetadata(item);
+      if (expected && matchesProfileHelper(owner, expected, helper)) {
+        known.set(item.pid, { pid: item.pid, start: item.start });
+        helpers.set(item.pid, helper);
+      }
+    }
     return collectOwnedProcesses(owner, known, snapshot);
   };
   return {
@@ -67,7 +121,13 @@ export function trackBrowserProcesses(pid) {
     signal(signal) {
       for (const item of observe()) {
         const current = stat(item.pid);
-        if (current?.start !== item.start) continue;
+        if (current?.start !== item.start || ['Z', 'X', 'x'].includes(current.state)) continue;
+        const admitted = helpers.get(item.pid);
+        if (admitted?.start === item.start && !matchesProfileHelper(owner, expected, helperMetadata(current))) {
+          const again = stat(item.pid);
+          if (!again || again.start !== item.start || ['Z', 'X', 'x'].includes(again.state)) continue;
+          throw new Error('Owned browser helper identity changed before signalling');
+        }
         try { process.kill(item.pid, signal); }
         catch (error) { if (error.code !== 'ESRCH') throw error; }
       }

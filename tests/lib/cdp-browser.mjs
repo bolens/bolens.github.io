@@ -1,5 +1,6 @@
 import { existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { spawn } from 'node:child_process';
+import { join } from 'node:path';
 import { browserEnvironment } from './browser-environment.mjs';
 import { trackBrowserProcesses } from './browser-processes.mjs';
 
@@ -7,7 +8,7 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
   const executable = ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium'].find(existsSync);
   if (!executable) throw new Error('Chrome or Chromium is required for the browser smoke test');
   const profile = mkdtempSync('/tmp/bolens-site-smoke-');
-  const process = spawn(executable, ['--headless=new', '--disable-crashpad-for-testing', '--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox', '--no-first-run', '--disable-background-networking', '--disable-component-update', '--no-default-browser-check', '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { detached: true, stdio: ['ignore', 'ignore', 'pipe'] });
+  const process = spawn(executable, ['--headless=new', '--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox', '--no-first-run', '--disable-background-networking', '--disable-component-update', '--no-default-browser-check', '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { detached: true, stdio: ['ignore', 'ignore', 'pipe'], env: { ...globalThis.process.env, CHROME_CONFIG_HOME: join(profile, 'chrome-config') } });
   let tracker;
   let log = '';
   let socket;
@@ -59,7 +60,7 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
   };
 
   try {
-    if (globalThis.process.platform === 'linux') tracker = trackBrowserProcesses(process.pid);
+    if (globalThis.process.platform === 'linux') tracker = trackBrowserProcesses(process.pid, profile);
     const deadline = performance.now() + 45_000;
     let port;
     while (performance.now() < deadline) {
