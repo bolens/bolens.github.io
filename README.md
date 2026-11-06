@@ -83,8 +83,9 @@ The site supplies no custom events, account identifiers, cookies, or stored pref
 ## Woodpecker validation
 
 [The native portfolio pipeline](.woodpecker/portfolio.yml) runs lint and the
-complete Node test file set on pull requests and main pushes, with two workers
-and no retries. Tests use isolated Chromium profiles and owned loopback servers.
+complete Node test file set on pull requests and main pushes, with one worker
+and no retries. A single browser worker stays within the native runner’s two-CPU
+allocation. Tests use isolated Chromium profiles and owned loopback servers.
 The Node 24 and clone images are digest-pinned; Chromium resolves from Debian's
 configured package repositories and its version is logged on every run. No host
 mounts, privileged containers, or deployment credentials are required.

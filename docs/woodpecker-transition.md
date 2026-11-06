@@ -2,8 +2,9 @@
 
 Move the existing lint and full browser-test workload to Woodpecker while keeping
 GitHub Pages publication and its protected credentials separate. The native job
-runs every `tests/*.mjs` file with two workers and a 60-second per-test deadline;
-it does not retry failures or omit browser suites. It uses isolated profiles,
+runs every `tests/*.mjs` file with one worker and a 60-second per-test deadline;
+it does not retry failures or omit browser suites. The native runner allocates
+two CPUs per workflow, so browser work is serialized within that allocation. It uses isolated profiles,
 loopback servers, and existing fixture-controlled external responses.
 
 First add the native pipeline alongside GitHub Lint and verify actual PR and

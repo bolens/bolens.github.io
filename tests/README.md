@@ -146,7 +146,7 @@ Run a single shard locally with `node --test --test-concurrency=2
 Node partitions the complete file list; new test files join automatically.
 
 The staged [Woodpecker pipeline](../.woodpecker/portfolio.yml) executes the same
-complete file glob with two workers in one isolated Linux job. GitHub's existing
+complete file glob with one browser worker in its two-CPU isolated Linux job. GitHub's existing
 three-shard gate remains active until native PR/main evidence and the Pages
 validation handoff agree. Chromium and Node versions are logged; no test retries
 or live third-party fixtures are added.
