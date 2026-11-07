@@ -96,3 +96,14 @@ The `github-pages` environment supplies `CLOUDFLARE_CACHE_PURGE_TOKEN` as a secr
 A missing credential, invalid zone ID, HTTP failure or unsuccessful API response fails the workflow after deployment. The site may already be deployed when purging fails. Inspect the failure, repair the credential/configuration and retry the failed deployment job through Actions. Requests have bounded timeouts/retries. Purging Cloudflare does not clear visitors' browser caches or the GitHub Pages origin CDN, which currently advertises a 10-minute lifetime.
 
 For rollback, disable the site's new cache rules and restore its recorded DNS proxy flags. Preserve the GitHub Pages custom domain, HTTPS origin certificate and mail records. DNS/rule baselines and live verification receipts are stored privately outside this repository.
+
+## Native repository policy
+
+`bash scripts/ci/check-policy.sh` invokes the full configured shared source
+selector at `7603518f305fb76f7bb1b9979f2692521f633b82`, followed by checksum-verified
+actionlint 1.7.12 and offline zizmor 1.29.0 at medium severity/confidence. The
+`repository` workflow groups those checks separately from `portfolio` browser
+and generated-site validation. Keep hosted Source lint and all current required
+status bindings during actual PR and genuine-main verification. The
+[CI index](docs/woodpecker-transition.md#ci-organization) preserves local commands
+and the distinct Pages, artifact and hostname-purge boundaries.
