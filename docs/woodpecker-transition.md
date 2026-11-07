@@ -19,6 +19,7 @@ with the same complete file selection and 60-second per-test deadline.
 | Phase | Check group / canonical local command | Native workflow / step | Retained hosted owner / boundary |
 | --- | --- | --- | --- |
 | `validate` | Source and generated-content checks: `node scripts/lint.mjs` | `portfolio` / `validate` | PR, main push and native manual validation |
+| `validate` | Shared source/workflow policy: `bash scripts/ci/check-policy.sh` | `repository` / `source-and-workflow-policy` | Exact shared SourceLint 7603518, checksum-verified actionlint 1.7.12 and offline zizmor 1.29.0; hosted equivalents remain during verification |
 | `test` | Full browser suite: `node --test --test-concurrency=2 --test-timeout=60000 tests/*.mjs` | `portfolio` / `validate`, with native concurrency set to `1` | Node 24 and Chrome/Chromium; isolated profiles, owned servers and controlled fixtures |
 | `test` | Native-status boundaries: `python3 -m unittest discover -s scripts -p 'test_woodpecker_handoff.py' -v` | `portfolio` / `validate` | Hosted `Lint` joins the exact trusted source result |
 | `site` | Generated-site freshness: `node scripts/build-site.mjs --check` | Included in the lint invocation | Regenerate only through the source generator when its inputs change |
@@ -61,9 +62,23 @@ renderer stalls; the passing focused comparison used about 338 MiB of swap.
 Those results described different resource budgets. They do not establish a
 foreground, animation or functional application defect.
 
-The combined candidate retains all 472 existing Node assertions, the strict
-handoff boundary tests and the unchanged Pages publication workflow. Require a
+The candidate retains the complete existing Node suite, the strict handoff
+boundary tests and the unchanged Pages publication workflow. Require a
 complete exact-head native run under the corrected budget and an isolated build,
 post-create smoke and gate check of the refreshed editor image before delivery.
 The operator must confirm the persistent agent limits before publishing this
 candidate; a source-only change does not apply those limits.
+
+The repository group uses the complete configured JavaScript/CSS sets from
+`.github/source-lint.json` with the shared selector and locked tooling at
+`7603518f305fb76f7bb1b9979f2692521f633b82`. This adds ESLint/Stylelint and workflow
+policy alongside the existing syntax, generated-content and browser checks.
+Local reproduction requires Git, Node 24, Python 3 with venv support, curl and
+ShellCheck. Downloaded tools use a disposable temporary directory; apt setup
+belongs only to the CI container. Zizmor retains offline audits at medium
+severity and confidence.
+
+Keep hosted Source lint active until exact-head PR and genuine-main native
+proof supports retirement. Preserve the `portfolio` alias and existing `Lint`
+status handoff; the new repository lane does not replace the browser suite,
+Pages artifact staging, environment approval, revision guards or cache purge.
