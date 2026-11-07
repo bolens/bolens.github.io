@@ -5,9 +5,10 @@
 Open this repository in VS Code and run **Dev Containers: Reopen in
 Container**. A local Docker-compatible engine and the Dev Containers extension
 are required. The first build downloads the pinned tool images and distribution
-packages. Setup installs dependencies from this checkout's lockfiles and runs
-`smoke.sh`. Rebuild the container after Dockerfile changes. Rerun
-`bash .devcontainer/post-create.sh` after changing dependency lockfiles.
+packages. Setup runs `smoke.sh` to verify the mounted checkout and tools
+already installed in the image; it does not install checkout dependencies.
+Rebuild the container after Dockerfile changes. Rerun
+`bash .devcontainer/post-create.sh` to check checkout readiness.
 
 Includes Node 26 and Chromium for the repository browser tests. Run
 `python3 -m http.server 8000 --bind 0.0.0.0` for a localhost-forwarded preview.
@@ -23,8 +24,10 @@ source is bind-mounted at `/workspace` and is never copied into image layers.
 Use a regular clone when the container cannot see a linked worktree's external
 Git directory. Keep credentials in your local development environment.
 
-`bash .devcontainer/smoke.sh` checks installed tools and checkout access. It
-does not run the application test suite. No application starts automatically.
+`bash .devcontainer/smoke.sh` checks installed tools and checkout access and
+reports Node, Python, UV and Ruff versions. The pinned Zizmor tool installation
+uses `/usr/bin/python3`, preserving the distribution interpreter across UV
+default-version changes. It does not run the application test suite. No application starts automatically.
 Image references include immutable digests. Dependabot monitors the Dockerfiles
 where supported. Distribution packages resolve from the configured Debian
 repositories at build time. Update image pins and rerun setup and native checks

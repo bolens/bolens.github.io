@@ -35,8 +35,8 @@ test('ambient water and bank growth reuse slots without expanding tier allocatio
 
 test('efficient mode stops primitive transition storms and limits live motion', () => {
   assert.match(css, /\.cryptid-camp\[data-render-runtime\] svg :is\(path,rect,circle,ellipse,polygon,polyline,line,stop\) \{ transition:none; \}/);
-  assert.match(css, /\.cryptid-camp\[data-render-runtime\] \.terrain-asset \{[^}]*transition:none; \}/);
-  assert.match(css, /--asset-light-shadow:none;--asset-time-shadow:none/);
+  assert.match(css, /:root \.cryptid-camp\[data-render-runtime\] svg \.terrain-asset \{[^}]*transition:none; \}/);
+  assert.match(css, /:root \.cryptid-camp\[data-render-runtime\] svg \.terrain-asset \{ --asset-light-shadow: ;--asset-time-shadow: ;transition:none; \}/);
   assert.match(css, /data-render-runtime[^}]+animation:none!important/);
   assert.match(css, /data-render-runtime\] svg \* \{ animation-play-state:paused!important; \}/);
   assert.match(css, /data-runtime-motion="live"/);

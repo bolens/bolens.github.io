@@ -46,13 +46,30 @@ export async function navigate(send, url) {
 }
 
 export async function waitForFrames(send, count = 2) {
-  await evaluate(
-    send,
-    `new Promise((resolve)=>{let remaining=${count};const next=()=>{if(--remaining<=0)resolve(true);else requestAnimationFrame(next)};requestAnimationFrame(next)})`,
-    {
-      awaitPromise: true,
-    },
-  );
+  const inspect = async (afterFailure = false) => {
+    const response = await send('Runtime.evaluate', {
+      expression: `({hidden:document.hidden,visibility:document.visibilityState,focused:document.hasFocus(),ready:document.readyState,prerendering:document.prerendering,timeline:document.timeline.currentTime,now:performance.now()${afterFailure ? ',animations:document.getAnimations().length' : ''}})`,
+      returnByValue: true,
+    }, 1_000);
+    if (response.exceptionDetails) throw new Error('Frame-state inspection failed');
+    return response.result.value;
+  };
+  let before;
+  try { before = await inspect(); }
+  catch (diagnosticError) { before = { diagnosticError: diagnosticError.message }; }
+  try {
+    await evaluate(
+      send,
+      `new Promise((resolve)=>{let remaining=${count};const next=()=>{if(--remaining<=0)resolve(true);else requestAnimationFrame(next)};requestAnimationFrame(next)})`,
+      { awaitPromise: true },
+    );
+  } catch (error) {
+    let after;
+    try { after = await inspect(true); }
+    catch (diagnosticError) { after = { diagnosticError: diagnosticError.message }; }
+    error.message += `; frame lifecycle ${JSON.stringify({ before, after })}`;
+    throw error;
+  }
 }
 
 export async function finishFiniteAnimations(send, selector) {

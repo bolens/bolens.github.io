@@ -1,12 +1,15 @@
 import { existsSync, mkdtempSync, rmSync } from 'node:fs';
 import { spawn } from 'node:child_process';
+import { join } from 'node:path';
 import { browserEnvironment } from './browser-environment.mjs';
+import { trackBrowserProcesses } from './browser-processes.mjs';
 
 export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = globalThis.fetch } = {}) {
   const executable = ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium'].find(existsSync);
   if (!executable) throw new Error('Chrome or Chromium is required for the browser smoke test');
   const profile = mkdtempSync('/tmp/bolens-site-smoke-');
-  const process = spawn(executable, ['--headless=new', '--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox', '--no-first-run', '--disable-background-networking', '--disable-component-update', '--no-default-browser-check', '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { detached: true, stdio: ['ignore', 'ignore', 'pipe'] });
+  const process = spawn(executable, ['--headless=new', '--disable-gpu', '--disable-dev-shm-usage', '--no-sandbox', '--no-first-run', '--disable-background-networking', '--disable-component-update', '--no-default-browser-check', '--remote-debugging-address=127.0.0.1', '--remote-debugging-port=0', `--user-data-dir=${profile}`, 'about:blank'], { detached: true, stdio: ['ignore', 'ignore', 'pipe'], env: { ...globalThis.process.env, CHROME_CONFIG_HOME: join(profile, 'chrome-config') } });
+  let tracker;
   let log = '';
   let socket;
   let closed = false;
@@ -26,39 +29,38 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
     }
     pending.clear();
     closing = (async () => {
-      const groupExists = () => {
-        try {
-          globalThis.process.kill(-process.pid, 0);
-          return true;
-        } catch {
-          return false;
+      const leaderExited = () => process.exitCode !== null || process.signalCode !== null || !process.pid;
+      const live = () => {
+        if (!process.pid) return false;
+        if (tracker) return tracker.observe().length !== 0 || !leaderExited();
+        if (globalThis.process.platform === 'linux') {
+          if (!leaderExited()) process.kill('SIGKILL');
+          throw new Error('Owned browser cleanup identity is unavailable');
         }
+        try { globalThis.process.kill(-process.pid, 0); return true; }
+        catch (error) { if (error.code === 'ESRCH') return !leaderExited(); throw error; }
       };
-      if (groupExists()) {
-        globalThis.process.kill(-process.pid, 'SIGTERM');
+      const signal = value => {
+        if (tracker) tracker.signal(value);
+        else { try { globalThis.process.kill(-process.pid, value); } catch (error) { if (error.code !== 'ESRCH') throw error; } }
+      };
+      if (live()) {
+        signal('SIGTERM');
         const gracefulDeadline = performance.now() + 2_000;
-        while (groupExists() && performance.now() < gracefulDeadline) {
-          await new Promise((done) => setTimeout(done, 25));
-        }
-        if (groupExists()) globalThis.process.kill(-process.pid, 'SIGKILL');
+        while (live() && performance.now() < gracefulDeadline) await new Promise(done => setTimeout(done, 25));
+        if (live()) signal('SIGKILL');
         const forcedDeadline = performance.now() + 2_000;
-        while (groupExists() && performance.now() < forcedDeadline) {
-          await new Promise((done) => setTimeout(done, 25));
-        }
-      }
-      const cleanupDeadline = performance.now() + 2_000;
-      let absentChecks = 0;
-      while (absentChecks < 3 && performance.now() < cleanupDeadline) {
-        rmSync(profile, { recursive: true, force: true });
-        await new Promise((done) => setTimeout(done, 25));
-        absentChecks = existsSync(profile) ? 0 : absentChecks + 1;
+        while (live() && performance.now() < forcedDeadline) await new Promise(done => setTimeout(done, 25));
+        if (live()) throw new Error('Owned browser cleanup did not finish before its deadline');
       }
       rmSync(profile, { recursive: true, force: true });
+      if (existsSync(profile)) throw new Error('Owned browser profile cleanup is incomplete');
     })();
     return closing;
   };
 
   try {
+    if (globalThis.process.platform === 'linux') tracker = trackBrowserProcesses(process.pid, profile);
     const deadline = performance.now() + 45_000;
     let port;
     while (performance.now() < deadline) {
@@ -115,10 +117,14 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
     };
     const send = (method, params = {}, timeoutMs = 30_000) => new Promise((resolve, reject) => {
       if (closed) return reject(new Error('browser connection is closed'));
+      if (method === 'Browser.close') tracker?.observe();
       const requestId = ++id;
+      const expression = method === 'Runtime.evaluate' ? `: ${String(params.expression).slice(0, 180)}` : '';
+      const timeoutError = new Error(`browser command timed out after ${timeoutMs}ms: ${method}${expression}`);
+      Error.captureStackTrace(timeoutError, send);
       const timeout = setTimeout(() => {
         pending.delete(requestId);
-        reject(new Error(`browser command timed out after ${timeoutMs}ms: ${method}`));
+        reject(timeoutError);
       }, timeoutMs);
       pending.set(requestId, { resolve, reject, timeout });
       socket.send(JSON.stringify({ id: requestId, method, params }));
@@ -144,6 +150,7 @@ export async function startBrowser(onEvent = () => {}, { fetch: fetchImpl = glob
       { name: 'prefers-reduced-motion', value: 'no-preference' },
     ] });
     await send('Page.addScriptToEvaluateOnNewDocument', { source: browserEnvironment });
+    tracker?.observe();
     return { debugPort: port, send, close };
   } catch (error) {
     await stop();

@@ -44,8 +44,9 @@ git config core.hooksPath .githooks
 
 The hook runs `node scripts/lint.mjs`, which checks JavaScript syntax, parses JSON,
 verifies generated files, and validates the site contract. CI runs the same command
-for pull requests and pushes to `main`. Tests run across three shards; only
-Markdown-only PRs skip them. Main and manual runs always run the complete suite.
+for pull requests and pushes to `main` in Woodpecker, alongside the complete
+test suite. GitHub Lint verifies the exact source revision’s native result before
+Pages can publish it. Manual GitHub runs use the verified main push result.
 
 Project listings, command-palette entries, shared page chrome, `sitemap.xml`, and `llms.txt` are generated from `data/projects.json` and `scripts/build-site.mjs`. Palette tokens, picker previews, browser theme colors, and 404 scene accents are generated from `data/themes.json`. Run `node scripts/build-site.mjs` after changing either data source or shared navigation.
 
@@ -79,3 +80,21 @@ details and renew its expiration before October 31, 2027.
 Production pages load Cloudflare Web Analytics for aggregate traffic and page-performance measurements. `assets/web-analytics.js` enables the optional module only on `michael.bolens.dev` and `bolens.github.io`; it respects Global Privacy Control and Do Not Track. Preview hosts do not load the beacon. Blocking analytics does not prevent the site from working.
 
 The site supplies no custom events, account identifiers, cookies, or stored preferences to analytics. Cloudflare receives standard page and performance measurements; see its [collection documentation](https://developers.cloudflare.com/web-analytics/data-metrics/data-origin-and-collection/). The beacon identifier is public configuration, not an API credential. Shared script inclusion belongs to `scripts/build-site.mjs`; regenerate HTML after changing it.
+
+## Woodpecker validation
+
+[The native portfolio pipeline](.woodpecker/portfolio.yml) runs lint and the
+complete Node test file set on pull requests and main pushes, with one worker
+and no retries. A single browser worker stays within the native runner’s two-CPU
+allocation. Tests use isolated Chromium profiles and owned loopback servers.
+The Node 24 and clone images are digest-pinned; Chromium resolves from Debian's
+configured package repositories and its version is logged on every run. No host
+mounts, privileged containers, or deployment credentials are required.
+
+GitHub’s stable `lint` gate requires the native result for the same repository,
+source revision, event context, publisher, and pipeline. Missing/pending results
+wait within a bounded deadline; native failures fail immediately. The Pages
+workflow and protected credentials remain in GitHub, with their existing
+same-repository/main checks and superseded-revision guards. Source/workflow
+lint and CodeQL remain separate checks. Review YAML image pins monthly and on
+security releases; Dependabot's Dockerfile updates do not update these references.

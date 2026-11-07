@@ -1,0 +1,30 @@
+labels:
+  platform: linux/amd64
+  backend: docker
+
+clone:
+  git:
+    image: docker.io/woodpeckerci/plugin-git@sha256:9802cb7852dcf31f9c5c1d1ddeadfb9002d4fae85751f7b6a792eedb267bcc59
+    settings:
+      depth: 0
+      partial: false
+
+when:
+  - event: pull_request
+  - event: push
+    branch: main
+  - event: manual
+
+steps:
+  - name: validate
+    image: docker.io/library/node:24-trixie-slim@sha256:0820eaa85e07d0490446dd01d14707e17e6108a36988cf374899cd057eb3812d
+    environment:
+      DEBIAN_FRONTEND: noninteractive
+    commands:
+      - apt-get update
+      - apt-get install -y --no-install-recommends chromium git python3
+      - node --version
+      - chromium --version
+      - python3 -m unittest discover -s scripts -p 'test_woodpecker_handoff.py' -v
+      - node scripts/lint.mjs
+      - node --test --test-concurrency=1 --test-timeout=60000 tests/*.mjs

@@ -29,6 +29,13 @@ external state synchronization, all 55 season/weather combinations, and actual
 SVG-instance pixel checks. `season-motion.mjs` checks unchanged animation budgets,
 two fixed wind phases, both reduced-motion preferences, and narrow/short panels.
 `weather-fallback.mjs` checks the frozen season catalog and DOM state at notification.
+Each seasonal viewport trial owns a fresh browser and awaits verified process
+cleanup before the next trial; its 55-state matrix, transitions, captures and
+shared error aggregation remain intact. Actual ordinary terrain instances keep
+all eleven color functions while runtime shadow tokens stay empty, including all
+weather/light cases; the CSS-only fallback retains its shadows and color chain.
+`browser-processes-contract.mjs` covers process identity, zombie exclusion,
+detached descendants, PID reuse and unanchored-session rejection.
 
 `picker-performance.mjs` counts animation-allocation writes and atmosphere redraws
 for unchanged control inputs at desktop and phone widths. It also verifies real
@@ -133,14 +140,27 @@ runs for the same PR; main and manual validation runs retain their results. A
 `project-evidence-layout.mjs` checks selected-work text clearance from dividers
 and cell boundaries at six widths, including fixed hover and focus phases.
 
-The Lint workflow uses `dorny/paths-filter` to skip test shards only for
-Markdown-only PRs. Lint itself always runs. Every other PR change, main push,
-and manual run executes all tests in three native Node shards, each with two
-workers and its own JUnit artifact. Shards do not cancel siblings on failure.
-The required `lint` aggregate fails if validation or any required shard fails,
-is cancelled, or is unexpectedly skipped. Pages still waits for the complete
-successful main workflow.
+[Woodpecker](../.woodpecker/portfolio.yml) runs every `tests/*.mjs` file with
+one browser worker in its two-CPU isolated Linux job. The full glob includes new
+test files automatically. Tests retain their 60-second deadlines and assertions;
+there are no automatic test retries or live third-party fixtures. Chromium and
+Node versions are logged.
 
-Run a single shard locally with `node --test --test-concurrency=2
---test-timeout=60000 --test-shard=1/3 tests/*.mjs` (replace `1` with `2` or `3`).
-Node partitions the complete file list; new test files join automatically.
+GitHub’s stable `lint` gate runs the status-handoff boundary tests and requires
+the exact source’s trusted native status. It accepts success only for this
+repository’s correct event context and pipeline; failures fail immediately and
+pending/missing statuses have a bounded deadline. Pages waits for that complete
+successful main workflow and rechecks that the validated revision is current.
+
+For a local subset, Node still supports `--test-shard=1/3` (replace `1` with `2`
+or `3`). This is a diagnostic option; the native CI gate always runs the full glob.
+
+Owned Linux test browsers retain normal Crashpad behavior and set a child-only
+[`CHROME_CONFIG_HOME`](https://chromium.googlesource.com/chromium/src/+/refs/tags/156.0.8078.79/chrome/common/chrome_paths_linux.cc)
+inside their fresh profile. Chromium stores crash databases relative to this
+default configuration directory even when `--user-data-dir` is supplied.
+Detached helpers are admitted only by their actual sibling executable/file
+identity, exact owned database and start generation, then rechecked before
+PID-specific shutdown. Arguments are never logged. Browser stderr, CDP
+exceptions, assertions, process exits and native resource diagnostics remain
+available; profile removal requires verified owned-process exit.
