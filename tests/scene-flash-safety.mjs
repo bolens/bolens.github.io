@@ -53,7 +53,7 @@ test('the runtime prevents primitive and filter transition storms', () => {
   assert.match(css, /\.cryptid-camp svg stop \{ transition:stop-color \.55s ease,stop-opacity \.55s ease; \}/);
   assert.match(css, /\.terrain-asset \{[^}]*transition:filter \.55s ease/);
   assert.match(css, /\.cryptid-camp\[data-render-runtime\] svg :is\(path,rect,circle,ellipse,polygon,polyline,line,stop\) \{ transition:none; \}/);
-  assert.match(css, /\.cryptid-camp\[data-render-runtime\] \.terrain-asset \{[^}]*transition:none; \}/);
+  assert.match(css, /:root \.cryptid-camp\[data-render-runtime\] svg \.terrain-asset \{[^}]*transition:none; \}/);
 });
 
 test('large scene washes crossfade without display toggles', () => {
