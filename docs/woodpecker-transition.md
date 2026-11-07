@@ -9,6 +9,24 @@ within that allocation. It also runs the native-status handoff boundary tests.
 It uses isolated profiles,
 loopback servers, and existing fixture-controlled external responses.
 
+## CI organization
+
+Use the [shared purpose phases](https://github.com/bolens/.github/blob/main/docs/woodpecker-transition.md#ci-organization)
+with the existing Node and Python entrypoints. The local full-suite command in
+RELEASING uses two workers; native CI uses one worker under its fixed allocation,
+with the same complete file selection and 60-second per-test deadline.
+
+| Phase | Check group / canonical local command | Native workflow / step | Retained hosted owner / boundary |
+| --- | --- | --- | --- |
+| `validate` | Source and generated-content checks: `node scripts/lint.mjs` | `portfolio` / `validate` | PR, main push and native manual validation |
+| `test` | Full browser suite: `node --test --test-concurrency=2 --test-timeout=60000 tests/*.mjs` | `portfolio` / `validate`, with native concurrency set to `1` | Node 24 and Chrome/Chromium; isolated profiles, owned servers and controlled fixtures |
+| `test` | Native-status boundaries: `python3 -m unittest discover -s scripts -p 'test_woodpecker_handoff.py' -v` | `portfolio` / `validate` | Hosted `Lint` joins the exact trusted source result |
+| `site` | Generated-site freshness: `node scripts/build-site.mjs --check` | Included in the lint invocation | Regenerate only through the source generator when its inputs change |
+| `publish` | Existing main redeploy entrypoint: `gh workflow run lint.yml --ref main` | Publication remains hosted | Successful trusted main `Lint` triggers Deploy GitHub Pages; environment approval, revision checks, artifact allowlist and cache purge retain their existing guards |
+
+The `portfolio` alias, required check names and `Lint` to Pages dependency remain
+stable. Follow [RELEASING](../RELEASING.md) for publication review and verification.
+
 The GitHub `lint` gate verifies the latest native status for the exact PR head
 or main push. It binds repository, revision, event context, publisher, pipeline
 URL, and the latest combined/history status ID; it never reuses an older success
