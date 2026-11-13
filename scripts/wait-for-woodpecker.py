@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Join this exact source revision's native validation without rerunning it."""
+import http.client
 import json
 import os
 import re
@@ -11,6 +12,7 @@ REPOSITORY = 'bolens/bolens.github.io'
 REPOSITORY_ID = 1355134655
 CREATOR_ID = 1218380
 TARGET = re.compile(r'https://woodpecker\.bolens\.dev/repos/33/pipeline/[1-9][0-9]*/1')
+TRANSIENT_READ_ERRORS = (http.client.RemoteDisconnected, ConnectionResetError, TimeoutError)
 
 
 def select_state(payload, history, sha, context):
@@ -56,7 +58,16 @@ def wait(read, sha, context, *, clock=time.monotonic, sleep=time.sleep, timeout=
     deadline = clock() + timeout
     previous = None
     while clock() < deadline:
-        state = select_state(*read(), sha, context)
+        try:
+            response = read()
+        except TRANSIENT_READ_ERRORS:
+            state = 'lookup unavailable'
+        except urllib.error.URLError as error:
+            if not isinstance(error.reason, TRANSIENT_READ_ERRORS):
+                raise
+            state = 'lookup unavailable'
+        else:
+            state = select_state(*response, sha, context)
         if clock() >= deadline:
             break
         if state != previous:
