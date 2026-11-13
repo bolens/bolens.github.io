@@ -20,7 +20,7 @@ with the same complete file selection and 60-second per-test deadline.
 | --- | --- | --- | --- |
 | `validate` | Source and generated-content checks: `node scripts/lint.mjs` | `portfolio` / `validate` | PR, main push and native manual validation |
 | `validate` | Shared source/workflow policy: `bash scripts/ci/check-policy.sh` | `repository` / `source-and-workflow-policy` | Exact shared SourceLint 7603518, checksum-verified actionlint 1.7.12 and offline zizmor 1.29.0. Duplicate hosted equivalents are disabled after verified native cutover |
-| `validate` | Managed Spec Kit integrity: `bash scripts/ci/check-spec-kit.sh` (included in repository policy) | Existing policy step | Immutable C161 validator. Hosted PR/push validation retained during native qualification. Updater remains scheduled/manual on GitHub |
+| `validate` | Managed Spec Kit integrity: `bash scripts/ci/check-spec-kit.sh` (included in repository policy) | Existing policy step | Immutable C161 validator. Automatic PR/main validation is native. Hosted manual validation and scheduled/manual updater stay active |
 | `test` | Full browser suite: `node --test --test-concurrency=2 --test-timeout=60000 tests/*.mjs` | `portfolio` / `validate`, with native concurrency set to `1` | Node 24 and Chrome/Chromium; isolated profiles, owned servers and controlled fixtures |
 | `test` | Native-status boundaries: `python3 -m unittest discover -s scripts -p 'test_woodpecker_handoff.py' -v` | `portfolio` / `validate` | Hosted `Lint` joins the exact trusted source result |
 | `site` | Generated-site freshness: `node scripts/build-site.mjs --check` | Included in the lint invocation | Regenerate only through the source generator when its inputs change |
