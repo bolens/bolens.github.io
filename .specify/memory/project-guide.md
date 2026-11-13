@@ -68,7 +68,7 @@ updates. Follow `RELEASING.md` for push, merge, release or delivery, and recover
 ## Retained compatibility entrypoint
 
 `.agents/skills/speckit-taskstoissues/SKILL.md` is a project-retained, deprecated
-compatibility artifact. The current Spec Kit integration no longer manages it;
-keep its existing bytes outside the generated integration manifest. Its presence
+compatibility artifact. The current Spec Kit integration no longer manages it.
+Keep its existing bytes outside the generated integration manifest. Its presence
 does not install an extension or authorize converting tasks into issues. Any
 future removal or replacement requires a separate reviewed compatibility change.
