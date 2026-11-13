@@ -76,14 +76,15 @@ Fleet policy: <https://github.com/bolens/.github/blob/main/RELEASING.md>.
 
 ## Source lint
 
-The Source lint workflow checks maintained javascript, css files selected by
-[`.github/source-lint.json`](.github/source-lint.json) on every pull request
-and push to `main`. Existing native checks remain part of the merge gate.
+The native repository policy checks maintained javascript, css files selected by
+[`.github/source-lint.json`](.github/source-lint.json) through Woodpecker on every pull request and push to `main`.
+The duplicate hosted workflow is disabled after verified native cutover. Its
+tracked source remains available for rollback.
 Use the [shared local reproduction instructions](https://github.com/bolens/.github/blob/7603518f305fb76f7bb1b9979f2692521f633b82/docs/source-lint.md)
 with the same tooling revision pinned in
-[the workflow](.github/workflows/source-lint.yml). Review exclusions when adding
+[the native helper](scripts/ci/check-policy.sh). Review exclusions when adding
 source files; generated and imported files retain their native validation.
-Require the new check to pass on the current PR head before merging.
+Require the native repository check to pass on the current PR head before merging.
 
 ## Cloudflare caching
 
@@ -103,7 +104,27 @@ For rollback, disable the site's new cache rules and restore its recorded DNS pr
 selector at `7603518f305fb76f7bb1b9979f2692521f633b82`, followed by checksum-verified
 actionlint 1.7.12 and offline zizmor 1.29.0 at medium severity/confidence. The
 `repository` workflow groups those checks separately from `portfolio` browser
-and generated-site validation. Keep hosted Source lint and all current required
-status bindings during actual PR and genuine-main verification. The
+and generated-site validation. The duplicate hosted Source lint workflow is disabled after verified native
+cutover. Its tracked source remains available for rollback.
+Require the native repository status alongside the retained application gate. The
 [CI index](docs/woodpecker-transition.md#ci-organization) preserves local commands
 and the distinct Pages, artifact and hostname-purge boundaries.
+
+## Managed integration validation
+
+`bash scripts/ci/check-spec-kit.sh` verifies the current Spec Kit manifests and
+managed files without updating them. The existing native repository-policy
+command, `bash scripts/ci/check-policy.sh`, includes this check in its existing
+container and status context. It downloads only the public validator at
+`bolens/.github@c161a6757130ea687def9eb1e81c6a4190488f07`, verifies its
+SHA-256, limits the download to 64 KiB and 60 seconds, and bounds validation to
+four minutes. Local reproduction needs Bash and Python 3 on Linux/macOS with
+HTTPS access. It uses temporary files and requires no secrets or installed skill links.
+
+Source/workflow policy now runs in Woodpecker. Duplicate GitHub policy workflows
+are disabled, including manual and scheduled execution, after verified cutover.
+Their tracked source remains available for rollback. The mixed
+Spec Kit workflow still runs its hosted read-only PR/push validation while this
+native integration is qualified on actual PR and genuine-main revisions. Its
+scheduled/manual updater remains on GitHub. Preserve all current check names and
+publication/platform boundaries during that qualification.
