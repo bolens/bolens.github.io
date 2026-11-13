@@ -47,6 +47,10 @@ Only a successful main-branch push or manual `Lint` run triggers
 `Deploy GitHub Pages`. PR runs cannot publish. Deployment checks out the exact
 validated revision, skips superseded revisions, and rechecks main after any
 `github-pages` environment approval. Validation runs once per main revision.
+The native-status join retries transient HTTPS disconnects within its existing
+deadline. Each retry reads a fresh combined status and history pair. Native
+failures, invalid identities, authentication errors and malformed responses still
+fail the gate.
 
 The Pages artifact contains only root HTML, `.nojekyll`, crawler metadata,
 `.well-known/security.txt`, `assets/`, `about/`, `work/`, and `case-studies/`.
