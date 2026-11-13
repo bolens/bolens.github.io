@@ -64,3 +64,11 @@ Keep `.specify/templates/`, `.specify/scripts/`, and generated Codex skills unde
 integration manifests. Use this guide and the constitution for local customization.
 Regenerate managed files through Spec Kit and verify that project-owned memory survives
 updates. Follow `RELEASING.md` for push, merge, release or delivery, and recovery.
+
+## Retained compatibility entrypoint
+
+`.agents/skills/speckit-taskstoissues/SKILL.md` is a project-retained, deprecated
+compatibility artifact. The current Spec Kit integration no longer manages it;
+keep its existing bytes outside the generated integration manifest. Its presence
+does not install an extension or authorize converting tasks into issues. Any
+future removal or replacement requires a separate reviewed compatibility change.
